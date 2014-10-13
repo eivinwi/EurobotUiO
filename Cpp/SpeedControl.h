@@ -10,7 +10,8 @@
 /* Structs */
 typedef struct Motor {
 	uint8_t id;
-	uint16_t speed;	
+	uint8_t dir;
+	uint8_t speed;	
 } Motor;
 
 
@@ -19,8 +20,8 @@ public:
 	SpeedControl();
 	~SpeedControl();
 	void updateSpeeds();
-	void setSpeed(uint8_t, uint16_t);
-	uint16_t getSpeed(uint8_t);
+	void setSpeed(uint8_t, uint8_t);
+	uint8_t getSpeed(uint8_t);
 
 private:
 	Serial *port;

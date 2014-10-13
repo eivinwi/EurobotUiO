@@ -22,7 +22,7 @@ SpeedControl::~SpeedControl() {
 }
 
 
-void SpeedControl::setSpeed(uint8_t side, uint16_t speed) {
+void SpeedControl::setSpeed(uint8_t side, uint8_t speed) {
 	if(side == LEFT) {
 		left->speed = speed;
 	} else {
@@ -30,7 +30,7 @@ void SpeedControl::setSpeed(uint8_t side, uint16_t speed) {
 	}
 }
 
-uint16_t SpeedControl::getSpeed(uint8_t side) {
+uint8_t SpeedControl::getSpeed(uint8_t side) {
 	if(side == LEFT) {
 		return left->speed;
 	} else {

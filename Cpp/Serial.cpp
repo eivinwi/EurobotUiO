@@ -76,21 +76,10 @@ void Serial::writeBlock(char* buf) {
  * |Ldir|Rdir|Lpwm2|Lpwm1|Lpwm0|Rpwm2|Rpwm1|Rpwm0| = 8byte
 */
 void Serial::writeSpeeds(uint8_t dir_l, uint8_t pwm_l, uint8_t dir_r, uint8_t pwm_r) {
-	/*uint8_t speeds[4];
-	speeds[0] = (uint8_t) ((l & 0xFF00) >> 8);
-	speeds[1] = (uint8_t) (l & 0x00FF);
-	speeds[2] = (uint8_t) ((r & 0xFF00) >> 8);
-	speeds[3] = (uint8_t) (r & 0x00FF);
-	std::cout << speeds[0] << speeds[1] << speeds[2] << speeds[3] << '\n';
-	std::cout << speeds << '\n';
-
-	serial << "set";
-	for(int i = 0; i < 4; i++) {
-		serial << speeds[i];
-	}*/
-	serial << "set"
-	serial << l;
-	serial << r;
+	serial << dir_l;
+	serial << pwm_l;
+	serial << dir_r;
+	serial << pwm_r;
 	serial << '\n';
 }
 
