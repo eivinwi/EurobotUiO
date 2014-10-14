@@ -30,7 +30,7 @@ int present_speed_right;
 int present_dir_right;
 
 
-char serial_data[10];
+
 
 void setup() {
 	Serial.begin(9600); //(115200);
@@ -54,7 +54,7 @@ void setup() {
 
 void loop() {
 	readInstructions();
-
+//	testRead(4);
 	/*writeSpeed();
 	if(Serial.available() > 0) {
 		readInstructions();
@@ -62,7 +62,7 @@ void loop() {
 
 //	setSpeed(0, 100, 0, 100);
 //	delay(3000);
-	setSpeed(0, 0, 0, 0);
+//	setSpeed(0, 0, 0, 0);
 	delay(3000);
 //	setSpeed(1, 100, 1, 100);
 //	delay(6000);
@@ -91,44 +91,32 @@ void setSpeedRight(int dir_right, int pwm_right) {
 	analogWrite(RIGHT_PWM, pwm_right);
 }
 
+char serial_data[4];
 
 
 
 /* INPUT: 
  * change one:
- * |motor|dir|pwm2|pwm1|pwm0| = 5byte. Motor is 0=l 1=r
+ * |motor|dir|pwm| = 3byte. Motor is 0=l 1=r
  * 
  * change both:
- * |Ldir|Rdir|Lpwm2|Lpwm1|Lpwm0|Rpwm2|Rpwm1|Rpwm0| = 8byte
+ * |Ldir|Rdir|Lpwm|Rpwm| = 4byte
 */
-
-
-
 void readInstructions() {
-	if(Serial.available() >= 8) { //change both speeds
+	if(Serial.available() >= 4) { //change both speeds
 		Serial.readBytes(serial_data, 8);
 		uint8_t dir_l = serial_data[0];
-		uint8_t dir_r = serial.data[1];
-		char left_pwm[3];
-		char right_pwm[3];
-		for(int i = 0; i < 3; i++) {
-			left_pwm[i] = serial_data[i+2];
-			right_pwm[i] = serial_data[i+5];
-		}
-		int pwm_l = atoi(left_pwm);
-		int pwm_r = atoi(right_pwm);
+		uint8_t pwm_l = serial_data[1];
+		uint8_t dir_r = serial_data[2];
+		uint8_t pwm_r = serial_data[3];
 		setSpeed(dir_l, pwm_l, dir_r, pwm_r);
 	} 
 
-	else if(Serial.available() >= 5) {//change one speed
+	else if(Serial.available() >= 3) {//change one speed
 		Serial.readBytes(serial_data, 4);
 		uint8_t motor = serial_data[0];
 		uint8_t dir = serial_data[1];
-		char pwmc[3];
-		for(int i = 0; i < 3; i++){
-		    pwmc[i] = serial_data[i+2];
-		}
-		int pwm = atoi(pwmc);
+		uint8_t pwm = serial_data[2];
 		if(motor == LEFT) {
 			setSpeedLeft(dir, pwm);
 		} else {
@@ -136,6 +124,32 @@ void readInstructions() {
 		}
 	}
 }
+
+
+char s_data[] = {1, 50, 1, 50};
+void testRead(int sa) {
+	if(sa >= 4) { //change both speeds
+		Serial.readBytes(serial_data, 8);
+		uint8_t dir_l = s_data[0];
+		uint8_t pwm_l = s_data[1];
+		uint8_t dir_r = s_data[2];
+		uint8_t pwm_r = s_data[3];
+		setSpeed(dir_l, pwm_l, dir_r, pwm_r);
+	} 
+
+	else if(sa >= 3) {//change one speed
+		Serial.readBytes(s_data, 4);
+		uint8_t motor = s_data[0];
+		uint8_t dir = s_data[1];
+		uint8_t pwm = s_data[2];
+		if(motor == LEFT) {
+			setSpeedLeft(dir, pwm);
+		} else {
+			setSpeedRight(dir, pwm);
+		}
+	}
+}
+
 
 void writeSpeed() {
 	//Serial.write("s");
