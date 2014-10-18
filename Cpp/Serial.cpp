@@ -2,8 +2,9 @@
 
 
 Serial::Serial() {
+	serial.Open("/dev/ttyACM0");
 	//serial.Open("/dev/ttyS0");
-	serial.Open("/dev/ttyUSB0");
+//	serial.Open("/dev/ttyUSB0");
 	serial.SetBaudRate(SerialStreamBuf::BAUD_38400);
 	serial.SetCharSize( SerialStreamBuf::CHAR_SIZE_8 );
 	//serial.SetNumOfStopBits(1);

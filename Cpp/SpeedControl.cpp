@@ -22,7 +22,6 @@ SpeedControl::~SpeedControl() {
 
 void SpeedControl::setSpeed1(uint8_t speed) {
 	left->speed = speed;	
-	std::cout << "setSpeed1" << '\n';
 	sync();
 	uint8_t sdir = 0x31;
 	port->write(sdir);
@@ -75,7 +74,7 @@ void SpeedControl::getEncoders() {
 uint8_t SpeedControl::getVoltage() {
 	sync();
 	port->write(0x26);
-	usleep(10000);
+	usleep(5000);
 	uint8_t volt = port->read();
 	std::cout << "Voltage: " << volt << '\n';
 	return volt;
