@@ -10,35 +10,54 @@ SpeedControl::SpeedControl() {
 	right->id = RIGHT;
 	right->speed = 0;
 	
-	setSpeed(LEFT, 111);
-	setSpeed(RIGHT, 111);
-	updateSpeeds();
+
 }
 
 SpeedControl::~SpeedControl() {
 	//free(&left);
 	//free(&right);
-	port->close();
+
 }
 
 
-void SpeedControl::setSpeed(uint8_t side, uint8_t speed) {
-	if(side == LEFT) {
-		left->speed = speed;
-	} else {
-		right->speed = speed;
-	}
+void SpeedControl::setSpeed1(uint8_t speed) {
+	left->speed = speed;
+	
+	sync();
+	port->write(0x31);
+	port->write(speed);
 }
 
-uint8_t SpeedControl::getSpeed(uint8_t side) {
-	if(side == LEFT) {
-		return left->speed;
-	} else {
-		return right->speed;
-	}
+void SpeedControl::setSpeed2(uint8_t speed) {
+	right->speed = speed;
+
+	sync();
+	port->write(0x31);
+	port->write(0x200);
 }
 
-void SpeedControl::updateSpeeds() {
-	port->writeSpeeds(left->speed, right->speed);
+uint8_t SpeedControl::getSpeed1() {
+	sync();
+	port->write(0x21);
+	uint8_t speed = port->read();
+	left->speed = speed;
+	return speed;
+}
 
+uint8_t SpeedControl::getSpeed2() {
+	sync();
+	port->write(0x21);
+	uint8_t speed = port->read();
+	right->speed = speed;
+	return speed;
+}
+
+void SpeedControl::getEncoders() {
+	sync();
+	port->write(0x25);
+
+}
+
+void SpeedControl::sync() {
+	port->write(0x00);
 }

@@ -19,10 +19,12 @@ class SpeedControl {
 public:
 	SpeedControl();
 	~SpeedControl();
-	void updateSpeeds();
-	void setSpeed(uint8_t, uint8_t);
-	uint8_t getSpeed(uint8_t);
-
+	void setSpeed1(uint8_t speed);
+	void setSpeed2(uint8_t speed);
+	uint8_t getSpeed1();
+	uint8_t getSpeed2();
+	void getEncoders();
+	void sync();
 private:
 	Serial *port;
 	Motor *right; 

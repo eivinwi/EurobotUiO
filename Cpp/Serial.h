@@ -16,15 +16,12 @@ class Serial {
 public:
     Serial();
     ~Serial();
-    void testProg();
-    void close();
-    void write(int);
-    void write(char);
-    void writeBlock(char[]); 
-    void writeSpeeds(uint16_t l, uint16_t r); 
-    char readChar();
-   	int readInt();
-   	void readBlock(char[]);
+    void write(char arg);
+    void write(int arg);
+    char read();
+    int readInt();
+    void readBlocks(int byte, char *buf);
+    
 private:
     SerialStream serial;
 
