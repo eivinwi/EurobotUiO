@@ -1,8 +1,6 @@
 #ifndef SERIAL_H
 #define	SERIAL_H
 
-#define BUFFER_SIZE 4
-
 #include <SerialStream.h>
 #include <iostream>
 #include <unistd.h>
@@ -16,16 +14,16 @@ class Serial {
 public:
     Serial();
     ~Serial();
+    void write(uint8_t arg);
     void write(char arg);
     void write(int arg);
-    char read();
+    uint8_t read();
     int readInt();
-    void readBlocks(int byte, char *buf);
-    
+    void readBlock(int byte, char *buf);
+
 private:
     SerialStream serial;
-
-	char buffer[BUFFER_SIZE];    
+    
     
     
 };

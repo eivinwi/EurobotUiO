@@ -3,6 +3,8 @@
 
 #define LEFT 1
 #define RIGHT 2
+#define ENC_BUFF_SIZE 8
+
 
 #include "Serial.h"
 #include <stdint.h>
@@ -23,12 +25,16 @@ public:
 	void setSpeed2(uint8_t speed);
 	uint8_t getSpeed1();
 	uint8_t getSpeed2();
+	void resetEncoders();
 	void getEncoders();
+	uint8_t getVoltage();
 	void sync();
 private:
 	Serial *port;
 	Motor *right; 
 	Motor *left;
+
+	char enc_buffer[ENC_BUFF_SIZE];
 };
 
 #endif /* SPEEDCONTROL_H */

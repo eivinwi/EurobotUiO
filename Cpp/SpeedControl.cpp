@@ -21,19 +21,19 @@ SpeedControl::~SpeedControl() {
 
 
 void SpeedControl::setSpeed1(uint8_t speed) {
-	left->speed = speed;
-	
+	left->speed = speed;	
+	std::cout << "setSpeed1" << '\n';
 	sync();
-	port->write(0x31);
+	uint8_t sdir = 0x31;
+	port->write(sdir);
 	port->write(speed);
 }
 
 void SpeedControl::setSpeed2(uint8_t speed) {
 	right->speed = speed;
-
 	sync();
-	port->write(0x31);
-	port->write(0x200);
+	port->write(0x32);
+	port->write(speed);
 }
 
 uint8_t SpeedControl::getSpeed1() {
@@ -52,12 +52,36 @@ uint8_t SpeedControl::getSpeed2() {
 	return speed;
 }
 
+void SpeedControl::resetEncoders() {
+	sync();
+	port->write(0x35);
+}
+
 void SpeedControl::getEncoders() {
 	sync();
-	port->write(0x25);
+	uint8_t x = 0x25;
+	port->write(x);
+	long result;
+	result = port->read() << 24ul;
+	result += port->read() << 16ul;
+	result += port->read() << 8ul;
+	result += port->read(); 
+	//port->readBlock(ENC_BUFF_SIZE, enc_buffer);
 
+	//TODO: Do stuff with enc_buffer
+	std::cout << result << '\n';
+}
+
+uint8_t SpeedControl::getVoltage() {
+	sync();
+	port->write(0x26);
+	usleep(10000);
+	uint8_t volt = port->read();
+	std::cout << "Voltage: " << volt << '\n';
+	return volt;
 }
 
 void SpeedControl::sync() {
-	port->write(0x00);
+	uint8_t clear_b = 0x00;
+	port->write(clear_b);
 }

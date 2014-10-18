@@ -27,6 +27,11 @@ int main(int argc, char *argv[]) {
 
 //    s->testProg();
 //    s->close();
+    uint8_t sp = 0xfa;
+    //s->setSpeed2(sp);
+  //  s->getVoltage();
+    s->resetEncoders();
+    s->getEncoders();
     while(1) {
 /*        s->setSpeed(LEFT, 1, 200);
         s->setSpeed(RIGHT, 1, 200);
@@ -40,6 +45,9 @@ int main(int argc, char *argv[]) {
         s->setSpeed(RIGHT, 0, 0);
         s->updateSpeeds();
         usleep(900000);*/
+
+        s->setSpeed1(sp);
+        usleep(500000);
     }
     return 0;
 }

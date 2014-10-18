@@ -3,8 +3,8 @@
 
 Serial::Serial() {
 	//serial.Open("/dev/ttyS0");
-	serial.Open("/dev/ttyACM0");
-	serial.SetBaudRate(SerialStreamBuf::BAUD_57600);
+	serial.Open("/dev/ttyUSB0");
+	serial.SetBaudRate(SerialStreamBuf::BAUD_38400);
 	serial.SetCharSize( SerialStreamBuf::CHAR_SIZE_8 );
 	//serial.SetNumOfStopBits(1);
 	//serial.SetParity( SerialStreamBuf::PARITY_ODD );
@@ -15,18 +15,26 @@ Serial::~Serial() {
 	serial.Close();
 }
 
+void Serial::write(uint8_t arg) {
+	std::cout << "Writing uint8_t" << '\n';
+	serial << arg;// << std::endl;
+}
 
 void Serial::write(char arg) {
-	serial << arg;
+	std::cout << "Writing char" << '\n';
+	serial << arg;// << std::endl;
 }
 
 void Serial::write(int arg) {
-	serial << arg;	
+	std::cout << "Writing int" << '\n';
+	serial << arg << std::endl;
 }
 
-char Serial::read(){
-	char r;
+uint8_t Serial::read(){
+	std::cout << "reading" << '\n';
+	uint8_t r;
 	serial >> r;
+	std::cout << "done" << '\n';
 	return r;		
 }
 
@@ -37,6 +45,6 @@ int Serial::readInt() {
 }
 
 
-void Serial::readBlocks(int byte, char *buf) {
+void Serial::readBlock(int byte, char *buf) {
 	serial.read(buf, byte);
 } 	
