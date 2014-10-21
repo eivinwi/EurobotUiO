@@ -1,6 +1,5 @@
-#include "SpeedControl.h"
-
-
+#include "SpeedControl.h
+"
 SpeedControl::SpeedControl() {
 	port = new Serial;
 //	left = new Motor(LEFT, 0, 0);
@@ -10,14 +9,11 @@ SpeedControl::SpeedControl() {
 	right = new Motor;
 	right->id = RIGHT;
 	right->speed = 0;
-	
-
 }
 
 SpeedControl::~SpeedControl() {
 	//free(&left);
 	//free(&right);
-
 }
 
 
