@@ -17,14 +17,17 @@ public:
     void write(uint8_t arg);
     void write(char arg);
     void write(int arg);
+    uint8_t readNoWait();
     uint8_t read();
     int readInt();
     void readBlock(int byte, char *buf);
+    void printAll();
+
 
 private:
     SerialStream serial;
     
-    
+//    SerialPort serial;
     
 };
 

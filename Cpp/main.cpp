@@ -34,7 +34,8 @@ int main(int argc, char *argv[]) {
     
   //  s->getVoltage();
   //  s->getEncoders();
-    
+    s->setMode(0);
+
     std::string input;
     while(1) {
         std::cout << "Write cmd: ";
@@ -65,9 +66,21 @@ int main(int argc, char *argv[]) {
             else if(sub2 == "re") {
                 s->resetEncoders();
             } 
-            else if(sub2 == "ge") {
+            else if(sub2 == "el") {
+                s->getEnc1();
+            }
+            else if(sub2 == "er") {
+                s->getEnc2();
+            }
+            else if(sub2 == "eb") {
                 s->getEncoders();
             } 
+            else if(sub2 == "ve") {
+                s->getVersion();
+            }
+            else if(sub2 == "ps") {
+                s->printSerial();
+            }
         } 
         else if(input == "h") {
             printHelp();
@@ -103,9 +116,15 @@ void printHelp() {
     std::cout << "sr(0-255): setSpeedRight\n";
     std::cout << "gl: getSpeedLeft\n";
     std::cout << "gr: getSpeedRight\n";
-    std::cout << "ge: getEncoders\n";
+    
+    std::cout << "el: getEnc1\n";
+    std::cout << "er: getEnc2\n";
+    std::cout << "eb: getEncoders\n";
+    
     std::cout << "re: resetEncoders\n";
     std::cout << "vo: getVoltage\n";
+    std::cout << "ve: getVersion\n";
+    std::cout << "ps: printSerial\n";
     std::cout << "h: this menu\n";
     std::cout << "q: quit\n";
     std::cout << "------------------------\n";

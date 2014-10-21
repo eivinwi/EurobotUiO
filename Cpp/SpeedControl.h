@@ -26,8 +26,13 @@ public:
 	uint8_t getSpeed1();
 	uint8_t getSpeed2();
 	void resetEncoders();
+	void getEnc1();
+	void getEnc2();
 	void getEncoders();
 	uint8_t getVoltage();
+	uint8_t getVersion();
+	void setMode(int mode);
+	void printSerial();
 	void sync();
 private:
 	Serial *port;

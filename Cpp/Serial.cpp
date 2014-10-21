@@ -2,14 +2,17 @@
 
 
 Serial::Serial() {
-	serial.Open("/dev/ttyACM0");
-	//serial.Open("/dev/ttyS0");
+	serial.Open("/dev/ttyACM2");
+//	serial.Open("/dev/ttyS0");	
 //	serial.Open("/dev/ttyUSB0");
+//	serial.SetBaudRate(SerialStreamBuf::BAUD_115200);
 	serial.SetBaudRate(SerialStreamBuf::BAUD_38400);
+	//serial.SetBaudRate(SerialStreamBuf::BAUD_9600);
 	serial.SetCharSize( SerialStreamBuf::CHAR_SIZE_8 );
-	//serial.SetNumOfStopBits(1);
-	//serial.SetParity( SerialStreamBuf::PARITY_ODD );
-	//serial.SetFlowControl( SerialStreamBuf::FLOW_CONTROL_HARD );
+	serial.SetNumOfStopBits( SerialStreamBuf::DEFAULT_NO_OF_STOP_BITS);
+	serial.SetParity( SerialStreamBuf::PARITY_NONE );
+	serial.SetFlowControl( SerialStreamBuf::FLOW_CONTROL_HARD );
+
 }
 
 Serial::~Serial() {
@@ -31,12 +34,29 @@ void Serial::write(int arg) {
 	serial << arg << std::endl;
 }
 
-uint8_t Serial::read(){
+uint8_t Serial::readNoWait(){
 	std::cout << "reading" << '\n';
-	uint8_t r;
-	serial >> r;
+	uint8_t r = '\0';
+	//serial >> r;
+	
+	if(serial.rdbuf()->in_avail()) {
+		r =  serial.get();
+	} else {
+		usleep(5000);
+		if(serial.rdbuf()->in_avail()) {
+			r =  serial.get();
+		}
+	}
+
+//	serial.get(r);
+	//serial.read(r);
 	std::cout << "done" << '\n';
 	return r;		
+}
+
+uint8_t Serial::read() {
+	usleep(5000);
+	return readNoWait();
 }
 
 int Serial::readInt() {
@@ -45,7 +65,14 @@ int Serial::readInt() {
 	return i;
 }
 
-
 void Serial::readBlock(int byte, char *buf) {
 	serial.read(buf, byte);
+}
+
+void Serial::printAll() {
+	std::cout << "All serial: [";
+	while(serial.rdbuf()->in_avail()) {
+		std::cout << serial.get();
+	}
+	std::cout << "]\n";
 } 	
