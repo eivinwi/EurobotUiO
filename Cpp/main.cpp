@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
     s->resetEncoders();
     std::string input;
     usleep(10000);
-    s->printSerial();
+    s->flush();
     while(1) {
         std::cout << "Write cmd: ";
         std::getline(std::cin, input);
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
                 s->getVersion();
             }
             else if(sub2 == "ps") {
-                s->printSerial();
+                s->flush();
             }
         } 
         else if(input == "h") {

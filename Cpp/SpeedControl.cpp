@@ -9,6 +9,9 @@ SpeedControl::SpeedControl() {
 	right = new Motor;
 	right->id = RIGHT;
 	right->speed = 0;
+
+	prev_enc1 = 0;
+	prev_enc2 = 0;
 }
 
 SpeedControl::~SpeedControl() {
@@ -58,6 +61,8 @@ void SpeedControl::setMode(int mode) {
 void SpeedControl::resetEncoders() {
 	sync();
 	action(RESET_ENC);
+	prev_enc1 = 0;
+	prev_enc2 = 0;
 }
 
 
@@ -82,22 +87,31 @@ void SpeedControl::getEncoders() {
 	result2 += port->readNoWait() << 16ul;
 	result2 += port->readNoWait() << 8ul;
 	result2 += port->readNoWait();	
-
-	//port->readBlock(ENC_BUFF_SIZE, enc_buffer);
-
-	//TODO: Do stuff with enc_buffer
 	std::cout << "Enc1: " << result1 << '\n';
 	std::cout << "Enc2: " << result2 << '\n';
 }  
+
+
+
 
 long SpeedControl::getEnc1() {
 	sync();
 	action(GET_ENC1);
 	long result = 0;
+	long diff = 0;
 	result = port->read() << 24ul;
 	result += port->readNoWait() << 16ul;
 	result += port->readNoWait() << 8ul;
 	result += port->readNoWait(); 
+
+	std::cout << "Enc1: " << result;
+	diff = result - prev_enc1;
+	std::cout << " (diff: " << diff << ")\n";
+	
+	std::cout << "Wheel rotations: " <<  (diff/980.0) << '\n';
+	std::cout << "Distance: " << diff*0.385 << '\n';
+
+	prev_enc1 = result;
 	return result;
 }
 
@@ -114,7 +128,6 @@ long SpeedControl::getEnc2() {
 
 uint8_t SpeedControl::getVoltage() {
 	sync();
-	uint8_t v = 0x26;
 	action(GET_VOLT);
 	int volt = 0;
 	volt = port->read(); //readNoWait();
@@ -131,7 +144,7 @@ uint8_t SpeedControl::getVersion() {
 	return version;
 }
 
-void SpeedControl::printSerial() {
+void SpeedControl::flush() {
 	port->printAll();
 }
 

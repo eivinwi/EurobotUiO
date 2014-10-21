@@ -32,7 +32,7 @@ public:
 	uint8_t getVoltage();
 	uint8_t getVersion();
 	void setMode(int mode);
-	void printSerial();
+	void flush();
 	void sync();
 	void action(uint8_t a); 
 
@@ -42,6 +42,9 @@ private:
 	Motor *left;
 
 	char enc_buffer[ENC_BUFF_SIZE];
+
+	long prev_enc1;
+	long prev_enc2;
 
 	const static uint8_t CLEAR = 0x00;
 	const static uint8_t RESET_ENC = 0x35;
