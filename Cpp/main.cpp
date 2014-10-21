@@ -35,8 +35,10 @@ int main(int argc, char *argv[]) {
   //  s->getVoltage();
   //  s->getEncoders();
     s->setMode(0);
-
+    s->resetEncoders();
     std::string input;
+    usleep(10000);
+    s->printSerial();
     while(1) {
         std::cout << "Write cmd: ";
         std::getline(std::cin, input);

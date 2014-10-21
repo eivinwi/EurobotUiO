@@ -5,14 +5,12 @@ Serial::Serial() {
 	serial.Open("/dev/ttyACM2");
 //	serial.Open("/dev/ttyS0");	
 //	serial.Open("/dev/ttyUSB0");
-//	serial.SetBaudRate(SerialStreamBuf::BAUD_115200);
-	serial.SetBaudRate(SerialStreamBuf::BAUD_38400);
-	//serial.SetBaudRate(SerialStreamBuf::BAUD_9600);
+
+	serial.SetBaudRate( SerialStreamBuf::BAUD_38400 );
 	serial.SetCharSize( SerialStreamBuf::CHAR_SIZE_8 );
 	serial.SetNumOfStopBits( SerialStreamBuf::DEFAULT_NO_OF_STOP_BITS);
 	serial.SetParity( SerialStreamBuf::PARITY_NONE );
 	serial.SetFlowControl( SerialStreamBuf::FLOW_CONTROL_HARD );
-
 }
 
 Serial::~Serial() {
@@ -20,37 +18,31 @@ Serial::~Serial() {
 }
 
 void Serial::write(uint8_t arg) {
-	std::cout << "Writing uint8_t" << '\n';
 	serial << arg;// << std::endl;
 }
 
 void Serial::write(char arg) {
-	std::cout << "Writing char" << '\n';
 	serial << arg;// << std::endl;
 }
 
 void Serial::write(int arg) {
-	std::cout << "Writing int" << '\n';
 	serial << arg << std::endl;
 }
 
 uint8_t Serial::readNoWait(){
-	std::cout << "reading" << '\n';
+	std::cout << "Reading" << '\n';
 	uint8_t r = '\0';
-	//serial >> r;
 	
 	if(serial.rdbuf()->in_avail()) {
 		r =  serial.get();
 	} else {
+		std::cout << "In ELSE, sleeping for 50ms\n";
 		usleep(5000);
 		if(serial.rdbuf()->in_avail()) {
 			r =  serial.get();
 		}
 	}
-
-//	serial.get(r);
-	//serial.read(r);
-	std::cout << "done" << '\n';
+	
 	return r;		
 }
 
@@ -70,7 +62,7 @@ void Serial::readBlock(int byte, char *buf) {
 }
 
 void Serial::printAll() {
-	std::cout << "All serial: [";
+	std::cout << "Flushed serial: [";
 	while(serial.rdbuf()->in_avail()) {
 		std::cout << serial.get();
 	}

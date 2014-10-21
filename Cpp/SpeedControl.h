@@ -26,20 +26,40 @@ public:
 	uint8_t getSpeed1();
 	uint8_t getSpeed2();
 	void resetEncoders();
-	void getEnc1();
-	void getEnc2();
+	long getEnc1();
+	long getEnc2();
 	void getEncoders();
 	uint8_t getVoltage();
 	uint8_t getVersion();
 	void setMode(int mode);
 	void printSerial();
 	void sync();
+	void action(uint8_t a); 
+
 private:
 	Serial *port;
 	Motor *right; 
 	Motor *left;
 
 	char enc_buffer[ENC_BUFF_SIZE];
+
+	const static uint8_t CLEAR = 0x00;
+	const static uint8_t RESET_ENC = 0x35;
+
+	const static uint8_t GET_SPEED1 = 0x21;
+	const static uint8_t GET_SPEED2 = 0x22;
+	const static uint8_t GET_ENC1 = 0x23;
+	const static uint8_t GET_ENC2 = 0x24;
+	const static uint8_t GET_ENCODERS = 0x25;
+	const static uint8_t GET_ACCEL = 0x33;
+	const static uint8_t GET_VOLT = 0x26;
+	const static uint8_t GET_VERSION = 0x29;
+
+	const static uint8_t SET_SPEED1 = 0x31;
+	const static uint8_t SET_SPEED2 = 0x32; //alternatively TURN
+	const static uint8_t SET_ACCEL = 0x2A;
+	const static uint8_t SET_MODE = 0x24;
+
 };
 
 #endif /* SPEEDCONTROL_H */
