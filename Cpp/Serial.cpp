@@ -2,7 +2,7 @@
 
 
 Serial::Serial() {
-	serial.Open("/dev/ttyACM2");
+	serial.Open("/dev/ttyACM0");
 //	serial.Open("/dev/ttyS0");	
 //	serial.Open("/dev/ttyUSB0");
 
