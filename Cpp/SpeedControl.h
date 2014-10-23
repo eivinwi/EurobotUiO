@@ -21,8 +21,10 @@ class SpeedControl {
 public:
 	SpeedControl();
 	~SpeedControl();
+	void setAccel(int acc);
 	void setSpeed1(uint8_t speed);
 	void setSpeed2(uint8_t speed);
+	void setSpeedBoth(uint8_t speed);
 	uint8_t getSpeed1();
 	uint8_t getSpeed2();
 	void resetEncoders();
@@ -32,6 +34,8 @@ public:
 	uint8_t getVoltage();
 	uint8_t getVersion();
 	void setMode(int mode);
+	void enableReg(bool b);
+	void enableTimeout(bool b);
 	void flush();
 	void sync();
 	void action(uint8_t a); 
@@ -63,6 +67,11 @@ private:
 	const static uint8_t SET_ACCEL = 0x2A;
 	const static uint8_t SET_MODE = 0x24;
 
+	const static uint8_t REG_ENABLE = 0x37;
+	const static uint8_t REG_DISABLE = 0x36;
+
+	const static uint8_t TIMEOUT_ENABLE = 0x39;
+	const static uint8_t TIMEOUT_DISABLE = 0x38;
 };
 
 #endif /* SPEEDCONTROL_H */

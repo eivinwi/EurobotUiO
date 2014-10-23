@@ -19,6 +19,11 @@ SpeedControl::~SpeedControl() {
 	//free(&right);
 }
 
+void SpeedControl::setAccel(int acc) {
+	sync();
+	action(SET_ACCEL);
+	port->write(acc);
+}
 
 void SpeedControl::setSpeed1(uint8_t speed) {
 	left->speed = speed;	
@@ -32,6 +37,11 @@ void SpeedControl::setSpeed2(uint8_t speed) {
 	sync();
 	action(SET_SPEED2);
 	port->write(speed);
+}
+
+void SpeedControl::setSpeedBoth(uint8_t speed) {
+	setSpeed1(speed);
+	setSpeed2(speed);
 }
 
 uint8_t SpeedControl::getSpeed1() {
@@ -57,6 +67,7 @@ void SpeedControl::setMode(int mode) {
 	action(SET_MODE);
 	port->write(mode);
 }
+
 
 void SpeedControl::resetEncoders() {
 	sync();
@@ -142,6 +153,24 @@ uint8_t SpeedControl::getVersion() {
 	version = port->read();
 	std::cout << "Version: " << version << '\n';
 	return version;
+}
+
+void SpeedControl::enableReg(bool b) {
+	sync();
+	if(b) {
+		action(REG_ENABLE);
+	} else {
+		action(REG_DISABLE);
+	}
+}
+
+void SpeedControl::enableTimeout(bool b) {
+	sync();
+	if(b) {
+		action(TIMEOUT_ENABLE);
+	} else {
+		action(TIMEOUT_DISABLE);
+	}
 }
 
 void SpeedControl::flush() {

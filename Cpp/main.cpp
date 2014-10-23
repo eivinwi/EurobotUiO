@@ -36,6 +36,10 @@ int main(int argc, char *argv[]) {
   //  s->getEncoders();
     s->setMode(0);
     s->resetEncoders();
+    s->enableReg(true);
+    s->enableTimeout(false);
+    s->setAccel(5);
+
     std::string input;
     usleep(10000);
     s->flush();
@@ -48,15 +52,21 @@ int main(int argc, char *argv[]) {
 
             if(sub2 == "sl") {
                 int speed = findNumber(input);
-                if(speed > 0) {
+                if(speed > -1) {
                     s->setSpeed1(speed);
                 }
             } else if(sub2 == "sr") {
                 int speed = findNumber(input);
-                if(speed > 0) {
+                if(speed > -1) {
                     s->setSpeed2(speed);
                 }
-            } else if(sub2 == "gl") {
+            } else if(sub2 == "sb") {
+                int speed = findNumber(input);
+                if(speed > -1) {
+                    s->setSpeedBoth(speed);
+                }
+            }
+            else if(sub2 == "gl") {
                 s->getSpeed1();
             } 
             else if(sub2 == "gr") {
