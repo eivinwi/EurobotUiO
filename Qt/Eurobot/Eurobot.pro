@@ -13,8 +13,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    serial.cpp \
+    speedcontrol.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    serial.h \
+    speedcontrol.h
 
 FORMS    += mainwindow.ui
+
+unix|win32: LIBS += -lserial
