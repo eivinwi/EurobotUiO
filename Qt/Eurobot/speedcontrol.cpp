@@ -91,8 +91,6 @@ void SpeedControl::resetEncoders() {
  * Distance per count: 0.385mm
  */
 void SpeedControl::getEncoders() {
-    action(RESET_ENC);
-
     sync();
     action(GET_ENCODERS);
     flush();
@@ -104,7 +102,7 @@ void SpeedControl::getEncoders() {
     result1 += port->readNoWait() << 8ul;
     result1 += port->readNoWait();
 
-    result2 = port->read() << 24ul;
+    result2 = port->readNoWait() << 24ul;
     result2 += port->readNoWait() << 16ul;
     result2 += port->readNoWait() << 8ul;
     result2 += port->readNoWait();
@@ -120,11 +118,17 @@ long SpeedControl::getEncL() {
     action(GET_ENCL);
     long result = 0;
     result = port->read() << 24ul;
+    std::bitset<32> r1(result);
     result += port->readNoWait() << 16ul;
+    std::bitset<32> r2(result);
     result += port->readNoWait() << 8ul;
+    std::bitset<32> r3(result);
     result += port->readNoWait();
 
     long diff = result - prev_encL;
+
+    std::cout << "BITS: \n" << r1 << '\n' << r2 << '\n'
+              << r3 << '\n' << result << "\n--------------\n";
 
     std::cout << "EncL: " << result;
     std::cout << " (diff: " << diff << ")\n";

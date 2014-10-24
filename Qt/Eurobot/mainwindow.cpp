@@ -72,7 +72,10 @@ void MainWindow::updateVi() {
    ui->display_accel->setValue(s->getAcceleration());
    ui->display_mode->setValue(s->getMode());
 */
-   updateEncoders();
+   // s->getEncoders();
+    s->flush();
+    usleep(5000);
+    updateEncoders();
 }
 
 void MainWindow::updateEncoders() {
