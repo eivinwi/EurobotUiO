@@ -28,6 +28,7 @@ public slots:
       void stopButton();
       void resetButton();
       void updateVi();
+      void updateEncoders();
       void changeMode();
       void changeReg();
       void changeTimeout();

@@ -11,8 +11,8 @@ SpeedControl::SpeedControl() {
     right->id = RIGHT;
     right->speed = 0;
 
-    prev_enc1 = 0;
-    prev_enc2 = 0;
+    prev_encL = 0;
+    prev_encR = 0;
 }
 
 SpeedControl::~SpeedControl() {
@@ -64,11 +64,12 @@ uint8_t SpeedControl::getSpeedR() {
 uint8_t SpeedControl::getAcceleration() {
     sync();
     action(GET_ACCEL);
-    return port->read();
+    uint8_t acc = port->read();
+    return acc;
 }
 
 //input 0 [default], 1, 2 or 3
-void SpeedControl::setMode(int mode) {
+void SpeedControl::setMode(uint8_t mode) {
     sync();
     action(SET_MODE);
     port->write(mode);
@@ -78,8 +79,8 @@ void SpeedControl::setMode(int mode) {
 void SpeedControl::resetEncoders() {
     sync();
     action(RESET_ENC);
-    prev_enc1 = 0;
-    prev_enc2 = 0;
+    prev_encL = 0;
+    prev_encR = 0;
 }
 
 
@@ -90,11 +91,14 @@ void SpeedControl::resetEncoders() {
  * Distance per count: 0.385mm
  */
 void SpeedControl::getEncoders() {
+    action(RESET_ENC);
+
     sync();
     action(GET_ENCODERS);
-
+    flush();
     long result1;
     long result2;
+
     result1 = port->read() << 24ul;
     result1 += port->readNoWait() << 16ul;
     result1 += port->readNoWait() << 8ul;
@@ -104,42 +108,42 @@ void SpeedControl::getEncoders() {
     result2 += port->readNoWait() << 16ul;
     result2 += port->readNoWait() << 8ul;
     result2 += port->readNoWait();
-    std::cout << "Enc1: " << result1 << '\n';
-    std::cout << "Enc2: " << result2 << '\n';
+    std::cout << "EncL: " << result1 << '\n';
+    std::cout << "EncR: " << result2 << '\n';
 }
 
 
 
 
-long SpeedControl::getEnc1() {
+long SpeedControl::getEncL() {
     sync();
-    action(GET_ENC1);
+    action(GET_ENCL);
     long result = 0;
-    long diff = 0;
     result = port->read() << 24ul;
     result += port->readNoWait() << 16ul;
     result += port->readNoWait() << 8ul;
     result += port->readNoWait();
 
-    std::cout << "Enc1: " << result;
-    diff = result - prev_enc1;
-    std::cout << " (diff: " << diff << ")\n";
+    long diff = result - prev_encL;
 
+    std::cout << "EncL: " << result;
+    std::cout << " (diff: " << diff << ")\n";
     std::cout << "Wheel rotations: " <<  (diff/980.0) << '\n';
     std::cout << "Distance: " << diff*0.385 << '\n';
 
-    prev_enc1 = result;
+    prev_encL = result;
     return result;
 }
 
-long SpeedControl::getEnc2() {
+long SpeedControl::getEncR(long diff) {
     sync();
-    action(GET_ENC2);
+    action(GET_ENCR);
     long result = 0;
     result = port->read() << 24ul;
     result += port->readNoWait() << 16ul;
     result += port->readNoWait() << 8ul;
     result += port->readNoWait();
+    diff = result - prev_encR;
     return result;
 }
 
@@ -147,7 +151,8 @@ uint8_t SpeedControl::getVoltage() {
     sync();
     action(GET_VOLT);
     int volt = 0;
-    return port->read();
+    volt = port->read(); //readNoWait();
+    return volt;
 }
 
 long SpeedControl::getVi() {
@@ -160,16 +165,28 @@ long SpeedControl::getVi() {
     return vi;
 }
 
+uint8_t SpeedControl::getMode() {
+    sync();
+    action(GET_MODE);
+    int mode = 0;
+    mode = port->read();
+    return mode;
+}
+
 uint8_t SpeedControl::getVersion() {
     sync();
     action(GET_VERSION);
-    return port->read();
+    int version = 0;
+    version = port->read();
+    return version;
 }
 
 uint8_t SpeedControl::getError() {
     sync();
-    action(GET_VERSION);
-    return port->read();
+    action(GET_ERROR);
+    uint8_t error = 0;
+    error = port->read();
+    return error;
 }
 
 void SpeedControl::enableReg(bool b) {

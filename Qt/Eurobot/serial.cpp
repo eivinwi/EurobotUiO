@@ -26,11 +26,11 @@ void Serial::write(char arg) {
 }
 
 void Serial::write(int arg) {
-    serial << arg << std::endl;
+    serial << arg;// << std::endl;
 }
 
 uint8_t Serial::readNoWait(){
-    std::cout << "Reading" << '\n';
+    //std::cout << "Reading" << '\n';
     uint8_t r = 0x00;
 
     if(serial.rdbuf()->in_avail()) {

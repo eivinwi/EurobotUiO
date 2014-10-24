@@ -20,11 +20,13 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QPlainTextEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTextBrowser>
+#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
 
@@ -67,6 +69,9 @@ public:
     QSlider *slider_both;
     QTextBrowser *display_text;
     QPushButton *button_refresh;
+    QSpinBox *display_mode;
+    QPlainTextEdit *display_textEncL;
+    QTextEdit *display_textEncR;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -169,13 +174,13 @@ public:
         display_currentR->setButtonSymbols(QAbstractSpinBox::NoButtons);
         display_encoderL = new QSpinBox(centralWidget);
         display_encoderL->setObjectName(QStringLiteral("display_encoderL"));
-        display_encoderL->setGeometry(QRect(150, 240, 81, 27));
+        display_encoderL->setGeometry(QRect(230, 70, 81, 27));
         display_encoderL->setFrame(true);
         display_encoderL->setReadOnly(true);
         display_encoderL->setButtonSymbols(QAbstractSpinBox::NoButtons);
         display_encoderR = new QSpinBox(centralWidget);
         display_encoderR->setObjectName(QStringLiteral("display_encoderR"));
-        display_encoderR->setGeometry(QRect(150, 270, 81, 27));
+        display_encoderR->setGeometry(QRect(230, 100, 81, 27));
         display_encoderR->setFrame(true);
         display_encoderR->setReadOnly(true);
         display_encoderR->setButtonSymbols(QAbstractSpinBox::NoButtons);
@@ -224,6 +229,20 @@ public:
         button_refresh = new QPushButton(centralWidget);
         button_refresh->setObjectName(QStringLiteral("button_refresh"));
         button_refresh->setGeometry(QRect(380, 280, 97, 26));
+        display_mode = new QSpinBox(centralWidget);
+        display_mode->setObjectName(QStringLiteral("display_mode"));
+        display_mode->setGeometry(QRect(110, 90, 48, 27));
+        display_mode->setReadOnly(true);
+        display_mode->setButtonSymbols(QAbstractSpinBox::NoButtons);
+        display_mode->setMaximum(255);
+        display_textEncL = new QPlainTextEdit(centralWidget);
+        display_textEncL->setObjectName(QStringLiteral("display_textEncL"));
+        display_textEncL->setGeometry(QRect(150, 240, 91, 31));
+        display_textEncL->setReadOnly(true);
+        display_textEncR = new QTextEdit(centralWidget);
+        display_textEncR->setObjectName(QStringLiteral("display_textEncR"));
+        display_textEncR->setGeometry(QRect(150, 280, 91, 31));
+        display_textEncR->setReadOnly(true);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));

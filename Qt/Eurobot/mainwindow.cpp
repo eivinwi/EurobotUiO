@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //Set defaults
     s->setAcceleration(5);
     s->setMode(0);
+    ui->display_mode->setValue(s->getMode());
     s->enableReg(true);
     s->enableTimeout(false);
     s->flush();
@@ -46,15 +47,20 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->check_time->setChecked(false);
     s->flush();
     ui->display_error->display(s->getError());
+    ui->slider_both->setValue(128);
+    speedChangeBoth();
+    s->flush();
+    s->resetEncoders();
 
    // s->setSpeedL(0xFF);
-    s->flush();
-    updateVi();
+    //s->flush();
+  //  updateVi();
+   updateEncoders();
 }
 
 
 void MainWindow::updateVi() {
-   long vi = s->getVi();
+   /*long vi = s->getVi();
    uint8_t volt = ((vi & 0x00FF0000) >> 16);
    uint8_t curL = ((vi & 0x0000FF00) >> 8);
    uint8_t curR = (vi & 0x000000FF);
@@ -64,8 +70,32 @@ void MainWindow::updateVi() {
    ui->display_currentR->setValue(curR);
 
    ui->display_accel->setValue(s->getAcceleration());
+   ui->display_mode->setValue(s->getMode());
+*/
+   updateEncoders();
 }
 
+void MainWindow::updateEncoders() {
+    //s->getEncoders();
+    //long diff = 0;
+    long enc = s->getEncL();
+    std::bitset<32> encB(enc);
+    // std::bitset<32> diffB(diff);
+
+    std::cout << encB << '\n';
+    //std::cout << diffB << '\n';
+
+    int e = (enc && 0x0000FFFF);
+    int e2 = ((enc && 0xFFFF0000) >> 16);
+
+    ui->display_encoderL->setValue(e);
+    //ui->display_diffL->setValue(e2);
+
+    QString str;
+    str.append(QString("%1").arg(enc));
+
+    ui->display_textEncL->appendPlainText(str);
+}
 
 void MainWindow::speedChangeL() {
     int val = ui->slider_speedL->value();
@@ -83,17 +113,21 @@ void MainWindow::speedChangeBoth() {
     int val = ui->slider_both->value();
     ui->display_speedL->setValue(val);
     ui->display_speedR->setValue(val);
+    ui->slider_speedL->setValue(val);
+    ui->slider_speedR->setValue(val);
     s->setSpeedBoth(val);
 }
 
 void MainWindow::changeAcceleration() {
-    s->setAcceleration(ui->spin_accel->value());
+    int val = ui->spin_accel->value();
+    s->setAcceleration(val);
+    ui->display_accel->setValue(val);
 }
 
 void MainWindow::stopButton() {
     //QApplication::quit();
-    ui->display_speedL->setValue(128);
-    ui->display_speedR->setValue(128);
+    ui->slider_both->setValue(128);
+    speedChangeBoth();
     s->setSpeedBoth(128);
 }
 
@@ -102,8 +136,9 @@ void MainWindow::resetButton() {
 }
 
 void MainWindow::changeMode() {
-    int val = ui->combo_mode->currentIndex();
-    s->setMode(val);
+   int val = ui->combo_mode->currentIndex();
+   s->setMode(val);
+   ui->display_mode->setValue(s->getMode());
 }
 
 void MainWindow::changeReg() {
