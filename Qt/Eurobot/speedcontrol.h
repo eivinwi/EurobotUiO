@@ -8,6 +8,7 @@
 
 #include "serial.h"
 #include <stdint.h>
+#include <sstream>
 
 /* Structs */
 typedef struct Motor {

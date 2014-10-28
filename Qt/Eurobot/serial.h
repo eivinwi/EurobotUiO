@@ -1,6 +1,12 @@
 #ifndef SERIAL_H
 #define	SERIAL_H
 
+#ifdef DEBUG
+#define DBP(x) DBP( x;
+#else
+#define DBP(x);
+#endif
+
 #include <SerialStream.h>
 #include <iostream>
 #include <unistd.h>

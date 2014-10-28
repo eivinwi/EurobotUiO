@@ -106,8 +106,11 @@ void SpeedControl::getEncoders() {
     result2 += port->readNoWait() << 16ul;
     result2 += port->readNoWait() << 8ul;
     result2 += port->readNoWait();
-    std::cout << "EncL: " << result1 << '\n';
-    std::cout << "EncR: " << result2 << '\n';
+    DBP("EncL: "); 
+    DBP(result1);
+    DBP("\nEncR: "); 
+    DBP(result2);
+    DBP("\n");
 }
 
 
@@ -124,17 +127,14 @@ long SpeedControl::getEncL() {
     result += port->readNoWait() << 8ul;
     std::bitset<32> r3(result);
     result += port->readNoWait();
-
     long diff = result - prev_encL;
 
-    std::cout << "BITS: \n" << r1 << '\n' << r2 << '\n'
-              << r3 << '\n' << result << "\n--------------\n";
+    std::stringstream ss;
+    ss << "BITS: \n" << r1 << '\n' << r2 << '\n' << r3 << '\n' << result << "\n--------------\n"
+        << "EncL: " << result << " (diff: " << diff << ")\nWheel rotations: " <<  (diff/980.0) << 
+        "\nDistance: " << diff*0.385 << '\n';
 
-    std::cout << "EncL: " << result;
-    std::cout << " (diff: " << diff << ")\n";
-    std::cout << "Wheel rotations: " <<  (diff/980.0) << '\n';
-    std::cout << "Distance: " << diff*0.385 << '\n';
-
+    DBP(ss);
     prev_encL = result;
     return result;
 }

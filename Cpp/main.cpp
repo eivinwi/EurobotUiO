@@ -51,17 +51,17 @@ int main(int argc, char *argv[]) {
             std::string sub2 = input.substr(0,2);
 
             if(sub2 == "sl") {
-                int speed = findNumber(input);
+                int speed = 0;//= findNumber(input);
                 if(speed > -1) {
                     s->setSpeed1(speed);
                 }
             } else if(sub2 == "sr") {
-                int speed = findNumber(input);
+                int speed = 0;//findNumber(input);
                 if(speed > -1) {
                     s->setSpeed2(speed);
                 }
             } else if(sub2 == "sb") {
-                int speed = findNumber(input);
+                int speed = 0;//findNumber(input);
                 if(speed > -1) {
                     s->setSpeedBoth(speed);
                 }

@@ -1,6 +1,7 @@
 #include "serial.h"
 
 
+
 Serial::Serial() {
     serial.Open("/dev/ttyACM0");
 //	serial.Open("/dev/ttyS0");
@@ -30,13 +31,13 @@ void Serial::write(int arg) {
 }
 
 uint8_t Serial::readNoWait(){
-    //std::cout << "Reading" << '\n';
+    //DBP( "Reading" << '\n';
     uint8_t r = 0x00;
 
     if(serial.rdbuf()->in_avail()) {
         r =  serial.get();
     } else {
-        std::cout << "In ELSE, sleeping for 50ms\n";
+        DBP("In ELSE, sleeping for 50ms\n");
         usleep(5000);
         if(serial.rdbuf()->in_avail()) {
             r =  serial.get();
@@ -62,9 +63,9 @@ void Serial::readBlock(int byte, char *buf) {
 }
 
 void Serial::printAll() {
-    std::cout << "Flushed serial: [";
+    DBP("Flushed serial: [");
     while(serial.rdbuf()->in_avail()) {
-        std::cout << serial.get();
+        DBP(serial.get());
     }
-    std::cout << "]\n";
+    DBP( "]\n");
 }

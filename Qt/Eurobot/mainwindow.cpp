@@ -29,11 +29,11 @@ MainWindow::MainWindow(QWidget *parent) :
     //placeholder
     connect(ui->button_refresh, SIGNAL(clicked()), this, SLOT(updateVi()));
 
-
+/*
     //Set defaults
     s->setAcceleration(5);
     s->setMode(0);
-    ui->display_mode->setValue(s->getMode());
+ //   ui->display_mode->setValue(s->getMode());
     s->enableReg(true);
     s->enableTimeout(false);
     s->flush();
@@ -50,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->slider_both->setValue(128);
     speedChangeBoth();
     s->flush();
-    s->resetEncoders();
+    s->resetEncoders();*/
 
    // s->setSpeedL(0xFF);
     //s->flush();

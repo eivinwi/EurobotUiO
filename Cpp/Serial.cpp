@@ -1,5 +1,10 @@
 #include "Serial.h"
 
+#ifdef DEBUG
+#define DBP(x) std::cout << x;
+#else
+#define DBP(x);
+#endif
 
 Serial::Serial() {
 	serial.Open("/dev/ttyACM0");
@@ -30,13 +35,13 @@ void Serial::write(int arg) {
 }
 
 uint8_t Serial::readNoWait(){
-	std::cout << "Reading" << '\n';
+	DBP("Reading\n");
 	uint8_t r = '\0';
 	
 	if(checkAvailable()) {
 		r =  serial.get();
 	} else {
-		std::cout << "In ELSE, sleeping for 50ms\n";
+		DBP("In ELSE, sleeping for 50ms\n");
 		usleep(5000);
 		if(checkAvailable()) {
 			r =  serial.get();
@@ -66,9 +71,10 @@ bool Serial::checkAvailable() {
 }
 
 void Serial::printAll() {
-	std::cout << "Flushed serial: [";
+	DBP("Flushed serial: [");
 	while(serial.rdbuf()->in_avail()) {
-		std::cout << serial.get();
+		DBP("std::cout");
+		DBP(serial.get())
 	}
-	std::cout << "]\n";
+	DBP("]\n");
 } 	
