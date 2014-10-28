@@ -1,5 +1,11 @@
 #include "SpeedControl.h"
 
+#ifdef ROBOSIM
+#define SIM_READ() RobotSim::readSerial(); 
+#else
+#define SIM_READ()
+#endif 
+
 SpeedControl::SpeedControl() {
 	port = new Serial;
 //	left = new Motor(LEFT, 0, 0);

@@ -33,12 +33,12 @@ uint8_t Serial::readNoWait(){
 	std::cout << "Reading" << '\n';
 	uint8_t r = '\0';
 	
-	if(serial.rdbuf()->in_avail()) {
+	if(checkAvailable()) {
 		r =  serial.get();
 	} else {
 		std::cout << "In ELSE, sleeping for 50ms\n";
 		usleep(5000);
-		if(serial.rdbuf()->in_avail()) {
+		if(checkAvailable()) {
 			r =  serial.get();
 		}
 	}
@@ -59,6 +59,10 @@ int Serial::readInt() {
 
 void Serial::readBlock(int byte, char *buf) {
 	serial.read(buf, byte);
+}
+
+bool Serial::checkAvailable() {
+	return serial.rdbuf()->in_avail();
 }
 
 void Serial::printAll() {

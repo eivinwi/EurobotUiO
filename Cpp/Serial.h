@@ -21,6 +21,7 @@ public:
     uint8_t read();
     int readInt();
     void readBlock(int byte, char *buf);
+    bool checkAvailable();
     void printAll();
 
 
