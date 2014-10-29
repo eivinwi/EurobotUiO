@@ -1,0 +1,4 @@
+main.o: main.cpp serial.h speedcontrol.h
+serial.o: serial.cpp serial.h
+speedcontrol.o: speedcontrol.cpp speedcontrol.h serial.h
+robotsim.o: robotsim.cpp robotsim.h serial.h
