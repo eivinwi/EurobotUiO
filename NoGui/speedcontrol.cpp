@@ -1,13 +1,10 @@
 #include "speedcontrol.h"
 
-#ifdef ROBOSIM
-#define SIM_READ() RobotSim::readSerial(); 
-#else
-#define SIM_READ()
-#endif 
-
 SpeedControl::SpeedControl() {
-    port = new Serial;
+    port = new SerialSim;
+    //port = new Serial;
+    //port = new SerialSim;
+
 //	left = new Motor(LEFT, 0, 0);
     left = new Motor;
     left->id = LEFT;
@@ -25,22 +22,22 @@ SpeedControl::~SpeedControl() {
 
 void SpeedControl::setAcceleration(int acc) {
     sync();
-    action(SET_ACCEL);
-    port->write(acc);
+    writeToSerial(SET_ACCELERATION);
+    writeToSerial(acc);
 }
 
 void SpeedControl::setSpeedL(uint8_t speed) {
     left->speed = speed;
     sync();
-    action(SET_SPEEDL);
-    port->write(speed);
+    writeToSerial(SET_SPEEDL);
+    writeToSerial(speed);
 }
 
 void SpeedControl::setSpeedR(uint8_t speed) {
     right->speed = speed;
     sync();
-    action(SET_SPEEDR);
-    port->write(speed);
+    writeToSerial(SET_SPEEDR);
+    writeToSerial(speed);
 }
 
 void SpeedControl::setSpeedBoth(uint8_t speed) {
@@ -50,38 +47,38 @@ void SpeedControl::setSpeedBoth(uint8_t speed) {
 
 uint8_t SpeedControl::getSpeedL() {
     sync();
-    action(GET_SPEEDL);
-    uint8_t speed = port->read();
+    writeToSerial(GET_SPEEDL);
+    uint8_t speed = readFromSerial();
     left->speed = speed;
     return speed;
 }
 
 uint8_t SpeedControl::getSpeedR() {
     sync();
-    action(GET_SPEEDR);
-    uint8_t speed = port->read();
+    writeToSerial(GET_SPEEDR);
+    uint8_t speed = readFromSerial();
     right->speed = speed;
     return speed;
 }
 
 uint8_t SpeedControl::getAcceleration() {
     sync();
-    action(GET_ACCEL);
-    uint8_t acc = port->read();
+    writeToSerial(GET_ACCELERATION);
+    uint8_t acc = readFromSerial();
     return acc;
 }
 
 //input 0 [default], 1, 2 or 3
 void SpeedControl::setMode(uint8_t mode) {
     sync();
-    action(SET_MODE);
-    port->write(mode);
+    writeToSerial(SET_MODE);
+    writeToSerial(mode);
 }
 
 
 void SpeedControl::resetEncoders() {
     sync();
-    action(RESET_ENC);
+    writeToSerial(RESET_ENCODERS);
     prev_encL = 0;
     prev_encR = 0;
 }
@@ -95,20 +92,20 @@ void SpeedControl::resetEncoders() {
  */
 void SpeedControl::getEncoders() {
     sync();
-    action(GET_ENCODERS);
+    writeToSerial(GET_ENCODERS);
     flush();
     long result1;
     long result2;
 
-    result1 = port->read() << 24ul;
-    result1 += port->readNoWait() << 16ul;
-    result1 += port->readNoWait() << 8ul;
-    result1 += port->readNoWait();
+    result1 = readFromSerial() << 24ul;
+    result1 += readFromSerialNoWait() << 16ul;
+    result1 += readFromSerialNoWait() << 8ul;
+    result1 += readFromSerialNoWait();
 
-    result2 = port->readNoWait() << 24ul;
-    result2 += port->readNoWait() << 16ul;
-    result2 += port->readNoWait() << 8ul;
-    result2 += port->readNoWait();
+    result2 = readFromSerialNoWait() << 24ul;
+    result2 += readFromSerialNoWait() << 16ul;
+    result2 += readFromSerialNoWait() << 8ul;
+    result2 += readFromSerialNoWait();
     DBP("EncL: "); 
     DBP(result1);
     DBP("\nEncR: "); 
@@ -121,15 +118,15 @@ void SpeedControl::getEncoders() {
 
 long SpeedControl::getEncL() {
     sync();
-    action(GET_ENCL);
+    writeToSerial(GET_ENCODERL);
     long result = 0;
-    result = port->read() << 24ul;
+    result = readFromSerial() << 24ul;
     std::bitset<32> r1(result);
-    result += port->readNoWait() << 16ul;
+    result += readFromSerialNoWait() << 16ul;
     std::bitset<32> r2(result);
-    result += port->readNoWait() << 8ul;
+    result += readFromSerialNoWait() << 8ul;
     std::bitset<32> r3(result);
-    result += port->readNoWait();
+    result += readFromSerialNoWait();
     long diff = result - prev_encL;
 
     std::stringstream ss;
@@ -144,15 +141,15 @@ long SpeedControl::getEncL() {
 
 long SpeedControl::getEncR() {
     sync();
-    action(GET_ENCR);
+    writeToSerial(GET_ENCODERR);
     long result = 0;
-    result = port->read() << 24ul;
+    result = readFromSerial() << 24ul;
     std::bitset<32> r1(result);
-    result += port->readNoWait() << 16ul;
+    result += readFromSerialNoWait() << 16ul;
     std::bitset<32> r2(result);
-    result += port->readNoWait() << 8ul;
+    result += readFromSerialNoWait() << 8ul;
     std::bitset<32> r3(result);
-    result += port->readNoWait();
+    result += readFromSerialNoWait();
     long diff = result - prev_encL;
 
     std::stringstream ss;
@@ -167,61 +164,61 @@ long SpeedControl::getEncR() {
 
 uint8_t SpeedControl::getVoltage() {
     sync();
-    action(GET_VOLT);
+    writeToSerial(GET_VOLT);
     int volt = 0;
-    volt = port->read(); //readNoWait();
+    volt = readFromSerial(); //readNoWait();
     return volt;
 }
 
 long SpeedControl::getVi() {
     long vi = 0;
     sync();
-    action(GET_VI);
-    vi = port->read() << 16ul;
-    vi += port->readNoWait() << 8ul;
-    vi += port->readNoWait();
+    writeToSerial(GET_VI);
+    vi = readFromSerial() << 16ul;
+    vi += readFromSerialNoWait() << 8ul;
+    vi += readFromSerialNoWait();
     return vi;
 }
 
 uint8_t SpeedControl::getMode() {
     sync();
-    action(GET_MODE);
+    writeToSerial(GET_MODE);
     int mode = 0;
-    mode = port->read();
+    mode = readFromSerial();
     return mode;
 }
 
 uint8_t SpeedControl::getVersion() {
     sync();
-    action(GET_VERSION);
+    writeToSerial(GET_VERSION);
     int version = 0;
-    version = port->read();
+    version = readFromSerial();
     return version;
 }
 
 uint8_t SpeedControl::getError() {
     sync();
-    action(GET_ERROR);
+    writeToSerial(GET_ERROR);
     uint8_t error = 0;
-    error = port->read();
+    error = readFromSerial();
     return error;
 }
 
 void SpeedControl::enableReg(bool b) {
     sync();
     if(b) {
-        action(REG_ENABLE);
+        writeToSerial(ENABLE_REGULATOR);
     } else {
-        action(REG_DISABLE);
+        writeToSerial(DISABLE_REGULATOR);
     }
 }
 
 void SpeedControl::enableTimeout(bool b) {
     sync();
     if(b) {
-        action(TIMEOUT_ENABLE);
+        writeToSerial(ENABLE_TIMEOUT);
     } else {
-        action(TIMEOUT_DISABLE);
+        writeToSerial(DISABLE_TIMEOUT);
     }
 }
 
@@ -230,9 +227,25 @@ void SpeedControl::flush() {
 }
 
 void SpeedControl::sync() {
-    action(CLEAR);
+    writeToSerial(CLEAR);
 }
 
-void SpeedControl::action(uint8_t a) {
+void SpeedControl::writeToSerial(uint8_t a) {
     port->write(a);
+}
+
+void SpeedControl::writeToSerial(int a) {
+    port->write(a);
+}
+
+/*int SpeedControl::readFromSerial() {
+    return port->read();
+}*/
+
+uint8_t SpeedControl::readFromSerial() {
+    return port->read();
+}
+
+uint8_t SpeedControl::readFromSerialNoWait() {
+    return port->readNoWait();
 }

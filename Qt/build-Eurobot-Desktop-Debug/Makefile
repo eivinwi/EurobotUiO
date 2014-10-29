@@ -48,11 +48,13 @@ OBJECTS_DIR   = ./
 SOURCES       = ../Eurobot/main.cpp \
 		../Eurobot/mainwindow.cpp \
 		../Eurobot/serial.cpp \
-		../Eurobot/speedcontrol.cpp moc_mainwindow.cpp
+		../Eurobot/speedcontrol.cpp \
+		../Eurobot/serialsim.cpp moc_mainwindow.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		serial.o \
 		speedcontrol.o \
+		serialsim.o \
 		moc_mainwindow.o
 DIST          = /usr/lib/i386-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/common/shell-unix.conf \
@@ -285,7 +287,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/Eurobot1.0.0 || mkdir -p .tmp/Eurobot1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/Eurobot1.0.0/ && $(COPY_FILE) --parents ../Eurobot/mainwindow.h ../Eurobot/serial.h ../Eurobot/speedcontrol.h .tmp/Eurobot1.0.0/ && $(COPY_FILE) --parents ../Eurobot/main.cpp ../Eurobot/mainwindow.cpp ../Eurobot/serial.cpp ../Eurobot/speedcontrol.cpp .tmp/Eurobot1.0.0/ && $(COPY_FILE) --parents ../Eurobot/mainwindow.ui .tmp/Eurobot1.0.0/ && (cd `dirname .tmp/Eurobot1.0.0` && $(TAR) Eurobot1.0.0.tar Eurobot1.0.0 && $(COMPRESS) Eurobot1.0.0.tar) && $(MOVE) `dirname .tmp/Eurobot1.0.0`/Eurobot1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/Eurobot1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/Eurobot1.0.0/ && $(COPY_FILE) --parents ../Eurobot/mainwindow.h ../Eurobot/serial.h ../Eurobot/speedcontrol.h ../Eurobot/serialsim.h .tmp/Eurobot1.0.0/ && $(COPY_FILE) --parents ../Eurobot/main.cpp ../Eurobot/mainwindow.cpp ../Eurobot/serial.cpp ../Eurobot/speedcontrol.cpp ../Eurobot/serialsim.cpp .tmp/Eurobot1.0.0/ && $(COPY_FILE) --parents ../Eurobot/mainwindow.ui .tmp/Eurobot1.0.0/ && (cd `dirname .tmp/Eurobot1.0.0` && $(TAR) Eurobot1.0.0.tar Eurobot1.0.0 && $(COMPRESS) Eurobot1.0.0.tar) && $(MOVE) `dirname .tmp/Eurobot1.0.0`/Eurobot1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/Eurobot1.0.0
 
 
 clean:compiler_clean 
@@ -311,8 +313,8 @@ compiler_rcc_clean:
 compiler_moc_header_make_all: moc_mainwindow.cpp
 compiler_moc_header_clean:
 	-$(DEL_FILE) moc_mainwindow.cpp
-moc_mainwindow.cpp: ../Eurobot/speedcontrol.h \
-		../Eurobot/serial.h \
+moc_mainwindow.cpp: ../../NoGui/speedcontrol.h \
+		../../NoGui/serial.h \
 		/usr/include/qt5/QtWidgets/QMainWindow \
 		/usr/include/qt5/QtWidgets/qmainwindow.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
@@ -446,8 +448,8 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 ####### Compile
 
 main.o: ../Eurobot/main.cpp ../Eurobot/mainwindow.h \
-		../Eurobot/speedcontrol.h \
-		../Eurobot/serial.h \
+		../../NoGui/speedcontrol.h \
+		../../NoGui/serial.h \
 		/usr/include/qt5/QtWidgets/QMainWindow \
 		/usr/include/qt5/QtWidgets/qmainwindow.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
@@ -569,8 +571,8 @@ main.o: ../Eurobot/main.cpp ../Eurobot/mainwindow.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../Eurobot/main.cpp
 
 mainwindow.o: ../Eurobot/mainwindow.cpp ../Eurobot/mainwindow.h \
-		../Eurobot/speedcontrol.h \
-		../Eurobot/serial.h \
+		../../NoGui/speedcontrol.h \
+		../../NoGui/serial.h \
 		/usr/include/qt5/QtWidgets/QMainWindow \
 		/usr/include/qt5/QtWidgets/qmainwindow.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
@@ -754,12 +756,15 @@ mainwindow.o: ../Eurobot/mainwindow.cpp ../Eurobot/mainwindow.h \
 		/usr/include/qt5/QtWidgets/QWidget
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../Eurobot/mainwindow.cpp
 
-serial.o: ../Eurobot/serial.cpp ../Eurobot/serial.h
+serial.o: ../Eurobot/serial.cpp ../../NoGui/serial.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o serial.o ../Eurobot/serial.cpp
 
-speedcontrol.o: ../Eurobot/speedcontrol.cpp ../Eurobot/speedcontrol.h \
-		../Eurobot/serial.h
+speedcontrol.o: ../Eurobot/speedcontrol.cpp ../../NoGui/speedcontrol.h \
+		../../NoGui/serial.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o speedcontrol.o ../Eurobot/speedcontrol.cpp
+
+serialsim.o: ../Eurobot/serialsim.cpp ../../NoGui/serialsim.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o serialsim.o ../Eurobot/serialsim.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp

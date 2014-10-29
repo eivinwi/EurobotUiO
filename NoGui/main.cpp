@@ -12,6 +12,8 @@ int findNumber(std::string s);
 void printHelp();
 
 int main(int argc, char *argv[]) { 
+    std::cout << "argc: " << argc << '\n';
+
     SpeedControl *s = new SpeedControl;
     
   //  s->getVoltage();
@@ -24,7 +26,7 @@ int main(int argc, char *argv[]) {
 
     std::string input;
     usleep(10000);
-    s->flush();
+   // s->flush();
     while(1) {
         std::cout << "Write cmd: ";
         std::getline(std::cin, input);
@@ -33,47 +35,54 @@ int main(int argc, char *argv[]) {
             std::string sub2 = input.substr(0,2);
 
             if(sub2 == "sl") {
-                int speed = 0;//= findNumber(input);
+                int speed = findNumber(input);
                 if(speed > -1) {
                     s->setSpeedL(speed);
+                    std::cout << "SpeedL set to:" << speed << '\n';
                 }
             } else if(sub2 == "sr") {
-                int speed = 0;//findNumber(input);
+                int speed = findNumber(input);
                 if(speed > -1) {
                     s->setSpeedR(speed);
+                    std::cout << "SpeedR set to:" << speed << '\n';
                 }
             } else if(sub2 == "sb") {
-                int speed = 0;//findNumber(input);
+                int speed = findNumber(input);
                 if(speed > -1) {
                     s->setSpeedBoth(speed);
+                    std::cout << "Speeds set to:" << speed << '\n';
                 }
             }
             else if(sub2 == "gl") {
-                s->getSpeedL();
+                std::cout << "SpeedL:" << s->getSpeedL() << '\n';
             } 
             else if(sub2 == "gr") {
-                s->getSpeedR();
+                std::cout << "SpeedR:" << s->getSpeedR() << '\n';
             } 
             else if(sub2 == "vo") {
+                std::cout << "Volt:" << s->getVoltage() << '\n';
                 s->getVoltage();
             } 
             else if(sub2 == "re") {
                 s->resetEncoders();
+                std::cout << "Encoders reset.\n";
             } 
             else if(sub2 == "el") {
-                s->getEncL();
+                std::cout << "EncL:" << s->getEncL() << '\n';
             }
             else if(sub2 == "er") {
-                s->getEncR();
+                std::cout << "EncR:" << s->getEncR() << '\n';
             }
             else if(sub2 == "eb") {
-                s->getEncoders();
+                std::cout << "EncL:" << s->getEncL() << '\n';
+                std::cout << "EncR:" << s->getEncR() << '\n';
             } 
             else if(sub2 == "ve") {
-                s->getVersion();
+                std::cout << "Version:" << s->getVersion() << '\n';
             }
             else if(sub2 == "ps") {
                 s->flush();
+                std::cout << "Serial flushed.\n";
             }
         } 
         else if(input == "h") {

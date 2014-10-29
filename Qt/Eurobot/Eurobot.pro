@@ -15,11 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     serial.cpp \
-    speedcontrol.cpp
+    speedcontrol.cpp \
+    serialsim.cpp
 
 HEADERS  += mainwindow.h \
     serial.h \
-    speedcontrol.h
+    speedcontrol.h \
+    serialsim.h \
+    md49.h
 
 FORMS    += mainwindow.ui
 

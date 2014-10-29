@@ -2,10 +2,13 @@
 #define	SERIAL_H
 
 #ifdef DEBUG
-#define DBP(x) DBP( x;
+#define DBP(x) std::cout << x;
 #else
 #define DBP(x);
 #endif
+
+#include "md49.h"
+
 
 #include <SerialStream.h>
 #include <iostream>

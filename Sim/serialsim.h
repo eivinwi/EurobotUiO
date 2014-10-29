@@ -1,9 +1,10 @@
-#ifndef ROBOTSIM_H
-#define	ROBOTSIM_H
+#ifndef SERIALSIM_H
+#define	SERIALSIM_H
 
 #include "serial.h"
 #include <stdint.h>
 #include <time.h>
+
 
 							//Recv Send				
 #define GET_SPEED1 0x21		//	2	1
@@ -32,10 +33,10 @@
 #define ENABLE_TIMEOUT 0x39  // 2	0
 
 
-class RobotSim {
+class SerialSim {
 public:
-	RobotSim();
-	~RobotSim();
+	SerialSim();
+	~SerialSim();
 	void readSerial();
 	void writeEnc(time_t encTime);
 
@@ -62,4 +63,4 @@ private:
 	time_t time2;
 };
 
-#endif /* ROBOTSIM_H */
+#endif /* SERIALSIM_H */

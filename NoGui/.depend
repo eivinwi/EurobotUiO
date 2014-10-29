@@ -1,3 +1,5 @@
-main.o: main.cpp serial.h speedcontrol.h
-serial.o: serial.cpp serial.h
-speedcontrol.o: speedcontrol.cpp speedcontrol.h serial.h
+main.o: main.cpp serial.h md49.h speedcontrol.h serialsim.h
+speedcontrol.o: speedcontrol.cpp speedcontrol.h serialsim.h md49.h \
+ serial.h
+serial.o: serial.cpp serial.h md49.h
+serialsim.o: serialsim.cpp serialsim.h md49.h
