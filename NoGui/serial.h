@@ -28,8 +28,6 @@ public:
     void write(int arg);
     uint8_t readNoWait();
     uint8_t read();
-    int readInt();
-    void readBlock(int byte, char *buf);
     bool available();
     void printAll();
 

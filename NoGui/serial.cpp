@@ -32,7 +32,7 @@ void Serial::write(int arg) {
 }
 
 uint8_t Serial::readNoWait(){
-    //DBP( "Reading" << '\n';
+    DBP("Reading" << '\n');
     uint8_t r = 0x00;
 
     if(available()) {
@@ -44,23 +44,13 @@ uint8_t Serial::readNoWait(){
             r =  serial.get();
         }
     }
-
+    DBP("Read returning " << r << '\n');
     return r;
 }
 
 uint8_t Serial::read() {
     usleep(5000);
     return readNoWait();
-}
-
-int Serial::readInt() {
-    int i;
-    serial >> i;
-    return i;
-}
-
-void Serial::readBlock(int byte, char *buf) {
-    serial.read(buf, byte);
 }
 
 bool Serial::available() {

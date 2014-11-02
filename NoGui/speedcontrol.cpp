@@ -1,8 +1,10 @@
 #include "speedcontrol.h"
+#include <cstring>
 
 SpeedControl::SpeedControl() {
   	simulating = false;
-  	serial_port = "ACM0";
+  	//serial_port = "ACM0";
+  	strcpy(serial_port, "ACM0");
 
     prev_encL = 0;
     prev_encR = 0;
@@ -27,8 +29,9 @@ void SpeedControl::serialSimDisable() {
 	simulating = false;
 }
 
-void SpeedControl::setSerialPort(char *s) {
-	serial_port = s;
+void SpeedControl::setSerialPort(const char *s) {
+	//serial_port = s;
+	strcpy(serial_port, s);
 }
 
 void SpeedControl::setAcceleration(int acc) {

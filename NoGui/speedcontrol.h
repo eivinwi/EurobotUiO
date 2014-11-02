@@ -29,7 +29,7 @@ public:
     void startSerial();
 	void serialSimEnable();
 	void serialSimDisable();
-	void setSerialPort(char *s);
+	void setSerialPort(const char *s);
     void setAcceleration(int acc);
     void setSpeedL(uint8_t speed);
     void setSpeedR(uint8_t speed);
