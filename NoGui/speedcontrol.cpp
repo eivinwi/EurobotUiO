@@ -1,23 +1,34 @@
 #include "speedcontrol.h"
 
 SpeedControl::SpeedControl() {
-    port = new SerialSim;
-    //port = new Serial;
-    //port = new SerialSim;
-
-//	left = new Motor(LEFT, 0, 0);
-    left = new Motor;
-    left->id = LEFT;
-    left->speed = 0;
-    right = new Motor;
-    right->id = RIGHT;
-    right->speed = 0;
+  	simulating = false;
+  	serial_port = "ACM0";
 
     prev_encL = 0;
     prev_encR = 0;
 }
 
 SpeedControl::~SpeedControl() {
+}
+
+void SpeedControl::startSerial() {
+	if(simulating) {
+		simport = new SerialSim;
+	} else {
+		port = new Serial(serial_port);
+	}
+}
+
+void SpeedControl::serialSimEnable() {
+	simulating = true;
+}
+
+void SpeedControl::serialSimDisable() {
+	simulating = false;
+}
+
+void SpeedControl::setSerialPort(char *s) {
+	serial_port = s;
 }
 
 void SpeedControl::setAcceleration(int acc) {
@@ -27,14 +38,12 @@ void SpeedControl::setAcceleration(int acc) {
 }
 
 void SpeedControl::setSpeedL(uint8_t speed) {
-    left->speed = speed;
     sync();
     writeToSerial(SET_SPEEDL);
     writeToSerial(speed);
 }
 
 void SpeedControl::setSpeedR(uint8_t speed) {
-    right->speed = speed;
     sync();
     writeToSerial(SET_SPEEDR);
     writeToSerial(speed);
@@ -49,7 +58,6 @@ uint8_t SpeedControl::getSpeedL() {
     sync();
     writeToSerial(GET_SPEEDL);
     uint8_t speed = readFromSerial();
-    left->speed = speed;
     return speed;
 }
 
@@ -57,7 +65,6 @@ uint8_t SpeedControl::getSpeedR() {
     sync();
     writeToSerial(GET_SPEEDR);
     uint8_t speed = readFromSerial();
-    right->speed = speed;
     return speed;
 }
 
@@ -231,11 +238,19 @@ void SpeedControl::sync() {
 }
 
 void SpeedControl::writeToSerial(uint8_t a) {
-    port->write(a);
+	if(simulating) {
+	    simport->write(a);
+	} else {
+		port->write(a);
+	}
 }
 
 void SpeedControl::writeToSerial(int a) {
-    port->write(a);
+    if(simulating) {
+	    simport->write(a);
+	} else {
+		port->write(a);
+	}
 }
 
 /*int SpeedControl::readFromSerial() {
@@ -243,9 +258,17 @@ void SpeedControl::writeToSerial(int a) {
 }*/
 
 uint8_t SpeedControl::readFromSerial() {
-    return port->read();
+    if(simulating) {
+	    return simport->read();
+	} else {
+		return port->read();
+	}
 }
 
 uint8_t SpeedControl::readFromSerialNoWait() {
-    return port->readNoWait();
+    if(simulating) {
+	    return simport->readNoWait();
+	} else {
+		return port->readNoWait();
+	}
 }

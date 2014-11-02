@@ -21,7 +21,7 @@ using namespace LibSerial ;
 
 class Serial {
 public:
-    Serial();
+    Serial(char *s);
     ~Serial();
     void write(uint8_t arg);
     void write(char arg);

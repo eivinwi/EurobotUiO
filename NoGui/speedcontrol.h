@@ -25,6 +25,11 @@ class SpeedControl {
 public:
     SpeedControl();
     ~SpeedControl();
+
+    void startSerial();
+	void serialSimEnable();
+	void serialSimDisable();
+	void setSerialPort(char *s);
     void setAcceleration(int acc);
     void setSpeedL(uint8_t speed);
     void setSpeedR(uint8_t speed);
@@ -51,9 +56,10 @@ public:
     //int readFromSerial();
     uint8_t readFromSerial();
     uint8_t readFromSerialNoWait();
+
 private:
-    SerialSim *port;
-    // Serial *port;
+    SerialSim *simport;
+    Serial *port;
 
     Motor *right;
     Motor *left;
@@ -62,6 +68,9 @@ private:
 
     long prev_encL;
     long prev_encR;
+
+    bool simulating;
+	char *serial_port;
 };
 
 #endif /* SPEEDCONTROL_H */

@@ -4,18 +4,55 @@
  *
  * Created on 26. september 2014, 14:15
  */
-#include "serial.h"
+//#include "serial.h"
 #include "speedcontrol.h"
 #include <string>
+#include <cstring>
 
 int findNumber(std::string s);
 void printHelp();
 
-int main(int argc, char *argv[]) { 
-    std::cout << "argc: " << argc << '\n';
 
-    SpeedControl *s = new SpeedControl;
-    
+int main(int argc, char *argv[]) { 
+	SpeedControl *s = new SpeedControl;
+
+    if(argc < 1) {
+    	std::cout << "No arguments - expecting serial at: /dev/ACM0\n";
+    	s->setSerialPort("ttyACM0");
+    } else {
+    	std::cout << "Arguments: ";
+    	for(int i = 0; i < argc; i++) {
+    		std::cout << argv[i];
+    	}
+    	std::cout << '\n';
+
+		if(strcmp(argv[1], "sim") == 0) {
+			std::cout << "Simulating serial.\n";	
+			s->serialSimEnable();
+		}
+		else if(strcmp(argv[1], "ttyUSB0") == 0) {
+			std::cout << "Opening serial on: /dev/" << argv[1] << '\n';
+			s->setSerialPort(argv[1]);
+		}
+		else if(strcmp(argv[1], "ttyS0") == 0) {
+			std::cout << "Opening serial on: /dev/" << argv[1] << '\n';
+			s->setSerialPort(argv[1]);
+		}
+		else if(strcmp(argv[1], "ttyACM1") == 0) {
+			std::cout << "Opening serial on: /dev/" << argv[1] << '\n';
+			s->setSerialPort(argv[1]);
+		}
+		else if(strcmp(argv[1], "ttyUSB1") == 0) {
+			std::cout << "Opening serial on: /dev/" << argv[1] << '\n';
+			s->setSerialPort(argv[1]);
+		} else {
+			std::cout << "Invalid arguments: /dev/" << argv[1] << '\n';
+			return 0;
+		}
+    }
+
+    s->startSerial();
+       
   //  s->getVoltage();
   //  s->getEncoders();
   //  s->setMode(0);

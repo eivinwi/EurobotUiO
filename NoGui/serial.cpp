@@ -1,11 +1,12 @@
 #include "serial.h"
+#include <cstring>
 
 
-
-Serial::Serial() {
-    serial.Open("/dev/ttyACM0");
-//	serial.Open("/dev/ttyS0");
-//	serial.Open("/dev/ttyUSB0");
+Serial::Serial(char *serial_port) {
+	char s[20]; 
+	strcpy(s, "/dev/");
+	strcat(s, serial_port);
+    serial.Open(s);
 
     serial.SetBaudRate( SerialStreamBuf::BAUD_38400 );
     serial.SetCharSize( SerialStreamBuf::CHAR_SIZE_8 );
