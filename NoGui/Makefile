@@ -1,12 +1,12 @@
 CC=gcc
-CXX=g++ -Wall
+CXX=g++ -Wall -std=c++11
 RM=rm -f
 CPPFLAGS=-g $(shell root-config --cflags)
 LDFLAGS=-g $(shell root-config --ldflags)
-LDLIBS=$(shell root-config --libs) -lserial
+LDLIBS=$(shell root-config --libs) -lserial -lzmq
 
 EXEC=exec
-SRCS=main.cpp speedcontrol.cpp serial.cpp serialsim.cpp
+SRCS=main.cpp motorcom.cpp serial.cpp serialsim.cpp communication.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
 
 all: $(EXEC) $(SIMEXEC)

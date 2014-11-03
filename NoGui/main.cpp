@@ -5,20 +5,29 @@
  * Created on 26. september 2014, 14:15
  */
 //#include "serial.h"
-#include "speedcontrol.h"
+#include "motorcom.h"
+#include "communication.h"
 #include <string>
 #include <cstring>
 
 int findNumber(std::string s);
 void printHelp();
+void getKeyboardInput();
 
+bool quit;
+MotorCom *m;
+Communication *c;
 
-int main(int argc, char *argv[]) { 
-	SpeedControl *s = new SpeedControl;
+int main(int argc, char *argv[]) {
+    std::cout << "CREATING SpeedControl\n";
+	m = new MotorCom;
+    std::cout << "CREATING Communication\n";
+    c = new Communication;
 
+    std::cout << "READING Arguments\n";
     if(argc < 1) {
     	std::cout << "No arguments - expecting serial at: /dev/ACM0\n";
-    	s->setSerialPort("ttyACM0");
+    	m->setSerialPort("ttyACM0");
     } else {
     	std::cout << "Arguments: ";
     	for(int i = 0; i < argc; i++) {
@@ -28,100 +37,112 @@ int main(int argc, char *argv[]) {
 
 		if(strcmp(argv[1], "sim") == 0) {
 			std::cout << "Simulating serial.\n";	
-			s->serialSimEnable();
+			m->serialSimEnable();
 		}
 		else if(strcmp(argv[1], "ttyUSB0") == 0) {
 			std::cout << "Opening serial on: /dev/" << argv[1] << '\n';
-			s->setSerialPort(argv[1]);
+			m->setSerialPort(argv[1]);
 		}
 		else if(strcmp(argv[1], "ttyS0") == 0) {
 			std::cout << "Opening serial on: /dev/" << argv[1] << '\n';
-			s->setSerialPort(argv[1]);
+			m->setSerialPort(argv[1]);
 		}
 		else if(strcmp(argv[1], "ttyACM1") == 0) {
 			std::cout << "Opening serial on: /dev/" << argv[1] << '\n';
-			s->setSerialPort(argv[1]);
+			m->setSerialPort(argv[1]);
 		}
 		else if(strcmp(argv[1], "ttyUSB1") == 0) {
 			std::cout << "Opening serial on: /dev/" << argv[1] << '\n';
-			s->setSerialPort(argv[1]);
+			m->setSerialPort(argv[1]);
 		} else {
 			std::cout << "Invalid arguments: /dev/" << argv[1] << '\n';
 			return 0;
 		}
     }
 
-    s->startSerial();
-       
-    std::string input;
-    while(1) {
-        std::cout << "Write cmd: ";
-        std::getline(std::cin, input);
+    std::cout << "STARTING Serial\n";
+    m->startSerial();
 
-        if(input.length() > 1) {
-            std::string sub2 = input.substr(0,2);
 
-            if(sub2 == "sl") {
-                int speed = findNumber(input);
-                if(speed > -1) {
-                    s->setSpeedL(speed);
-                    std::cout << "SpeedL set to:" << speed << '\n';
-                }
-            } else if(sub2 == "sr") {
-                int speed = findNumber(input);
-                if(speed > -1) {
-                    s->setSpeedR(speed);
-                    std::cout << "SpeedR set to:" << speed << '\n';
-                }
-            } else if(sub2 == "sb") {
-                int speed = findNumber(input);
-                if(speed > -1) {
-                    s->setSpeedBoth(speed);
-                    std::cout << "Speeds set to:" << speed << '\n';
-                }
-            }
-            else if(sub2 == "gl") {
-                std::cout << "SpeedL:" << s->getSpeedL() << '\n';
-            } 
-            else if(sub2 == "gr") {
-                std::cout << "SpeedR:" << s->getSpeedR() << '\n';
-            } 
-            else if(sub2 == "vo") {
-                std::cout << "Volt:" << s->getVoltage() << '\n';
-                s->getVoltage();
-            } 
-            else if(sub2 == "re") {
-                s->resetEncoders();
-                std::cout << "Encoders reset.\n";
-            } 
-            else if(sub2 == "el") {
-                std::cout << "EncL:" << s->getEncL() << '\n';
-            }
-            else if(sub2 == "er") {
-                std::cout << "EncR:" << s->getEncR() << '\n';
-            }
-            else if(sub2 == "eb") {
-                std::cout << "EncL:" << s->getEncL() << '\n';
-                std::cout << "EncR:" << s->getEncR() << '\n';
-            } 
-            else if(sub2 == "ve") {
-                std::cout << "Version:" << s->getVersion() << '\n';
-            }
-            else if(sub2 == "ps") {
-                s->flush();
-                std::cout << "Serial flushed.\n";
-            }
-        } 
-        else if(input == "h") {
-            printHelp();
-        } else if(input == "q") {
+    std::cout << "STARTING input-loop\n";
+    quit = false;
+    while(true) {
+        getKeyboardInput();
+        if(quit) {
             break;
         }
-        else {
-            std::cout << "Input too short: " << input.length() << '\n';
-        }
     }
+    std::cout << "DONE";
     return 0;
+}
+
+void getKeyboardInput() {
+    std::string input;
+    std::cout << "Write cmd: ";
+    std::getline(std::cin, input);
+
+    if(input.length() > 1) {
+        std::string sub2 = input.substr(0,2);
+
+        if(sub2 == "sl") {
+            int speed = findNumber(input);
+            if(speed > -1) {
+                m->setSpeedL(speed);
+                std::cout << "SpeedL set to:" << speed << '\n';
+            }
+        } else if(sub2 == "sr") {
+            int speed = findNumber(input);
+            if(speed > -1) {
+                m->setSpeedR(speed);
+                std::cout << "SpeedR set to:" << speed << '\n';
+            }
+        } else if(sub2 == "sb") {
+            int speed = findNumber(input);
+            if(speed > -1) {
+                m->setSpeedBoth(speed);
+                std::cout << "Speeds set to:" << speed << '\n';
+            }
+        }
+        else if(sub2 == "gl") {
+            std::cout << "SpeedL:" << m->getSpeedL() << '\n';
+        } 
+        else if(sub2 == "gr") {
+            std::cout << "SpeedR:" << m->getSpeedR() << '\n';
+        } 
+        else if(sub2 == "vo") {
+            std::cout << "Volt:" << m->getVoltage() << '\n';
+            m->getVoltage();
+        } 
+        else if(sub2 == "re") {
+            m->resetEncoders();
+            std::cout << "Encoders reset.\n";
+        } 
+        else if(sub2 == "el") {
+            std::cout << "EncL:" << m->getEncL() << '\n';
+        }
+        else if(sub2 == "er") {
+            std::cout << "EncR:" << m->getEncR() << '\n';
+        }
+        else if(sub2 == "eb") {
+            std::cout << "EncL:" << m->getEncL() << '\n';
+            std::cout << "EncR:" << m->getEncR() << '\n';
+        } 
+        else if(sub2 == "ve") {
+            std::cout << "Version:" << m->getVersion() << '\n';
+        }
+        else if(sub2 == "ps") {
+            m->flush();
+            std::cout << "Serial flushed.\n";
+        }
+    } 
+    else if(input == "h") {
+        printHelp();
+    } else if(input == "q") {
+        quit = true;
+    }
+    else {
+        std::cout << "Input too short: " << input.length() << '\n';
+    }
 }
 
 int findNumber(std::string s) {
