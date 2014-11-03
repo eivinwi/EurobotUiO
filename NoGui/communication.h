@@ -1,3 +1,14 @@
+/*  
+ * File: communication.h
+ * Author: Eivind Wikheim 
+ *
+ * TODO:
+ * Implement a interface for communication between POS <-> AI 
+ * 
+ * Possibly TODO:
+ * Implement a interface for communication between POS <-> SENS
+ */
+
 #ifndef COMMUNICATION_H
 #define COMMUNICATION_H
 

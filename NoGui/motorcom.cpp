@@ -1,5 +1,4 @@
 #include "motorcom.h"
-#include <cstring>
 
 MotorCom::MotorCom() {
   	simulating = false;

@@ -1,3 +1,12 @@
+/*  
+ * File: md49.h
+ * Author: Eivind Wikheim
+ *
+ * Defines the commands used to communicate with the MD49 motor controller via serial.
+ *
+ * Documentation: http://www.robot-electronics.co.uk/htm/md49tech.htm
+ */
+
 #ifndef MD49_H
 #define	MD49_H
 

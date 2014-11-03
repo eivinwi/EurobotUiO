@@ -1,24 +1,25 @@
+/* 
+ * File: motorcom.h
+ * Author: Eivind Wikheim
+ *
+ * Implements a interface for working with the MD49 motor controller, either via serial
+ * or serialsim (decided in main.cpp based on program arguments). 
+ * 
+ */
+
 #ifndef MOTORCOM_H
 #define	MOTORCOM_H
 
 #include "serialsim.h"
 #include "serial.h"
+#include <stdint.h>
+#include <bitset>
+#include <sstream>
+#include <cstring>
 
 #define LEFT 1
 #define RIGHT 2
 #define ENC_BUFF_SIZE 8
-
-
-#include <stdint.h>
-#include <bitset>
-#include <sstream>
-
-/* Structs */
-typedef struct Motor {
-    uint8_t id;
-    uint8_t dir;
-    uint8_t speed;
-} Motor;
 
 
 class MotorCom {
@@ -60,9 +61,6 @@ public:
 private:
     SerialSim *simport;
     Serial *port;
-
-    Motor *right;
-    Motor *left;
 
     char enc_buffer[ENC_BUFF_SIZE];
 

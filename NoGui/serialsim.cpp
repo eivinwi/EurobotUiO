@@ -1,6 +1,5 @@
 #include "serialsim.h"
 
-
 SerialSim::SerialSim() {
 	speedL = 255;
 	speedR = 255;

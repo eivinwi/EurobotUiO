@@ -1,3 +1,12 @@
+/*  
+ * File: serial.h
+ * Author: Eivind Wikheim
+ *
+ * Implements functions for communicating to the MD49 motor controller via serial. 
+ * Serial can be run at either 9600 or 38400 baud (IMPORTANT: changed with hardware pins on the controller.) 
+ *
+ */
+
 #ifndef SERIAL_H
 #define	SERIAL_H
 

@@ -1,3 +1,14 @@
+/* 
+ * File: serialsim.h
+ * Author: Eivind Wikheim
+ *
+ * Simulates a serial-connection to the MD49 motor controller.
+ * 
+ * Relatively realistic encoder-values are calculated based on set motorspeed and
+ * time since last encoder-request (or since program start).
+ */
+
+
 #ifndef SERIALSIM_H
 #define	SERIALSIM_H
 
