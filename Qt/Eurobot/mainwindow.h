@@ -32,6 +32,7 @@ public slots:
       void changeMode();
       void changeReg();
       void changeTimeout();
+      void marioPlease();
 
 private:
     Ui::MainWindow *ui;

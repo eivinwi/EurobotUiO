@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <bitset>
+#include <QtMultimedia>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -29,11 +30,11 @@ MainWindow::MainWindow(QWidget *parent) :
     //placeholder
     connect(ui->button_refresh, SIGNAL(clicked()), this, SLOT(updateVi()));
 
-/*
+
     //Set defaults
     s->setAcceleration(5);
     s->setMode(0);
- //   ui->display_mode->setValue(s->getMode());
+    ui->display_mode->setValue(0);
     s->enableReg(true);
     s->enableTimeout(false);
     s->flush();
@@ -50,12 +51,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->slider_both->setValue(128);
     speedChangeBoth();
     s->flush();
-    s->resetEncoders();*/
+    s->resetEncoders();
 
    // s->setSpeedL(0xFF);
     //s->flush();
   //  updateVi();
    updateEncoders();
+}
+
+MainWindow::~MainWindow() {
+    delete ui;
 }
 
 
@@ -98,6 +103,7 @@ void MainWindow::updateEncoders() {
     str.append(QString("%1").arg(enc));
 
     ui->display_textEncL->appendPlainText(str);
+    marioPlease();
 }
 
 void MainWindow::speedChangeL() {
@@ -152,7 +158,10 @@ void MainWindow::changeTimeout() {
     s->enableTimeout(ui->check_time->isEnabled());
 }
 
-MainWindow::~MainWindow()
-{
-    delete ui;
+void MainWindow::marioPlease() {
+    QMediaPlayer *player;
+    player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("/home/eivinwi/EurobotUiO/Sound/mario_plz.wav"));
+    player->setVolume(100);
+    player->play();
 }
