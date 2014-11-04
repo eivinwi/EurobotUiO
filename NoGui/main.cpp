@@ -9,6 +9,7 @@
 #include "communication.h"
 #include <string>
 #include <cstring>
+#include <pthread.h>
 
 int findNumber(std::string s);
 void printHelp();
@@ -25,7 +26,7 @@ int main(int argc, char *argv[]) {
     c = new Communication;
 
     std::cout << "READING Arguments\n";
-    if(argc < 1) {
+    if(argc < 2) {
     	std::cout << "No arguments - expecting serial at: /dev/ACM0\n";
     	m->setSerialPort("ttyACM0");
     } else {
@@ -35,7 +36,10 @@ int main(int argc, char *argv[]) {
     	}
     	std::cout << '\n';
 
-		if(strcmp(argv[1], "sim") == 0) {
+        if(strcmp(argv[0], "valgrind") == 0) {
+            std::cout << "Valgrind is running; debugging.\n";
+        }
+		else if(strcmp(argv[1], "sim") == 0) {
 			std::cout << "Simulating serial.\n";	
 			m->serialSimEnable();
 		}
