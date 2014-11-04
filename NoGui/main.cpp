@@ -80,6 +80,7 @@ int main(int argc, char *argv[]) {
     std::cout << "DONE";*/
 
     Poscontrol *p = new Poscontrol(m);
+    p->testDrive(100, 100);
     return 0;
 }
 
