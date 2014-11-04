@@ -43,7 +43,7 @@ class Communication {
 				sleep(1);
 				// Send reply back to client
 				zmq::message_t reply (5);
-				memcpy ((void *) reply.data (), "ok", 5);
+				memcpy ((void *) reply.data (), "ok", 2);
 				socket.send (reply);
 			}
 			return 0;
