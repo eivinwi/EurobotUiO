@@ -55,8 +55,8 @@ private:
 	int goalY;
 	int goalR;
 
-	long currentX;
-	long currentY;
+	float currentX;
+	float currentY;
 	int currentR;
 
 	long prev_encL;

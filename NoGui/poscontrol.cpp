@@ -21,11 +21,19 @@ void Poscontrol::testDrive(int x, int y) {
 		drive();
 		updatePosition();
 		std::cout << "X: " << currentX << " goalX: " << goalX << std::endl;
+		usleep(50000);
+
 		if(inGoal()) {
 			break;
 		}
+
 	}
+	com->setSpeedBoth(SPEED_STOP);
+	usleep(100000);
+	std::cout << "Stopped" << std::endl;
+	updatePosition();
 }
+
 
 bool Poscontrol::inGoal() {
 	return (distanceFromX() < 5);
@@ -33,13 +41,12 @@ bool Poscontrol::inGoal() {
 
 
 void Poscontrol::drive() {
+
 	if(!inGoal()) {
-		com->setSpeedBoth(100);
+		com->setSpeedBoth(150);
 	//} else if(distanceFromY > 5) {
 	//	setSpeedBoth(100);
-	} else {
-		com->setSpeedBoth(SPEED_STOP);
-	}
+	} 
 }
 
 void Poscontrol::setGoalPos(int x, int y, int rot) {
@@ -63,25 +70,34 @@ int Poscontrol::distanceFromY() {
  * Distance per count: 0.385mm
  */
 void Poscontrol::updatePosition() {
+	com->flush();
 	long encL = com->getEncL();
-	long encR = com->getEncR(); 
+	//long encR = com->getEncR(); 
 
 
-	long diffL = prev_encL - encL;
-	long diffR = prev_encR - encR;
+	long diffL = encL - prev_encL;
+	//long diffR = encR - prev_encR;
 
-	long distanceL = diffL*0.385;
-	long distanceR = diffR*0.385;
+	float distanceL = diffL*0.385;
+	//long distanceR = diffR*0.385;
+
+	std::cout << "\nUPDATEPOSITION" << std::endl;
+	std::cout << "prev_encL: " << prev_encL << std::endl; 
+	std::cout << "encL: " << encL << std::endl; 
+	std::cout << "diffL: " << diffL << std::endl; 
+	std::cout << "distanceL: " << distanceL << std::endl; 
+	std::cout << "totalDist: " << encL*0.385 << std::endl;
+	std::cout << "--------------" << std::endl;
 
 
 	currentX += distanceL;
-	currentY += distanceR;
+	//currentY += distanceR;
 	prev_encL = encL;
-	prev_encR = encR;
+	//prev_encR = encR;
 }
 
 
-
+long totalDist = 0;
 
 
 

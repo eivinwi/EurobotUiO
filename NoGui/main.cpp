@@ -25,10 +25,11 @@ int main(int argc, char *argv[]) {
 	m = new MotorCom;
    /* std::cout << "CREATING Communication\n";
     c = new Communication;
+    m->serialSimDisable();
 
     std::cout << "READING Arguments\n";
     if(argc < 2) {
-    	std::cout << "No arguments - expecting serial at: /dev/ACM0\n";
+    	std::cout << "No arguments - expecting serial at: /dev/ttyACM0\n";
     	m->setSerialPort("ttyACM0");
     } else {
     	std::cout << "Arguments: ";
@@ -66,9 +67,10 @@ int main(int argc, char *argv[]) {
     }
 
     std::cout << "STARTING Serial\n";
-    m->startSerial();*/
+    m->startSerial();
+    m->flush();
 
-/*
+
     std::cout << "STARTING input-loop\n";
     quit = false;
     while(true) {
@@ -79,8 +81,11 @@ int main(int argc, char *argv[]) {
     }
     std::cout << "DONE";*/
 
+    m->startSerial();
+    m->resetEncoders();
     Poscontrol *p = new Poscontrol(m);
-    p->testDrive(100, 100);
+
+    p->testDrive(35, 100);
     return 0;
 }
 

@@ -3,7 +3,7 @@
 MotorCom::MotorCom() {
   	simulating = false;
   	//serial_port = "ACM0";
-  	strcpy(serial_port, "ACM0");
+  	strcpy(serial_port, "ttyACM0");
 
     prev_encL = 0;
     prev_encR = 0;
@@ -144,6 +144,7 @@ long MotorCom::getEncL() {
         "\nDistance: " << diff*0.385 << '\n';
 
     DBP(ss);
+   // std::cout << ss;
     prev_encL = result;
     return result;
 }
