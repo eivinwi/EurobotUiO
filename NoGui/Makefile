@@ -6,7 +6,7 @@ LDFLAGS=-g $(shell root-config --ldflags)
 LDLIBS=$(shell root-config --libs) -lserial -lzmq
 
 EXEC=exec
-SRCS=main.cpp motorcom.cpp serial.cpp serialsim.cpp communication.cpp
+SRCS=main.cpp motorcom.cpp serial.cpp serialsim.cpp communication.cpp poscontrol.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
 
 all: $(EXEC) $(SIMEXEC)

@@ -7,6 +7,7 @@
 //#include "serial.h"
 #include "motorcom.h"
 #include "communication.h"
+#include "poscontrol.h"
 #include <string>
 #include <cstring>
 #include <pthread.h>
@@ -20,9 +21,9 @@ MotorCom *m;
 Communication *c;
 
 int main(int argc, char *argv[]) {
-    std::cout << "CREATING SpeedControl\n";
+    std::cout << "CREATING MotorCom\n";
 	m = new MotorCom;
-    std::cout << "CREATING Communication\n";
+   /* std::cout << "CREATING Communication\n";
     c = new Communication;
 
     std::cout << "READING Arguments\n";
@@ -65,9 +66,9 @@ int main(int argc, char *argv[]) {
     }
 
     std::cout << "STARTING Serial\n";
-    m->startSerial();
+    m->startSerial();*/
 
-
+/*
     std::cout << "STARTING input-loop\n";
     quit = false;
     while(true) {
@@ -76,7 +77,9 @@ int main(int argc, char *argv[]) {
             break;
         }
     }
-    std::cout << "DONE";
+    std::cout << "DONE";*/
+
+    Poscontrol *p = new Poscontrol(m);
     return 0;
 }
 

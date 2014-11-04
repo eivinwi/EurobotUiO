@@ -24,6 +24,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <cassert>
+#include "motorcom.h"
 
 
 #define XRES 3000
@@ -33,14 +34,33 @@ void *worker_routine(void *arg);
 
 class Poscontrol {
 public:
-    Poscontrol();
+    Poscontrol(MotorCom *s);
     ~Poscontrol();
 
-
+    bool inGoal();
+	void testDrive(int x, int y);    
+	void drive();
+	void setGoalPos(int x, int y, int r);
+	int distanceFromX();
+	int distanceFromY();
+	void updatePosition();
 
 
 private:
 	std::string in;
+
+	MotorCom *com;
+
+	int goalX;
+	int goalY;
+	int goalR;
+
+	long currentX;
+	long currentY;
+	int currentR;
+
+	long prev_encL;
+	long prev_encR;
 
 };
 

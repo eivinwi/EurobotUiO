@@ -37,4 +37,9 @@
 #define DISABLE_TIMEOUT 0x38  //2	0
 #define ENABLE_TIMEOUT 0x39  // 2	0
 
+
+#define SPEED_STOP 128
+#define SPEED_MAX_POS 255
+#define SPEED_MAX_NEG 0
+
 #endif /* MD49_H */

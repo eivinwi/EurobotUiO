@@ -2,11 +2,15 @@
  * File: communication.h
  * Author: Eivind Wikheim 
  *
+ * Implements communication between POS and AI parts of the project via Zeromq.
+ *
  * TODO:
- * Implement a interface for communication between POS <-> AI 
- * 
+ * - Send pos only when prompted by main
+ * - Thread-safe information sharing (of position)
+ *
  * Possibly TODO:
  * Implement a interface for communication between POS <-> SENS
+
  */
 
 #ifndef COMMUNICATION_H
