@@ -12,6 +12,7 @@
 
 #include "serialsim.h"
 #include "serial.h"
+#include "printing.h"
 #include <stdint.h>
 #include <bitset>
 #include <sstream>

@@ -1,8 +1,9 @@
-main.o: main.cpp motorcom.h serialsim.h md49.h serial.h communication.h \
- poscontrol.h
-motorcom.o: motorcom.cpp motorcom.h serialsim.h md49.h serial.h
-serial.o: serial.cpp serial.h md49.h
-serialsim.o: serialsim.cpp serialsim.h md49.h
-communication.o: communication.cpp communication.h
-poscontrol.o: poscontrol.cpp poscontrol.h motorcom.h serialsim.h md49.h \
+main.o: main.cpp motorcom.h serialsim.h printing.h md49.h serial.h \
+ communication.h poscontrol.h
+motorcom.o: motorcom.cpp motorcom.h serialsim.h printing.h md49.h \
  serial.h
+serial.o: serial.cpp serial.h md49.h printing.h
+serialsim.o: serialsim.cpp serialsim.h printing.h md49.h
+communication.o: communication.cpp communication.h printing.h
+poscontrol.o: poscontrol.cpp poscontrol.h motorcom.h serialsim.h \
+ printing.h md49.h serial.h

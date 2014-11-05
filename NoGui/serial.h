@@ -10,14 +10,10 @@
 #ifndef SERIAL_H
 #define	SERIAL_H
 
-#ifdef DEBUG
-#define DBP(x) std::cout << x;
-#else
-#define DBP(x);
-#endif
+
 
 #include "md49.h"
-
+#include "printing.h"
 
 #include <SerialStream.h>
 #include <iostream>

@@ -16,6 +16,7 @@
 #ifndef COMMUNICATION_H
 #define COMMUNICATION_H
 
+#include "printing.h"
 #include <zmq.hpp>
 #include <string>
 #include <iostream>
@@ -42,7 +43,7 @@ class Communication {
 				socket.recv (&request);
 				std::string rpl = std::string(static_cast<char*>(request.data()), request.size());
 
-				std::cout << "READ Received" << rpl  << std::endl;
+				DBPL("READTHREAD: received" << rpl);
 				// Do some 'work'
 				sleep(1);
 				// Send reply back to client
@@ -65,12 +66,13 @@ class Communication {
 				socket.recv (&request);
 				std::string rpl = std::string(static_cast<char*>(request.data()), request.size());
 
-				std::cout << "WRITE Received" << rpl  << std::endl;
+				DBPL("WRITETHREAD: recieved: " << rpl);
 				// Do some 'work'
 				sleep(1);
 				// Send reply back to client
 				zmq::message_t reply (9);
 				memcpy ((void *) reply.data (), "20 40 50", 8);
+				DBPL("WRITETHREAD: replied: " << "20 40 50");
 				socket.send (reply);
 			}
 			return 0;

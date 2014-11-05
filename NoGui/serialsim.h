@@ -12,12 +12,7 @@
 #ifndef SERIALSIM_H
 #define	SERIALSIM_H
 
-#ifdef DEBUG
-#define DBP(x) std::cout << x;
-#else
-#define DBP(x);
-#endif
-
+#include "printing.h"
 #include <iostream>
 #include <stdint.h>
 #include <time.h>

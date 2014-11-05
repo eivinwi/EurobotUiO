@@ -17,6 +17,8 @@
 #ifndef POSCONTROL_H
 #define POSCONTROL_H
 
+#include "motorcom.h"
+#include "printing.h"
 #include <zmq.hpp>
 #include <string>
 #include <iostream>
@@ -24,11 +26,12 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <cassert>
-#include "motorcom.h"
+
+// Game area resolution in mm:
+#define XRES 30000
+#define YRES 20000
 
 
-#define XRES 3000
-#define YRES 2000
 
 void *worker_routine(void *arg);
 
@@ -50,17 +53,6 @@ private:
 	std::string in;
 
 	MotorCom *com;
-
-	int goalX;
-	int goalY;
-	int goalR;
-
-	float currentX;
-	float currentY;
-	int currentR;
-
-	long prev_encL;
-	long prev_encR;
 
 };
 

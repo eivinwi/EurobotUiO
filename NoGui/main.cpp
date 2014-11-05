@@ -8,6 +8,7 @@
 #include "motorcom.h"
 #include "communication.h"
 #include "poscontrol.h"
+#include "printing.h"
 #include <string>
 #include <cstring>
 #include <pthread.h>
@@ -15,63 +16,28 @@
 int findNumber(std::string s);
 void printHelp();
 void getKeyboardInput();
+bool checkArguments(int argc, char *argv[]);
 
 bool quit;
 MotorCom *m;
 Communication *c;
 
 int main(int argc, char *argv[]) {
-    std::cout << "CREATING MotorCom\n";
+    PRINTLINE("SETUP: creating MotorCom");
 	m = new MotorCom;
-   /* std::cout << "CREATING Communication\n";
+    PRINTLINE("SETUP: creating Communication");
     c = new Communication;
-    m->serialSimDisable();
 
-    std::cout << "READING Arguments\n";
-    if(argc < 2) {
-    	std::cout << "No arguments - expecting serial at: /dev/ttyACM0\n";
-    	m->setSerialPort("ttyACM0");
-    } else {
-    	std::cout << "Arguments: ";
-    	for(int i = 0; i < argc; i++) {
-    		std::cout << argv[i];
-    	}
-    	std::cout << '\n';
-
-        if(strcmp(argv[0], "valgrind") == 0) {
-            std::cout << "Valgrind is running; debugging.\n";
-        }
-		else if(strcmp(argv[1], "sim") == 0) {
-			std::cout << "Simulating serial.\n";	
-			m->serialSimEnable();
-		}
-		else if(strcmp(argv[1], "ttyUSB0") == 0) {
-			std::cout << "Opening serial on: /dev/" << argv[1] << '\n';
-			m->setSerialPort(argv[1]);
-		}
-		else if(strcmp(argv[1], "ttyS0") == 0) {
-			std::cout << "Opening serial on: /dev/" << argv[1] << '\n';
-			m->setSerialPort(argv[1]);
-		}
-		else if(strcmp(argv[1], "ttyACM1") == 0) {
-			std::cout << "Opening serial on: /dev/" << argv[1] << '\n';
-			m->setSerialPort(argv[1]);
-		}
-		else if(strcmp(argv[1], "ttyUSB1") == 0) {
-			std::cout << "Opening serial on: /dev/" << argv[1] << '\n';
-			m->setSerialPort(argv[1]);
-		} else {
-			std::cout << "Invalid arguments: /dev/" << argv[1] << '\n';
-			return 0;
-		}
+    if(!checkArguments(argc, argv)) {
+    	return -1;
     }
 
-    std::cout << "STARTING Serial\n";
+    PRINTLINE("SETUP: starting serial");
     m->startSerial();
     m->flush();
 
 
-    std::cout << "STARTING input-loop\n";
+    PRINTLINE("SETUP: done. starting input-loop");
     quit = false;
     while(true) {
         getKeyboardInput();
@@ -79,19 +45,69 @@ int main(int argc, char *argv[]) {
             break;
         }
     }
-    std::cout << "DONE";*/
 
-    m->startSerial();
+
+/*    m->startSerial();
     m->resetEncoders();
     Poscontrol *p = new Poscontrol(m);
 
-    p->testDrive(35, 100);
+    p->testDrive(35, 100);*/
+    PRINTLINE("Exiting");
     return 0;
 }
 
+
+/* return:
+ *  	true - if good/no arguments
+ *		false - if invalid argument exists
+*/
+bool checkArguments(int argc, char *argv[]) {
+	PRINTLINE("READING Arguments");
+	m->serialSimDisable(); //just because
+    if(argc < 2) {
+    	PRINTLINE("No arguments - expecting serial at: /dev/ttyACM0");
+    	m->setSerialPort("ttyACM0");
+    } else {
+    	PRINT("Arguments: ");
+    	for(int i = 0; i < argc; i++) {
+    		PRINT(argv[i]);
+    	}
+    	PRINTLINE("");
+
+
+    	for(int i = 1; i < argc; i++) {
+			if(strcmp(argv[i], "sim") == 0) {
+				PRINTLINE("Simulating serial.");	
+				m->serialSimEnable();
+			}
+			else if(strcmp(argv[i], "ttyUSB0") == 0) {
+				PRINTLINE("Opening serial on: /dev/" << argv[i]);
+				m->setSerialPort(argv[1]);
+			}
+			else if(strcmp(argv[i], "ttyS0") == 0) {
+				PRINTLINE("Opening serial on: /dev/" << argv[i]);
+				m->setSerialPort(argv[1]);
+			}
+			else if(strcmp(argv[i], "ttyACM1") == 0) {
+				PRINTLINE("Opening serial on: /dev/" << argv[i]);
+				m->setSerialPort(argv[1]);
+			}
+			else if(strcmp(argv[i], "ttyUSB1") == 0) {
+				PRINTLINE("Opening serial on: /dev/" << argv[i]);
+				m->setSerialPort(argv[1]);
+			} else {
+				PRINTLINE("Invalid argument: " << argv[i]);
+				return false;
+			}
+		}
+    }
+    return true;
+}
+
+
 void getKeyboardInput() {
     std::string input;
-    std::cout << "Write cmd: ";
+    PRINT("Write cmd: ");
     std::getline(std::cin, input);
 
     if(input.length() > 1) {
@@ -101,51 +117,51 @@ void getKeyboardInput() {
             int speed = findNumber(input);
             if(speed > -1) {
                 m->setSpeedL(speed);
-                std::cout << "SpeedL set to:" << speed << '\n';
+                PRINTLINE("SpeedL set to:" << speed);
             }
         } else if(sub2 == "sr") {
             int speed = findNumber(input);
             if(speed > -1) {
                 m->setSpeedR(speed);
-                std::cout << "SpeedR set to:" << speed << '\n';
+                PRINTLINE("SpeedR set to:" << speed);
             }
         } else if(sub2 == "sb") {
             int speed = findNumber(input);
             if(speed > -1) {
                 m->setSpeedBoth(speed);
-                std::cout << "Speeds set to:" << speed << '\n';
+                PRINTLINE("Speeds set to:" << speed);
             }
         }
         else if(sub2 == "gl") {
-            std::cout << "SpeedL:" << m->getSpeedL() << '\n';
+            PRINTLINE("SpeedL:" << m->getSpeedL());
         } 
         else if(sub2 == "gr") {
-            std::cout << "SpeedR:" << m->getSpeedR() << '\n';
+            PRINTLINE("SpeedR:" << m->getSpeedR());
         } 
         else if(sub2 == "vo") {
-            std::cout << "Volt:" << m->getVoltage() << '\n';
+            PRINTLINE("Volt:" << m->getVoltage());
             m->getVoltage();
         } 
         else if(sub2 == "re") {
             m->resetEncoders();
-            std::cout << "Encoders reset.\n";
+            PRINTLINE("Encoders reset.");
         } 
         else if(sub2 == "el") {
-            std::cout << "EncL:" << m->getEncL() << '\n';
+            PRINTLINE("EncL:" << m->getEncL());
         }
         else if(sub2 == "er") {
-            std::cout << "EncR:" << m->getEncR() << '\n';
+            PRINTLINE("EncR:" << m->getEncR());
         }
         else if(sub2 == "eb") {
-            std::cout << "EncL:" << m->getEncL() << '\n';
-            std::cout << "EncR:" << m->getEncR() << '\n';
+            PRINTLINE("EncL:" << m->getEncL());
+            PRINTLINE("EncR:" << m->getEncR());
         } 
         else if(sub2 == "ve") {
-            std::cout << "Version:" << m->getVersion() << '\n';
+            PRINTLINE("Version:" << m->getVersion());
         }
         else if(sub2 == "ps") {
             m->flush();
-            std::cout << "Serial flushed.\n";
+            PRINTLINE("Serial flushed.");
         }
     } 
     else if(input == "h") {
@@ -154,7 +170,7 @@ void getKeyboardInput() {
         quit = true;
     }
     else {
-        std::cout << "Input too short: " << input.length() << '\n';
+        PRINTLINE("Input too short: " << input.length());
     }
 }
 
@@ -163,34 +179,34 @@ int findNumber(std::string s) {
         std::string sub = s.substr(2, s.length()-2);
         int speed = atoi(sub.c_str());
         if(speed >= 0 && speed <= 255) {
-            std::cout << "Setting speed: " << speed << '\n';
+            PRINTLINE("Setting speed: " << speed);
             return speed;
         } else { 
-            std::cout << "Invalid speed (must be 0-255).\n";
+            PRINTLINE("Invalid speed (must be 0-255).");
         }
     } else {
-        std::cout << "Must specify speed (0-255).\n";
+        PRINTLINE("Must specify speed (0-255).");
     }
     return -1;
 }
 
 void printHelp() {
-    std::cout << "----- Commands ---------\n";
-    std::cout << "sl(0-255): setSpeedLeft\n";
-    std::cout << "sr(0-255): setSpeedRight\n";
-    std::cout << "gl: getSpeedLeft\n";
-    std::cout << "gr: getSpeedRight\n";
+    PRINTLINE("----- Commands ---------");
+    PRINTLINE("sl(0-255): setSpeedLeft");
+    PRINTLINE("sr(0-255): setSpeedRight");
+    PRINTLINE("gl: getSpeedLeft");
+    PRINTLINE("gr: getSpeedRight");
     
-    std::cout << "el: getEnc1\n";
-    std::cout << "er: getEnc2\n";
-    std::cout << "eb: getEncoders\n";
+    PRINTLINE("el: getEnc1");
+    PRINTLINE("er: getEnc2");
+    PRINTLINE("eb: getEncoders");
     
-    std::cout << "re: resetEncoders\n";
-    std::cout << "vo: getVoltage\n";
-    std::cout << "ve: getVersion\n";
-    std::cout << "ps: printSerial\n";
-    std::cout << "h: this menu\n";
-    std::cout << "q: quit\n";
-    std::cout << "------------------------\n";
+    PRINTLINE("re: resetEncoders");
+    PRINTLINE("vo: getVoltage");
+    PRINTLINE("ve: getVersion");
+    PRINTLINE("ps: PRINTSerial");
+    PRINTLINE("h: this menu");
+    PRINTLINE("q: quit");
+    PRINTLINE("------------------------");
 }
 

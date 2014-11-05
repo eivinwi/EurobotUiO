@@ -1,9 +1,7 @@
 #include "motorcom.h"
 
 MotorCom::MotorCom() {
-  	simulating = false;
   	//serial_port = "ACM0";
-  	strcpy(serial_port, "ttyACM0");
 
     prev_encL = 0;
     prev_encR = 0;
@@ -14,22 +12,30 @@ MotorCom::~MotorCom() {
 
 void MotorCom::startSerial() {
 	if(simulating) {
+        DBP("Starting serialsim\n")
 		simport = new SerialSim;
 	} else {
+        if(strcmp(serial_port, "") == 0) {
+            PRINTLINE("Error, empty serial_port. Setting to /dev/ttyACM0");
+            strcpy(serial_port, "ttyACM0");
+        }     
+        DBP("Starting serial\n")
 		port = new Serial(serial_port);
 	}
 }
 
 void MotorCom::serialSimEnable() {
+    DBP("Simulating=true\n");
 	simulating = true;
 }
 
 void MotorCom::serialSimDisable() {
-	simulating = false;
+    DBP("Simulating=false\n");
+    simulating = false;
 }
 
 void MotorCom::setSerialPort(const char *s) {
-	//serial_port = s;
+    DBPL("serial_port=" << s)
 	strcpy(serial_port, s);
 }
 
@@ -115,11 +121,7 @@ void MotorCom::getEncoders() {
     result2 += readFromSerialNoWait() << 16ul;
     result2 += readFromSerialNoWait() << 8ul;
     result2 += readFromSerialNoWait();
-    DBP("EncL: "); 
-    DBP(result1);
-    DBP("\nEncR: "); 
-    DBP(result2);
-    DBP("\n");
+    DBPL("EncL: " << result1 z << "\nEncR" << result2); 
 }
 
 
@@ -141,10 +143,10 @@ long MotorCom::getEncL() {
     std::stringstream ss;
     ss << "BITS: \n" << r1 << '\n' << r2 << '\n' << r3 << '\n' << result << "\n--------------\n"
         << "EncL: " << result << " (diff: " << diff << ")\nWheel rotations: " <<  (diff/980.0) << 
-        "\nDistance: " << diff*0.385 << '\n';
+        "\nDistance: " << diff*0.385;
 
-    DBP(ss);
-   // std::cout << ss;
+    DBPL(ss);
+
     prev_encL = result;
     return result;
 }
@@ -165,9 +167,9 @@ long MotorCom::getEncR() {
     std::stringstream ss;
     ss << "BITS: \n" << r1 << '\n' << r2 << '\n' << r3 << '\n' << result << "\n--------------\n"
         << "EncL: " << result << " (diff: " << diff << ")\nWheel rotations: " <<  (diff/980.0) << 
-        "\nDistance: " << diff*0.385 << '\n';
+        "\nDistance: " << diff*0.385;
 
-    DBP(ss);
+    DBPL(ss);
     prev_encL = result;
     return result;
 }

@@ -1,13 +1,38 @@
 #include "poscontrol.h"
-#include "motorcom.h"
+#include <iostream>
+#include <string>
+#include <sstream>
+//using namespace std;
+
+struct position {
+	float x;
+	float y;
+	int rot;
+} goalPos, curPos, exactPos;
+
+struct encoder {
+	long prev;
+	long diff;
+	long total;
+} encL, encR;
+
+
+
 
 Poscontrol::Poscontrol(MotorCom *s) {
 	com = s;
-	currentX = 0;
-	currentY = 0;
-	currentR = 0;
-	prev_encL = 0;
-	prev_encR = 0;
+
+	curPos.x = 0;
+	curPos.y = 0;
+	curPos.rot = 0;
+	
+	encL.prev = 0;
+	encL.diff = 0;
+	encL.total = 0;
+
+	encR.prev = 0;
+	encR.diff = 0;
+	encR.total = 0;
 }
 
 Poscontrol::~Poscontrol() {
@@ -20,7 +45,7 @@ void Poscontrol::testDrive(int x, int y) {
 	while(true) {
 		drive();
 		updatePosition();
-		std::cout << "X: " << currentX << " goalX: " << goalX << std::endl;
+		PRINTLINE("X: " << curPos.x << " goalPos.x: " << goalPos.x);
 		usleep(50000);
 
 		if(inGoal()) {
@@ -30,7 +55,8 @@ void Poscontrol::testDrive(int x, int y) {
 	}
 	com->setSpeedBoth(SPEED_STOP);
 	usleep(100000);
-	std::cout << "Stopped" << std::endl;
+
+	PRINTLINE("Stopped");
 	updatePosition();
 }
 
@@ -43,24 +69,24 @@ bool Poscontrol::inGoal() {
 void Poscontrol::drive() {
 
 	if(!inGoal()) {
-		com->setSpeedBoth(150);
+		com->setSpeedBoth(200);
 	//} else if(distanceFromY > 5) {
 	//	setSpeedBoth(100);
 	} 
 }
 
 void Poscontrol::setGoalPos(int x, int y, int rot) {
-	goalX = x*10;
-	goalY = y*10;
-	goalR = rot;
+	goalPos.x = x*10;
+	goalPos.y = y*10;
+	goalPos.rot = rot;
 }
 
 int Poscontrol::distanceFromX() {
-	return (goalX - currentX);
+	return (goalPos.x - curPos.x);
 }
 
 int Poscontrol::distanceFromY() {
-	return (goalY - currentY);	
+	return (goalPos.y - curPos.y);	
 }
 
 /*
@@ -71,35 +97,42 @@ int Poscontrol::distanceFromY() {
  */
 void Poscontrol::updatePosition() {
 	com->flush();
-	long encL = com->getEncL();
+	long encoderL = com->getEncL();
 	//long encR = com->getEncR(); 
 
 
-	long diffL = encL - prev_encL;
-	//long diffR = encR - prev_encR;
+	long diffL = encoderL - encL.prev;
+	//long diffR = encR - encR.prev;
 
 	float distanceL = diffL*0.385;
 	//long distanceR = diffR*0.385;
 
-	std::cout << "\nUPDATEPOSITION" << std::endl;
-	std::cout << "prev_encL: " << prev_encL << std::endl; 
-	std::cout << "encL: " << encL << std::endl; 
-	std::cout << "diffL: " << diffL << std::endl; 
-	std::cout << "distanceL: " << distanceL << std::endl; 
-	std::cout << "totalDist: " << encL*0.385 << std::endl;
-	std::cout << "--------------" << std::endl;
+	PRINTLINE("\nUPDATEPOSITION");
+	PRINTLINE("encL.prev: " << encL.prev); 
+	PRINTLINE("encL: " << encoderL); 
+	PRINTLINE("diffL: " << diffL); 
+	PRINTLINE("distanceL: " << distanceL); 
+	PRINTLINE("totalDist: " << encoderL*0.385);
+	PRINTLINE("--------------");
 
 
-	currentX += distanceL;
-	//currentY += distanceR;
-	prev_encL = encL;
-	//prev_encR = encR;
+
+
+
+
+
+	curPos.x += distanceL;
+	//curPos.y += distanceR;
+	encL.prev = encoderL;
+	//encR.prev = encR;
 }
 
 
 long totalDist = 0;
-
-
+/* CurrentPos - current estimated position based on dead reckoning with encoders. Is updated regularly to be Exactpos
+ * ExactPos   - input position from SENS
+ * GoalPos    - input from main or AI 
+*/
 
 
 

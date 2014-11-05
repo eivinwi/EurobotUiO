@@ -19,7 +19,7 @@ SerialSim::SerialSim() {
 	readCounter = 0;
 	synced = false;
 	prev_cmd = 0x00;
-	std::cout << "Started SerialSim\n";
+	DBP("Started SerialSim\n");
 }
 
 SerialSim::~SerialSim() {
@@ -36,19 +36,15 @@ void SerialSim::write(int arg) {
 
 
 void SerialSim::write(uint8_t arg) {
-	//std::cout << "write ";
+	DBP("SERIALSIM: write " << arg)
 	if(arg == 0x00) {
-		//std::cout << "0x00\n";
 		synced = true;
 		prev_cmd = 0x00;
 	} 
 	else if(synced && (prev_cmd == 0x00)) {
 		// Already synced
 		// reading second byte, defines command
-		//std::cout << " elif1: " << arg << "\n";
 		prev_cmd = arg;
-
-
 		switch(arg){
 	        //2byte in  -- 0 out
 			case RESET_ENCODERS:
@@ -125,7 +121,7 @@ void SerialSim::write(uint8_t arg) {
 				readCounter = 0;
 	        	break;
 	        default:
-		    	//std::cout << "Invalid serial-cmd in SIM: " << arg << '\n';
+	        	PRINTLINE("Invalid serial-cmd in SIM: " << arg);
 		    	break;
 
 		}
@@ -153,10 +149,9 @@ void SerialSim::write(uint8_t arg) {
 
 
 uint8_t SerialSim::readNoWait() {
-	std::cout << "read " << prev_cmd << "\n";
+	DBPL("SIM: readNoWait " << prev_cmd);
 	switch(prev_cmd) {
         case GET_SPEEDL:
-        	std::cout << "returning speedL\n";
         	return speedL;
         	break;
 		case GET_SPEEDR:
@@ -204,6 +199,7 @@ uint8_t SerialSim::readNoWait() {
 }
 
 uint8_t SerialSim::read() {
+	DBPL("SIM: read");
 	return readNoWait();
 }
 
@@ -250,19 +246,20 @@ uint8_t SerialSim::readEncs() {
 }
 
 void SerialSim::calculateEncL() {
+	DBPL("SIM: calculateEncL");
 	time_t now;
 	time(&now);
 	double timePassed = difftime(now, timeL);
 	double rotations = (timePassed)/RPS;
 	double encoderDiff = rotations*980;
 
-	std::cout << "timePassed: " << timePassed << '\n';
-	std::cout << "rotations: " << rotations << '\n';
-	std::cout << "encoderDiff: " << encoderDiff << '\n';
+	PRINTLINE("timePassed: " << timePassed);
+	PRINTLINE("rotations: " << rotations);
+	PRINTLINE("encoderDiff: " << encoderDiff);
 
 	long enc = (long) encoderDiff;
 
-	std::cout << "enc: " << enc << '\n';
+	PRINTLINE("enc: " << enc);
 
 	encL[3] = ((enc >> 24) & 0xff);
 	encL[2] = ((enc >> 16) & 0xff);
@@ -271,6 +268,7 @@ void SerialSim::calculateEncL() {
 }
 
 void SerialSim::calculateEncR() {
+	DBP("SIM: calculateEncR\n");
 	time_t now;
 	time(&now);
 	double timePassed = difftime(now, timeR);
@@ -285,5 +283,5 @@ void SerialSim::calculateEncR() {
 }
 
 void SerialSim::printAll() {
-
+	DBPL("Sim \"flushed\"");
 }
