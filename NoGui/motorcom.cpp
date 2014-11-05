@@ -12,30 +12,30 @@ MotorCom::~MotorCom() {
 
 void MotorCom::startSerial() {
 	if(simulating) {
-        DBP("Starting serialsim\n")
+        DBP("MOTORCOM: Starting serialsim\n")
 		simport = new SerialSim;
 	} else {
         if(strcmp(serial_port, "") == 0) {
             PRINTLINE("Error, empty serial_port. Setting to /dev/ttyACM0");
             strcpy(serial_port, "ttyACM0");
         }     
-        DBP("Starting serial\n")
+        DBP("MOTORCOM:  serial\n")
 		port = new Serial(serial_port);
 	}
 }
 
 void MotorCom::serialSimEnable() {
-    DBP("Simulating=true\n");
+    DBP("MOTORCOM: Simulating=true\n");
 	simulating = true;
 }
 
 void MotorCom::serialSimDisable() {
-    DBP("Simulating=false\n");
+    DBP("MOTORCOM: Simulating=false\n");
     simulating = false;
 }
 
 void MotorCom::setSerialPort(const char *s) {
-    DBPL("serial_port=" << s)
+    DBPL("MOTORCOM: serial_port=" << s)
 	strcpy(serial_port, s);
 }
 
@@ -121,7 +121,7 @@ void MotorCom::getEncoders() {
     result2 += readFromSerialNoWait() << 16ul;
     result2 += readFromSerialNoWait() << 8ul;
     result2 += readFromSerialNoWait();
-    DBPL("EncL: " << result1 z << "\nEncR" << result2); 
+    DBPL("MOTORCOM: EncL: " << result1 z << "\nEncR" << result2); 
 }
 
 
@@ -145,7 +145,7 @@ long MotorCom::getEncL() {
         << "EncL: " << result << " (diff: " << diff << ")\nWheel rotations: " <<  (diff/980.0) << 
         "\nDistance: " << diff*0.385;
 
-    DBPL(ss);
+    DBPL("MOTORCOM: \n" << ss);
 
     prev_encL = result;
     return result;
@@ -169,7 +169,8 @@ long MotorCom::getEncR() {
         << "EncL: " << result << " (diff: " << diff << ")\nWheel rotations: " <<  (diff/980.0) << 
         "\nDistance: " << diff*0.385;
 
-    DBPL(ss);
+    DBPL("MOTORCOM: \n" << ss);
+    
     prev_encL = result;
     return result;
 }

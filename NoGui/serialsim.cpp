@@ -19,7 +19,7 @@ SerialSim::SerialSim() {
 	readCounter = 0;
 	synced = false;
 	prev_cmd = 0x00;
-	DBP("Started SerialSim\n");
+	DBP("SIM: Started SerialSim\n");
 }
 
 SerialSim::~SerialSim() {
@@ -36,7 +36,7 @@ void SerialSim::write(int arg) {
 
 
 void SerialSim::write(uint8_t arg) {
-	DBP("SERIALSIM: write " << arg)
+	DBP("SIM: write " << arg)
 	if(arg == 0x00) {
 		synced = true;
 		prev_cmd = 0x00;
