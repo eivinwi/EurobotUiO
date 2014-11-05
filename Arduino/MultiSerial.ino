@@ -1,6 +1,8 @@
 #include <Arduino.h>
 
-
+/* Arduino Due:
+ * - connect on programming port
+*/
 
 void setup() {
   // initialize both serial ports:

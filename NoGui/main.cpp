@@ -46,9 +46,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-
-/*    m->startSerial();
-    m->resetEncoders();
+/*    m->resetEncoders();
     Poscontrol *p = new Poscontrol(m);
 
     p->testDrive(35, 100);*/
