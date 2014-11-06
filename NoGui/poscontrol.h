@@ -26,33 +26,52 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <cassert>
+#include <time.h>
 
 // Game area resolution in mm:
 #define XRES 30000
 #define YRES 20000
 
+#define REASONABLE_ENC_DIFF 980
 
+#define TURNING 0
+#define DRIVE_X 1
+#define DRIVE_Y 2
 
 void *worker_routine(void *arg);
 
-class Poscontrol {
+class PosControl {
 public:
-    Poscontrol(MotorCom *s);
-    ~Poscontrol();
+    PosControl(MotorCom *s);
+    ~PosControl();
 
-    bool inGoal();
-	void testDrive(int x, int y);    
-	void drive();
+    void controlLoop();
+    void stop();
+    void turn(int distR);
+    void drive(float distX, float distY);
 	void setGoalPos(int x, int y, int r);
-	int distanceFromX();
-	int distanceFromY();
-	void updatePosition();
+	float distanceFromX();
+	float distanceFromY();
+	int rotationOffset();
+	long encoderDifference();
+	void updatePosition(int action);
+	int getRotation();
+	bool closeEnoughAngle(int a, int b); 
+	bool closeEnoughEnc(long a, long b);
+	void updateEncoder(long e, struct encoder *side);
+	void updateLeft();
+	void updateRight();
+	float average(long a, long b);
 
+	//seconds
+	double timeSinceGoal(); 
 
 private:
 	std::string in;
 
 	MotorCom *com;
+
+	bool turning;
 
 };
 

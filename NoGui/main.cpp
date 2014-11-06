@@ -37,19 +37,24 @@ int main(int argc, char *argv[]) {
     m->flush();
 
 
-    PRINTLINE("SETUP: done. starting input-loop");
+    /*PRINTLINE("SETUP: done. starting input-loop");
     quit = false;
     while(true) {
         getKeyboardInput();
         if(quit) {
             break;
         }
-    }
+    }*/
 
-/*    m->resetEncoders();
-    Poscontrol *p = new Poscontrol(m);
+    m->resetEncoders();
+    PosControl *p = new PosControl(m);
 
-    p->testDrive(35, 100);*/
+    p->setGoalPos(0, 10, 0);
+    p->controlLoop();
+    //p->updatePosition();
+
+
+
     PRINTLINE("Exiting");
     return 0;
 }

@@ -37,9 +37,17 @@
 #define DISABLE_TIMEOUT 0x38  //2	0
 #define ENABLE_TIMEOUT 0x39  // 2	0
 
-
-#define SPEED_STOP 128
-#define SPEED_MAX_POS 255
+/* 
+Speeds are calculated assuming mode=0
+This means:
+	0=full reverse
+	128= stop
+	255=full forward
+*/
 #define SPEED_MAX_NEG 0
+#define SPEED_MED_NEG 64
+#define SPEED_STOP 128
+#define SPEED_MED_POS 192
+#define SPEED_MAX_POS 255
 
 #endif /* MD49_H */
