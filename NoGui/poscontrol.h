@@ -45,7 +45,7 @@ public:
     PosControl(MotorCom *s);
     ~PosControl();
 
-    void controlLoop();
+    bool controlLoop();
     void stop();
     void turn(int distR);
     void drive(float distX, float distY);

@@ -17,10 +17,12 @@ int findNumber(std::string s);
 void printHelp();
 void getKeyboardInput();
 bool checkArguments(int argc, char *argv[]);
+void drive();
 
 bool quit;
 MotorCom *m;
 Communication *c;
+PosControl *p;
 
 int main(int argc, char *argv[]) {
     PRINTLINE("SETUP: creating MotorCom");
@@ -47,10 +49,15 @@ int main(int argc, char *argv[]) {
     }*/
 
     m->resetEncoders();
-    PosControl *p = new PosControl(m);
+    m->flush();
+    p = new PosControl(m);
 
-    p->setGoalPos(0, 10, 0);
-    p->controlLoop();
+    p->setGoalPos(20, 0, 0);
+    drive();
+    p->setGoalPos(20, 0, 10);
+    drive();
+
+
     //p->updatePosition();
 
 
@@ -59,6 +66,15 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
+void drive() {
+    bool done = false;
+    while(!done) {
+        done = p->controlLoop();
+        usleep(5000);
+    }
+    PRINTLINE("Drive done");
+    usleep(2000000);
+}
 
 /* return:
  *  	true - if good/no arguments
