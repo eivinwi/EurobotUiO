@@ -56,7 +56,7 @@ PosControl::~PosControl() {
 }
 
 #define ROTATION_CLOSE_ENOUGH 1
-#define POSITION_CLOSE_ENOUGH 5
+#define POSITION_CLOSE_ENOUGH 1
 #define TOO_LONG 20
 
 void PosControl::controlLoop() {
@@ -69,6 +69,9 @@ void PosControl::controlLoop() {
 	int distR = rotationOffset();
 	float distX = distanceFromX(); 
 	float distY = distanceFromY();
+
+	PRINTLINE("===== CONTROL-LOOP =====");
+	PRINTLINE("distR: " << distR << "distX: " << distX << "distY: " << distY);
 
 
 	if(distR > ROTATION_CLOSE_ENOUGH) {
