@@ -2,8 +2,8 @@
 #define	PRINTING_H
 
 #ifdef DEBUG
-#define DBP(x) std::cout << x;
-#define DBPL(x) std::cout << x << std::endl;
+#define DBP(x) std::cerr << x;
+#define DBPL(x) std::cerr << x << std::endl;
 #else
 #define DBP(x);
 #define DBPL(x);
