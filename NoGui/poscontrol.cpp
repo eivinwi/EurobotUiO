@@ -339,5 +339,5 @@ void PosControl::updateRight() {
 
 
 double PosControl::timeSinceGoal() {
-	return (time(0), goalPos.changed);
+	return (time(0) - goalPos.changed);
 }
