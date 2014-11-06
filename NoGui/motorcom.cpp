@@ -176,10 +176,12 @@ long MotorCom::getEncR() {
 }
 
 uint8_t MotorCom::getVoltage() {
+    DBPL("MOTORCOM: getVoltage");
     sync();
     writeToSerial(GET_VOLT);
     int volt = 0;
     volt = readFromSerial(); //readNoWait();
+    DBPL("MOTORCOM: volt: " << volt << " (int val is: " << (int) volt << ")");
     return volt;
 }
 
