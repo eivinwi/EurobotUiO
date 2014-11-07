@@ -5,6 +5,11 @@
  * Created on 26. september 2014, 14:15
  */
 //#include "serial.h"
+
+//TODO: own method for getdegrees/getpositions to the readloop
+ //TODO: negative angle adjustments
+
+
 #include "motorcom.h"
 #include "communication.h"
 #include "poscontrol.h"
