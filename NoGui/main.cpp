@@ -14,11 +14,13 @@
 #include <pthread.h>
 
 int findNumber(std::string s);
-void goToXYR(std::string s);
+void goToXYR(int x, int y, int z);
 void printHelp();
 void getKeyboardInput();
 bool checkArguments(int argc, char *argv[]);
 void drive();
+
+int coords[3];
 
 bool quit;
 MotorCom *m;
@@ -122,9 +124,17 @@ void getKeyboardInput() {
     if(input.length() > 1) {
         std::string sub2 = input.substr(0,2);
 
-        if(sub2 == "go") {
-            goToXYR(input);
-        } else if(sub2 == "sl") {
+        if(sub2 == "gx") {
+            int pos = findNumber(input);
+            goToXYR(pos, coords[1], coords[2]);
+        } if(sub2 == "gy") {
+            int pos = findNumber(input);
+            goToXYR(coords[0], pos, coords[2]);
+        } else if(sub2 == "gr") {
+            int rot = findNumber(input);
+            goToXYR(coords[0], coords[1], rot);
+        }
+        else if(sub2 == "sl") {
             int speed = findNumber(input);
             if(speed > -1) {
                 m->setSpeedL(speed);
@@ -143,10 +153,10 @@ void getKeyboardInput() {
                 PRINTLINE("Speeds set to:" << speed);
             }
         }
-        else if(sub2 == "gl") {
+        else if(sub2 == "le") {
             PRINTLINE("SpeedL:" << m->getSpeedL());
         } 
-        else if(sub2 == "gr") {
+        else if(sub2 == "lr") {
             PRINTLINE("SpeedR:" << m->getSpeedR());
         } 
         else if(sub2 == "vo") {
@@ -201,6 +211,29 @@ int findNumber(std::string s) {
     return -1;
 }
 
+void goToXYR(int x, int y, int r) {
+    if(coords[0] > 1000 || coords[1] > 1000 || coords[2] > 360) {
+        PRINTLINE("Values too high, aborting goToXYR");
+    } else {
+        int changed = 0;
+        if(x != coords[0]) changed++;
+        if(y != coords[1]) changed++;
+        if(r != coords[2]) changed++;
+
+        if(changed > 1) {
+            PRINTLINE("Cannot change more than 1 position at a time");
+        } else {
+
+            p->setGoalPos(coords[0], coords[1], coords[2]);
+            drive();
+            coords[0] = x;
+            coords[1] = y;
+            coords[2] = r;
+        }
+    }
+}
+
+/*
 void goToXYR(std::string input) {
     std::string sub = input.substr(2, input.length()-2);
     PRINTLINE("MAIN: goToXYR with arguments: " << sub);
@@ -236,7 +269,9 @@ void goToXYR(std::string input) {
         p->setGoalPos(coords[0], coords[1], coords[2]);
         drive();
     }
-}
+}*/
+
+
 
 void printHelp() {
     PRINTLINE("----- Commands ---------");
