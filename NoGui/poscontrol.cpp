@@ -239,23 +239,30 @@ int PosControl::rotationOffset() {
 	return curPos.rotation->distanceTo(goalPos.rot);
 }
 
+
+//TODO: change restraints
 void PosControl::setGoalPos(int x, int y, int rot) {
-	PRINT("POS: goal");
-	if(goalPos.x != x*10) {
+	PRINTLINE("POS: goal changed: " << x << "," << y << "," << rot);
+	if(x*10 > 1000) {
+		//
+	} else {
 		goalPos.x = x*10;
 		goalPos.changed = time(0);
-		PRINTLINE("Pos.x = " << x*10);
+		PRINTLINE("new goalX: " << goalPos.x);
 	} 
-	if(goalPos.y != y*10) {
+	if(y*10 > 1000) {
+		//
+	} else {
 		goalPos.y = y*10;
 		goalPos.changed = time(0);
-		PRINTLINE("Pos.y = " << y*10);
+		PRINTLINE("new goalY: " << goalPos.y);
 	} 
 	if(goalPos.rot != rot && rot < 360) {
 		goalPos.rot = rot;
 		goalPos.changed = time(0);
-		PRINTLINE("Pos.rot = " << rot);
+		PRINTLINE("new goalR: " << goalPos.rot);
 	} 
+	PRINTLINE(" ");
 }
 
 
