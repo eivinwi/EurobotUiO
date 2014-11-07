@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include "rotation.h"
 //using namespace std;
 
 
@@ -21,12 +22,25 @@
  * ExactPos   - input position from SENS
  * GoalPos    - input from main or AI 
 */
-struct position {
+struct goalPosition {
 	float x;
 	float y;
 	float rot;
 	time_t changed;
-} goalPos, curPos, exactPos;
+} goalPos;
+
+struct exactPosition {
+	float x;
+	float y;
+	float rot;
+} exactPos;
+
+struct currentPosition {
+	float x;
+	float y;
+	Rotation *rotation;
+	time_t changed;
+} curPos;
 
 struct encoder {
 	long prev;
@@ -44,7 +58,7 @@ PosControl::PosControl(MotorCom *s) {
 
 	curPos.x = 0.0;
 	curPos.y = 0.0;
-	curPos.rot = 0.0;
+	curPos.rotation = new Rotation;
 	curPos.changed = time(0);
 
 	goalPos.x = 0.0;
@@ -84,9 +98,10 @@ bool PosControl::controlLoop() {
 	float distY = distanceFromY();
 
 	PRINTLINE("===== CONTROL-LOOP =====");
-	PRINTLINE("distR: " << distR << " distX: " << distX << " distY: " << distY);
-	PRINTLINE("curX: " << curPos.x << " curY: " << curPos.y << " curR: " << curPos.rot);
-
+	PRINTLINE("goalX: " << goalPos.x << " goalY: " << goalPos.y << " goalR: " << goalPos.rot);	
+	PRINTLINE("curX: " << curPos.x << " curY: " << curPos.y << " curR: " << currentRotation());
+	PRINTLINE("distX: " << distX << " distY: " << distY << "distR: " << distR);
+	PRINTLINE("---\n");
 
 	if(distR > ROTATION_CLOSE_ENOUGH) {
 		PRINTLINE("POS: rotating");
@@ -98,8 +113,8 @@ bool PosControl::controlLoop() {
 		if(goalPos.rot != 0 && goalPos.rot != 180) {
 			PRINTLINE("POS: ERROR; goalX specified, but goalRot is " << goalPos.rot);
 			return true;
-		} else if(curPos.rot != 0 && curPos.rot != 180) {
-			PRINTLINE("POS: ERROR; curPos.rot is" << curPos.rot << " should be 0/180. ");
+		} else if(currentRotation() != 0 && currentRotation() != 180) {
+			PRINTLINE("POS: ERROR; cur->angle is" << currentRotation() << " should be 0/180. ");
 			PRINTLINE("POS: attempting to fix by turning");
 			turn(rotationOffset());
 		} else {
@@ -116,8 +131,8 @@ bool PosControl::controlLoop() {
 		if(goalPos.rot != 90 && goalPos.rot != 270) {
 			PRINTLINE("POS: ERROR; goalY specified, but goalRot is " << goalPos.rot);
 			return true;
-		} else if(curPos.rot != 0 && curPos.rot != 180) {
-			PRINTLINE("POS: ERROR; curPos.rot is" << curPos.rot << " should be 90/270. ");
+		} else if(currentRotation() != 0 && currentRotation() != 180) {
+			PRINTLINE("POS: ERROR; cur->angle is" << currentRotation() << " should be 90/270. ");
 			PRINTLINE("POS: attempting to fix by turning");
 			turn(rotationOffset());
 		} else {
@@ -149,32 +164,20 @@ enc per mm = 980/337 = 2.6
 enc per grad = 2.88*2.6 = 7.5
 */
 void PosControl::updatePosition(int action) {
-	updateLeft();
-	updateRight();
-	int angle =	getRotation();
+	updateLeftEncoder();
+	updateRightEncoder();
+//	int angle =	getRotation();
 
 	PRINTLINE("POS: updatePos");
 	if(action == TURNING) {
 		//curX and curY should not really be updated
-		int ediff = encoderDifference();
-		if(ediff > 50) {
-			PRINTLINE("POS: Warning, large encoder difference: " << ediff);
-		}
-
-		float turned = rightEncoder.diff/7.5; //using right-encoder because it coincidentally has the same sign as rotation (0->360 positive)
-											  //TODO: needs to know that encoders read the same
-		PRINT("POS: changing rotation: " << curPos.rot << " + " << turned);
-		curPos.rot += turned;
-		if(curPos.rot > 360.0) {
-			curPos.rot -= 360.0;
-		}
-
-		PRINTLINE(" = " << curPos.rot);
+		// update angle
+		curPos.rotation->updateAngle(leftEncoder.diff, rightEncoder.diff);
 	}
 	else if(action == DRIVE_X) {
 		int ediff = encoderDifference();
 		if(ediff > 50) {
-			PRINTLINE("POS: Warning, large encoder difference: " << ediff);
+			PRINTLINE("POS: Warning, large encoder difference(drivex): " << ediff);
 		}
 
 		curPos.x += leftEncoder.diffDist;
@@ -182,7 +185,7 @@ void PosControl::updatePosition(int action) {
 	else if(action == DRIVE_Y) {
 		int ediff = encoderDifference();
 		if(ediff > 50) {
-			PRINTLINE("POS: Warning, large encoder difference: " << ediff);
+			PRINTLINE("POS: Warning, large encoder difference(drivey): " << ediff);
 		}
 
 		curPos.y += leftEncoder.diffDist;
@@ -233,7 +236,7 @@ float PosControl::distanceFromY() {
  * <0 : goal angle in negative direction
  */
 int PosControl::rotationOffset() {
-	return (goalPos.rot - curPos.rot);
+	return curPos.rotation->distanceTo(goalPos.rot);
 }
 
 void PosControl::setGoalPos(int x, int y, int rot) {
@@ -260,8 +263,8 @@ void PosControl::setGoalPos(int x, int y, int rot) {
 // following updatePosition() is more complex, should be used if diagonal travel is wanted
 /*
 void PosControl::updatePosition() {
-	updateLeft();
-	updateRight();
+	updateLeftEncoder();
+	updateRightEncoder();
 	int angle =	getRotation();
 
 	//left&right encoder movement is hypotenuse
@@ -359,14 +362,14 @@ void PosControl::updateEncoder(long e, struct encoder *enc) {
 
 
 
-void PosControl::updateLeft() {
+void PosControl::updateLeftEncoder() {
 	DBPL("POS:updating left encoder");
 	com->flush(); //unnecessary?
 	long enc = com->getEncL();
 	updateEncoder(enc, &leftEncoder);
 }
 
-void PosControl::updateRight() {
+void PosControl::updateRightEncoder() {
 	DBPL("POS:updating right encoder");
 	com->flush(); //unnecessary?
 	long enc = com->getEncR();
@@ -379,3 +382,8 @@ double PosControl::timeSinceGoal() {
 }
 
 //TODO: turning negative
+
+
+float PosControl::currentRotation() {
+	return curPos.rotation->getAngle();
+}

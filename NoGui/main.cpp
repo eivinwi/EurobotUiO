@@ -53,9 +53,9 @@ int main(int argc, char *argv[]) {
     m->flush();
     p = new PosControl(m);
 
-    p->setGoalPos(20, 0, 0);
-    drive();
-    p->setGoalPos(20, 0, 45);
+    //p->setGoalPos(20, 0, 0);
+    //drive();
+    p->setGoalPos(0, 0, 45);
     //m ->flush();
     drive();
 

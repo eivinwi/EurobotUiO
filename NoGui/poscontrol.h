@@ -59,10 +59,10 @@ public:
 	bool closeEnoughAngle(int a, int b); 
 	bool closeEnoughEnc(long a, long b);
 	void updateEncoder(long e, struct encoder *side);
-	void updateLeft();
-	void updateRight();
+	void updateLeftEncoder();
+	void updateRightEncoder();
 	float average(long a, long b);
-
+	float currentRotation();
 	//seconds
 	double timeSinceGoal(); 
 

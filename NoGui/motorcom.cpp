@@ -132,8 +132,7 @@ long MotorCom::getEncL() {
     writeToSerial(GET_ENCODERL);
     long result = readLongFromSerial();
     //DBPL("MOTORCOM: encoder update\n" << ss);
-    long diff = result - prev_encL;
-    DBPL("EncL: " << result << " (diff: " << diff << ")\nWheel rotations: " <<  (diff/980.0) << 
+    DBPL("EncL: " << result << " (diff: " << (result - prev_encL) << ")\nWheel rotations: " <<  ((result-prev_encL)/980.0) << 
                 "\nDistance: " << diff*0.385);
     prev_encL = result;
     return result;
@@ -143,9 +142,8 @@ long MotorCom::getEncR() {
     sync();
     writeToSerial(GET_ENCODERR);
     long result = readLongFromSerial();
-    long diff = result - prev_encR;
-    DBPL("EncR: " << result << " (diff: " << diff << ")\nWheel rotations: " 
-        << (diff/980.0) << "\nDistance: " << diff*0.385);
+    DBPL("EncR: " << result << " (diff: " << (result - prev_encR) << ")\nWheel rotations: " 
+        << (diff/980.0) << "\nDistance: " << ((result - prev_encR)*0.385));
     prev_encR = result;
     return result;
 }
