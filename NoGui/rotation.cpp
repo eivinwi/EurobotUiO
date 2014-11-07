@@ -79,7 +79,7 @@ float Rotation::distanceTo(float goalRot) {
 }
 
 float Rotation::distanceLeft(float goal) {
-	if(goal > angle) {
+	if(goal >= angle) {
 		return (goal - angle);
 	} else {
 		return (360 - angle + goal);
@@ -88,7 +88,7 @@ float Rotation::distanceLeft(float goal) {
 
 //result will be negative, to show rotation towards the right
 float Rotation::distanceRight(float goal) {
-	if(goal < angle) {
+	if(goal =< angle) {
 		return (goal - angle);
 	} else {
 		return (goal - angle - 360);
