@@ -14,6 +14,7 @@
 #include <pthread.h>
 
 int findNumber(std::string s);
+void goToXYR(std::string s);
 void printHelp();
 void getKeyboardInput();
 bool checkArguments(int argc, char *argv[]);
@@ -36,36 +37,22 @@ int main(int argc, char *argv[]) {
 
     PRINTLINE("SETUP: starting serial");
     m->startSerial();
+    m->resetEncoders();
+    usleep(10000);
     m->flush();
 
+    p = new PosControl(m);
 
-    /*PRINTLINE("SETUP: done. starting input-loop");
+    PRINTLINE("SETUP: done. starting input-loop");
     quit = false;
     while(true) {
         getKeyboardInput();
         if(quit) {
             break;
         }
-    }*/
+    }
 
-    m->resetEncoders();
-    usleep(10000);
-    m->flush();
-    p = new PosControl(m);
-
-    p->setGoalPos(40, 0, 0);
-    drive();
-    p->setGoalPos(40, 0, 45);
-    //m ->flush();
-    drive();
-    p->setGoalPos(40, 0, 90);
-    drive();
-
-    //p->updatePosition();
-
-
-
-    PRINTLINE("Exiting");
+    PRINTLINE("MAIN: Exiting");
     return 0;
 }
 
@@ -92,7 +79,7 @@ bool checkArguments(int argc, char *argv[]) {
     } else {
     	PRINT("Arguments: ");
     	for(int i = 0; i < argc; i++) {
-    		PRINT(argv[i]);
+    		PRINT(argv[i] << " ");
     	}
     	PRINTLINE("");
 
@@ -135,7 +122,9 @@ void getKeyboardInput() {
     if(input.length() > 1) {
         std::string sub2 = input.substr(0,2);
 
-        if(sub2 == "sl") {
+        if(sub2 == "go") {
+            goToXYR(input);
+        } else if(sub2 == "sl") {
             int speed = findNumber(input);
             if(speed > -1) {
                 m->setSpeedL(speed);
@@ -212,6 +201,43 @@ int findNumber(std::string s) {
     return -1;
 }
 
+void goToXYR(std::string input) {
+    std::string sub = input.substr(2, input.length()-2);
+    PRINTLINE("MAIN: goToXYR with arguments: " << sub);
+    std::string delimiter = ",";    
+
+    int coords[3];
+
+    std::string token;
+    size_t pos = 0;
+    int i = 0;
+    while( (pos = sub.find(delimiter)) != std::string::npos) {
+        if(i > 1) break;
+        token = sub.substr(0, pos);
+        coords[i] = atoi(token.c_str());
+        sub.erase(0, pos+1);
+        i++;
+    }
+    if(sub.length() > 0) {
+        PRINTLINE("sub" << sub)
+        coords[i] = atoi(sub.c_str());
+        i++;
+    } 
+    while(i < 3) {
+        coords[i] = 0;
+        i++;
+    }
+
+    PRINTLINE("tokenizer done: [" << coords[0] << "][" << coords[1] << "][" << coords[2] << "]");
+
+    if(coords[0] > 1000 || coords[1] > 1000 || coords[2] > 360) {
+        PRINTLINE("Values too high, aborting goToXYR");
+    } else {
+        p->setGoalPos(coords[0], coords[1], coords[2]);
+        drive();
+    }
+}
+
 void printHelp() {
     PRINTLINE("----- Commands ---------");
     PRINTLINE("sl(0-255): setSpeedLeft");
@@ -231,4 +257,3 @@ void printHelp() {
     PRINTLINE("q: quit");
     PRINTLINE("------------------------");
 }
-

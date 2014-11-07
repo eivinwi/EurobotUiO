@@ -5,6 +5,7 @@ MotorCom::MotorCom() {
 
     prev_encL = 0;
     prev_encR = 0;
+    simulating = false;
 }
 
 MotorCom::~MotorCom() {
@@ -25,7 +26,7 @@ void MotorCom::startSerial() {
 }
 
 void MotorCom::serialSimEnable() {
-    DBP("MOTORCOM: Simulating=true\n");
+    PRINTLINE("MOTORCOM: Simulating=true\n");
 	simulating = true;
 }
 
@@ -211,7 +212,11 @@ void MotorCom::enableTimeout(bool b) {
 }
 
 void MotorCom::flush() {
-    port->printAll();
+    if(simulating) {
+        simport->printAll();
+    } else {
+        port->printAll();
+    }
 }
 
 void MotorCom::sync() {
