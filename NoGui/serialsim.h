@@ -37,6 +37,7 @@ public:
 	void write(int arg);
 	uint8_t readNoWait();
 	uint8_t read();
+	long readLong();
 	uint8_t readVi();
 	uint8_t readEncL();
 	uint8_t readEncR();

@@ -14,8 +14,6 @@
 #include "serial.h"
 #include "printing.h"
 #include <stdint.h>
-#include <bitset>
-#include <sstream>
 #include <cstring>
 
 #define LEFT 1
@@ -58,6 +56,7 @@ public:
     //int readFromSerial();
     uint8_t readFromSerial();
     uint8_t readFromSerialNoWait();
+    long readLongFromSerial();
 
 private:
     SerialSim *simport;

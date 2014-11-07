@@ -21,6 +21,9 @@
 #include <cstdlib>
 #include <string>
 #include <stdint.h>
+#include <bitset>
+#include <sstream>
+#include <cstring>
 
 using namespace LibSerial ;
 
@@ -33,6 +36,7 @@ public:
     void write(int arg);
     uint8_t readNoWait();
     uint8_t read();
+    long readLong();
     bool available();
     void printAll();
 

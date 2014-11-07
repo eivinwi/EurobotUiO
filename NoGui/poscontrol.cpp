@@ -4,6 +4,19 @@
 #include <sstream>
 //using namespace std;
 
+
+
+
+/*
+	TODO:
+		- fix encoder values on turn
+		- negative encoder values
+
+		- share objects in threads
+
+*/
+
+
 /* curPos - current estimated position based on dead reckoning with encoders. Is updated regularly to be Exactpos
  * ExactPos   - input position from SENS
  * GoalPos    - input from main or AI 
@@ -11,7 +24,7 @@
 struct position {
 	float x;
 	float y;
-	int rot;
+	float rot;
 	time_t changed;
 } goalPos, curPos, exactPos;
 
@@ -29,14 +42,14 @@ struct encoder {
 PosControl::PosControl(MotorCom *s) {
 	com = s;
 
-	curPos.x = 0;
-	curPos.y = 0;
-	curPos.rot = 0;
+	curPos.x = 0.0;
+	curPos.y = 0.0;
+	curPos.rot = 0.0;
 	curPos.changed = time(0);
 
-	goalPos.x = 0;
-	goalPos.y = 0;
-	goalPos.rot = 0;
+	goalPos.x = 0.0;
+	goalPos.y = 0.0;
+	goalPos.rot = 0.0;
 	goalPos.changed = time(0); //initialize to avoid problems, might be wrong
 	
 	leftEncoder.prev = 0;
@@ -91,7 +104,6 @@ bool PosControl::controlLoop() {
 			turn(rotationOffset());
 		} else {
 			PRINTLINE("POS: correct rotation, can drive X.");
-
 			if(distX > 0) {
 				com->setSpeedBoth(SPEED_MED_POS);
 			} else {
@@ -129,16 +141,35 @@ bool PosControl::controlLoop() {
 }
 
 
-
-
+/*
+Angle calculation:
+omkrets = 2*pi*r = 2*pi*(330/2)=pi*330 = 1036
+mm per grad = 1036/360 = 2.88
+enc per mm = 980/337 = 2.6
+enc per grad = 2.88*2.6 = 7.5
+*/
 void PosControl::updatePosition(int action) {
 	updateLeft();
 	updateRight();
 	int angle =	getRotation();
 
+	PRINTLINE("POS: updatePos");
 	if(action == TURNING) {
 		//curX and curY should not really be updated
-		curPos.rot++;
+		int ediff = encoderDifference();
+		if(ediff > 50) {
+			PRINTLINE("POS: Warning, large encoder difference: " << ediff);
+		}
+
+		float turned = rightEncoder.diff/7.5; //using right-encoder because it coincidentally has the same sign as rotation (0->360 positive)
+											  //TODO: needs to know that encoders read the same
+		PRINT("POS: changing rotation: " << curPos.rot << " + " << turned);
+		curPos.rot += turned;
+		if(curPos.rot > 360.0) {
+			curPos.rot -= 360.0;
+		}
+
+		PRINTLINE(" = " << curPos.rot);
 	}
 	else if(action == DRIVE_X) {
 		int ediff = encoderDifference();
@@ -217,7 +248,7 @@ void PosControl::setGoalPos(int x, int y, int rot) {
 		goalPos.changed = time(0);
 		PRINTLINE("Pos.y = " << y*10);
 	} 
-	if(goalPos.rot != rot) {
+	if(goalPos.rot != rot && rot < 360) {
 		goalPos.rot = rot;
 		goalPos.changed = time(0);
 		PRINTLINE("Pos.rot = " << rot);
@@ -329,12 +360,14 @@ void PosControl::updateEncoder(long e, struct encoder *enc) {
 
 
 void PosControl::updateLeft() {
+	DBPL("POS:updating left encoder");
 	com->flush(); //unnecessary?
 	long enc = com->getEncL();
 	updateEncoder(enc, &leftEncoder);
 }
 
 void PosControl::updateRight() {
+	DBPL("POS:updating right encoder");
 	com->flush(); //unnecessary?
 	long enc = com->getEncR();
 	updateEncoder(enc, &rightEncoder);
@@ -344,3 +377,5 @@ void PosControl::updateRight() {
 double PosControl::timeSinceGoal() {
 	return (time(0) - goalPos.changed);
 }
+
+//TODO: turning negative

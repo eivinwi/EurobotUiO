@@ -1,6 +1,9 @@
 #include "serial.h"
-#include <cstring>
-
+#include <iostream>
+#include <iomanip>
+#include <chrono>
+#include <ctime>
+#include <thread>
 
 Serial::Serial(char *serial_port) {
 	char s[20]; 
@@ -54,6 +57,85 @@ uint8_t Serial::readNoWait(){
 uint8_t Serial::read() {
     usleep(5000);
     return readNoWait();
+}
+/*
+long Serial::readLong() {
+    long result = 0;
+    for(int i = 0; i < 4; i++) {
+        int av = serial.rdbuf()->in_avail();
+        PRINTLINE("SERIAL: AVAILABLE: " << av);
+        if(av < 3) {
+            usleep(10000);
+        } else {
+            result = readNoWait() << 24ul;
+            std::bitset<32> r1(result);
+            result += readNoWait() << 16ul;
+            std::bitset<32> r2(result);
+            result += readNoWait() << 8ul;
+            std::bitset<32> r3(result);
+            result += readNoWait();
+
+            std::stringstream ss;
+            ss << "BITS: \n" << r1 << '\n' << r2 << '\n' << r3 
+                << '\n' << result << "\n--------------\n";
+            PRINTLINE("SERIAL: returning long: \n" << ss);
+            //DBPL("SERIAL: returning long: \n" << ss);
+        }
+    }
+    return result;
+}*/
+
+
+//#include <chrono>
+#define MAX_READ_TIME 
+
+
+long Serial::readLong() {
+    DBPL("SERIAL: readLong")
+    std::clock_t c_start = std::clock();
+    auto t_start = std::chrono::high_resolution_clock::now();
+
+    std::clock_t c_end = std::clock();
+    auto t_end = std::chrono::high_resolution_clock::now();
+    
+    uint8_t bytes[4];
+    bytes[0] = 0;
+    bytes[1] = 0;
+    bytes[2] = 0;
+    bytes[3] = 0;
+    DBPL("SERIAL: readLong starting loop")    
+    for(int i = 0; i < 4; i++) {
+        double timepassed = std::chrono::duration<double, std::milli>(t_end-t_start).count();
+        DBPL("SERIAL: byte nr" << i << "done");
+        while(timepassed < 100) {
+            if(available()) {
+                bytes[i] = readNoWait();
+                break;
+            }
+            t_end = std::chrono::high_resolution_clock::now();
+            timepassed = std::chrono::duration<double, std::milli>(t_end-t_start).count();
+        }   
+    }
+    DBPL("SERIAL: readLong loop done")
+
+    long result = 0;
+    result += bytes[0] << 24;
+    result += bytes[1] << 16;
+    result += bytes[2] << 8;
+    result += bytes[3];
+
+    std::bitset<8> r1(bytes[0]);
+    std::bitset<8> r2(bytes[1]);
+    std::bitset<8> r3(bytes[2]);
+    std::bitset<8> r4(bytes[3]);
+
+
+    PRINT("SERIAL: read long, bits:");
+    PRINTLINE("[" << r1 << "][" << r2 << "][" << r3 << "][" << r4 << "]");
+    PRINTLINE("result: " << result);
+    //DBPL("SERIAL: returning long: \n" << ss);
+
+    return result;
 }
 
 bool Serial::available() {

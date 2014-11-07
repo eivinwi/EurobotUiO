@@ -121,7 +121,7 @@ void MotorCom::getEncoders() {
     result2 += readFromSerialNoWait() << 16ul;
     result2 += readFromSerialNoWait() << 8ul;
     result2 += readFromSerialNoWait();
-    DBPL("MOTORCOM: EncL: " << result1 z << "\nEncR" << result2); 
+    DBPL("MOTORCOM: EncL: " << result1 << "\nEncR" << result2); 
 }
 
 
@@ -130,23 +130,11 @@ void MotorCom::getEncoders() {
 long MotorCom::getEncL() {
     sync();
     writeToSerial(GET_ENCODERL);
-    long result = 0;
-    result = readFromSerial() << 24ul;
-    std::bitset<32> r1(result);
-    result += readFromSerialNoWait() << 16ul;
-    std::bitset<32> r2(result);
-    result += readFromSerialNoWait() << 8ul;
-    std::bitset<32> r3(result);
-    result += readFromSerialNoWait();
+    long result = readLongFromSerial();
+    //DBPL("MOTORCOM: encoder update\n" << ss);
     long diff = result - prev_encL;
-
-    std::stringstream ss;
-    ss << "BITS: \n" << r1 << '\n' << r2 << '\n' << r3 << '\n' << result << "\n--------------\n"
-        << "EncL: " << result << " (diff: " << diff << ")\nWheel rotations: " <<  (diff/980.0) << 
-        "\nDistance: " << diff*0.385;
-
-    DBPL("MOTORCOM: \n" << ss);
-
+    DBPL("EncL: " << result << " (diff: " << diff << ")\nWheel rotations: " <<  (diff/980.0) << 
+                "\nDistance: " << diff*0.385);
     prev_encL = result;
     return result;
 }
@@ -154,24 +142,11 @@ long MotorCom::getEncL() {
 long MotorCom::getEncR() {
     sync();
     writeToSerial(GET_ENCODERR);
-    long result = 0;
-    result = readFromSerial() << 24ul;
-    std::bitset<32> r1(result);
-    result += readFromSerialNoWait() << 16ul;
-    std::bitset<32> r2(result);
-    result += readFromSerialNoWait() << 8ul;
-    std::bitset<32> r3(result);
-    result += readFromSerialNoWait();
-    long diff = result - prev_encL;
-
-    std::stringstream ss;
-    ss << "BITS: \n" << r1 << '\n' << r2 << '\n' << r3 << '\n' << result << "\n--------------\n"
-        << "EncL: " << result << " (diff: " << diff << ")\nWheel rotations: " <<  (diff/980.0) << 
-        "\nDistance: " << diff*0.385;
-
-    DBPL("MOTORCOM: \n" << ss);
-    
-    prev_encL = result;
+    long result = readLongFromSerial();
+    long diff = result - prev_encR;
+    DBPL("EncR: " << result << " (diff: " << diff << ")\nWheel rotations: " 
+        << (diff/980.0) << "\nDistance: " << diff*0.385);
+    prev_encR = result;
     return result;
 }
 
@@ -279,4 +254,12 @@ uint8_t MotorCom::readFromSerialNoWait() {
 	} else {
 		return port->readNoWait();
 	}
+}
+
+long MotorCom::readLongFromSerial() {
+    if(simulating) {
+        return simport->readLong();
+    } else {
+        return port->readLong();
+    }
 }

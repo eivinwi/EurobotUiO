@@ -203,6 +203,12 @@ uint8_t SerialSim::read() {
 	return readNoWait();
 }
 
+long SerialSim::readLong() {
+	//TODO
+	long l = 0;
+	return l;
+}
+
 uint8_t SerialSim::readVi() {
 	readCounter++;
 	if(readCounter == 1) {
