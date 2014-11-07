@@ -4,7 +4,7 @@
 #include "printing.h"
 #include <iostream>
 
-#define ENC_PER_DEGREE 7.5
+#define ENC_PER_DEGREE 5.0 //7.5
 
 class Rotation {
 public:

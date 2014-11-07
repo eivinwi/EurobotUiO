@@ -53,12 +53,12 @@ int main(int argc, char *argv[]) {
     m->flush();
     p = new PosControl(m);
 
-    p->setGoalPos(20, 0, 0);
+    p->setGoalPos(40, 0, 0);
     drive();
-    p->setGoalPos(20, 0, 45);
+    p->setGoalPos(40, 0, 45);
     //m ->flush();
     drive();
-    p->setGoalPos(20, 0, 90);
+    p->setGoalPos(40, 0, 90);
     drive();
 
     //p->updatePosition();
