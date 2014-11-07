@@ -213,7 +213,7 @@ int findNumber(std::string s) {
 
 void goToXYR(int x, int y, int r) {
     if(coords[0] > 1000 || coords[1] > 1000 || coords[2] > 360) {
-        PRINTLINE("Values too high, aborting goToXYR");
+        PRINTLINE("MAIN: gotoXYR-values too high, aborting goToXYR");
     } else {
         int changed = 0;
         if(x != coords[0]) changed++;
@@ -221,10 +221,10 @@ void goToXYR(int x, int y, int r) {
         if(r != coords[2]) changed++;
 
         if(changed > 1) {
-            PRINTLINE("Cannot change more than 1 position at a time");
+            PRINTLINE("MAIN: goToXYR cannot change more than 1 position at a time");
         } else {
-
-            p->setGoalPos(coords[0], coords[1], coords[2]);
+            PRINTLINE("MAIN: goToXYR attempting to reach: " << x << "," << y << "," << r);
+            p->setGoalPos(x, y, r);
             drive();
             coords[0] = x;
             coords[1] = y;
