@@ -70,6 +70,7 @@ void Rotation::setAngle(float a) {
 float Rotation::distanceTo(float goalRot) {
 	float l = distanceLeft(goalRot);
 	float r = distanceRight(goalRot);
+	PRINTLINE("ROTATION distanceTo: l=" << l << " r=" << r);
 	if(abs(l) <= abs(r)) {
 		return l;
 	} else {
