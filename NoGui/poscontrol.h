@@ -38,6 +38,11 @@
 #define DRIVE_X 1
 #define DRIVE_Y 2
 
+#define ROTATION_CLOSE_ENOUGH 1
+#define POSITION_CLOSE_ENOUGH 1
+#define TOO_LONG 20
+
+
 void *worker_routine(void *arg);
 
 class PosControl {
@@ -46,13 +51,16 @@ public:
     ~PosControl();
 
     bool controlLoop();
-    void stop();
-    void turn(int distR);
-    void drive(float distX, float distY);
+    void fullStop();
+    void changeRotation(float distR);
+    void driveX(float distX);
+    void driveY(float distY);
+
+    //void drive(float distX, float distY);
 	void setGoalPos(int x, int y, int r);
-	float distanceFromX();
-	float distanceFromY();
-	int rotationOffset();
+	float distanceX();
+	float distanceY();
+	float rotationOffset();
 	long encoderDifference();
 	void updatePosition(int action);
 	int getRotation();
