@@ -132,10 +132,10 @@ void getKeyboardInput() {
         std::string sub2 = input.substr(0,2);
 
         if(sub2 == "gx") {
-            int pos = findNumber(input);
+            int pos = findPosition(input);
             goToXYR(pos, coords[1], coords[2]);
         } if(sub2 == "gy") {
-            int pos = findNumber(input);
+            int pos = findPosition(input);
             goToXYR(coords[0], pos, coords[2]);
         } else if(sub2 == "gr") {
             int rot = findAngle(input);
@@ -238,9 +238,9 @@ int findAngle(std::string s) {
 int findPosition(std::string s) {
     if(s.length() > 3) {
         std::string sub = s.substr(2, s.length()-2);
-        int speed = atoi(sub.c_str());
-        if(speed >= 0 && speed <= 300) {
-            return speed;
+        int pos = atoi(sub.c_str());
+        if(pos >= 0 && pos <= 300) {
+            return pos;
         } else { 
             PRINTLINE("Invalid position(must be 0-300).");
         }
@@ -252,7 +252,7 @@ int findPosition(std::string s) {
 
 
 void goToXYR(int x, int y, int r) {
-    if(coords[0] > 1000 || coords[1] > 1000 || coords[2] > 360) {
+    if(coords[0] > 3000 || coords[1] > 2000 || coords[2] > 360) {
         PRINTLINE("MAIN: gotoXYR-values too high, aborting goToXYR");
     } else {
         int changed = 0;

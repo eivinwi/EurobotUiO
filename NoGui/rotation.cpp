@@ -17,17 +17,17 @@ void Rotation::reset() {
 
 void Rotation::rotateTowards(float goalRot) {
 	if(goalRot > 360.0) {
-		PRINTLINE("ROTATION: invalid goalRot: " << goalRot);
+		DBPL("ROTATION: invalid goalRot: " << goalRot);
 	} else if (goalRot == angle) {
-		PRINTLINE("ROTATION: already at goalRot: " << goalRot);
+		DBPL("ROTATION: already at goalRot: " << goalRot);
 	} else {
 		float rot = distanceTo(goalRot);
 
 		if(rot > 0) {
-			PRINTLINE("ROTATION: rotating positive direction (" << angle << "->" << goalRot << ")");
+			DBPL("ROTATION: rotating positive direction (" << angle << "->" << goalRot << ")");
 		}
 		else {
-			PRINTLINE("ROTATION: rotating positive direction (" << angle << "->" << goalRot << ")");    			
+			DBPL("ROTATION: rotating positive direction (" << angle << "->" << goalRot << ")");    			
 		}
 	}
 
@@ -39,7 +39,7 @@ void Rotation::rotateTowards(float goalRot) {
 void Rotation::updateAngle(long diffL, long diffR) {
 	int ediff = (abs(diffL) + abs(diffR))/2;
 	if(ediff > 50) {
-		PRINTLINE("POS: Warning, large encoder difference (turning): " << ediff);
+		DBPL("POS: Warning, large encoder difference (turning): " << ediff);
 	}
 
 
@@ -53,24 +53,24 @@ void Rotation::updateAngle(long diffL, long diffR) {
 		turned = -(encAvg/ENC_PER_DEGREE) * POS_DIR;//*ROTATION_DIR;
 	}
 
-	PRINT("POS: changing rotation: " << angle << " + " << turned);
+	DBP("POS: changing rotation: " << angle << " + " << turned);
 
 	angle += turned;
 	if(angle > 360.0) {
-		PRINT("\nPOS: overflow " << angle);
+		DBP("\nPOS: overflow " << angle);
 		angle -= 360.0;
 	} else if(angle < 0.0) {
-		PRINT("\nPOS: overflow " << angle);
+		DBP("\nPOS: overflow " << angle);
 		angle = 360.0 + angle;
 	}
 
-	PRINTLINE(" = " << angle);
+	DBPL(" = " << angle);
 }
 
 
 void Rotation::setAngle(float a) {
 	if(a < 0.0 || a > 360.0) {
-		PRINTLINE("INVALID input to setAngle(): " << a);
+		DBPL("INVALID input to setAngle(): " << a);
 	} else {
     	angle = a;
 	}
@@ -80,7 +80,7 @@ void Rotation::setAngle(float a) {
 float Rotation::distanceTo(float goalRot) {
 	float l = distanceLeft(goalRot);
 	float r = distanceRight(goalRot);
-	PRINTLINE("ROTATION distanceTo: l=" << l << " r=" << r);
+	DBPL("ROTATION distanceTo: l=" << l << " r=" << r);
 	if(abs(l) <= abs(r)) {
 		return l;
 	} else {

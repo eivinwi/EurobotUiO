@@ -65,7 +65,7 @@ This means:
 #define POS_DIR (-1) //-1
 
 
-#define SLOWDOWN_DISTANCE 10
+#define SLOWDOWN_DISTANCE 40
 #define SLOWDOWN_DISTANCE_ROT 5
 
 #endif /* MD49_H */

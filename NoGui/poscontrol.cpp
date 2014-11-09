@@ -86,7 +86,7 @@ PosControl::~PosControl() {
 //sets the new goal pos
 // WARNING: currently only one arguments should be changed at the time
 void PosControl::setGoalPos(int x, int y, int rot) {
-	PRINT("POS: setGoalPos(" << x << "," << y << "," << rot << ")  : ");
+	DBP("POS: setGoalPos(" << x << "," << y << "," << rot << ")  : ");
 	x *= 10;
 	y *= 10;
 	int change = 0;
@@ -95,9 +95,9 @@ void PosControl::setGoalPos(int x, int y, int rot) {
 	if(rot != goalPos.rot) change++;
 
 	if(change == 0) {
-		PRINTLINE("already at specified goalPos.");
+		DBPL("already at specified goalPos.");
 	} else if(change > 1) {
-		PRINTLINE("only one position can be changed at a time.");
+		DBPL("only one position can be changed at a time.");
 	} else {
 		if(x != goalPos.x) goalPos.x = x;
 		if(y != goalPos.y) goalPos.y = y;
@@ -126,7 +126,7 @@ void PosControl::resetPosition() {
 //return true - in goalPos
 bool PosControl::controlLoop() {
 	/*if(timeSinceGoal() > TOO_LONG) {
-		PRINTLINE("Too long time since goal update, shutting down.");
+		DBPL("Too long time since goal update, shutting down.");
 		fullStop();
 		exit(EXIT_SUCCESS);
 	}*/
@@ -135,11 +135,11 @@ bool PosControl::controlLoop() {
 	float distX = distanceX(); 
 	float distY = distanceY();
 
-	PRINTLINE("===== CONTROL-LOOP =====");
+	DBPL("===== CONTROL-LOOP =====");
 	printGoal();
 	printCurrent();
 	printDist();
-	PRINTLINE("========================\n");
+	DBPL("========================\n");
 
 	// Checking if rotation is necessary.
 	// If not: checking if position-change is necessary
@@ -156,34 +156,35 @@ bool PosControl::controlLoop() {
 		updatePosition(DRIVE_Y);
 	}
 	else {	
-		PRINTLINE("**** GOAL REACHED ******");
+		DBPL("**** GOAL REACHED ******");
 		printGoal();
 		printCurrent();
 		printDist();
-		PRINTLINE("************************\n\n\n");
+		DBPL("************************\n\n\n");
 		fullStop();
 		return true;
 	}
-	PRINTLINE("\n");
+	DBPL("\n");
 	return false;
 }
 
 //TODO: fix negative
 void PosControl::changeRotation(float distR) {
-	PRINT("POS: turning: ");
+	DBP("POS: turning: ");
 	if(distR == 0) {
-		PRINTLINE("Error, turn is 0.");
+		DBPL("Error, turn is 0.");
 	} else if(distR > 0) {
-		PRINTLINE("Positive dir (" << distR << ")");
+		DBPL("Positive dir (" << distR << ")");
 		if(distR > SLOWDOWN_DISTANCE_ROT) {
 			com->setSpeedL(SPEED_MED_POS);
 			com->setSpeedR(SPEED_MED_NEG);
 		} else {
+			PRINTLINE("SLOWDOWN ROT");
 			com->setSpeedL(SPEED_SLOW_POS);
 			com->setSpeedR(SPEED_SLOW_NEG);
 		}
 	} else {
-		PRINTLINE("Negative dir (" << distR << ")");
+		DBPL("Negative dir (" << distR << ")");
 		if(distR < -SLOWDOWN_DISTANCE_ROT) {
 			com->setSpeedL(SPEED_MED_NEG);
 			com->setSpeedR(SPEED_MED_POS);
@@ -197,18 +198,20 @@ void PosControl::changeRotation(float distR) {
 void PosControl::driveX(float distX) {
 	float rotation = currentRotation();	
 	if(goalPos.rot != 0 && goalPos.rot != 180) {
-		PRINTLINE("POS: ERROR; goalX specified, but goalRot is " << goalPos.rot);
+		DBPL("POS: ERROR; goalX specified, but goalRot is " << goalPos.rot);
 	} 
 	else if(!closeEnoughAngle(rotation, 0) && !closeEnoughAngle(rotation, 180)) {
-		PRINTLINE("POS: ERROR; cur->angle is" << currentRotation() << " should be 0/180. Attemting to fix by turning");
+		DBPL("POS: ERROR; cur->angle is" << currentRotation() << " should be 0/180. Attemting to fix by turning");
 		changeRotation(rotationOffset());
 	} 
 	else {
-		PRINTLINE("POS: correct rotation, can drive X.");
+		DBPL("POS: correct rotation, can drive X.");
 		if(distX > 0) {
 			if(distX > SLOWDOWN_DISTANCE) {
+				PRINTLINE("FULLSPEED");
 				com->setSpeedBoth(SPEED_MED_POS);
 			} else {
+				PRINTLINE("SLOWDOWN X");
 				com->setSpeedBoth(SPEED_SLOW_POS);
 			}
 		} else {
@@ -224,14 +227,14 @@ void PosControl::driveX(float distX) {
 void PosControl::driveY(float distY) {
 	float rotation = currentRotation();
 	if(goalPos.rot != 90 && goalPos.rot != 270) {
-		PRINTLINE("POS: ERROR; goalY specified, but goalRot is " << goalPos.rot);
+		DBPL("POS: ERROR; goalY specified, but goalRot is " << goalPos.rot);
 	} 
 	else if(!closeEnoughAngle(rotation, 90) && !closeEnoughAngle(rotation,270)) {
-		PRINTLINE("POS: ERROR; cur->angle is" << rotation << " should be 90/270. Attempting to fix by turning");
+		DBPL("POS: ERROR; cur->angle is" << rotation << " should be 90/270. Attempting to fix by turning");
 		changeRotation(rotationOffset());
 	} 
 	else {
-		PRINTLINE("POS: correct rotation, can drive Y.");
+		DBPL("POS: correct rotation, can drive Y.");
 		if(distY > 0) {
 			if(distY > SLOWDOWN_DISTANCE) {
 				com->setSpeedBoth(SPEED_MED_POS);
@@ -260,27 +263,27 @@ void PosControl::updatePosition(int action) {
 	updateRightEncoder();
 //	int angle =	getRotation();
 
-	PRINT("POS: updatePos ");
+	DBP("POS: updatePos ");
 	if(action == TURNING) {
-//		PRINTLINE("Turning");
+//		DBPL("Turning");
 		//curX and curY should not really be updated
 		// update angle
 		curPos.rotation->updateAngle(leftEncoder.diff, rightEncoder.diff);
 	}
 	else if(action == DRIVE_X) {
-	//	PRINTLINE("DriveX");
+	//	DBPL("DriveX");
 		int ediff = encoderDifference();
 		if(ediff > 50) {
-			PRINTLINE("POS: Warning, large encoder difference(drivex): " << ediff);
+			DBPL("POS: Warning, large encoder difference(drivex): " << ediff);
 		}
 
 		curPos.x += leftEncoder.diffDist*POS_DIR;
 	}
 	else {  //if(action == DRIVE_Y) {
-	//	PRINTLINE("DriveY");
+	//	DBPL("DriveY");
 		int ediff = encoderDifference();
 		if(ediff > 50) {
-			PRINTLINE("POS: Warning, large encoder difference(drivey): " << ediff);
+			DBPL("POS: Warning, large encoder difference(drivey): " << ediff);
 		}
 
 		curPos.y += leftEncoder.diffDist*POS_DIR;
@@ -302,7 +305,7 @@ void PosControl::updateEncoder(long e, struct encoder *enc) {
 
 	if(absDiff > REASONABLE_ENC_DIFF) {
 		//TODO: reset encoders while taking care of values in a controlled manner
-		PRINTLINE("Error: unreasonable encoder value.");
+		DBPL("Error: unreasonable encoder value.");
 	}
 
 
@@ -416,9 +419,9 @@ void PosControl::printCurrent() {
 }
 
 void PosControl::printGoal() {
-	PRINTLINE("goal: " << goalPos.x << "," << goalPos.y << "," << goalPos.rot);	
+	DBPL("goal: " << goalPos.x << "," << goalPos.y << "," << goalPos.rot);	
 }
 
 void PosControl::printDist() {
-	PRINTLINE("dist: " << distanceX() << "," << distanceY() << "," << rotationOffset());
+	DBPL("dist: " << distanceX() << "," << distanceY() << "," << rotationOffset());
 }
