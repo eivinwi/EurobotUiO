@@ -1,5 +1,8 @@
 #include "rotation.h"
 
+//TODO: something is not right with direction-select
+// sometimes choses the furthest path to rotate
+
 Rotation::Rotation() {
 	reset();
 }
@@ -45,9 +48,9 @@ void Rotation::updateAngle(long diffL, long diffR) {
 	float turned = 0.0;
 
 	if(diffL > 0) {
-		turned = (encAvg/ENC_PER_DEGREE);//*ROTATION_DIR; 
+		turned = (encAvg/ENC_PER_DEGREE) * POS_DIR;//*ROTATION_DIR; 
 	} else {
-		turned = -(encAvg/ENC_PER_DEGREE);//*ROTATION_DIR;
+		turned = -(encAvg/ENC_PER_DEGREE) * POS_DIR;//*ROTATION_DIR;
 	}
 
 	PRINT("POS: changing rotation: " << angle << " + " << turned);

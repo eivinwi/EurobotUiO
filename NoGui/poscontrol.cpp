@@ -258,7 +258,7 @@ void PosControl::updatePosition(int action) {
 			PRINTLINE("POS: Warning, large encoder difference(drivex): " << ediff);
 		}
 
-		curPos.x += leftEncoder.diffDist;
+		curPos.x += leftEncoder.diffDist*POS_DIR;
 	}
 	else {  //if(action == DRIVE_Y) {
 	//	PRINTLINE("DriveY");
@@ -267,7 +267,7 @@ void PosControl::updatePosition(int action) {
 			PRINTLINE("POS: Warning, large encoder difference(drivey): " << ediff);
 		}
 
-		curPos.y += leftEncoder.diffDist;
+		curPos.y += leftEncoder.diffDist*POS_DIR;
 	}
 
 }

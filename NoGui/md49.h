@@ -44,6 +44,7 @@ This means:
 	128= stop
 	255=full forward
 */
+/*
 #define SPEED_MAX_NEG 0
 #define SPEED_MED_NEG 64
 #define SPEED_SLOW_NEG 96
@@ -51,7 +52,7 @@ This means:
 #define SPEED_SLOW_POS 160
 #define SPEED_MED_POS 192
 #define SPEED_MAX_POS 255
-/*
+*/
 #define SPEED_MAX_NEG 255
 #define SPEED_MED_NEG 192
 #define SPEED_SLOW_NEG 160
@@ -59,8 +60,8 @@ This means:
 #define SPEED_SLOW_POS 196
 #define SPEED_MED_POS 64
 #define SPEED_MAX_POS 0
-*/
+//*/
 
-#define ROTATION_DIR 1 //-1
+#define POS_DIR (-1) //-1
 
 #endif /* MD49_H */

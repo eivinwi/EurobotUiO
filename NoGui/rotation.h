@@ -2,6 +2,7 @@
 #define	ROTATION_H
 
 #include "printing.h"
+#include "md49.h"
 #include <iostream>
 
 #define ENC_PER_DEGREE 6.2 //7.5

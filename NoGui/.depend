@@ -7,4 +7,4 @@ serialsim.o: serialsim.cpp serialsim.h printing.h md49.h
 communication.o: communication.cpp communication.h printing.h
 poscontrol.o: poscontrol.cpp poscontrol.h motorcom.h serialsim.h \
  printing.h md49.h serial.h rotation.h
-rotation.o: rotation.cpp rotation.h printing.h
+rotation.o: rotation.cpp rotation.h printing.h md49.h
