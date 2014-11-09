@@ -19,6 +19,8 @@
 #include <pthread.h>
 
 int findNumber(std::string s);
+int findAngle(std::string s);
+int findPosition(std::string s);
 void goToXYR(int x, int y, int z);
 void printHelp();
 void getKeyboardInput();
@@ -136,7 +138,7 @@ void getKeyboardInput() {
             int pos = findNumber(input);
             goToXYR(coords[0], pos, coords[2]);
         } else if(sub2 == "gr") {
-            int rot = findNumber(input);
+            int rot = findAngle(input);
             goToXYR(coords[0], coords[1], rot);
         }
         else if(sub2 == "sl") {
@@ -205,7 +207,6 @@ int findNumber(std::string s) {
         std::string sub = s.substr(2, s.length()-2);
         int speed = atoi(sub.c_str());
         if(speed >= 0 && speed <= 255) {
-            PRINTLINE("Setting speed: " << speed);
             return speed;
         } else { 
             PRINTLINE("Invalid speed (must be 0-255).");
@@ -215,6 +216,37 @@ int findNumber(std::string s) {
     }
     return -1;
 }
+
+int findAngle(std::string s) {
+    if(s.length() > 3) {
+        std::string sub = s.substr(2, s.length()-2);
+        int speed = atoi(sub.c_str());
+        if(speed >= 0 && speed <= 360) {
+            return speed;
+        } else { 
+            PRINTLINE("Invalid angle(must be 0-360).");
+        }
+    } else {
+        PRINTLINE("Must specify angle (0-360).");
+    }
+    return 0;
+}
+
+int findPosition(std::string s) {
+    if(s.length() > 3) {
+        std::string sub = s.substr(2, s.length()-2);
+        int speed = atoi(sub.c_str());
+        if(speed >= 0 && speed <= 300) {
+            return speed;
+        } else { 
+            PRINTLINE("Invalid position(must be 0-300).");
+        }
+    } else {
+        PRINTLINE("Must specify position (0-300).");
+    }
+    return 0;
+}
+
 
 void goToXYR(int x, int y, int r) {
     if(coords[0] > 1000 || coords[1] > 1000 || coords[2] > 360) {

@@ -38,8 +38,8 @@
 #define DRIVE_X 1
 #define DRIVE_Y 2
 
-#define ROTATION_CLOSE_ENOUGH 1
-#define POSITION_CLOSE_ENOUGH 1
+#define ROTATION_CLOSE_ENOUGH 1.0
+#define POSITION_CLOSE_ENOUGH 1.0
 #define TOO_LONG 20
 
 
@@ -73,6 +73,9 @@ public:
 	float currentRotation();
 	//seconds
 	double timeSinceGoal(); 
+	void printGoal();
+	void printCurrent();
+	void printDist();
 
 private:
 	std::string in;

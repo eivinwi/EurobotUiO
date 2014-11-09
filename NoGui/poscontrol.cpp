@@ -82,68 +82,69 @@ PosControl::PosControl(MotorCom *s) {
 PosControl::~PosControl() {
 }
 
-
-//TODO: change restraints
+//TODO: fix multiple changes
+//sets the new goal pos
+// WARNING: currently only one arguments should be changed at the time
 void PosControl::setGoalPos(int x, int y, int rot) {
-	PRINTLINE("POS: setGoalPos: " << x << "," << y << "," << rot);
-	if(x*10 > 3000) {
-		PRINTLINE("POS: specified goalX is out of bounds: " << x);
+	PRINT("POS: setGoalPos(" << x << "," << y << "," << rot << ")  : ");
+	x *= 10;
+	y *= 10;
+	int change = 0;
+	if(x != goalPos.x) change++;
+	if(y != goalPos.y) change++;
+	if(rot != goalPos.rot) change++;
+
+	if(change == 0) {
+		PRINTLINE("already at specified goalPos.");
+	} else if(change > 1) {
+		PRINTLINE("only one position can be changed at a time.");
 	} else {
-		goalPos.x = x*10;
+		if(x != goalPos.x) goalPos.x = x;
+		if(y != goalPos.y) goalPos.y = y;
+		if(rot != goalPos.rot) goalPos.rot = rot;
 		goalPos.changed = time(0);
-		PRINTLINE("new goalX: " << goalPos.x);
-	} 
-	if(y*10 > 2000) {
-		PRINTLINE("POS: specified goalY is out of bounds: " << y);
-	} else {
-		goalPos.y = y*10;
-		goalPos.changed = time(0);
-		PRINTLINE("new goalY: " << goalPos.y);
 	}
-	if(rot < 0 || rot > 360) {
-		PRINTLINE("POS: specified goalRot is out of bounds: " << rot);
-	} else {
-		goalPos.rot = rot;
-		goalPos.changed = time(0);
-		PRINTLINE("new goalR: " << goalPos.rot);
-	} 
-	PRINTLINE(" ");
 }
 
 //return false - no yet in goalPos
 //return true - in goalPos
 bool PosControl::controlLoop() {
-	if(timeSinceGoal() > TOO_LONG) {
+	/*if(timeSinceGoal() > TOO_LONG) {
 		PRINTLINE("Too long time since goal update, shutting down.");
 		fullStop();
 		exit(EXIT_SUCCESS);
-	}
+	}*/
 
 	int distR = rotationOffset();
 	float distX = distanceX(); 
 	float distY = distanceY();
 
 	PRINTLINE("===== CONTROL-LOOP =====");
-	PRINTLINE("goal: " << goalPos.x << "," << goalPos.y << "," << goalPos.rot);	
-	PRINTLINE("cur : " << curPos.x << "," << curPos.y << "," << currentRotation());
-	PRINTLINE("dist: " << distX << "," << distY << "," << distR);
-	PRINTLINE("-------------------------\n");
+	printGoal();
+	printCurrent();
+	printDist();
+	PRINTLINE("========================\n");
 
-	/* Checking if we need to rotate */
-	if(distR > ROTATION_CLOSE_ENOUGH) {
+	// Checking if rotation is necessary.
+	// If not: checking if position-change is necessary
+	if(abs(distR) > ROTATION_CLOSE_ENOUGH) {
 		changeRotation(distR);
 		updatePosition(TURNING);
 	}
-	else if(distX > POSITION_CLOSE_ENOUGH) {
+	else if(abs(distX) > POSITION_CLOSE_ENOUGH) {
 		driveX(distX);
 		updatePosition(DRIVE_X);
 	} 	
-	else if(distY > POSITION_CLOSE_ENOUGH) {	
+	else if(abs(distY) > POSITION_CLOSE_ENOUGH) {	
 		driveY(distY);
 		updatePosition(DRIVE_Y);
 	}
 	else {	
-		PRINTLINE("POS: GOAL REACHED");
+		PRINTLINE("**** GOAL REACHED ******");
+		printGoal();
+		printCurrent();
+		printDist();
+		PRINTLINE("************************\n\n\n");
 		fullStop();
 		return true;
 	}
@@ -162,16 +163,17 @@ void PosControl::changeRotation(float distR) {
 		com->setSpeedR(SPEED_MED_NEG);
 	} else {
 		PRINTLINE("Negative dir (" << distR << ")");
-		com->setSpeedL(SPEED_MED_POS);
-		com->setSpeedR(SPEED_MED_NEG);
+		com->setSpeedL(SPEED_MED_NEG);
+		com->setSpeedR(SPEED_MED_POS);
 	}
 }
 
 void PosControl::driveX(float distX) {
+	float rotation = currentRotation();	
 	if(goalPos.rot != 0 && goalPos.rot != 180) {
 		PRINTLINE("POS: ERROR; goalX specified, but goalRot is " << goalPos.rot);
 	} 
-	else if(currentRotation() != 0 && currentRotation() != 180) {
+	else if(rotation != 0 && rotation != 180) {
 		PRINTLINE("POS: ERROR; cur->angle is" << currentRotation() << " should be 0/180. Attemting to fix by turning");
 		changeRotation(rotationOffset());
 	} 
@@ -186,16 +188,16 @@ void PosControl::driveX(float distX) {
 }
 
 void PosControl::driveY(float distY) {
+	float rotation = currentRotation();
 	if(goalPos.rot != 90 && goalPos.rot != 270) {
 		PRINTLINE("POS: ERROR; goalY specified, but goalRot is " << goalPos.rot);
 	} 
-	else if(currentRotation() != 0 && currentRotation() != 180) {
-		PRINTLINE("POS: ERROR; cur->angle is" << currentRotation() << " should be 90/270. Attempting to fix by turning");
+	else if(rotation != 0 && rotation != 180) {
+		PRINTLINE("POS: ERROR; cur->angle is" << rotation << " should be 90/270. Attempting to fix by turning");
 		changeRotation(rotationOffset());
 	} 
 	else {
 		PRINTLINE("POS: correct rotation, can drive Y.");
-
 		if(distY > 0) {
 			com->setSpeedBoth(SPEED_MED_POS);
 		} else {
@@ -363,4 +365,17 @@ long PosControl::encoderDifference() {
 
 double PosControl::timeSinceGoal() {
 	return (time(0) - goalPos.changed);
+}
+
+
+void PosControl::printCurrent() {
+	PRINTLINE("cur : " << curPos.x << "," << curPos.y << "," << currentRotation());
+}
+
+void PosControl::printGoal() {
+	PRINTLINE("goal: " << goalPos.x << "," << goalPos.y << "," << goalPos.rot);	
+}
+
+void PosControl::printDist() {
+	PRINTLINE("dist: " << distanceX() << "," << distanceY() << "," << rotationOffset());
 }
