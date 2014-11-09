@@ -52,14 +52,16 @@ int main(int argc, char *argv[]) {
 
     p = new PosControl(m);
 
-    PRINTLINE("SETUP: done. starting input-loop");
+  /*  PRINTLINE("SETUP: done. starting input-loop");
     quit = false;
     while(true) {
         getKeyboardInput();
         if(quit) {
             break;
         }
-    }
+    }*/
+
+    PRINTLINE("SETUP: done, starting driving sequence");
 
     PRINTLINE("MAIN: Exiting");
     return 0;

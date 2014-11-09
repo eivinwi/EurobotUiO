@@ -10,8 +10,7 @@
 
 /*
 	TODO:
-		- fix encoder values on turn
-		- negative encoder values
+		- driving opposite way should reduce x/y values, not increase
 
 		- share objects in threads
 
