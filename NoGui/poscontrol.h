@@ -50,6 +50,7 @@ public:
     PosControl(MotorCom *s);
     ~PosControl();
 
+    void resetPosition();
     bool controlLoop();
     void fullStop();
     void changeRotation(float distR);

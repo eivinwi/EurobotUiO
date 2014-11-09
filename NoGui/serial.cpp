@@ -130,9 +130,9 @@ long Serial::readLong() {
     std::bitset<8> r4(bytes[3]);
 
 
-    PRINT("SERIAL: read long, bits:");
-    PRINTLINE("[" << r1 << "][" << r2 << "][" << r3 << "][" << r4 << "]");
-    PRINTLINE("result: " << result);
+    DBP("SERIAL: read long, bits:");
+    DBPL("[" << r1 << "][" << r2 << "][" << r3 << "][" << r4 << "]");
+    DBPL("result: " << result);
     //DBPL("SERIAL: returning long: \n" << ss);
 
     return result;
@@ -143,9 +143,10 @@ bool Serial::available() {
 }
 
 void Serial::printAll() {
-    PRINT("Flushed serial: [");
+    DBP("Flushed serial: [");
     while(serial.rdbuf()->in_avail()) {
-        PRINT(serial.get());
+        uint8_t b = serial.get();
+        DBP(serial.get());
     }
-    PRINTLINE("]");
+    DBPL("]");
 }

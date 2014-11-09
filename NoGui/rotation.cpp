@@ -1,13 +1,13 @@
 #include "rotation.h"
 
 Rotation::Rotation() {
-	resetAngle();
+	reset();
 }
 
 Rotation::~Rotation(){
 }
 
-void Rotation::resetAngle() {
+void Rotation::reset() {
 	angle = 0.0;
 }
 
@@ -31,7 +31,7 @@ void Rotation::rotateTowards(float goalRot) {
 }
 
 
-
+//BUG: turned is always positive
 //calculate new angle based on encoders
 void Rotation::updateAngle(long diffL, long diffR) {
 	int ediff = (abs(diffL) + abs(diffR))/2;
@@ -42,7 +42,14 @@ void Rotation::updateAngle(long diffL, long diffR) {
 
   	//TODO: needs to know that encoders read the same
 	long encAvg = (abs(diffL) + abs(diffR))/2;
-	float turned = encAvg/ENC_PER_DEGREE; 
+	float turned = 0.0;
+
+	if(diffL > 0) {
+		turned = (encAvg/ENC_PER_DEGREE);//*ROTATION_DIR; 
+	} else {
+		turned = -(encAvg/ENC_PER_DEGREE);//*ROTATION_DIR;
+	}
+
 	PRINT("POS: changing rotation: " << angle << " + " << turned);
 
 	angle += turned;
@@ -82,18 +89,26 @@ float Rotation::distanceLeft(float goal) {
 	if(goal >= angle) {
 		return (goal - angle);
 	} else {
-		return (360 - goal + angle);
+		return ((360 - angle) + goal);
 	}
 }
 
 //result will be negative, to show rotation towards the right
 float Rotation::distanceRight(float goal) {
 	if(goal >= angle) {
-		return (goal - 360 - angle);
+		return ( (-angle) - (360-goal) );  //(goal - 360 - angle);
 	} else {
 		return (goal - angle);
 	}
 }
+
+/*
+goal=
+angle=
+
+
+*/
+
 
 
 float Rotation::getAngle() {

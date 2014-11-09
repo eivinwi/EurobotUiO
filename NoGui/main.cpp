@@ -140,6 +140,9 @@ void getKeyboardInput() {
         } else if(sub2 == "gr") {
             int rot = findAngle(input);
             goToXYR(coords[0], coords[1], rot);
+        } else if(sub2 == "re") {
+            PRINTLINE("Setting current position as 0,0,0");
+            p->resetPosition();
         }
         else if(sub2 == "sl") {
             int speed = findNumber(input);

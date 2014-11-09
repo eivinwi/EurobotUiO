@@ -4,13 +4,13 @@
 #include "printing.h"
 #include <iostream>
 
-#define ENC_PER_DEGREE 6.5 //7.5
+#define ENC_PER_DEGREE 6.2 //7.5
 
 class Rotation {
 public:
     Rotation();
     ~Rotation();
-    void resetAngle();
+    void reset();
     void rotateTowards(float goalRot);
 
     //calculate new angle based on encoders
