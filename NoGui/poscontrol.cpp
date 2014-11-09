@@ -175,7 +175,7 @@ void PosControl::changeRotation(float distR) {
 		PRINTLINE("Error, turn is 0.");
 	} else if(distR > 0) {
 		PRINTLINE("Positive dir (" << distR << ")");
-		if(distR > 5) {
+		if(distR > SLOWDOWN_DISTANCE_ROT) {
 			com->setSpeedL(SPEED_MED_POS);
 			com->setSpeedR(SPEED_MED_NEG);
 		} else {
@@ -184,7 +184,7 @@ void PosControl::changeRotation(float distR) {
 		}
 	} else {
 		PRINTLINE("Negative dir (" << distR << ")");
-		if(distR < -5) {
+		if(distR < -SLOWDOWN_DISTANCE_ROT) {
 			com->setSpeedL(SPEED_MED_NEG);
 			com->setSpeedR(SPEED_MED_POS);
 		} else {
@@ -206,9 +206,17 @@ void PosControl::driveX(float distX) {
 	else {
 		PRINTLINE("POS: correct rotation, can drive X.");
 		if(distX > 0) {
-			com->setSpeedBoth(SPEED_MED_POS);
+			if(distX > SLOWDOWN_DISTANCE) {
+				com->setSpeedBoth(SPEED_MED_POS);
+			} else {
+				com->setSpeedBoth(SPEED_SLOW_POS);
+			}
 		} else {
-			com->setSpeedBoth(SPEED_MED_NEG);
+			if(distX < -SLOWDOWN_DISTANCE) {
+				com->setSpeedBoth(SPEED_MED_NEG);
+			} else {
+				com->setSpeedBoth(SPEED_SLOW_NEG);
+			}
 		}
 	}
 }
@@ -225,9 +233,17 @@ void PosControl::driveY(float distY) {
 	else {
 		PRINTLINE("POS: correct rotation, can drive Y.");
 		if(distY > 0) {
-			com->setSpeedBoth(SPEED_MED_POS);
+			if(distY > SLOWDOWN_DISTANCE) {
+				com->setSpeedBoth(SPEED_MED_POS);
+			} else {
+				com->setSpeedBoth(SPEED_SLOW_POS);
+			}
 		} else {
-			com->setSpeedBoth(SPEED_MED_NEG);
+			if(distY < -SLOWDOWN_DISTANCE) {
+				com->setSpeedBoth(SPEED_MED_NEG);
+			} else {
+				com->setSpeedBoth(SPEED_SLOW_NEG);
+			}
 		}
 	} 	
 }

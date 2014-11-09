@@ -69,7 +69,7 @@ void drive() {
     bool done = false;
     while(!done) {
         done = p->controlLoop();
-        usleep(5000);
+        usleep(4000);
     }
     PRINTLINE("Drive done");
     usleep(2000000);
