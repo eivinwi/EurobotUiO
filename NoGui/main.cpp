@@ -62,7 +62,22 @@ int main(int argc, char *argv[]) {
     }*/
 
     PRINTLINE("SETUP: done, starting driving sequence");
-
+    p->setGoalPos(50,0,0);
+    drive();
+    p->setGoalPos(50,0,90);
+    drive();
+    p->setGoalPos(50,50,90);
+    drive();
+    p->setGoalPos(50,50,180);
+    drive();
+    p->setGoalPos(100,50,180);
+    drive();
+    p->setGoalPos(100,50,270);
+    drive();
+    p->setGoalPos(100,100,270);
+    drive();
+    p->setGoalPos(100,100,0);
+    drive();
     PRINTLINE("MAIN: Exiting");
     return 0;
 }
@@ -74,7 +89,7 @@ void drive() {
         usleep(4000);
     }
     PRINTLINE("Drive done");
-    usleep(2000000);
+    usleep(1000000);
 }
 
 /* return:
