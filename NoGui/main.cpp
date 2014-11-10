@@ -62,8 +62,22 @@ int main(int argc, char *argv[]) {
     }*/
 
     PRINTLINE("SETUP: done, starting driving sequence");
-    p->setGoalPos(50,0,0);
-    drive();
+    p->setGoalPos(-50,0,0);
+    p->controlLoop();
+    //p->setGoalPos(50,0,180);
+    //p->controlLoop();
+    p->setGoalPos(0,0, 0);
+    p->controlLoop();
+
+    /*
+    p->setGoalPos(50,50,180);
+    p->controlLoop();
+    p->setGoalPos(0,50,180);
+    p->controlLoop();
+*/
+
+
+  /*  drive();
     p->setGoalPos(50,0,90);
     drive();
     p->setGoalPos(50,50,90);
@@ -79,7 +93,7 @@ int main(int argc, char *argv[]) {
     p->setGoalPos(100,100,0);
     drive();
     PRINTLINE("MAIN: Exiting");
-    return 0;
+    return 0;*/
 }
 
 void drive() {

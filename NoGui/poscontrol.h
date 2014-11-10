@@ -19,7 +19,6 @@
 
 #include "motorcom.h"
 #include "printing.h"
-#include <zmq.hpp>
 #include <string>
 #include <iostream>
 #include <thread>
@@ -27,6 +26,7 @@
 #include <unistd.h>
 #include <cassert>
 #include <time.h>
+#include <math.h>
 
 // Game area resolution in mm:
 #define XRES 30000
@@ -49,44 +49,40 @@ class PosControl {
 public:
     PosControl(MotorCom *s);
     ~PosControl();
-
     void resetPosition();
     bool controlLoop();
-    void fullStop();
+	void setGoalPos(int x, int y, int r);
+	float currentRotation();
+	std::string getCurrentPos();
+	bool inGoal();
+
+private:
+	long encoderDifference();
     void changeRotation(float distR);
     void driveX(float distX);
     void driveY(float distY);
-
-    //void drive(float distX, float distY);
-	void setGoalPos(int x, int y, int r);
+    void fullStop();
 	float distanceX();
 	float distanceY();
 	float rotationOffset();
-	long encoderDifference();
 	void updatePosition(int action);
-	int getRotation();
 	bool closeEnoughAngle(int a, int b); 
+	bool closeEnoughPos(float a, float b);
 	bool closeEnoughEnc(long a, long b);
 	void updateEncoder(long e, struct encoder *side);
 	void updateLeftEncoder();
 	void updateRightEncoder();
 	float average(long a, long b);
-	float currentRotation();
-	//seconds
+
 	double timeSinceGoal(); 
 	void printGoal();
 	void printCurrent();
 	void printDist();
 
-private:
 	std::string in;
-
 	MotorCom *com;
-
 	bool turning;
 
 };
 
 #endif /* POSCONTROL_H */
-
-
