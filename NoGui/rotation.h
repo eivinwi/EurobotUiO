@@ -17,11 +17,11 @@ public:
     //calculate new angle based on encoders
     void updateAngle(long diffL, long diffR);
 
-    void setAngle(float a);
+    void set(float a);
     float distanceTo(float goal);
     float distanceLeft(float goal);
 	float distanceRight(float goal);
-    float getAngle();
+    float get();
 
 private:
 	float angle;

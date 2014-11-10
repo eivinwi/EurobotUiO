@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
     }*/
 
     PRINTLINE("SETUP: done, starting driving sequence");
-    p->setGoalPos(-50,0,0);
+    p->setGoalPos(50,0,0);
     p->controlLoop();
     //p->setGoalPos(50,0,180);
     //p->controlLoop();

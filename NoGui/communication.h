@@ -20,10 +20,12 @@
 #include <zmq.hpp>
 #include <string>
 #include <iostream>
+#include <sstream>
 #include <thread>
 #include <pthread.h>
 #include <unistd.h>
 #include <cassert>
+#include <vector>
 
 //static void* readLoop(void* me);
 
@@ -43,12 +45,18 @@ class Communication {
 				socket.recv (&request);
 				std::string rpl = std::string(static_cast<char*>(request.data()), request.size());
 
-				DBPL("READTHREAD: received" << rpl);
+				PRINTLINE("READTHREAD: received" << rpl);
 				// Do some 'work'
+				
 				sleep(1);
-				// Send reply back to client
-				zmq::message_t reply (5);
-				memcpy ((void *) reply.data (), "ok", 2);
+
+				//reply
+				zmq::message_t reply(7);
+		//		if(addToQueue(rpl)) {
+					memcpy ((void *) reply.data (), "okidoki", 7);
+		//		} else {
+		//			memcpy ((void *) reply.data (), "invalid", 7);
+		//		}
 				socket.send (reply);
 			}
 			return 0;
@@ -70,6 +78,8 @@ class Communication {
 				// Do some 'work'
 				sleep(1);
 				// Send reply back to client
+
+				//std::string pos = 
 				zmq::message_t reply (9);
 				memcpy ((void *) reply.data (), "20 40 50", 8);
 				DBPL("WRITETHREAD: replied: " << "20 40 50");
@@ -79,7 +89,14 @@ class Communication {
 		}	
 
 	private:
+		//bool addToQueue(std::string);
+		//void dequeuePos();
+
 		std::string in;
+		//std::queue<std::string> posQueue;
+
+		bool new_pos_ready;
+		pthread_mutex_t new_pos_mutex;
 
 };
 

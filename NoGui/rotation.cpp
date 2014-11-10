@@ -68,7 +68,7 @@ void Rotation::updateAngle(long diffL, long diffR) {
 }
 
 
-void Rotation::setAngle(float a) {
+void Rotation::set(float a) {
 	if(a < 0.0 || a > 360.0) {
 		DBPL("INVALID input to setAngle(): " << a);
 	} else {
@@ -105,16 +105,13 @@ float Rotation::distanceRight(float goal) {
 	}
 }
 
+
+float Rotation::get() {
+	return angle;
+}
 /*
 goal=
 angle=
 
 
 */
-
-
-
-float Rotation::getAngle() {
-	return angle;
-}
-

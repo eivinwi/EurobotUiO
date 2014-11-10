@@ -1,10 +1,11 @@
 main.o: main.cpp motorcom.h serialsim.h printing.h md49.h serial.h \
- communication.h poscontrol.h
+ communication.h poscontrol.h position.h rotation.h
 motorcom.o: motorcom.cpp motorcom.h serialsim.h printing.h md49.h \
  serial.h
 serial.o: serial.cpp serial.h md49.h printing.h
 serialsim.o: serialsim.cpp serialsim.h printing.h md49.h
 communication.o: communication.cpp communication.h printing.h
 poscontrol.o: poscontrol.cpp poscontrol.h motorcom.h serialsim.h \
- printing.h md49.h serial.h rotation.h
+ printing.h md49.h serial.h position.h rotation.h
 rotation.o: rotation.cpp rotation.h printing.h md49.h
+position.o: position.cpp position.h rotation.h printing.h md49.h

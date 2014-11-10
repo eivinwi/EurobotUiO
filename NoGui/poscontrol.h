@@ -19,14 +19,21 @@
 
 #include "motorcom.h"
 #include "printing.h"
-#include <string>
+#include "position.h"
+#include "rotation.h"
 #include <iostream>
-#include <thread>
-#include <pthread.h>
-#include <unistd.h>
+#include <string>
+#include <sstream>
+#include <vector>
+
 #include <cassert>
+#include <unistd.h>
 #include <time.h>
 #include <math.h>
+#include <thread>
+#include <pthread.h>
+
+
 
 // Game area resolution in mm:
 #define XRES 30000
@@ -74,7 +81,6 @@ private:
 	void updateRightEncoder();
 	float average(long a, long b);
 
-	double timeSinceGoal(); 
 	void printGoal();
 	void printCurrent();
 	void printDist();
@@ -82,6 +88,10 @@ private:
 	std::string in;
 	MotorCom *com;
 	bool turning;
+
+	Position *goalPos;
+	Position *curPos;
+	Position *exactPos;
 
 };
 
