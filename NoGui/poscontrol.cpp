@@ -6,6 +6,7 @@
 
 
 		- controlLoop in its own thread???
+			- mutex for position update/retrival, eventually atomic positions
 */
 
 struct encoder {
@@ -20,7 +21,7 @@ struct encoder {
 
 PosControl::PosControl(MotorCom *s) {
 	com = s;
-	goalPos = new Position;
+	goalPos = new GoalPosition;
 	curPos = new Position;
 	exactPos = new Position;
 
@@ -77,7 +78,7 @@ void PosControl::resetPosition() {
 		fullStop();
 		exit(EXIT_SUCCESS);
 	}*/
-bool PosControl::controlLoop() {
+void PosControl::controlLoop() {
 	do {
 		//TODO: check if too long since position update
 
@@ -104,17 +105,19 @@ bool PosControl::controlLoop() {
 		else if(abs(distY) > POSITION_CLOSE_ENOUGH) {	
 			driveY(distY);
 			updatePosition(DRIVE_Y);
+		} else {
+			PRINTLINE("**** GOAL REACHED ******");
+			printGoal();
+			printCurrent();
+			printDist();
+			PRINTLINE("************************\n\n\n");
+			fullStop();
 		}
 		usleep(3000);
-	} while(!inGoal());
-	PRINTLINE("**** GOAL REACHED ******");
-	printGoal();
-	printCurrent();
-	printDist();
-	PRINTLINE("************************\n\n\n");
-	fullStop();
+	} while(true);
+
+	PRINTLINE("*** EXITING CONTROL LOOP ***");
 	usleep(1000000);
-	return true;
 }
 
 bool PosControl::inGoal() {

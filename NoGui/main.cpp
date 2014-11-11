@@ -67,8 +67,8 @@ void readLoop() {
 			//if(pthread_mutex_trylock(&read_pos_mutex) != 0) {
 			if(false) {
 				usleep(5000);
-				if(mutex) {
-\					PRINTLINE("READLOOP: error, mutex still locked");
+				if(true) {//mutex) {
+					PRINTLINE("READLOOP: error, mutex still locked");
 				} else {
 					input_pos.x = pos[0];
 					input_pos.y = pos[1];
@@ -124,19 +124,23 @@ int main(int argc, char *argv[]) {
     //std::thread write_thread(writeLoop);
 
 
+    PRINTLINE("SETUP: initializing controlLoop thread");
+    std::thread pos_thread(&PosControl::controlLoop, p);
 
+
+/*
     PRINTLINE("SETUP: done, looping and checking for input");
     while(true) {
     	if(new_pos_ready) {
 
     		//attempt to lock mutex, read values, unlock mutex, set pos_ready to false
-    		if(mutex.try_lock()) {
+    		if(read_mutex.try_lock()) {
     			//setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
 	    		read_mutex.unlock();
     			new_pos_ready = false; 
     		} else {
     			usleep(1000);
-    			if(mutex.try_lock()) {
+    			if(read_mutex.try_lock()) {
 	    			//setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
 		    		read_mutex.unlock();
 	    			new_pos_ready = false; 
@@ -146,10 +150,21 @@ int main(int argc, char *argv[]) {
     		}
     	}
     	usleep(1000);
+    }*/
+
+ //   testDrive();
+
+    PRINTLINE("MAIN: Exiting");
+    if(read_thread.joinable()) {
+    	read_thread.join();
+    }
+/*    if(write_thread.joinable()) {
+		write_thread.join();
+    }*/
+    if(pos_thread.joinable()) {
+    	pos_thread.join();
     }
 
-    //testDrive();
-    PRINTLINE("MAIN: Exiting");
     return 0;
 }
 
@@ -176,7 +191,7 @@ bool getArguments(std::string input, int *pos) {
     }
 }
 
-
+/*
 void drive() {
     bool done = false;
     while(!done) {
@@ -185,26 +200,26 @@ void drive() {
     }
     PRINTLINE("Drive done");
     usleep(1000000);
-}
+}*/
 
 
 void testDrive() {
     p->setGoalPos(50,0,0);
-    p->controlLoop();
+    //p->controlLoop();
     p->setGoalPos(50,0, 90);
-    p->controlLoop();
+    //p->controlLoop();
     p->setGoalPos(50,50, 90);
-    p->controlLoop();
+   // p->controlLoop();
     p->setGoalPos(50,50, 180);
-    p->controlLoop();
+   // p->controlLoop();
     p->setGoalPos(0,50, 180);
-    p->controlLoop();
+   // p->controlLoop();
     p->setGoalPos(0,50, 270);
-    p->controlLoop();
+   // p->controlLoop();
     p->setGoalPos(0,0, 270);
-    p->controlLoop();
+   // p->controlLoop();
     p->setGoalPos(0,0, 0);
-    p->controlLoop();	
+   // p->controlLoop();	
 }
 
 

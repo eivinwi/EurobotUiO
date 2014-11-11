@@ -20,6 +20,7 @@
 #include "motorcom.h"
 #include "printing.h"
 #include "position.h"
+#include "goalposition.h"
 #include "rotation.h"
 #include <iostream>
 #include <string>
@@ -57,7 +58,7 @@ public:
     PosControl(MotorCom *s);
     ~PosControl();
     void resetPosition();
-    bool controlLoop();
+    void controlLoop();
 	void setGoalPos(int x, int y, int r);
 	float currentRotation();
 	std::string getCurrentPos();
@@ -89,7 +90,7 @@ private:
 	MotorCom *com;
 	bool turning;
 
-	Position *goalPos;
+	GoalPosition *goalPos;
 	Position *curPos;
 	Position *exactPos;
 

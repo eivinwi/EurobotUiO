@@ -4,6 +4,7 @@
 #include "printing.h"
 #include "md49.h"
 #include <iostream>
+#include <atomic>
 
 #define ENC_PER_DEGREE 6.2 //7.5
 
@@ -25,6 +26,7 @@ public:
 
 private:
 	float angle;
+    
 };
 
 #endif /* ROTATION_H */
