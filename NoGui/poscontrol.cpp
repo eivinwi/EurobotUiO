@@ -107,11 +107,12 @@ void PosControl::controlLoop() {
 			updatePosition(DRIVE_Y);
 		} else {
 			PRINTLINE("**** GOAL REACHED ******");
-			printGoal();
+		/*	printGoal();
 			printCurrent();
 			printDist();
-			PRINTLINE("************************\n\n\n");
+			PRINTLINE("************************\n\n\n");*/
 			fullStop();
+			usleep(7000);
 		}
 		usleep(3000);
 	} while(true);

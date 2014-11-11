@@ -41,6 +41,7 @@ std::mutex read_mutex;
 std::atomic<bool> new_pos_ready(false);
 
 void readLoop() {
+	//PRINTLINE("READLOOP: starting");
 	// Prepare our context and socket
 	zmq::context_t context (1);
 	zmq::socket_t socket (context, ZMQ_REP);
@@ -51,7 +52,7 @@ void readLoop() {
 		socket.recv (&request);
 		std::string recv_str = std::string(static_cast<char*>(request.data()), request.size());
 
-		PRINTLINE("READTHREAD: received" << recv_str);
+		PRINTLINE("READLOOP: received" << recv_str);
 		// Do some 'work'
 		
 		sleep(1);
@@ -65,21 +66,27 @@ void readLoop() {
 			//set position in struct
 
 			//if(pthread_mutex_trylock(&read_pos_mutex) != 0) {
-			if(false) {
+			if(!read_mutex.try_lock()) {
+				//PRINTLINE("READLOOP: mutex locked, wait and retry");
 				usleep(5000);
-				if(true) {//mutex) {
-					PRINTLINE("READLOOP: error, mutex still locked");
+				if(!read_mutex.try_lock()) {//mutex) {
+					//PRINTLINE("READLOOP: error, mutex still locked");
 				} else {
+					//PRINTLINE("READLOOP: mutex now open, setting position");
 					input_pos.x = pos[0];
 					input_pos.y = pos[1];
 					input_pos.rot = pos[2];
+					new_pos_ready = true;
+					read_mutex.unlock();
 				}
 			} else {
 				input_pos.x = pos[0];
 				input_pos.y = pos[1];
 				input_pos.rot = pos[2];
+				//PRINTLINE("READLOOP: setting position: [" << input_pos.x << "," << input_pos.y << "," << input_pos.rot << "]");
+				new_pos_ready = true;
+				read_mutex.unlock();
 			}
-
 			//return OK to client
 			memcpy ((void *) reply.data (), "ok", 2);
 		} else {
@@ -119,6 +126,7 @@ int main(int argc, char *argv[]) {
     input_pos.rot = 0;
 
     std::thread read_thread(readLoop);
+    usleep(100000);
 
     //PRINTLINE("SETUP: initializing writeLoop thread");
     //std::thread write_thread(writeLoop);
@@ -126,22 +134,23 @@ int main(int argc, char *argv[]) {
 
     PRINTLINE("SETUP: initializing controlLoop thread");
     std::thread pos_thread(&PosControl::controlLoop, p);
+    usleep(100000);
 
 
-/*
     PRINTLINE("SETUP: done, looping and checking for input");
     while(true) {
     	if(new_pos_ready) {
 
     		//attempt to lock mutex, read values, unlock mutex, set pos_ready to false
     		if(read_mutex.try_lock()) {
-    			//setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
+    			p->setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
+    			//PRINTLINE();
 	    		read_mutex.unlock();
     			new_pos_ready = false; 
     		} else {
     			usleep(1000);
     			if(read_mutex.try_lock()) {
-	    			//setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
+	    			p->setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
 		    		read_mutex.unlock();
 	    			new_pos_ready = false; 
     			} else {
@@ -150,7 +159,7 @@ int main(int argc, char *argv[]) {
     		}
     	}
     	usleep(1000);
-    }*/
+    }
 
  //   testDrive();
 
@@ -172,22 +181,26 @@ int main(int argc, char *argv[]) {
 bool getArguments(std::string input, int *pos) {
 	int i = 0;
     std::istringstream f(input);
-    std::string s;    
+    std::string s;
     while(getline(f, s, ',')) {
-        //std::cout << s << endl;
+    	//PRINTLINE("s=" << s);
         pos[i] = atoi(s.c_str());
         
         i++;
-        if(i >= 3) break;
+        if(i > 2) break;
     }
+//    PRINTLINE("DONEWHILE, i="<<i);
 
-    if(i != 2) {
+    if(i != 3) {
     	return false;
     } else {
         if(abs(pos[0]) > 300) return false;
         else if(abs(pos[1]) > 300) return false;
         else if(pos[2] < 0 || pos[2] > 360) return false;
-    	else return true;
+    	else {
+  //  		PRINTLINE("returning TRUE");
+    		return true;
+    	}
     }
 }
 
