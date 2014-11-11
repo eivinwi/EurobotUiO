@@ -1,9 +1,9 @@
 CC=gcc
-CXX=g++ -Wall -std=c++11
+CXX=g++ -Wall -std=c++11 -pthread
 RM=rm -f
 CPPFLAGS=-g $(shell root-config --cflags)
 LDFLAGS=-g $(shell root-config --ldflags)
-LDLIBS=$(shell root-config --libs) -lserial -lzmq
+LDLIBS=$(shell root-config --libs) -lserial -lzmq -lpthread
 
 EXEC=exec
 SRCS=main.cpp motorcom.cpp serial.cpp serialsim.cpp communication.cpp poscontrol.cpp rotation.cpp position.cpp

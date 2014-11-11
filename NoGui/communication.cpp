@@ -1,31 +1,43 @@
 #include "communication.h"
 
+struct read_thread_data {
+	int thread_id;
+	int x;
+	int y;
+	int rot;
+};
+
 Communication::Communication() {
     new_pos_ready = 0;
     
     //for reading position FROM PosControl
-   // pthread_mutex_init(read_pos_mutex, NULL);
-    
-    //pthread_mutex_init(write_pos_mutex, NULL);
 
-    int s1 = 0;
-    pthread_t com_thread;
-    pthread_create(&com_thread, NULL, readLoop, &s1);
+    pthread_mutex_init(&read_pos_mutex, NULL);
+    pthread_mutex_init(&write_pos_mutex, NULL);
 
-    int s2 = 0;
-    pthread_t th;
-    pthread_create(&th, NULL, writeLoop, &s2);
+    struct read_thread_data rd;
+    rd.thread_id = 0;
+    rd.x = 0;
+    rd.y = 0;
+    rd.rot = 0;
+
+    pthread_create(&read_pos_thread, NULL, readLoop, &rd);
+
+    int s2 = 1;
+    pthread_create(&write_pos_thread, NULL, writeLoop, &s2);
 }
 
 Communication::~Communication() {
+	pthread_join(read_pos_thread, NULL);
+	pthread_join(write_pos_thread, NULL);	
 }
 
 
 /* return true - position added to queue
  * return false - invalid position
 */
-/*bool Communication::addToQueue(std::string input) {
-	int positions[3];
+bool Communication::addToQueue(std::string input) {
+/*	int positions[3];
 	int i = 0;
 
     vector<string> strings;
@@ -52,9 +64,10 @@ Communication::~Communication() {
 
             return true;
         }
-    }
+    }*/
+    return false;
 }
 
 void Communication::dequeuePos() {
 
-}*/
+}

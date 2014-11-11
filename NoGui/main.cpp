@@ -64,10 +64,24 @@ int main(int argc, char *argv[]) {
     PRINTLINE("SETUP: done, starting driving sequence");
     p->setGoalPos(50,0,0);
     p->controlLoop();
-    //p->setGoalPos(50,0,180);
-    //p->controlLoop();
+    p->setGoalPos(50,0, 90);
+    p->controlLoop();
+    p->setGoalPos(50,50, 90);
+    p->controlLoop();
+    p->setGoalPos(50,50, 180);
+    p->controlLoop();
+    p->setGoalPos(0,50, 180);
+    p->controlLoop();
+    p->setGoalPos(0,50, 270);
+    p->controlLoop();
+    p->setGoalPos(0,0, 270);
+    p->controlLoop();
     p->setGoalPos(0,0, 0);
     p->controlLoop();
+
+
+//    p->setGoalPos(0,0, 90);
+//    p->controlLoop();
 
     /*
     p->setGoalPos(50,50,180);
