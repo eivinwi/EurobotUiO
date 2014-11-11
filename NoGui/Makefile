@@ -1,12 +1,12 @@
 CC=gcc
-CXX=g++ -Wall -std=c++11 -pthread
+CXX=g++ -Wall -lpthread -std=c++11
 RM=rm -f
 CPPFLAGS=-g $(shell root-config --cflags)
 LDFLAGS=-g $(shell root-config --ldflags)
-LDLIBS=$(shell root-config --libs) -lserial -lzmq -lpthread
+LDLIBS=$(shell root-config --libs) -lserial -lzmq -pthread
 
 EXEC=exec
-SRCS=main.cpp motorcom.cpp serial.cpp serialsim.cpp communication.cpp poscontrol.cpp rotation.cpp position.cpp
+SRCS=main.cpp motorcom.cpp serial.cpp serialsim.cpp poscontrol.cpp rotation.cpp position.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
 
 all: $(EXEC) $(SIMEXEC)

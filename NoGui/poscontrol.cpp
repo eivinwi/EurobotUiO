@@ -4,6 +4,8 @@
 	TODO:
 		- share objects in threads
 
+
+		- controlLoop in its own thread???
 */
 
 struct encoder {

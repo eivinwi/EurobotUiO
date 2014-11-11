@@ -16,52 +16,179 @@
 #include "printing.h"
 #include <string>
 #include <cstring>
-#include <pthread.h>
+//#include <pthread.h>
+#include <thread>
+#include <mutex>
+#include <atomic>
 
-int findNumber(std::string s);
-int findAngle(std::string s);
-int findPosition(std::string s);
-void goToXYR(int x, int y, int z);
-void printHelp();
-void getKeyboardInput();
 bool checkArguments(int argc, char *argv[]);
 void drive();
+void testDrive();
+bool getArguments(std::string input, int *pos);
 
-int coords[3];
 
-bool quit;
+struct position {
+	int x;
+	int y;
+	int rot;
+};
+
+struct position input_pos;
+
 MotorCom *m;
-Communication *c;
 PosControl *p;
+std::mutex read_mutex;
+std::atomic<bool> new_pos_ready(false);
+
+void readLoop() {
+	// Prepare our context and socket
+	zmq::context_t context (1);
+	zmq::socket_t socket (context, ZMQ_REP);
+	socket.bind ("tcp://*:5555");
+	while (true) {
+		zmq::message_t request;
+		// Wait for next request from client
+		socket.recv (&request);
+		std::string recv_str = std::string(static_cast<char*>(request.data()), request.size());
+
+		PRINTLINE("READTHREAD: received" << recv_str);
+		// Do some 'work'
+		
+		sleep(1);
+
+		//check arguments
+		int pos[3];
+		bool isPosition = getArguments(recv_str, pos);
+		
+		zmq::message_t reply(2);
+		if(isPosition) {
+			//set position in struct
+
+			//if(pthread_mutex_trylock(&read_pos_mutex) != 0) {
+			if(false) {
+				usleep(5000);
+				if(mutex) {
+\					PRINTLINE("READLOOP: error, mutex still locked");
+				} else {
+					input_pos.x = pos[0];
+					input_pos.y = pos[1];
+					input_pos.rot = pos[2];
+				}
+			} else {
+				input_pos.x = pos[0];
+				input_pos.y = pos[1];
+				input_pos.rot = pos[2];
+			}
+
+			//return OK to client
+			memcpy ((void *) reply.data (), "ok", 2);
+		} else {
+			//recv_str is invalid, return negative to client
+			memcpy ((void *) reply.data (), "no", 2);
+		}
+		socket.send (reply);
+	}
+	//return 0;
+}	
+
+
 
 int main(int argc, char *argv[]) {
     PRINTLINE("SETUP: creating MotorCom");
 	m = new MotorCom;
-    PRINTLINE("SETUP: creating Communication");
-    c = new Communication;
-
-    if(!checkArguments(argc, argv)) {
-    	return -1;
-    }
 
     PRINTLINE("SETUP: starting serial");
     m->startSerial();
+
+    PRINTLINE("SETUP: resetting encoders and flushing serial");
     m->resetEncoders();
     usleep(10000);
     m->flush();
 
+    PRINTLINE("SETUP: checking cmdline-arguments");
+    if(!checkArguments(argc, argv)) {
+    	return -1;
+    }
+
+    PRINTLINE("SETUP: initializing PosControl");
     p = new PosControl(m);
 
-  /*  PRINTLINE("SETUP: done. starting input-loop");
-    quit = false;
-    while(true) {
-        getKeyboardInput();
-        if(quit) {
-            break;
-        }
-    }*/
+    PRINTLINE("SETUP: initializing readLoop thread");
+    input_pos.x = 0;
+    input_pos.y = 0;
+    input_pos.rot = 0;
 
-    PRINTLINE("SETUP: done, starting driving sequence");
+    std::thread read_thread(readLoop);
+
+    //PRINTLINE("SETUP: initializing writeLoop thread");
+    //std::thread write_thread(writeLoop);
+
+
+
+    PRINTLINE("SETUP: done, looping and checking for input");
+    while(true) {
+    	if(new_pos_ready) {
+
+    		//attempt to lock mutex, read values, unlock mutex, set pos_ready to false
+    		if(mutex.try_lock()) {
+    			//setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
+	    		read_mutex.unlock();
+    			new_pos_ready = false; 
+    		} else {
+    			usleep(1000);
+    			if(mutex.try_lock()) {
+	    			//setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
+		    		read_mutex.unlock();
+	    			new_pos_ready = false; 
+    			} else {
+    				PRINTLINE("MAIN: try_lock read_mutex unsuccessful");
+    			}
+    		}
+    	}
+    	usleep(1000);
+    }
+
+    //testDrive();
+    PRINTLINE("MAIN: Exiting");
+    return 0;
+}
+
+
+bool getArguments(std::string input, int *pos) {
+	int i = 0;
+    std::istringstream f(input);
+    std::string s;    
+    while(getline(f, s, ',')) {
+        //std::cout << s << endl;
+        pos[i] = atoi(s.c_str());
+        
+        i++;
+        if(i >= 3) break;
+    }
+
+    if(i != 2) {
+    	return false;
+    } else {
+        if(abs(pos[0]) > 300) return false;
+        else if(abs(pos[1]) > 300) return false;
+        else if(pos[2] < 0 || pos[2] > 360) return false;
+    	else return true;
+    }
+}
+
+
+void drive() {
+    bool done = false;
+    while(!done) {
+        done = p->controlLoop();
+        usleep(4000);
+    }
+    PRINTLINE("Drive done");
+    usleep(1000000);
+}
+
+
+void testDrive() {
     p->setGoalPos(50,0,0);
     p->controlLoop();
     p->setGoalPos(50,0, 90);
@@ -77,48 +204,9 @@ int main(int argc, char *argv[]) {
     p->setGoalPos(0,0, 270);
     p->controlLoop();
     p->setGoalPos(0,0, 0);
-    p->controlLoop();
-
-
-//    p->setGoalPos(0,0, 90);
-//    p->controlLoop();
-
-    /*
-    p->setGoalPos(50,50,180);
-    p->controlLoop();
-    p->setGoalPos(0,50,180);
-    p->controlLoop();
-*/
-
-
-  /*  drive();
-    p->setGoalPos(50,0,90);
-    drive();
-    p->setGoalPos(50,50,90);
-    drive();
-    p->setGoalPos(50,50,180);
-    drive();
-    p->setGoalPos(100,50,180);
-    drive();
-    p->setGoalPos(100,50,270);
-    drive();
-    p->setGoalPos(100,100,270);
-    drive();
-    p->setGoalPos(100,100,0);
-    drive();
-    PRINTLINE("MAIN: Exiting");
-    return 0;*/
+    p->controlLoop();	
 }
 
-void drive() {
-    bool done = false;
-    while(!done) {
-        done = p->controlLoop();
-        usleep(4000);
-    }
-    PRINTLINE("Drive done");
-    usleep(1000000);
-}
 
 /* return:
  *  	true - if good/no arguments
@@ -165,215 +253,4 @@ bool checkArguments(int argc, char *argv[]) {
 		}
     }
     return true;
-}
-
-
-void getKeyboardInput() {
-    std::string input;
-    PRINT("Write cmd: ");
-    std::getline(std::cin, input);
-
-    if(input.length() > 1) {
-        std::string sub2 = input.substr(0,2);
-
-        if(sub2 == "gx") {
-            int pos = findPosition(input);
-            goToXYR(pos, coords[1], coords[2]);
-        } if(sub2 == "gy") {
-            int pos = findPosition(input);
-            goToXYR(coords[0], pos, coords[2]);
-        } else if(sub2 == "gr") {
-            int rot = findAngle(input);
-            goToXYR(coords[0], coords[1], rot);
-        } else if(sub2 == "re") {
-            PRINTLINE("Setting current position as 0,0,0");
-            p->resetPosition();
-        }
-        else if(sub2 == "sl") {
-            int speed = findNumber(input);
-            if(speed > -1) {
-                m->setSpeedL(speed);
-                PRINTLINE("SpeedL set to:" << speed);
-            }
-        } else if(sub2 == "sr") {
-            int speed = findNumber(input);
-            if(speed > -1) {
-                m->setSpeedR(speed);
-                PRINTLINE("SpeedR set to:" << speed);
-            }
-        } else if(sub2 == "sb") {
-            int speed = findNumber(input);
-            if(speed > -1) {
-                m->setSpeedBoth(speed);
-                PRINTLINE("Speeds set to:" << speed);
-            }
-        }
-        else if(sub2 == "le") {
-            PRINTLINE("SpeedL:" << m->getSpeedL());
-        } 
-        else if(sub2 == "lr") {
-            PRINTLINE("SpeedR:" << m->getSpeedR());
-        } 
-        else if(sub2 == "vo") {
-            PRINTLINE("Volt:" << m->getVoltage());
-            m->getVoltage();
-        } 
-        else if(sub2 == "re") {
-            m->resetEncoders();
-            PRINTLINE("Encoders reset.");
-        } 
-        else if(sub2 == "el") {
-            PRINTLINE("EncL:" << m->getEncL());
-        }
-        else if(sub2 == "er") {
-            PRINTLINE("EncR:" << m->getEncR());
-        }
-        else if(sub2 == "eb") {
-            PRINTLINE("EncL:" << m->getEncL());
-            PRINTLINE("EncR:" << m->getEncR());
-        } 
-        else if(sub2 == "ve") {
-            PRINTLINE("Version:" << m->getVersion());
-        }
-        else if(sub2 == "ps") {
-            m->flush();
-            PRINTLINE("Serial flushed.");
-        }
-    } 
-    else if(input == "h") {
-        printHelp();
-    } else if(input == "q") {
-        quit = true;
-    }
-    else {
-        PRINTLINE("Input too short: " << input.length());
-    }
-}
-
-int findNumber(std::string s) {
-    if(s.length() > 3) {
-        std::string sub = s.substr(2, s.length()-2);
-        int speed = atoi(sub.c_str());
-        if(speed >= 0 && speed <= 255) {
-            return speed;
-        } else { 
-            PRINTLINE("Invalid speed (must be 0-255).");
-        }
-    } else {
-        PRINTLINE("Must specify speed (0-255).");
-    }
-    return -1;
-}
-
-int findAngle(std::string s) {
-    if(s.length() > 3) {
-        std::string sub = s.substr(2, s.length()-2);
-        int speed = atoi(sub.c_str());
-        if(speed >= 0 && speed <= 360) {
-            return speed;
-        } else { 
-            PRINTLINE("Invalid angle(must be 0-360).");
-        }
-    } else {
-        PRINTLINE("Must specify angle (0-360).");
-    }
-    return 0;
-}
-
-int findPosition(std::string s) {
-    if(s.length() > 3) {
-        std::string sub = s.substr(2, s.length()-2);
-        int pos = atoi(sub.c_str());
-        if(pos >= 0 && pos <= 300) {
-            return pos;
-        } else { 
-            PRINTLINE("Invalid position(must be 0-300).");
-        }
-    } else {
-        PRINTLINE("Must specify position (0-300).");
-    }
-    return 0;
-}
-
-
-void goToXYR(int x, int y, int r) {
-    if(coords[0] > 3000 || coords[1] > 2000 || coords[2] > 360) {
-        PRINTLINE("MAIN: gotoXYR-values too high, aborting goToXYR");
-    } else {
-        int changed = 0;
-        if(x != coords[0]) changed++;
-        if(y != coords[1]) changed++;
-        if(r != coords[2]) changed++;
-
-        if(changed > 1) {
-            PRINTLINE("MAIN: goToXYR cannot change more than 1 position at a time");
-        } else {
-            PRINTLINE("MAIN: goToXYR attempting to reach: " << x << "," << y << "," << r);
-            p->setGoalPos(x, y, r);
-            drive();
-            coords[0] = x;
-            coords[1] = y;
-            coords[2] = r;
-        }
-    }
-}
-
-/*
-void goToXYR(std::string input) {
-    std::string sub = input.substr(2, input.length()-2);
-    PRINTLINE("MAIN: goToXYR with arguments: " << sub);
-    std::string delimiter = ",";    
-
-    int coords[3];
-
-    std::string token;
-    size_t pos = 0;
-    int i = 0;
-    while( (pos = sub.find(delimiter)) != std::string::npos) {
-        if(i > 1) break;
-        token = sub.substr(0, pos);
-        coords[i] = atoi(token.c_str());
-        sub.erase(0, pos+1);
-        i++;
-    }
-    if(sub.length() > 0) {
-        PRINTLINE("sub" << sub)
-        coords[i] = atoi(sub.c_str());
-        i++;
-    } 
-    while(i < 3) {
-        coords[i] = 0;
-        i++;
-    }
-
-    PRINTLINE("tokenizer done: [" << coords[0] << "][" << coords[1] << "][" << coords[2] << "]");
-
-    if(coords[0] > 1000 || coords[1] > 1000 || coords[2] > 360) {
-        PRINTLINE("Values too high, aborting goToXYR");
-    } else {
-        p->setGoalPos(coords[0], coords[1], coords[2]);
-        drive();
-    }
-}*/
-
-
-
-void printHelp() {
-    PRINTLINE("----- Commands ---------");
-    PRINTLINE("sl(0-255): setSpeedLeft");
-    PRINTLINE("sr(0-255): setSpeedRight");
-    PRINTLINE("gl: getSpeedLeft");
-    PRINTLINE("gr: getSpeedRight");
-    
-    PRINTLINE("el: getEnc1");
-    PRINTLINE("er: getEnc2");
-    PRINTLINE("eb: getEncoders");
-    
-    PRINTLINE("re: resetEncoders");
-    PRINTLINE("vo: getVoltage");
-    PRINTLINE("ve: getVersion");
-    PRINTLINE("ps: PRINTSerial");
-    PRINTLINE("h: this menu");
-    PRINTLINE("q: quit");
-    PRINTLINE("------------------------");
 }

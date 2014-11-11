@@ -92,10 +92,10 @@ long Serial::readLong() {
 
 long Serial::readLong() {
     DBPL("SERIAL: readLong")
-    std::clock_t c_start = std::clock();
+    //std::clock_t c_start = std::clock();
     auto t_start = std::chrono::high_resolution_clock::now();
 
-    std::clock_t c_end = std::clock();
+    //std::clock_t c_end = std::clock();
     auto t_end = std::chrono::high_resolution_clock::now();
     
     uint8_t bytes[4];
@@ -146,7 +146,7 @@ void Serial::printAll() {
     DBP("Flushed serial: [");
     while(serial.rdbuf()->in_avail()) {
         uint8_t b = serial.get();
-        DBP(serial.get());
+        DBP(b);
     }
     DBPL("]");
 }
