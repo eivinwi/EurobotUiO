@@ -2,11 +2,12 @@
 
 /*
 	TODO:
-		- share objects in threads
-
+		- thread-safe reading of position
 
 		- controlLoop in its own thread???
 			- mutex for position update/retrival, eventually atomic positions
+		
+		- Encoders own class?
 */
 
 struct encoder {
@@ -18,18 +19,18 @@ struct encoder {
 } leftEncoder, rightEncoder;
 
 
-
 PosControl::PosControl(MotorCom *s) {
 	com = s;
 	goalPos = new GoalPosition;
 	curPos = new Position;
 	exactPos = new Position;
-
 	resetPosition();
 }
 
+
 PosControl::~PosControl() {
 }
+
 
 /* sets the new goal pos
  * WARNING: currently only one arguments should be changed at the time
@@ -120,6 +121,7 @@ void PosControl::controlLoop() {
 	PRINTLINE("*** EXITING CONTROL LOOP ***");
 	usleep(1000000);
 }
+
 
 bool PosControl::inGoal() {
 	if(abs(rotationOffset()) > ROTATION_CLOSE_ENOUGH) return false;
@@ -246,6 +248,7 @@ void PosControl::driveY(float distY) {
 	}
 }
 
+
 std::string PosControl::getCurrentPos() {
 	std::stringstream ss;
 	ss << (int) floor(curPos->getX()) << ",";
@@ -306,7 +309,6 @@ void PosControl::updatePosition(int action) {
 }
 
 
-
 /*
  * Encoder counts: 980 per output shaft turn
  * Wheel diameter: 120mm
@@ -354,9 +356,6 @@ void PosControl::updateRightEncoder() {
 void PosControl::fullStop() {
 	com->setSpeedBoth(SPEED_STOP);
 }
-
-
-
 
 
 /* >0 : goal is in positive x-direction
@@ -421,12 +420,14 @@ void PosControl::printCurrent() {
 	curPos->print();
 }
 
+
 void PosControl::printGoal() {
 	PRINT("Current: ");
 	//#ifdef DEBUG
 	goalPos->print();
 	//#endif
 }
+
 
 void PosControl::printDist() {
 	PRINTLINE("dist: " << distanceX() << "," << distanceY() << "," << rotationOffset());

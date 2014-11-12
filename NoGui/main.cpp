@@ -6,9 +6,7 @@
  */
 //#include "serial.h"
 
-//TODO: own method for getdegrees/getpositions to the readloop
- //TODO: negative angle adjustments
-
+//TODO: get position and send to clients
 
 #include "motorcom.h"
 #include "communication.h"
@@ -16,7 +14,6 @@
 #include "printing.h"
 #include <string>
 #include <cstring>
-//#include <pthread.h>
 #include <thread>
 #include <mutex>
 #include <atomic>
@@ -25,7 +22,7 @@ bool checkArguments(int argc, char *argv[]);
 void drive();
 void testDrive();
 bool getArguments(std::string input, int *pos);
-
+void readLoop();
 
 struct position {
 	int x;
@@ -53,9 +50,6 @@ void readLoop() {
 		std::string recv_str = std::string(static_cast<char*>(request.data()), request.size());
 
 		PRINTLINE("READLOOP: received" << recv_str);
-		// Do some 'work'
-		
-		sleep(1);
 
 		//check arguments
 		int pos[3];
@@ -64,7 +58,6 @@ void readLoop() {
 		zmq::message_t reply(2);
 		if(isPosition) {
 			//set position in struct
-
 			//if(pthread_mutex_trylock(&read_pos_mutex) != 0) {
 			if(!read_mutex.try_lock()) {
 				//PRINTLINE("READLOOP: mutex locked, wait and retry");
@@ -93,9 +86,9 @@ void readLoop() {
 			//recv_str is invalid, return negative to client
 			memcpy ((void *) reply.data (), "no", 2);
 		}
+		sleep(1);
 		socket.send (reply);
 	}
-	//return 0;
 }	
 
 
@@ -183,14 +176,10 @@ bool getArguments(std::string input, int *pos) {
     std::istringstream f(input);
     std::string s;
     while(getline(f, s, ',')) {
-    	//PRINTLINE("s=" << s);
         pos[i] = atoi(s.c_str());
-        
         i++;
         if(i > 2) break;
     }
-//    PRINTLINE("DONEWHILE, i="<<i);
-
     if(i != 3) {
     	return false;
     } else {
@@ -198,47 +187,33 @@ bool getArguments(std::string input, int *pos) {
         else if(abs(pos[1]) > 300) return false;
         else if(pos[2] < 0 || pos[2] > 360) return false;
     	else {
-  //  		PRINTLINE("returning TRUE");
     		return true;
     	}
     }
 }
 
-/*
-void drive() {
-    bool done = false;
-    while(!done) {
-        done = p->controlLoop();
-        usleep(4000);
-    }
-    PRINTLINE("Drive done");
-    usleep(1000000);
-}*/
 
-
+//Warning: not updated to the new poscontrol-setup (loops continuosly)
 void testDrive() {
+	/*
     p->setGoalPos(50,0,0);
-    //p->controlLoop();
     p->setGoalPos(50,0, 90);
-    //p->controlLoop();
     p->setGoalPos(50,50, 90);
-   // p->controlLoop();
     p->setGoalPos(50,50, 180);
-   // p->controlLoop();
     p->setGoalPos(0,50, 180);
-   // p->controlLoop();
     p->setGoalPos(0,50, 270);
-   // p->controlLoop();
     p->setGoalPos(0,0, 270);
-   // p->controlLoop();
     p->setGoalPos(0,0, 0);
-   // p->controlLoop();	
+    */
 }
 
 
-/* return:
+/* Checks cmd-line arguments 
+ * return:
  *  	true - if good/no arguments
  *		false - if invalid argument exists
+ *
+ * TODO: -noThread for program startup with read/write threads
 */
 bool checkArguments(int argc, char *argv[]) {
 	PRINTLINE("READING Arguments");
@@ -255,23 +230,23 @@ bool checkArguments(int argc, char *argv[]) {
 
 
     	for(int i = 1; i < argc; i++) {
-			if(strcmp(argv[i], "sim") == 0) {
+			if(strcmp(argv[i], "-sim") == 0) {
 				PRINTLINE("Simulating serial.");	
 				m->serialSimEnable();
 			}
-			else if(strcmp(argv[i], "ttyUSB0") == 0) {
+			else if(strcmp(argv[i], "-ttyUSB0") == 0) {
 				PRINTLINE("Opening serial on: /dev/" << argv[i]);
 				m->setSerialPort(argv[1]);
 			}
-			else if(strcmp(argv[i], "ttyS0") == 0) {
+			else if(strcmp(argv[i], "-ttyS0") == 0) {
 				PRINTLINE("Opening serial on: /dev/" << argv[i]);
 				m->setSerialPort(argv[1]);
 			}
-			else if(strcmp(argv[i], "ttyACM1") == 0) {
+			else if(strcmp(argv[i], "-ttyACM1") == 0) {
 				PRINTLINE("Opening serial on: /dev/" << argv[i]);
 				m->setSerialPort(argv[1]);
 			}
-			else if(strcmp(argv[i], "ttyUSB1") == 0) {
+			else if(strcmp(argv[i], "-ttyUSB1") == 0) {
 				PRINTLINE("Opening serial on: /dev/" << argv[i]);
 				m->setSerialPort(argv[1]);
 			} else {

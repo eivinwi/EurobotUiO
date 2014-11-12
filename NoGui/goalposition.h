@@ -1,5 +1,6 @@
 #ifndef GOALPOSITION_H
 #define GOALPOSITION_H
+
 #include "rotation.h"
 #include "md49.h"
 #include "printing.h"

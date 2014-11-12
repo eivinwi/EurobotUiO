@@ -1,9 +1,4 @@
 #include "serial.h"
-#include <iostream>
-#include <iomanip>
-#include <chrono>
-#include <ctime>
-#include <thread>
 
 Serial::Serial(char *serial_port) {
 	char s[20]; 
@@ -18,24 +13,29 @@ Serial::Serial(char *serial_port) {
     serial.SetFlowControl( SerialStreamBuf::FLOW_CONTROL_HARD );
 }
 
+
 Serial::~Serial() {
     serial.Close();
 }
+
 
 void Serial::write(uint8_t arg) {
 	DBPL("SERIAL: writeu: " << arg);
     serial << arg;
 }
 
+
 void Serial::write(char arg) {
 	DBPL("SERIAL: writec: " << arg);
     serial << arg;
 }
 
+
 void Serial::write(int arg) {
 	DBPL("SERIAL: writeint: " << arg << " (converting)");
     write((uint8_t) arg); //hack!!!!
 }
+
 
 uint8_t Serial::readNoWait(){
     DBPL("SERIAL: readNW");
@@ -54,40 +54,11 @@ uint8_t Serial::readNoWait(){
     return r;
 }
 
+
 uint8_t Serial::read() {
     usleep(5000);
     return readNoWait();
 }
-/*
-long Serial::readLong() {
-    long result = 0;
-    for(int i = 0; i < 4; i++) {
-        int av = serial.rdbuf()->in_avail();
-        PRINTLINE("SERIAL: AVAILABLE: " << av);
-        if(av < 3) {
-            usleep(10000);
-        } else {
-            result = readNoWait() << 24ul;
-            std::bitset<32> r1(result);
-            result += readNoWait() << 16ul;
-            std::bitset<32> r2(result);
-            result += readNoWait() << 8ul;
-            std::bitset<32> r3(result);
-            result += readNoWait();
-
-            std::stringstream ss;
-            ss << "BITS: \n" << r1 << '\n' << r2 << '\n' << r3 
-                << '\n' << result << "\n--------------\n";
-            PRINTLINE("SERIAL: returning long: \n" << ss);
-            //DBPL("SERIAL: returning long: \n" << ss);
-        }
-    }
-    return result;
-}*/
-
-
-//#include <chrono>
-#define MAX_READ_TIME 
 
 
 long Serial::readLong() {
@@ -138,9 +109,11 @@ long Serial::readLong() {
     return result;
 }
 
+
 bool Serial::available() {
 	return serial.rdbuf()->in_avail();
 }
+
 
 void Serial::printAll() {
     DBP("Flushed serial: [");

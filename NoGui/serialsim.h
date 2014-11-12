@@ -38,6 +38,8 @@ public:
 	uint8_t readNoWait();
 	uint8_t read();
 	long readLong();
+
+private:
 	uint8_t readVi();
 	uint8_t readEncL();
 	uint8_t readEncR();
@@ -46,7 +48,6 @@ public:
 	void calculateEncR();
 	void printAll();
 
-private:
 	int speedL;
 	int speedR;
 	int acceleration;

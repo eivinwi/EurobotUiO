@@ -18,7 +18,6 @@ class Position {
 public:
 	Position();
 	~Position();
-
 	void reset();
 	void set(int n_x, int n_y, int n_rotation);
 	void updateEncoder();
@@ -35,11 +34,9 @@ public:
 	void decrX(float dist);
 	void incrY(float dist);
 	void decrY(float dist);
-
 	void print();
 
 private:
-
 	float x;
 	float y;
 	Rotation *rotation;

@@ -1,5 +1,7 @@
 #include "serialsim.h"
 
+//TODO: readlong
+
 SerialSim::SerialSim() {
 	speedL = 255;
 	speedR = 255;
@@ -30,7 +32,6 @@ void SerialSim::write(char arg) {
 }
 
 void SerialSim::write(int arg) {
-	//std::cout << "intwrite " << arg<< "\n";
 	write((uint8_t) arg);
 }
 
@@ -80,7 +81,6 @@ void SerialSim::write(uint8_t arg) {
 	        	break;
 			case SET_MODE:
 	        	break;
-
 
 		    //2byte in -- 1 out
 	        //store prev_cmd to use on next read

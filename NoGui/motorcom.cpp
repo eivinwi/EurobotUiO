@@ -1,15 +1,15 @@
 #include "motorcom.h"
 
 MotorCom::MotorCom() {
-  	//serial_port = "ACM0";
-
     prev_encL = 0;
     prev_encR = 0;
     simulating = false;
 }
 
+
 MotorCom::~MotorCom() {
 }
+
 
 void MotorCom::startSerial() {
 	if(simulating) {
@@ -25,20 +25,24 @@ void MotorCom::startSerial() {
 	}
 }
 
+
 void MotorCom::serialSimEnable() {
     PRINTLINE("MOTORCOM: Simulating=true\n");
 	simulating = true;
 }
+
 
 void MotorCom::serialSimDisable() {
     DBP("MOTORCOM: Simulating=false\n");
     simulating = false;
 }
 
+
 void MotorCom::setSerialPort(const char *s) {
     DBPL("MOTORCOM: serial_port=" << s)
 	strcpy(serial_port, s);
 }
+
 
 void MotorCom::setAcceleration(int acc) {
     sync();
@@ -46,11 +50,13 @@ void MotorCom::setAcceleration(int acc) {
     writeToSerial(acc);
 }
 
+
 void MotorCom::setSpeedL(uint8_t speed) {
     sync();
     writeToSerial(SET_SPEEDL);
     writeToSerial(speed);
 }
+
 
 void MotorCom::setSpeedR(uint8_t speed) {
     sync();
@@ -58,10 +64,12 @@ void MotorCom::setSpeedR(uint8_t speed) {
     writeToSerial(speed);
 }
 
+
 void MotorCom::setSpeedBoth(uint8_t speed) {
     setSpeedL(speed);
     setSpeedR(speed);
 }
+
 
 uint8_t MotorCom::getSpeedL() {
     sync();
@@ -70,6 +78,7 @@ uint8_t MotorCom::getSpeedL() {
     return speed;
 }
 
+
 uint8_t MotorCom::getSpeedR() {
     sync();
     writeToSerial(GET_SPEEDR);
@@ -77,12 +86,14 @@ uint8_t MotorCom::getSpeedR() {
     return speed;
 }
 
+
 uint8_t MotorCom::getAcceleration() {
     sync();
     writeToSerial(GET_ACCELERATION);
     uint8_t acc = readFromSerial();
     return acc;
 }
+
 
 //input 0 [default], 1, 2 or 3
 void MotorCom::setMode(uint8_t mode) {
@@ -112,7 +123,6 @@ void MotorCom::getEncoders() {
     flush();
     long result1;
     long result2;
-
     result1 = readFromSerial() << 24ul;
     result1 += readFromSerialNoWait() << 16ul;
     result1 += readFromSerialNoWait() << 8ul;
@@ -126,18 +136,16 @@ void MotorCom::getEncoders() {
 }
 
 
-
-
 long MotorCom::getEncL() {
     sync();
     writeToSerial(GET_ENCODERL);
     long result = readLongFromSerial();
-    //DBPL("MOTORCOM: encoder update\n" << ss);
     DBPL("EncL: " << result << " (diff: " << (result - prev_encL) << ")\nWheel rotations: " <<  ((result-prev_encL)/980.0) << 
                 "\nDistance: " << diff*0.385);
     prev_encL = result;
     return result;
 }
+
 
 long MotorCom::getEncR() {
     sync();
@@ -149,6 +157,7 @@ long MotorCom::getEncR() {
     return result;
 }
 
+
 uint8_t MotorCom::getVoltage() {
     DBPL("MOTORCOM: getVoltage");
     sync();
@@ -158,6 +167,7 @@ uint8_t MotorCom::getVoltage() {
     DBPL("MOTORCOM: volt: " << volt << " (int val is: " << (int) volt << ")");
     return volt;
 }
+
 
 long MotorCom::getVi() {
     long vi = 0;
@@ -169,6 +179,7 @@ long MotorCom::getVi() {
     return vi;
 }
 
+
 uint8_t MotorCom::getMode() {
     sync();
     writeToSerial(GET_MODE);
@@ -176,6 +187,7 @@ uint8_t MotorCom::getMode() {
     mode = readFromSerial();
     return mode;
 }
+
 
 uint8_t MotorCom::getVersion() {
     sync();
@@ -185,6 +197,7 @@ uint8_t MotorCom::getVersion() {
     return version;
 }
 
+
 uint8_t MotorCom::getError() {
     sync();
     writeToSerial(GET_ERROR);
@@ -192,6 +205,7 @@ uint8_t MotorCom::getError() {
     error = readFromSerial();
     return error;
 }
+
 
 void MotorCom::enableReg(bool b) {
     sync();
@@ -202,6 +216,7 @@ void MotorCom::enableReg(bool b) {
     }
 }
 
+
 void MotorCom::enableTimeout(bool b) {
     sync();
     if(b) {
@@ -211,6 +226,7 @@ void MotorCom::enableTimeout(bool b) {
     }
 }
 
+
 void MotorCom::flush() {
     if(simulating) {
         simport->printAll();
@@ -219,9 +235,11 @@ void MotorCom::flush() {
     }
 }
 
+
 void MotorCom::sync() {
     writeToSerial(CLEAR);
 }
+
 
 void MotorCom::writeToSerial(uint8_t a) {
 	if(simulating) {
@@ -231,6 +249,7 @@ void MotorCom::writeToSerial(uint8_t a) {
 	}
 }
 
+
 void MotorCom::writeToSerial(int a) {
     if(simulating) {
 	    simport->write(a);
@@ -239,9 +258,6 @@ void MotorCom::writeToSerial(int a) {
 	}
 }
 
-/*int MotorCom::readFromSerial() {
-    return port->read();
-}*/
 
 uint8_t MotorCom::readFromSerial() {
     if(simulating) {
@@ -251,6 +267,7 @@ uint8_t MotorCom::readFromSerial() {
 	}
 }
 
+
 uint8_t MotorCom::readFromSerialNoWait() {
     if(simulating) {
 	    return simport->readNoWait();
@@ -258,6 +275,7 @@ uint8_t MotorCom::readFromSerialNoWait() {
 		return port->readNoWait();
 	}
 }
+
 
 long MotorCom::readLongFromSerial() {
     if(simulating) {

@@ -1,3 +1,6 @@
+//FILE NOT NEEDED: multithreaded communication moved to main.cpp
+
+
 /*  
  * File: communication.h
  * Author: Eivind Wikheim 
@@ -22,21 +25,19 @@
 #include <iostream>
 #include <sstream>
 #include <thread>
-//#include <pthread.h>
 #include <unistd.h>
 #include <cassert>
 #include <vector>
 #include <queue>
 
-//static void* readLoop(void* me);
 
 class Communication {
 	public:
 	    Communication();
-	    ~Communication();
-		
+	    ~Communication();	
 		void readLoop();	
 		bool getArguments(std::string input, int *pos);
+
 
 
 		static void* writeLoop(void *me) {

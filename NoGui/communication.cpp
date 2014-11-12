@@ -1,3 +1,5 @@
+//FILE NOT NEEDED: multithreaded communication moved to main.cpp
+
 #include "communication.h"
 
 struct read_thread_data {
@@ -130,6 +132,7 @@ void Communication::readLoop() {
 	//return 0;
 }	
 
+void Communication::readLoop() {
 
 
 bool getArguments(std::string input, int *pos) {

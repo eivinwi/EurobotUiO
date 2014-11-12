@@ -4,8 +4,10 @@ Position::Position() {
 	reset();
 }
 
+
 Position::~Position() {
 }
+
 
 void Position::reset() {
 	x = 0.0;
@@ -24,26 +26,31 @@ void Position::set(int n_x, int n_y, int n_rotation) {
 	}
 }
 
+
 void Position::updateEncoder() {
-
-
+	//TODO: move encoder updates in here?
 }
+
 
 float Position::distanceX(float to) {
 	return (x - to);
 }
 
+
 float Position::distanceY(float to) {
 	return (y - to);
 }
+
 
 float Position::distanceRot(float to) {
 	return rotation->distanceTo(to);
 }
 
+
 double Position::timeSinceUpdate() {
 	return (time(0) - changed);
 }
+
 
 float Position::getRotation() {
 	return rotation->get();
@@ -54,9 +61,11 @@ float Position::getX() {
 	return x;
 }
 
+
 float Position::getY() {
 	return y;
 }
+
 
 std::string Position::getPosString() {
 	std::stringstream ss;
@@ -66,25 +75,31 @@ std::string Position::getPosString() {
 	return ss.str();
 }
 
+
 void Position::print() {
 	PRINTLINE("x:" << x << " y:" << y << " r:" << getRotation());
 }
+
 
 void Position::updateAngle(float leftDiff, float rightDiff) {
 	rotation->updateAngle(leftDiff, rightDiff);
 }
 
+
 void Position::incrX(float dist) {
 	x += dist*POS_DIR;
 }
+
 
 void Position::decrX(float dist) {
 	x -= dist*POS_DIR;
 }
 
+
 void Position::incrY(float dist) {
 	y += dist*POS_DIR;
 }
+
 
 void Position::decrY(float dist) {
 	y -= dist*POS_DIR;

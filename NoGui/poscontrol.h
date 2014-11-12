@@ -26,15 +26,11 @@
 #include <string>
 #include <sstream>
 #include <vector>
-
 #include <cassert>
 #include <unistd.h>
 #include <time.h>
 #include <math.h>
 #include <thread>
-#include <pthread.h>
-
-
 
 // Game area resolution in mm:
 #define XRES 30000
@@ -50,9 +46,6 @@
 #define POSITION_CLOSE_ENOUGH 1.0
 #define TOO_LONG 20
 
-
-void *worker_routine(void *arg);
-
 class PosControl {
 public:
     PosControl(MotorCom *s);
@@ -60,16 +53,16 @@ public:
     void resetPosition();
     void controlLoop();
 	void setGoalPos(int x, int y, int r);
-	float currentRotation();
 	std::string getCurrentPos();
-	bool inGoal();
-
+	
 private:
+	bool inGoal();
 	long encoderDifference();
     void changeRotation(float distR);
     void driveX(float distX);
     void driveY(float distY);
     void fullStop();
+//    float currentRotation();
 	float distanceX();
 	float distanceY();
 	float rotationOffset();
@@ -81,7 +74,6 @@ private:
 	void updateLeftEncoder();
 	void updateRightEncoder();
 	float average(long a, long b);
-
 	void printGoal();
 	void printCurrent();
 	void printDist();
@@ -89,7 +81,6 @@ private:
 	std::string in;
 	MotorCom *com;
 	bool turning;
-
 	GoalPosition *goalPos;
 	Position *curPos;
 	Position *exactPos;

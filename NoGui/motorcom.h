@@ -4,7 +4,6 @@
  *
  * Implements a interface for working with the MD49 motor controller, either via serial
  * or serialsim (decided in main.cpp based on program arguments). 
- * 
  */
 
 #ifndef MOTORCOM_H

@@ -10,8 +10,6 @@
 #ifndef SERIAL_H
 #define	SERIAL_H
 
-
-
 #include "md49.h"
 #include "printing.h"
 
@@ -24,6 +22,11 @@
 #include <bitset>
 #include <sstream>
 #include <cstring>
+#include <iomanip>
+#include <chrono>
+#include <ctime>
+//#include <thread>
+
 
 using namespace LibSerial ;
 
@@ -43,7 +46,6 @@ public:
 
 private:
     SerialStream serial;
-
 //    SerialPort serial;
 
 };
