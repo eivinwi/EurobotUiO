@@ -41,12 +41,15 @@ public:
 	void decrY(float dist);
 	void print();
 
+	void updatePosString();
+
 private:
 	float x;
 	float y;
 	Rotation *rotation;
 	time_t changed;
 
+	std::string pos_string;
 	std::mutex pos_mutex;
 };
 

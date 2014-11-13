@@ -71,20 +71,10 @@ float Position::getY() {
 
 //used externally
 std::string Position::getPosString() {
-	std::stringstream ss;
-	//ss << "";
-	if(pos_mutex.try_lock()) {
-		//copy variables here, to keep mutex lock as short as possible
-		float xx = x;
-		float yy = y;
-		float rot = getRotation();
-		pos_mutex.unlock();
-
-		ss << (int) floor(xx) << ",";
-		ss << (int) floor(yy) << ",";
-		ss << (int) floor(rot);
-	}
-	return ss.str();
+	pos_mutex.lock();
+	std::string pos = pos_string;
+	pos_mutex.unlock();
+	return pos;
 }
 
 
@@ -94,35 +84,38 @@ void Position::print() {
 
 
 void Position::updateAngle(float leftDiff, float rightDiff) {
-	pos_mutex.lock();
 	rotation->updateAngle(leftDiff, rightDiff);
-	pos_mutex.unlock();
 }
 
 
 void Position::incrX(float dist) {
-	pos_mutex.lock();
 	x += dist*POS_DIR;
-	pos_mutex.unlock();
 }
 
 
 void Position::decrX(float dist) {
-	pos_mutex.lock();
 	x -= dist*POS_DIR;
-	pos_mutex.unlock();
 }
 
 
 void Position::incrY(float dist) {
-	pos_mutex.lock();
 	y += dist*POS_DIR;
-	pos_mutex.unlock();
 }
 
 
 void Position::decrY(float dist) {
-	pos_mutex.lock();
 	y -= dist*POS_DIR;
-	pos_mutex.unlock();
+}
+
+void Position::updatePosString() {
+	if(pos_mutex.try_lock()) {
+		//update string
+		std::stringstream ss;
+		ss << (int) floor(x) << ",";
+		ss << (int) floor(y) << ",";
+		ss << (int) floor(getRotation());
+		pos_string = ss.str();
+		PRINTLINE("Updating pos: " << ss.str());
+		pos_mutex.unlock(); 
+	}
 }

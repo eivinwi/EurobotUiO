@@ -259,13 +259,13 @@ void SerialSim::calculateEncL() {
 	double rotations = (timePassed)/RPS;
 	double encoderDiff = rotations*980;
 
-	PRINTLINE("timePassed: " << timePassed);
-	PRINTLINE("rotations: " << rotations);
-	PRINTLINE("encoderDiff: " << encoderDiff);
+	DBPL("timePassed: " << timePassed);
+	DBPL("rotations: " << rotations);
+	DBPL("encoderDiff: " << encoderDiff);
 
 	long enc = (long) encoderDiff;
 
-	PRINTLINE("enc: " << enc);
+	DBPL("enc: " << enc);
 
 	encL[3] = ((enc >> 24) & 0xff);
 	encL[2] = ((enc >> 16) & 0xff);

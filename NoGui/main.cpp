@@ -42,137 +42,135 @@ std::atomic<bool> new_pos_ready(false);
  * TODO: define an extensive communication protocol
  */
 void readLoop() {
-	//PRINTLINE("READLOOP: starting");
-	// Prepare our context and socket
+	PRINTLINE("READ_THREAD: starting");
+	// Prepare context and socket
 	zmq::context_t context (1);
+//    zmq::context_t *context = (zmq::context_t *) arg;
+
 	zmq::socket_t socket (context, ZMQ_REP);
 	socket.bind ("tcp://*:5555");
+
 	while (true) {
 		zmq::message_t request;
 		// Wait for next request from client
 		socket.recv (&request);
 		std::string recv_str = std::string(static_cast<char*>(request.data()), request.size());
-
 		PRINTLINE("READLOOP: received" << recv_str);
 
-		//check arguments
-		int pos[3];
-		bool isPosition = getArguments(recv_str, pos);
-		
-		zmq::message_t reply(2);
-		if(isPosition) {
-			//set position in struct
-			//if(pthread_mutex_trylock(&read_pos_mutex) != 0) {
-			if(!read_mutex.try_lock()) {
-				//PRINTLINE("READLOOP: mutex locked, wait and retry");
-				usleep(5000);
-				if(!read_mutex.try_lock()) {//mutex) {
-					//PRINTLINE("READLOOP: error, mutex still locked");
-				} else {
-					//PRINTLINE("READLOOP: mutex now open, setting position");
-					input_pos.x = pos[0];
-					input_pos.y = pos[1];
-					input_pos.rot = pos[2];
-					new_pos_ready = true;
-					read_mutex.unlock();
-				}
-			} else {
-				input_pos.x = pos[0];
-				input_pos.y = pos[1];
-				input_pos.rot = pos[2];
-				//PRINTLINE("READLOOP: setting position: [" << input_pos.x << "," << input_pos.y << "," << input_pos.rot << "]");
-				new_pos_ready = true;
-				read_mutex.unlock();
-			}
-			//return OK to client
-			memcpy ((void *) reply.data (), "ok", 2);
-		} else {
-			//recv_str is invalid, return negative to client
-			memcpy ((void *) reply.data (), "no", 2);
-		}
-		sleep(1);
-		socket.send (reply);
+        if(recv_str.compare("getpos") == 0) {
+            PRINTLINE("READLOOP: getPos");
+            //return position
+            //check if position can be read.
+            //tries 4 times in case of mutex
+            bool got_position = false;
+            std::string pos_str;
+            for(int i = 0; i < 4; i++) {
+                PRINTLINE("Trying to get position");
+                std::string pos_str = p->getCurrentPos();
+                if(pos_str.length() > 0) {
+                    got_position = true;
+                    PRINTLINE("Got position: " << pos_str);
+                    zmq::message_t reply(pos_str.length());
+                    memcpy ((void *) reply.data (), pos_str.c_str(), pos_str.length());
+                    std::string sending = std::string(static_cast<char*>(reply.data()), reply.size());
+                    PRINTLINE("Sending(" << pos_str.length() << "): " << sending);
+                    socket.send(reply);
+                    PRINTLINE("Done sending");
+                    break;
+                }
+                usleep(1000);
+            }
+
+            sleep(1);
+            if(!got_position) {
+                zmq::message_t reply(11);
+                memcpy ((void *) reply.data (), "unavailable", 11);
+                socket.send (reply);
+            }
+        } else {
+    		//check arguments
+    		int pos[3];
+    		bool isPosition = getArguments(recv_str, pos);
+    		zmq::message_t reply(2);
+    		if(isPosition) {
+    			//set position in struct
+    			//if(pthread_mutex_trylock(&read_pos_mutex) != 0) {
+    			if(!read_mutex.try_lock()) {
+    				//PRINTLINE("READLOOP: mutex locked, wait and retry");
+    				usleep(5000);
+    				if(!read_mutex.try_lock()) {//mutex) {
+    					//PRINTLINE("READLOOP: error, mutex still locked");
+    				} else {
+    					//PRINTLINE("READLOOP: mutex now open, setting position");
+    					input_pos.x = pos[0];
+    					input_pos.y = pos[1];
+    					input_pos.rot = pos[2];
+    					new_pos_ready = true;
+    					read_mutex.unlock();
+    				}
+    			} else {
+    				input_pos.x = pos[0];
+    				input_pos.y = pos[1];
+    				input_pos.rot = pos[2];
+    				//PRINTLINE("READLOOP: setting position: [" << input_pos.x << "," << input_pos.y << "," << input_pos.rot << "]");
+    				new_pos_ready = true;
+    				read_mutex.unlock();
+    			}
+    			//return OK to client
+    			memcpy ((void *) reply.data (), "ok", 2);
+    		} 
+            else {
+    			//recv_str is invalid, return negative to client
+    			memcpy ((void *) reply.data (), "no", 2);
+    		}
+            sleep(1);
+            socket.send (reply);
+        }
 	}
 }	
 
+/*
+void writeLoop() {
+    PRINTLINE("WRITE_THREAD: starting");
+    // Prepare our context and socket
+    bool got_position = false;
+    zmq::context_t context (1);
+    zmq::socket_t socket (context, ZMQ_REP);  */
+   // socket.bind ("tcp://*:5556");
+ /*   while (true) {
+        zmq::message_t request;
+        // Wait for next request from client
+//        PRINTLINE
+        socket.recv (&request);
+        std::string recv_str = std::string(static_cast<char*>(request.data()), request.size());
+        PRINTLINE("WRITETHREAD: recieved: " << recv_str);
 
+        //check if position can be read.
+        //tries 4 times in case of mutex
+        got_position = false;
+        std::string pos_str;
+        for(int i = 0; i < 4; i++) {
+            std::string pos_str = p->getCurrentPos();
+            if(pos_str.length() > 0) {
+                got_position = true;
+                break;
+            }
+            usleep(1000);
+        }
 
-int main(int argc, char *argv[]) {
-    PRINTLINE("SETUP: creating MotorCom");
-	m = new MotorCom;
-
-    PRINTLINE("SETUP: starting serial");
-    m->startSerial();
-
-    PRINTLINE("SETUP: resetting encoders and flushing serial");
-    m->resetEncoders();
-    usleep(10000);
-    m->flush();
-
-    PRINTLINE("SETUP: checking cmdline-arguments");
-    if(!checkArguments(argc, argv)) {
-    	return -1;
+        sleep(1);
+        if(got_position) {
+            zmq::message_t reply(pos_str.length());
+            memcpy ((void *) reply.data (), pos_str.c_str(), pos_str.length());
+            socket.send(reply);
+        } else {
+            zmq::message_t reply(11);
+            memcpy ((void *) reply.data (), "unavailable", 11);
+            socket.send (reply);
+        }
     }
+}*/
 
-    PRINTLINE("SETUP: initializing PosControl");
-    p = new PosControl(m);
-
-    PRINTLINE("SETUP: initializing readLoop thread");
-    input_pos.x = 0;
-    input_pos.y = 0;
-    input_pos.rot = 0;
-
-    std::thread read_thread(readLoop);
-    usleep(100000);
-
-    //PRINTLINE("SETUP: initializing writeLoop thread");
-    //std::thread write_thread(writeLoop);
-
-
-    PRINTLINE("SETUP: initializing controlLoop thread");
-    std::thread pos_thread(&PosControl::controlLoop, p);
-    usleep(100000);
-
-
-    PRINTLINE("SETUP: done, looping and checking for input");
-    while(true) {
-    	if(new_pos_ready) {
-
-    		//attempt to lock mutex, read values, unlock mutex, set pos_ready to false
-    		if(read_mutex.try_lock()) {
-    			p->setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
-    			//PRINTLINE();
-	    		read_mutex.unlock();
-    			new_pos_ready = false; 
-    		} else {
-    			usleep(1000);
-    			if(read_mutex.try_lock()) {
-	    			p->setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
-		    		read_mutex.unlock();
-	    			new_pos_ready = false; 
-    			} else {
-    				PRINTLINE("MAIN: try_lock read_mutex unsuccessful");
-    			}
-    		}
-    	}
-    	usleep(1000);
-    }
-
- //   testDrive();
-
-    PRINTLINE("MAIN: Exiting");
-    if(read_thread.joinable()) {
-    	read_thread.join();
-    }
-/*    if(write_thread.joinable()) {
-		write_thread.join();
-    }*/
-    if(pos_thread.joinable()) {
-    	pos_thread.join();
-    }
-
-    return 0;
-}
 
 
 bool getArguments(std::string input, int *pos) {
@@ -235,23 +233,23 @@ bool checkArguments(int argc, char *argv[]) {
 
 
     	for(int i = 1; i < argc; i++) {
-			if(strcmp(argv[i], "-sim") == 0) {
+			if(strcmp(argv[i], "sim") == 0) {
 				PRINTLINE("Simulating serial.");	
 				m->serialSimEnable();
 			}
-			else if(strcmp(argv[i], "-ttyUSB0") == 0) {
+			else if(strcmp(argv[i], "ttyUSB0") == 0) {
 				PRINTLINE("Opening serial on: /dev/" << argv[i]);
 				m->setSerialPort(argv[1]);
 			}
-			else if(strcmp(argv[i], "-ttyS0") == 0) {
+			else if(strcmp(argv[i], "ttyS0") == 0) {
 				PRINTLINE("Opening serial on: /dev/" << argv[i]);
 				m->setSerialPort(argv[1]);
 			}
-			else if(strcmp(argv[i], "-ttyACM1") == 0) {
+			else if(strcmp(argv[i], "ttyACM1") == 0) {
 				PRINTLINE("Opening serial on: /dev/" << argv[i]);
 				m->setSerialPort(argv[1]);
 			}
-			else if(strcmp(argv[i], "-ttyUSB1") == 0) {
+			else if(strcmp(argv[i], "ttyUSB1") == 0) {
 				PRINTLINE("Opening serial on: /dev/" << argv[i]);
 				m->setSerialPort(argv[1]);
 			} else {
@@ -261,4 +259,84 @@ bool checkArguments(int argc, char *argv[]) {
 		}
     }
     return true;
+}
+
+
+int main(int argc, char *argv[]) {
+    PRINTLINE("SETUP: creating MotorCom");
+    m = new MotorCom;
+
+    PRINTLINE("SETUP: checking cmdline-arguments");
+    if(!checkArguments(argc, argv)) {
+        return -1;
+    }
+
+    PRINTLINE("SETUP: starting serial");
+    m->startSerial();
+
+    PRINTLINE("SETUP: resetting encoders and flushing serial");
+    m->resetEncoders();
+    usleep(10000);
+    m->flush();
+
+
+    PRINTLINE("SETUP: initializing PosControl");
+    p = new PosControl(m);
+
+    PRINTLINE("SETUP: initializing readLoop thread");
+    input_pos.x = 0;
+    input_pos.y = 0;
+    input_pos.rot = 0;
+
+
+    std::thread read_thread(readLoop);
+    usleep(100000);
+
+ //   PRINTLINE("SETUP: initializing writeLoop thread");
+ //  std::thread write_thread(writeLoop);
+
+
+    PRINTLINE("SETUP: initializing controlLoop thread");
+    std::thread pos_thread(&PosControl::controlLoop, p);
+    usleep(100000);
+
+
+    PRINTLINE("SETUP: done, looping and checking for input");
+    while(true) {
+        if(new_pos_ready) {
+
+            //attempt to lock mutex, read values, unlock mutex, set pos_ready to false
+            if(read_mutex.try_lock()) {
+                p->setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
+                //PRINTLINE();
+                read_mutex.unlock();
+                new_pos_ready = false; 
+            } else {
+                usleep(1000);
+                if(read_mutex.try_lock()) {
+                    p->setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
+                    read_mutex.unlock();
+                    new_pos_ready = false; 
+                } else {
+                    PRINTLINE("MAIN: try_lock read_mutex unsuccessful");
+                }
+            }
+        }
+        usleep(500);
+    }
+
+ //   testDrive();
+
+    PRINTLINE("MAIN: Exiting");
+    if(read_thread.joinable()) {
+        read_thread.join();
+    }
+/*    if(write_thread.joinable()) {
+        write_thread.join();
+    }*/
+    if(pos_thread.joinable()) {
+        pos_thread.join();
+    }
+
+    return 0;
 }

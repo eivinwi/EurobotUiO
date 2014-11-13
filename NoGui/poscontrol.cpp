@@ -77,6 +77,7 @@ void PosControl::resetPosition() {
 		exit(EXIT_SUCCESS);
 	}*/
 void PosControl::controlLoop() {
+	working = false;
 	do {
 		//TODO: check if too long since position update
 
@@ -84,34 +85,39 @@ void PosControl::controlLoop() {
 		float distX = distanceX(); 
 		float distY = distanceY();
 
-		PRINTLINE("===== CONTROL-LOOP =====");
+	/*	PRINTLINE("===== CONTROL-LOOP =====");
 		printGoal();    //DBP
 		printCurrent(); //is always printed
 		printDist();	//DBP
-		PRINTLINE("========================\n");
+		PRINTLINE("========================\n");*/
 
 		// Checking if rotation is necessary.
 		// If not: checking if position-change is necessary
 		if(abs(distR) > ROTATION_CLOSE_ENOUGH) {
+			working = true;
 			changeRotation(distR);
 			updatePosition(TURNING);
 		}
 		else if(abs(distX) > POSITION_CLOSE_ENOUGH) {
+			working = true;
 			driveX(distX);
 			updatePosition(DRIVE_X);
 		} 	
-		else if(abs(distY) > POSITION_CLOSE_ENOUGH) {	
+		else if(abs(distY) > POSITION_CLOSE_ENOUGH) {
+			working = true;	
 			driveY(distY);
 			updatePosition(DRIVE_Y);
 		} else {
-			PRINTLINE("**** GOAL REACHED ******");
-		/*	printGoal();
+		/*	PRINTLINE("**** GOAL REACHED ******");
+			printGoal();
 			printCurrent();
 			printDist();
 			PRINTLINE("************************\n\n\n");*/
 			fullStop();
+			working = false;
 			usleep(7000);
 		}
+		curPos->updatePosString();
 		usleep(3000);
 	} while(true);
 
@@ -138,7 +144,7 @@ void PosControl::changeRotation(float distR) {
 			com->setSpeedL(SPEED_MED_POS);
 			com->setSpeedR(SPEED_MED_NEG);
 		} else {
-			PRINTLINE("SLOWDOWN ROT");
+			DBPL("SLOWDOWN ROT");
 			com->setSpeedL(SPEED_SLOW_POS);
 			com->setSpeedR(SPEED_SLOW_NEG);
 		}
@@ -164,10 +170,10 @@ void PosControl::driveX(float distX) {
 		DBPL("POS: driveX rotation: " << rotation);
 		if(distX > 0) {
 			if(distX > SLOWDOWN_DISTANCE) {
-				PRINTLINE("FULLSPEED");
+				DBPL("FULLSPEED");
 				com->setSpeedBoth(SPEED_MED_POS);
 			} else {
-				PRINTLINE("SLOWDOWN X");
+				DBPL("SLOWDOWN X");
 				com->setSpeedBoth(SPEED_SLOW_POS);
 			}
 		} else {
@@ -181,10 +187,10 @@ void PosControl::driveX(float distX) {
 		DBPL("POS: driveX rotation: " << rotation);
 		if(distX > 0) {
 			if(distX > SLOWDOWN_DISTANCE) {
-				PRINTLINE("FULLSPEED");
+				DBPL("FULLSPEED");
 				com->setSpeedBoth(SPEED_MED_NEG);
 			} else {
-				PRINTLINE("SLOWDOWN X");
+				DBPL("SLOWDOWN X");
 				com->setSpeedBoth(SPEED_SLOW_NEG);
 			}
 		} else {
@@ -248,9 +254,12 @@ void PosControl::driveY(float distY) {
 
 std::string PosControl::getCurrentPos() {
 	std::stringstream ss;
-	ss << (int) floor(curPos->getX()) << ",";
-	ss << (int) floor(curPos->getY()) << ",";
-	ss << (int) floor(curPos->getRotation());
+	if(working) {
+		ss << "w,";
+	} else {
+		ss << "s,";
+	}
+	ss << curPos->getPosString();
 	return ss.str();
 }
 

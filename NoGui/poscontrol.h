@@ -81,6 +81,7 @@ private:
 	std::string in;
 	MotorCom *com;
 	bool turning;
+	bool working;
 	GoalPosition *goalPos;
 	Position *curPos;
 	Position *exactPos;

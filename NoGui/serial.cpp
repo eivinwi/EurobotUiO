@@ -120,6 +120,7 @@ void Serial::printAll() {
     while(serial.rdbuf()->in_avail()) {
         uint8_t b = serial.get();
         DBP(b);
+        (void) b;
     }
     DBPL("]");
 }
