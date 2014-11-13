@@ -8,7 +8,6 @@
  */
 
 #include "motorcom.h"
-#include "communication.h"
 #include "poscontrol.h"
 #include "printing.h"
 #include <string>
@@ -16,6 +15,7 @@
 #include <thread>
 #include <mutex>
 #include <atomic>
+#include <zmq.hpp>
 
 bool checkArguments(int argc, char *argv[]);
 void drive();
