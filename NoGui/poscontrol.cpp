@@ -1,12 +1,9 @@
 #include "poscontrol.h"
-
 /*
 	TODO:
 		- thread-safe reading of position
-
 		- controlLoop in its own thread???
 			- mutex for position update/retrival, eventually atomic positions
-		
 		- Encoders own class?
 */
 

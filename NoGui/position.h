@@ -8,6 +8,8 @@
 #include <string>
 #include <sstream>
 #include <math.h>
+#include <thread>
+#include <mutex>
 
 
 /* curPos - current estimated position based on dead reckoning with encoders. Is updated regularly to be Exactpos
@@ -20,7 +22,10 @@ public:
 	~Position();
 	void reset();
 	void set(int n_x, int n_y, int n_rotation);
-	void updateEncoder();
+	
+	//currently unused, done in poscontrol.h
+	void updateEncoder(); 
+	
 	float distanceX(float to);
 	float distanceY(float to);
 	float distanceRot(float to);
@@ -42,6 +47,7 @@ private:
 	Rotation *rotation;
 	time_t changed;
 
+	std::mutex pos_mutex;
 };
 
 #endif /* POSITION_H */

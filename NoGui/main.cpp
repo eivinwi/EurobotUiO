@@ -37,6 +37,10 @@ PosControl *p;
 std::mutex read_mutex;
 std::atomic<bool> new_pos_ready(false);
 
+
+/* Waits for input on socket, mainly position. 
+ * TODO: define an extensive communication protocol
+ */
 void readLoop() {
 	//PRINTLINE("READLOOP: starting");
 	// Prepare our context and socket
@@ -213,7 +217,8 @@ void testDrive() {
  *  	true - if good/no arguments
  *		false - if invalid argument exists
  *
- * TODO: -noThread for program startup with read/write threads
+ * TODO: -noCom for program startup without read/write threads
+ * TODO: -sound
 */
 bool checkArguments(int argc, char *argv[]) {
 	PRINTLINE("READING Arguments");
