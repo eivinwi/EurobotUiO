@@ -115,7 +115,6 @@ void Position::updatePosString() {
 		ss << (int) floor(y) << ",";
 		ss << (int) floor(getRotation());
 		pos_string = ss.str();
-		PRINTLINE("Updating pos: " << ss.str());
 		pos_mutex.unlock(); 
 	}
 }

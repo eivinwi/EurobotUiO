@@ -97,27 +97,36 @@ void PosControl::controlLoop() {
 			working = true;
 			changeRotation(distR);
 			updatePosition(TURNING);
+			curPos->updatePosString();
+			printCurrent();
 		}
 		else if(abs(distX) > POSITION_CLOSE_ENOUGH) {
 			working = true;
 			driveX(distX);
 			updatePosition(DRIVE_X);
+			curPos->updatePosString();
+			printCurrent();
 		} 	
 		else if(abs(distY) > POSITION_CLOSE_ENOUGH) {
 			working = true;	
 			driveY(distY);
 			updatePosition(DRIVE_Y);
-		} else {
-		/*	PRINTLINE("**** GOAL REACHED ******");
-			printGoal();
+			curPos->updatePosString();
 			printCurrent();
-			printDist();
-			PRINTLINE("************************\n\n\n");*/
+		} else {
+			if(working) {
+				PRINTLINE("**** GOAL REACHED ******");
+				printGoal();
+				printCurrent();
+				printDist();
+				PRINTLINE("************************\n\n\n");
+				curPos->updatePosString();
+			}
 			fullStop();
 			working = false;
-			usleep(7000);
+			usleep(2000);
 		}
-		curPos->updatePosString();
+		//curPos->updatePosString();
 		usleep(3000);
 	} while(true);
 
