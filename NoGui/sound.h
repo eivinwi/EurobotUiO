@@ -1,3 +1,11 @@
+/*  
+ * File: serial.h
+ * Author: Eivind Wikheim
+ *
+ * TODO: implement a interface for playing audio files to use for feedback. 
+ *
+ */
+
 #ifndef SOUND_H
 #define	SOUND_H
 

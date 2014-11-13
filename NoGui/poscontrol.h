@@ -2,16 +2,16 @@
  * File: poscontrol.h
  * Author: Eivind Wikheim
  *
+ * Controls the motors by sending commands to MotorCom. commandLoop() runs 
+ * continuosly in an own thread, and moves the robot while curPos is not close
+ * enough to goalPos. 
+ *
+ *
  * TODO:
- * - driver robot from its current position to goal position in a controlled manner.
  * - tune algorithms for accuracy
+ * - encoders in own class?
  *
- * INPUTS via zeromq in communication.h:
- * - from AI: goal pos, goal orientation
- * - from SENS: true position
- *
- *
- * The resolution of the positioning system is 3000x2000, where 1res = 1cm
+ * The resolution of the positioning system is 3000x2000, where 1 = 1cm
  */
 
 #ifndef POSCONTROL_H

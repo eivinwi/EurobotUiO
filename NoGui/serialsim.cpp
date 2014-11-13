@@ -1,7 +1,5 @@
 #include "serialsim.h"
 
-//TODO: readlong
-
 SerialSim::SerialSim() {
 	speedL = 255;
 	speedR = 255;

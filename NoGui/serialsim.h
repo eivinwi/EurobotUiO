@@ -6,6 +6,10 @@
  * 
  * Relatively realistic encoder-values are calculated based on set motorspeed and
  * time since last encoder-request (or since program start).
+ *
+ * TODO: 
+ * -fix calculation of fake encoder values
+ * 	  - readLong
  */
 
 

@@ -1,3 +1,11 @@
+/*  
+ * File: rotation.h
+ * Author: Eivind Wikheim
+ *
+ * Contains the current estimated robot rotation (angle), 
+ * and functions for calculating distances (in degrees).
+ */
+
 #ifndef ROTATION_H
 #define	ROTATION_H
 

@@ -1,3 +1,11 @@
+/*  
+ * File: goalPosition.h
+ * Author: Eivind Wikheim
+ *
+ * Contains the current (exact) goal position, and functions for using/updating it.
+ * 
+ */
+
 #ifndef GOALPOSITION_H
 #define GOALPOSITION_H
 

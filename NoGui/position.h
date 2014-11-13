@@ -1,3 +1,11 @@
+/*  
+ * File: position.h
+ * Author: Eivind Wikheim
+ *
+ * Contains the current estimated robot position, and functions for using/updating
+ *
+ */
+
 #ifndef POSITION_H
 #define POSITION_H
 #include "rotation.h"

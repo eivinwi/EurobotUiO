@@ -1,3 +1,10 @@
+/*  
+ * File: printing.h
+ * Author: Eivind Wikheim
+ *
+ * Debug print macros
+ */
+
 #ifndef PRINTING_H
 #define	PRINTING_H
 

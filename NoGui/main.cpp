@@ -3,10 +3,9 @@
  * Author: Eivind
  *
  * Created on 26. september 2014, 14:15
+ *
+*
  */
-//#include "serial.h"
-
-//TODO: get position and send to clients
 
 #include "motorcom.h"
 #include "communication.h"
