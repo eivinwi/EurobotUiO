@@ -113,6 +113,8 @@ void PosControl::controlLoop() {
 				printCurrent();
 				printDist();
 				PRINTLINE("************************\n\n\n");
+				curPos->set(goalPos->getX(), goalPos->getY(), goalPos->getRotation());
+
 				curPos->updatePosString();
 			}
 			fullStop();
