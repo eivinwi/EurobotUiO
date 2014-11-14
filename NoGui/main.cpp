@@ -41,7 +41,7 @@ std::atomic<bool> new_pos_ready(false);
  * TODO: define an extensive communication protocol
  */
 void readLoop() {
-	PRINTLINE("READ_THREAD: starting");
+	TIMESTAMP("[COM] starting");
 	// Prepare context and socket
 	zmq::context_t context (1);
 //    zmq::context_t *context = (zmq::context_t *) arg;
@@ -120,10 +120,12 @@ void readLoop() {
     		} 
             else {
     			//recv_str is invalid, return negative to client
+                TIMESTAMP("[COM] replying no");
     			memcpy ((void *) reply.data (), "no", 2);
     		}
             //sleep(1);
             usleep(100);
+            TIMESTAMP("[COM] sending reply");
             socket.send (reply);
         }
 	}
