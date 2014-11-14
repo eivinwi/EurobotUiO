@@ -304,6 +304,10 @@ int main(int argc, char *argv[]) {
     std::thread pos_thread(&PosControl::controlLoop, p);
     usleep(5000);
 
+    uint8_t acc = m->getAcceleration();
+    PRINTLINE("Acceleration is: " << acc);
+    //m->setAcceleration();
+    usleep(2000);
 
     PRINTLINE("[SETUP] done, looping and checking for input");
     while(true) {
