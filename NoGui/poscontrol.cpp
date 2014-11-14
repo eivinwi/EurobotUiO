@@ -223,15 +223,15 @@ void PosControl::driveY(float distY) {
 		DBPL("[POS] correct rotation, can drive Y.");
 		if(distY > 0) {
 			if(distY > SLOWDOWN_DISTANCE) {
-				com->setSpeedBoth(SPEED_MED_POS);
+				setSpeed(SPEED_MED_POS, SPEED_MED_POS);
 			} else {
-				com->setSpeedBoth(SPEED_SLOW_POS);
+				setSpeed(SPEED_SLOW_POS, SPEED_SLOW_POS);
 			}
 		} else {
 			if(distY < -SLOWDOWN_DISTANCE) {
-				com->setSpeedBoth(SPEED_MED_NEG);
+				setSpeed(SPEED_MED_NEG, SPEED_MED_NEG);
 			} else {
-				com->setSpeedBoth(SPEED_SLOW_NEG);
+				setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
 			}
 		}
 	} 
@@ -239,15 +239,15 @@ void PosControl::driveY(float distY) {
 		DBPL("[POS] correct rotation, can drive Y.");
 		if(distY > 0) {
 			if(distY > SLOWDOWN_DISTANCE) {
-				com->setSpeedBoth(SPEED_MED_NEG);
+				setSpeed(SPEED_MED_NEG, SPEED_MED_NEG);				
 			} else {
-				com->setSpeedBoth(SPEED_SLOW_NEG);
+				setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
 			}
 		} else {
 			if(distY < -SLOWDOWN_DISTANCE) {
-				com->setSpeedBoth(SPEED_MED_POS);
+				setSpeed(SPEED_MED_POS, SPEED_MED_POS);
 			} else {
-				com->setSpeedBoth(SPEED_SLOW_POS);
+				setSpeed(SPEED_SLOW_POS, SPEED_SLOW_POS);
 			}
 		}
 	} 	
