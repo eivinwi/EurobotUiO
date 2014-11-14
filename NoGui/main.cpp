@@ -57,14 +57,12 @@ void readLoop() {
 		PRINTLINE("READLOOP: received" << recv_str);
 
         if(recv_str.compare("getpos") == 0) {
-            PRINTLINE("READLOOP: getPos");
             //return position
             //check if position can be read.
             //tries 4 times in case of mutex
             bool got_position = false;
             std::string pos_str;
             for(int i = 0; i < 4; i++) {
-                PRINTLINE("Trying to get position");
                 std::string pos_str = p->getCurrentPos();
                 if(pos_str.length() > 0) {
                     got_position = true;
@@ -77,13 +75,13 @@ void readLoop() {
                     PRINTLINE("Done sending");
                     break;
                 }
-                usleep(1000);
+                usleep(100);
             }
 
-            sleep(1);
             if(!got_position) {
                 zmq::message_t reply(11);
                 memcpy ((void *) reply.data (), "unavailable", 11);
+                usleep(100);
                 socket.send (reply);
             }
         } else {
@@ -96,7 +94,7 @@ void readLoop() {
     			//if(pthread_mutex_trylock(&read_pos_mutex) != 0) {
     			if(!read_mutex.try_lock()) {
     				//PRINTLINE("READLOOP: mutex locked, wait and retry");
-    				usleep(5000);
+    				usleep(1000);
     				if(!read_mutex.try_lock()) {//mutex) {
     					//PRINTLINE("READLOOP: error, mutex still locked");
     				} else {
@@ -122,7 +120,8 @@ void readLoop() {
     			//recv_str is invalid, return negative to client
     			memcpy ((void *) reply.data (), "no", 2);
     		}
-            sleep(1);
+            //sleep(1);
+            usleep(100);
             socket.send (reply);
         }
 	}
@@ -275,7 +274,7 @@ int main(int argc, char *argv[]) {
 
     PRINTLINE("SETUP: resetting encoders and flushing serial");
     m->resetEncoders();
-    usleep(10000);
+    usleep(5000);
     m->flush();
 
 
@@ -289,7 +288,7 @@ int main(int argc, char *argv[]) {
 
 
     std::thread read_thread(readLoop);
-    usleep(100000);
+    usleep(5000);
 
  //   PRINTLINE("SETUP: initializing writeLoop thread");
  //  std::thread write_thread(writeLoop);
@@ -297,7 +296,7 @@ int main(int argc, char *argv[]) {
 
     PRINTLINE("SETUP: initializing controlLoop thread");
     std::thread pos_thread(&PosControl::controlLoop, p);
-    usleep(100000);
+    usleep(5000);
 
 
     PRINTLINE("SETUP: done, looping and checking for input");
@@ -330,9 +329,6 @@ int main(int argc, char *argv[]) {
     if(read_thread.joinable()) {
         read_thread.join();
     }
-/*    if(write_thread.joinable()) {
-        write_thread.join();
-    }*/
     if(pos_thread.joinable()) {
         pos_thread.join();
     }
