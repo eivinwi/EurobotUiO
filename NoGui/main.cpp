@@ -64,7 +64,7 @@ void readLoop() {
             std::string pos_str;
             for(int i = 0; i < 4; i++) {
                 std::string pos_str = p->getCurrentPos();
-                if(pos_str.length() > 0) {
+                if(pos_str.length() > 2) {
                     got_position = true;
                     TIMESTAMP("[COM] Got position: " << pos_str);
                     zmq::message_t reply(pos_str.length());
