@@ -86,7 +86,7 @@ void PosControl::controlLoop() {
 
 	//	PRINTLINE("===== CONTROL-LOOP =====");
 	//	printGoal();    //DBP
-		printCurrent(); //is always printed
+	//	printCurrent(); //is always printed
 	//	printDist();	//DBP
 	//	PRINTLINE("========================\n");*/
 
@@ -97,21 +97,21 @@ void PosControl::controlLoop() {
 			changeRotation(distR);
 			updatePosition(TURNING);
 			curPos->updatePosString();
-			//printCurrent();
+			printCurrent();
 		}
 		else if(abs(distX) > POSITION_CLOSE_ENOUGH) {
 			working = true;
 			driveX(distX);
 			updatePosition(DRIVE_X);
 			curPos->updatePosString();
-			//printCurrent();
+			printCurrent();
 		} 	
 		else if(abs(distY) > POSITION_CLOSE_ENOUGH) {
 			working = true;	
 			driveY(distY);
 			updatePosition(DRIVE_Y);
 			curPos->updatePosString();
-			//printCurrent();
+			printCurrent();
 		} else {
 			if(working) {
 				TIMESTAMP(" GOAL REACHED ******");
