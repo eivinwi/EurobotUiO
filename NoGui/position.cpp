@@ -110,7 +110,7 @@ void Position::decrY(float dist) {
 void Position::updatePosString() {
 	if(pos_mutex.try_lock()) {
 		//update string
-		PRINTLINE("UPDATING POS");
+		//PRINTLINE("UPDATING POS");
 		std::stringstream ss;
 		ss << (int) floor(x/10) << ",";
 		ss << (int) floor(y/10) << ",";
