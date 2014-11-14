@@ -116,16 +116,17 @@ void readLoop() {
     				read_mutex.unlock();
     			}
     			//return OK to client
+                TIMESTAMP("[COM] reply=ok");
     			memcpy ((void *) reply.data (), "ok", 2);
     		} 
             else {
     			//recv_str is invalid, return negative to client
-                TIMESTAMP("[COM] replying no");
+                TIMESTAMP("[COM] reply=no");
     			memcpy ((void *) reply.data (), "no", 2);
     		}
             //sleep(1);
             usleep(100);
-            TIMESTAMP("[COM] sending reply");
+            TIMESTAMP("[COM] sending reply: " << std::string(static_cast<char*>(reply.data()), reply.size()));
             socket.send (reply);
         }
 	}
