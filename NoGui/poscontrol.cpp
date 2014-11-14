@@ -61,6 +61,8 @@ void PosControl::resetPosition() {
 	rightEncoder.diffDist = 0.0;
 	rightEncoder.total = 0;
 	rightEncoder.totalDist = 0.0;
+
+	curPos->updatePosString();
 }
 
 
