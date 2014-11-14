@@ -75,10 +75,11 @@ void readLoop() {
                     TIMESTAMP("[COM] Done sending");
                     break;
                 }
-                usleep(100);
+                usleep(1000);
             }
 
             if(!got_position) {
+                TIMESTAMP("[COM] reply=unavailable");
                 zmq::message_t reply(11);
                 memcpy ((void *) reply.data (), "unavailable", 11);
                 usleep(100);
