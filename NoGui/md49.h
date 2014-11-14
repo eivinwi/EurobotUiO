@@ -65,7 +65,14 @@ This means:
 #define POS_DIR (-1) //-1
 
 
-#define SLOWDOWN_DISTANCE 100
+#define SLOWDOWN_DISTANCE 40
 #define SLOWDOWN_DISTANCE_ROT 10
+
+#define TURNING 0
+#define DRIVE_X 1
+#define DRIVE_Y 2
+
+#define ROTATION_CLOSE_ENOUGH 1.0
+#define POSITION_CLOSE_ENOUGH 1.0
 
 #endif /* MD49_H */
