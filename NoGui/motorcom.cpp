@@ -13,33 +13,33 @@ MotorCom::~MotorCom() {
 
 void MotorCom::startSerial() {
 	if(simulating) {
-        DBP("MOTORCOM: Starting serialsim\n")
+        DBP("[MOTOR] Starting serialsim\n")
 		simport = new SerialSim;
 	} else {
         if(strcmp(serial_port, "") == 0) {
             PRINTLINE("Error, empty serial_port. Setting to /dev/ttyACM0");
             strcpy(serial_port, "ttyACM0");
         }     
-        DBP("MOTORCOM:  serial\n")
+        DBP("[MOTOR]  serial\n")
 		port = new Serial(serial_port);
 	}
 }
 
 
 void MotorCom::serialSimEnable() {
-    PRINTLINE("MOTORCOM: Simulating=true\n");
+    PRINTLINE("[MOTOR] Simulating=true\n");
 	simulating = true;
 }
 
 
 void MotorCom::serialSimDisable() {
-    DBP("MOTORCOM: Simulating=false\n");
+    DBP("[MOTOR] Simulating=false\n");
     simulating = false;
 }
 
 
 void MotorCom::setSerialPort(const char *s) {
-    DBPL("MOTORCOM: serial_port=" << s)
+    DBPL("[MOTOR] serial_port=" << s)
 	strcpy(serial_port, s);
 }
 
@@ -132,7 +132,7 @@ void MotorCom::getEncoders() {
     result2 += readFromSerialNoWait() << 16ul;
     result2 += readFromSerialNoWait() << 8ul;
     result2 += readFromSerialNoWait();
-    DBPL("MOTORCOM: EncL: " << result1 << "\nEncR" << result2); 
+    DBPL("[MOTOR] EncL: " << result1 << "\nEncR" << result2); 
 }
 
 
@@ -140,7 +140,7 @@ long MotorCom::getEncL() {
     sync();
     writeToSerial(GET_ENCODERL);
     long result = readLongFromSerial();
-    DBPL("EncL: " << result << " (diff: " << (result - prev_encL) << ")\nWheel rotations: " <<  ((result-prev_encL)/980.0) << 
+    DBPL("[MOTOR] EncL: " << result << " (diff: " << (result - prev_encL) << ")\nWheel rotations: " <<  ((result-prev_encL)/980.0) << 
                 "\nDistance: " << diff*0.385);
     prev_encL = result;
     return result;
@@ -151,7 +151,7 @@ long MotorCom::getEncR() {
     sync();
     writeToSerial(GET_ENCODERR);
     long result = readLongFromSerial();
-    DBPL("EncR: " << result << " (diff: " << (result - prev_encR) << ")\nWheel rotations: " 
+    DBPL("[MOTOR] EncR: " << result << " (diff: " << (result - prev_encR) << ")\nWheel rotations: " 
         << (diff/980.0) << "\nDistance: " << ((result - prev_encR)*0.385));
     prev_encR = result;
     return result;
@@ -159,12 +159,12 @@ long MotorCom::getEncR() {
 
 
 uint8_t MotorCom::getVoltage() {
-    DBPL("MOTORCOM: getVoltage");
+    DBPL("[MOTOR] getVoltage");
     sync();
     writeToSerial(GET_VOLT);
     int volt = 0;
     volt = readFromSerial(); //readNoWait();
-    DBPL("MOTORCOM: volt: " << volt << " (int val is: " << (int) volt << ")");
+    DBPL("[MOTOR] volt: " << volt << " (int val is: " << (int) volt << ")");
     return volt;
 }
 

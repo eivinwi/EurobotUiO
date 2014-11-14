@@ -54,7 +54,7 @@ void readLoop() {
 		// Wait for next request from client
 		socket.recv (&request);
 		std::string recv_str = std::string(static_cast<char*>(request.data()), request.size());
-		PRINTLINE("READLOOP: received" << recv_str);
+		TIMESTAMP("[COM] received" << recv_str);
 
         if(recv_str.compare("getpos") == 0) {
             //return position
@@ -66,13 +66,13 @@ void readLoop() {
                 std::string pos_str = p->getCurrentPos();
                 if(pos_str.length() > 0) {
                     got_position = true;
-                    PRINTLINE("Got position: " << pos_str);
+                    TIMESTAMP("[COM] Got position: " << pos_str);
                     zmq::message_t reply(pos_str.length());
                     memcpy ((void *) reply.data (), pos_str.c_str(), pos_str.length());
                     std::string sending = std::string(static_cast<char*>(reply.data()), reply.size());
-                    PRINTLINE("Sending(" << pos_str.length() << "): " << sending);
+                    TIMESTAMP("[COM] Returning position (" << pos_str.length() << "): " << sending);
                     socket.send(reply);
-                    PRINTLINE("Done sending");
+                    TIMESTAMP("[COM] Done sending");
                     break;
                 }
                 usleep(100);
@@ -90,18 +90,20 @@ void readLoop() {
     		bool isPosition = getArguments(recv_str, pos);
     		zmq::message_t reply(2);
     		if(isPosition) {
+                TIMESTAMP("[COM] got position");
     			//set position in struct
     			//if(pthread_mutex_trylock(&read_pos_mutex) != 0) {
     			if(!read_mutex.try_lock()) {
-    				//PRINTLINE("READLOOP: mutex locked, wait and retry");
+    				TIMESTAMP("[COM] mutex locked, wait and retry");
     				usleep(1000);
     				if(!read_mutex.try_lock()) {//mutex) {
-    					//PRINTLINE("READLOOP: error, mutex still locked");
+    					TIMESTAMP("[COM] error, mutex still locked");
     				} else {
     					//PRINTLINE("READLOOP: mutex now open, setting position");
-    					input_pos.x = pos[0];
-    					input_pos.y = pos[1];
-    					input_pos.rot = pos[2];
+                        input_pos.x = pos[0];
+                        input_pos.y = pos[1];
+                        input_pos.rot = pos[2];
+                        TIMESTAMP("[COM] mutex now open, setting position: [" << input_pos.x << "," << input_pos.y << "," << input_pos.rot << "]");
     					new_pos_ready = true;
     					read_mutex.unlock();
     				}
@@ -109,7 +111,7 @@ void readLoop() {
     				input_pos.x = pos[0];
     				input_pos.y = pos[1];
     				input_pos.rot = pos[2];
-    				//PRINTLINE("READLOOP: setting position: [" << input_pos.x << "," << input_pos.y << "," << input_pos.rot << "]");
+    				TIMESTAMP("[COM] setting position: [" << input_pos.x << "," << input_pos.y << "," << input_pos.rot << "]");
     				new_pos_ready = true;
     				read_mutex.unlock();
     			}
@@ -261,27 +263,27 @@ bool checkArguments(int argc, char *argv[]) {
 
 
 int main(int argc, char *argv[]) {
-    PRINTLINE("SETUP: creating MotorCom");
+    PRINTLINE("[SETUP] creating MotorCom");
     m = new MotorCom;
 
-    PRINTLINE("SETUP: checking cmdline-arguments");
+    PRINTLINE("[SETUP] checking cmdline-arguments");
     if(!checkArguments(argc, argv)) {
         return -1;
     }
 
-    PRINTLINE("SETUP: starting serial");
+    PRINTLINE("[SETUP] starting serial");
     m->startSerial();
 
-    PRINTLINE("SETUP: resetting encoders and flushing serial");
+    PRINTLINE("[SETUP] resetting encoders and flushing serial");
     m->resetEncoders();
     usleep(5000);
     m->flush();
 
 
-    PRINTLINE("SETUP: initializing PosControl");
+    PRINTLINE("[SETUP] initializing PosControl");
     p = new PosControl(m);
 
-    PRINTLINE("SETUP: initializing readLoop thread");
+    PRINTLINE("[SETUP] initializing readLoop thread");
     input_pos.x = 0;
     input_pos.y = 0;
     input_pos.rot = 0;
@@ -290,16 +292,16 @@ int main(int argc, char *argv[]) {
     std::thread read_thread(readLoop);
     usleep(5000);
 
- //   PRINTLINE("SETUP: initializing writeLoop thread");
+ //   PRINTLINE("[SETUP] initializing writeLoop thread");
  //  std::thread write_thread(writeLoop);
 
 
-    PRINTLINE("SETUP: initializing controlLoop thread");
+    PRINTLINE("[SETUP] initializing controlLoop thread");
     std::thread pos_thread(&PosControl::controlLoop, p);
     usleep(5000);
 
 
-    PRINTLINE("SETUP: done, looping and checking for input");
+    PRINTLINE("[SETUP] done, looping and checking for input");
     while(true) {
         if(new_pos_ready) {
 
@@ -325,7 +327,7 @@ int main(int argc, char *argv[]) {
 
  //   testDrive();
 
-    PRINTLINE("MAIN: Exiting");
+    PRINTLINE("[SETUP] Exiting");
     if(read_thread.joinable()) {
         read_thread.join();
     }

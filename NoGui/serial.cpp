@@ -20,25 +20,25 @@ Serial::~Serial() {
 
 
 void Serial::write(uint8_t arg) {
-	DBPL("SERIAL: writeu: " << arg);
+	DBPL("[SERIAL] writeu: " << arg);
     serial << arg;
 }
 
 
 void Serial::write(char arg) {
-	DBPL("SERIAL: writec: " << arg);
+	DBPL("[SERIAL] writec: " << arg);
     serial << arg;
 }
 
 
 void Serial::write(int arg) {
-	DBPL("SERIAL: writeint: " << arg << " (converting)");
+	DBPL("[SERIAL] writeint: " << arg << " (converting)");
     write((uint8_t) arg); //hack!!!!
 }
 
 
 uint8_t Serial::readNoWait(){
-    DBPL("SERIAL: readNW");
+    DBPL("[SERIAL] readNW");
     uint8_t r = 0x00;
 
     if(available()) {
@@ -50,7 +50,7 @@ uint8_t Serial::readNoWait(){
             r =  serial.get();
         }
     }
-    DBPL("SERIAL: readNW returning " << r);
+    DBPL("[SERIAL] readNW returning " << r);
     return r;
 }
 
@@ -62,7 +62,7 @@ uint8_t Serial::read() {
 
 
 long Serial::readLong() {
-    DBPL("SERIAL: readLong")
+    DBPL("[SERIAL] readLong")
     //std::clock_t c_start = std::clock();
     auto t_start = std::chrono::high_resolution_clock::now();
 
@@ -74,10 +74,10 @@ long Serial::readLong() {
     bytes[1] = 0;
     bytes[2] = 0;
     bytes[3] = 0;
-    DBPL("SERIAL: readLong starting loop")    
+    DBPL("[SERIAL] readLong starting loop")    
     for(int i = 0; i < 4; i++) {
         double timepassed = std::chrono::duration<double, std::milli>(t_end-t_start).count();
-        DBPL("SERIAL: byte nr" << i << "done");
+        DBPL("[SERIAL] byte nr" << i << "done");
         while(timepassed < 100) {
             if(available()) {
                 bytes[i] = readNoWait();
@@ -87,7 +87,7 @@ long Serial::readLong() {
             timepassed = std::chrono::duration<double, std::milli>(t_end-t_start).count();
         }   
     }
-    DBPL("SERIAL: readLong loop done")
+    DBPL("[SERIAL] readLong loop done")
 
     long result = 0;
     result += bytes[0] << 24;
@@ -101,10 +101,10 @@ long Serial::readLong() {
     std::bitset<8> r4(bytes[3]);
 
 
-    DBP("SERIAL: read long, bits:");
+    DBP("[SERIAL] read long, bits:");
     DBPL("[" << r1 << "][" << r2 << "][" << r3 << "][" << r4 << "]");
     DBPL("result: " << result);
-    //DBPL("SERIAL: returning long: \n" << ss);
+    //DBPL("[SERIAL] returning long: \n" << ss);
 
     return result;
 }

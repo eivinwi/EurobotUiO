@@ -19,7 +19,7 @@ SerialSim::SerialSim() {
 	readCounter = 0;
 	synced = false;
 	prev_cmd = 0x00;
-	DBP("SIM: Started SerialSim\n");
+	DBP("[SIM] Started SerialSim\n");
 }
 
 SerialSim::~SerialSim() {
@@ -35,7 +35,7 @@ void SerialSim::write(int arg) {
 
 
 void SerialSim::write(uint8_t arg) {
-	DBP("SIM: write " << arg)
+	DBP("[SIM] write " << arg)
 	if(arg == 0x00) {
 		synced = true;
 		prev_cmd = 0x00;
@@ -119,7 +119,7 @@ void SerialSim::write(uint8_t arg) {
 				readCounter = 0;
 	        	break;
 	        default:
-	        	PRINTLINE("Invalid serial-cmd in SIM: " << arg);
+	        	PRINTLINE("Invalid serial-cmd in [SIM] " << arg);
 		    	break;
 
 		}
@@ -147,7 +147,7 @@ void SerialSim::write(uint8_t arg) {
 
 
 uint8_t SerialSim::readNoWait() {
-	DBPL("SIM: readNoWait " << prev_cmd);
+	DBPL("[SIM] readNoWait " << prev_cmd);
 	switch(prev_cmd) {
         case GET_SPEEDL:
         	return speedL;
@@ -197,7 +197,7 @@ uint8_t SerialSim::readNoWait() {
 }
 
 uint8_t SerialSim::read() {
-	DBPL("SIM: read");
+	DBPL("[SIM] read");
 	return readNoWait();
 }
 
@@ -250,7 +250,7 @@ uint8_t SerialSim::readEncs() {
 }
 
 void SerialSim::calculateEncL() {
-	DBPL("SIM: calculateEncL");
+	DBPL("[SIM] calculateEncL");
 	time_t now;
 	time(&now);
 	double timePassed = difftime(now, timeL);
@@ -272,7 +272,7 @@ void SerialSim::calculateEncL() {
 }
 
 void SerialSim::calculateEncR() {
-	DBP("SIM: calculateEncR\n");
+	DBP("[SIM] calculateEncR\n");
 	time_t now;
 	time(&now);
 	double timePassed = difftime(now, timeR);
