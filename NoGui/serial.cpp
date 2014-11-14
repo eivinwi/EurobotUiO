@@ -45,7 +45,7 @@ uint8_t Serial::readNoWait(){
         r =  serial.get();
     } else {
         DBPL("In ELSE, sleeping for 50ms");
-        usleep(5000);
+        usleep(2000);
         if(available()) {
             r =  serial.get();
         }
@@ -56,7 +56,7 @@ uint8_t Serial::readNoWait(){
 
 
 uint8_t Serial::read() {
-    usleep(5000);
+    usleep(2000);
     return readNoWait();
 }
 

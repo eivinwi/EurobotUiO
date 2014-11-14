@@ -109,9 +109,3 @@ float Rotation::distanceRight(float goal) {
 float Rotation::get() {
 	return angle;
 }
-/*
-goal=
-angle=
-
-
-*/

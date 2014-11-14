@@ -119,10 +119,10 @@ void PosControl::controlLoop() {
 			}
 			fullStop();
 			working = false;
-			usleep(2000);
+			usleep(500);
 		}
 		//curPos->updatePosString();
-		usleep(3000);
+		usleep(2000);
 	} while(true);
 
 	PRINTLINE("*** EXITING CONTROL LOOP ***");
