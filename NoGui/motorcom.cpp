@@ -90,8 +90,7 @@ uint8_t MotorCom::getSpeedR() {
 uint8_t MotorCom::getAcceleration() {
     sync();
     writeToSerial(GET_ACCELERATION);
-    uint8_t acc = readFromSerial();
-    return acc;
+    return readFromSerial();
 }
 
 

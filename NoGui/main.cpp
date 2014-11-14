@@ -36,6 +36,7 @@ PosControl *p;
 std::mutex read_mutex;
 std::atomic<bool> new_pos_ready(false);
 
+int ACCELERATION = 3;
 
 /* Waits for input on socket, mainly position. 
  * TODO: define an extensive communication protocol
@@ -304,9 +305,13 @@ int main(int argc, char *argv[]) {
     std::thread pos_thread(&PosControl::controlLoop, p);
     usleep(5000);
 
-    uint8_t acc = m->getAcceleration();
-    PRINTLINE("Acceleration is: " << acc);
-    //m->setAcceleration();
+    int acc2 = m->getAcceleration();
+    PRINTLINE("[SETUP] Acceleration is: " << acc2 << ", setting new acceleration" << ACCELERATION);
+    usleep(1000);
+    m->setAcceleration(ACCELERATION);
+    usleep(1000);
+    acc2 = m->getAcceleration();
+    PRINTLINE("[SETUP] acceleration is now: " << acc2);
     usleep(2000);
 
     PRINTLINE("[SETUP] done, looping and checking for input");
