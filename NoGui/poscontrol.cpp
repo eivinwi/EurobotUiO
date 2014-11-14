@@ -126,7 +126,7 @@ void PosControl::controlLoop() {
 			usleep(500);
 		}
 		//curPos->updatePosString();
-		usleep(2000);
+		usleep(1000);
 	} while(true);
 
 	PRINTLINE("*** EXITING CONTROL LOOP ***");
