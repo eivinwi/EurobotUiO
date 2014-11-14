@@ -62,6 +62,8 @@ void PosControl::resetPosition() {
 	rightEncoder.total = 0;
 	rightEncoder.totalDist = 0.0;
 
+	curSpeedRight = 0;
+	curSpeedLeft = 0;
 	curPos->updatePosString();
 }
 
@@ -149,21 +151,17 @@ void PosControl::changeRotation(float distR) {
 	} else if(distR > 0) {
 		DBPL("Positive dir (" << distR << ")");
 		if(distR > SLOWDOWN_DISTANCE_ROT) {
-			com->setSpeedL(SPEED_MED_POS);
-			com->setSpeedR(SPEED_MED_NEG);
+			setSpeed(SPEED_MED_POS, SPEED_MED_NEG);
 		} else {
 			DBPL("SLOWDOWN ROT");
-			com->setSpeedL(SPEED_SLOW_POS);
-			com->setSpeedR(SPEED_SLOW_NEG);
+			setSpeed(SPEED_SLOW_POS, SPEED_SLOW_NEG);
 		}
 	} else {
 		DBPL("Negative dir (" << distR << ")");
 		if(distR < -SLOWDOWN_DISTANCE_ROT) {
-			com->setSpeedL(SPEED_MED_NEG);
-			com->setSpeedR(SPEED_MED_POS);
+			setSpeed(SPEED_MED_NEG, SPEED_MED_POS);
 		} else {
-			com->setSpeedL(SPEED_SLOW_NEG);
-			com->setSpeedR(SPEED_SLOW_POS);
+			setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_POS);
 		}
 	}
 }
@@ -179,16 +177,16 @@ void PosControl::driveX(float distX) {
 		if(distX > 0) {
 			if(distX > SLOWDOWN_DISTANCE) {
 				DBPL("FULLSPEED");
-				com->setSpeedBoth(SPEED_MED_POS);
+				setSpeed(SPEED_MED_POS, SPEED_MED_POS);
 			} else {
 				DBPL("SLOWDOWN X");
-				com->setSpeedBoth(SPEED_SLOW_POS);
+				setSpeed(SPEED_SLOW_POS, SPEED_SLOW_POS);
 			}
 		} else {
 			if(distX < -SLOWDOWN_DISTANCE) {
-				com->setSpeedBoth(SPEED_MED_NEG);
+				setSpeed(SPEED_MED_NEG, SPEED_MED_NEG);				
 			} else {
-				com->setSpeedBoth(SPEED_SLOW_NEG);
+				setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
 			}
 		}
 	} else if(closeEnoughAngle(rotation, 180)) {
@@ -196,16 +194,16 @@ void PosControl::driveX(float distX) {
 		if(distX > 0) {
 			if(distX > SLOWDOWN_DISTANCE) {
 				DBPL("FULLSPEED");
-				com->setSpeedBoth(SPEED_MED_NEG);
+				setSpeed(SPEED_MED_NEG, SPEED_MED_NEG);
 			} else {
 				DBPL("SLOWDOWN X");
-				com->setSpeedBoth(SPEED_SLOW_NEG);
+				setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
 			}
 		} else {
 			if(distX < -SLOWDOWN_DISTANCE) {
-				com->setSpeedBoth(SPEED_MED_POS);
+				setSpeed(SPEED_MED_POS, SPEED_MED_POS);
 			} else {
-				com->setSpeedBoth(SPEED_SLOW_POS);
+				setSpeed(SPEED_SLOW_POS, SPEED_SLOW_POS);
 			}
 		}
 	} 
@@ -368,7 +366,7 @@ void PosControl::updateRightEncoder() {
 
 
 void PosControl::fullStop() {
-	com->setSpeedBoth(SPEED_STOP);
+	setSpeed(SPEED_STOP, SPEED_STOP);
 }
 
 
@@ -445,4 +443,15 @@ void PosControl::printGoal() {
 
 void PosControl::printDist() {
 	PRINTLINE("[POS] dist: " << distanceX() << "," << distanceY() << "," << rotationOffset());
+}
+
+void PosControl::setSpeed(int l, int r) {
+	if(curSpeedLeft != l) {
+		com->setSpeedL(l);
+		curSpeedLeft = l;
+	} 
+	if(curSpeedRight != r) {
+		com->setSpeedR(r);
+		curSpeedRight = r;
+	}
 }

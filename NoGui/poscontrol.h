@@ -77,6 +77,7 @@ private:
 	void printGoal();
 	void printCurrent();
 	void printDist();
+	void setSpeed(int l, int r);
 
 	std::string in;
 	MotorCom *com;
@@ -86,6 +87,10 @@ private:
 	Position *curPos;
 	Position *exactPos;
 
+
+
+	int curSpeedLeft;
+	int curSpeedRight;
 };
 
 #endif /* POSCONTROL_H */
