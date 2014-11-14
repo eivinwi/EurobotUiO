@@ -82,6 +82,6 @@ This means:
  * Wheel circumference: 377mm
  * Distance per count: 0.385mm
  */
-#define ENCODER_CONSTANT 0.380
+#define ENCODER_CONSTANT 0.40
 
 #endif /* MD49_H */

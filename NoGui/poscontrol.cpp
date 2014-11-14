@@ -84,11 +84,11 @@ void PosControl::controlLoop() {
 		float distX = distanceX(); 
 		float distY = distanceY();
 
-	/*	PRINTLINE("===== CONTROL-LOOP =====");
-		printGoal();    //DBP
+	//	PRINTLINE("===== CONTROL-LOOP =====");
+	//	printGoal();    //DBP
 		printCurrent(); //is always printed
-		printDist();	//DBP
-		PRINTLINE("========================\n");*/
+	//	printDist();	//DBP
+	//	PRINTLINE("========================\n");*/
 
 		// Checking if rotation is necessary.
 		// If not: checking if position-change is necessary
