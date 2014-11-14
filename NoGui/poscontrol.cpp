@@ -321,16 +321,11 @@ void PosControl::updatePosition(int action) {
 }
 
 
-/*
- * Encoder counts: 980 per output shaft turn
- * Wheel diameter: 120mm
- * Wheel circumference: 377mm
- * Distance per count: 0.385mm
- */
+
 void PosControl::updateEncoder(long e, struct encoder *enc) {
 	long diff = e - enc->prev;
 	long absDiff = abs(diff);
-	float distance = diff*0.385;
+	float distance = diff*ENCODER_CONSTANT;
 
 	if(absDiff > REASONABLE_ENC_DIFF) {
 		//TODO: reset encoders while taking care of values in a controlled manner

@@ -75,4 +75,13 @@ This means:
 #define ROTATION_CLOSE_ENOUGH 1.0
 #define POSITION_CLOSE_ENOUGH 1.0
 
+
+/*
+ * Encoder counts: 980 per output shaft turn
+ * Wheel diameter: 120mm
+ * Wheel circumference: 377mm
+ * Distance per count: 0.385mm
+ */
+#define ENCODER_CONSTANT 0.380
+
 #endif /* MD49_H */
