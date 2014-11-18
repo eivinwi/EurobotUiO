@@ -1,0 +1,30 @@
+message size: 1 [B]
+roundtrip count: 100000
+average latency: 50.436 [us]
+message size: 1 [B]
+roundtrip count: 100000
+average latency: 51.024 [us]
+message size: 1 [B]
+roundtrip count: 100000
+average latency: 55.496 [us]
+message size: 1 [B]
+roundtrip count: 100000
+average latency: 53.973 [us]
+message size: 1 [B]
+roundtrip count: 100000
+average latency: 55.117 [us]
+message size: 1 [B]
+roundtrip count: 100000
+average latency: 56.375 [us]
+message size: 1 [B]
+roundtrip count: 100000
+average latency: 50.798 [us]
+message size: 1 [B]
+roundtrip count: 100000
+average latency: 52.373 [us]
+message size: 1 [B]
+roundtrip count: 100000
+average latency: 54.990 [us]
+message size: 1 [B]
+roundtrip count: 100000
+average latency: 50.314 [us]

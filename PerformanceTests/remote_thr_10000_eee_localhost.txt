@@ -1,0 +1,45 @@
+error in zmq_bind: No such device
+message size: 1 [B]
+message count: 100000
+mean throughput: 507977 [msg/s]
+mean throughput: 4.064 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 509988 [msg/s]
+mean throughput: 4.080 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 509777 [msg/s]
+mean throughput: 4.078 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 513228 [msg/s]
+mean throughput: 4.106 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 518419 [msg/s]
+mean throughput: 4.147 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 518268 [msg/s]
+mean throughput: 4.146 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 504843 [msg/s]
+mean throughput: 4.039 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 520738 [msg/s]
+mean throughput: 4.166 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 514112 [msg/s]
+mean throughput: 4.113 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 515325 [msg/s]
+mean throughput: 4.123 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 520288 [msg/s]
+mean throughput: 4.162 [Mb/s]
