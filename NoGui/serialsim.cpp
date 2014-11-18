@@ -19,15 +19,20 @@ SerialSim::SerialSim() {
 	readCounter = 0;
 	synced = false;
 	prev_cmd = 0x00;
+	encoderL = 0;
+	encoderR = 0;
 	DBP("[SIM] Started SerialSim\n");
 }
+
 
 SerialSim::~SerialSim() {
 }
 
+
 void SerialSim::write(char arg) {
 	write((uint8_t) arg);
 }
+
 
 void SerialSim::write(int arg) {
 	write((uint8_t) arg);
@@ -196,16 +201,18 @@ uint8_t SerialSim::readNoWait() {
     return 0x00;
 }
 
+
 uint8_t SerialSim::read() {
 	DBPL("[SIM] read");
 	return readNoWait();
 }
 
+
+//TODO: check what should be returned
 long SerialSim::readLong() {
-	//TODO
-	long l = 0;
-	return l;
+	return encoderL;
 }
+
 
 uint8_t SerialSim::readVi() {
 	readCounter++;
@@ -219,6 +226,7 @@ uint8_t SerialSim::readVi() {
 	}
 }
 
+
 uint8_t SerialSim::readEncL() {
 	uint8_t b = 0x00;
 	if(readCounter < 4) {
@@ -228,6 +236,7 @@ uint8_t SerialSim::readEncL() {
 	return b;
 }
 
+
 uint8_t SerialSim::readEncR() {
 	uint8_t b = 0x00;
 	if(readCounter < 4) {
@@ -236,6 +245,7 @@ uint8_t SerialSim::readEncR() {
 	}
 	return b;
 }
+
 
 uint8_t SerialSim::readEncs() {
 	uint8_t b = 0x00;
@@ -249,6 +259,7 @@ uint8_t SerialSim::readEncs() {
 	return b;
 }
 
+
 void SerialSim::calculateEncL() {
 	DBPL("[SIM] calculateEncL");
 	time_t now;
@@ -261,15 +272,16 @@ void SerialSim::calculateEncL() {
 	DBPL("rotations: " << rotations);
 	DBPL("encoderDiff: " << encoderDiff);
 
-	long enc = (long) encoderDiff;
+	encoderL = (long) encoderDiff;
 
 	DBPL("enc: " << enc);
 
-	encL[3] = ((enc >> 24) & 0xff);
-	encL[2] = ((enc >> 16) & 0xff);
-	encL[1] = ((enc >> 8) & 0xff);
-	encL[0] = (enc & 0xff);
+	encL[3] = ((encoderL >> 24) & 0xff);
+	encL[2] = ((encoderL >> 16) & 0xff);
+	encL[1] = ((encoderL >> 8) & 0xff);
+	encL[0] = (encoderL & 0xff);
 }
+
 
 void SerialSim::calculateEncR() {
 	DBP("[SIM] calculateEncR\n");
@@ -278,13 +290,14 @@ void SerialSim::calculateEncR() {
 	double timePassed = difftime(now, timeR);
 	double rot = (timePassed)/RPS;
 	double encoderDiff = rot*980;
-	long enc = (long) encoderDiff;
+	encoderR = (long) encoderDiff;
 
-	encR[3] = ((enc >> 24) & 0xff);
-	encR[2] = ((enc >> 16) & 0xff);
-	encR[1] = ((enc >> 8) & 0xff);
-	encR[0] = (enc & 0xff);
+	encR[3] = ((encoderR >> 24) & 0xff);
+	encR[2] = ((encoderR >> 16) & 0xff);
+	encR[1] = ((encoderR >> 8) & 0xff);
+	encR[0] = (encoderR & 0xff);
 }
+
 
 void SerialSim::printAll() {
 	DBPL("Sim \"flushed\"");

@@ -9,13 +9,23 @@
 #ifndef SOUND_H
 #define	SOUND_H
 
-#include "printing.h"
+//#include "printing.h"
 #include <string>
 #include <iostream>
 #include <thread>
 #include <pthread.h>
 #include <unistd.h>
 #include <cassert>
+#include <sys/types.h>
+#include <pwd.h>
+#include <stdio.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
+#include <thread>
+
+#define MARIO_PLZ 1
+#define MARIO_PLZ_EXT 1
+
 
 /* TODO:
 - implement queue
@@ -29,8 +39,17 @@ public:
     ~Sound();
 
     void addToQueue();
+    void loadFiles();
+    void playFileThread(int nr);
+    void playSound(int nr);
 private:
-	
+	bool ready_to_play;
+
+	struct passwd *pw;
+	char* LOCATION;
+
+
+	Mix_Music* files[20];
 };
 
 #endif /* SOUND_H */

@@ -8,6 +8,7 @@
  * time since last encoder-request (or since program start).
  *
  * TODO: 
+ * - Warning: poor code
  * -fix calculation of fake encoder values
  * 	  - readLong
  */
@@ -70,8 +71,8 @@ private:
 
 	time_t timeL;
 	time_t timeR;
-
-
+	//long encoderL;
+	//long encoderR;
 	int readCounter;
 
 	bool synced;

@@ -10,6 +10,7 @@
 #include "motorcom.h"
 #include "poscontrol.h"
 #include "printing.h"
+#include "sound.h"
 #include <string>
 #include <cstring>
 #include <thread>
@@ -37,6 +38,7 @@ std::mutex read_mutex;
 std::atomic<bool> new_pos_ready(false);
 
 int ACCELERATION = 3;
+bool sound_enabled = false;
 
 /* Waits for input on socket, mainly position. 
  * TODO: define an extensive communication protocol
@@ -236,36 +238,37 @@ bool checkArguments(int argc, char *argv[]) {
     	}
     	PRINTLINE("");
 
-
     	for(int i = 1; i < argc; i++) {
 			if(strcmp(argv[i], "sim") == 0) {
-				PRINTLINE("Simulating serial.");	
+				PRINTLINE("[SETUP] Simulating serial.");	
 				m->serialSimEnable();
-			}
+			} else if(strcmp(argv[i], "sound") == 0) {
+                PRINTLINE("[SETUP] Sound enabled.");
+                sound_enabled = true;
+            }
 			else if(strcmp(argv[i], "ttyUSB0") == 0) {
-				PRINTLINE("Opening serial on: /dev/" << argv[i]);
+				PRINTLINE("[SETUP] Opening serial on: /dev/" << argv[i]);
 				m->setSerialPort(argv[1]);
 			}
 			else if(strcmp(argv[i], "ttyS0") == 0) {
-				PRINTLINE("Opening serial on: /dev/" << argv[i]);
+				PRINTLINE("[SETUP] Opening serial on: /dev/" << argv[i]);
 				m->setSerialPort(argv[1]);
 			}
 			else if(strcmp(argv[i], "ttyACM1") == 0) {
-				PRINTLINE("Opening serial on: /dev/" << argv[i]);
+				PRINTLINE("[SETUP] Opening serial on: /dev/" << argv[i]);
 				m->setSerialPort(argv[1]);
 			}
 			else if(strcmp(argv[i], "ttyUSB1") == 0) {
-				PRINTLINE("Opening serial on: /dev/" << argv[i]);
+				PRINTLINE("[SETUP] Opening serial on: /dev/" << argv[i]);
 				m->setSerialPort(argv[1]);
 			} else {
-				PRINTLINE("Invalid argument: " << argv[i]);
+				PRINTLINE("[SETUP] Invalid argument: " << argv[i]);
 				return false;
 			}
 		}
     }
     return true;
 }
-
 
 int main(int argc, char *argv[]) {
     PRINTLINE("[SETUP] creating MotorCom");
