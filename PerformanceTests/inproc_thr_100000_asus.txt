@@ -1,0 +1,40 @@
+message size: 1 [B]
+message count: 100000
+mean throughput: 6780580 [msg/s]
+mean throughput: 54.245 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 4474473 [msg/s]
+mean throughput: 35.796 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 6904646 [msg/s]
+mean throughput: 55.237 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 6671559 [msg/s]
+mean throughput: 53.372 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 4926351 [msg/s]
+mean throughput: 39.411 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 5373743 [msg/s]
+mean throughput: 42.990 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 4941443 [msg/s]
+mean throughput: 39.532 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 6822213 [msg/s]
+mean throughput: 54.578 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 5483358 [msg/s]
+mean throughput: 43.867 [Mb/s]
+message size: 1 [B]
+message count: 100000
+mean throughput: 4772130 [msg/s]
+mean throughput: 38.177 [Mb/s]
