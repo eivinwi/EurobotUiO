@@ -57,7 +57,7 @@ This means:
 #define SPEED_MED_NEG 192
 #define SPEED_SLOW_NEG 160
 #define SPEED_STOP 128
-#define SPEED_SLOW_POS 196
+#define SPEED_SLOW_POS 96
 #define SPEED_MED_POS 64
 #define SPEED_MAX_POS 0
 //*/

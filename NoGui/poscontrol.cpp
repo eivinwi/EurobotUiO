@@ -29,8 +29,6 @@ PosControl::~PosControl() {
 */
 void PosControl::setGoalPos(int x, int y, int rot) {
 	PRINTLINE("[POS] setGoalPos(" << x << "," << y << "," << rot << ")  : ");
-	x *= 10;
-	y *= 10;
 	if(rot == 360) rot = 0;
 	
 	int change = 0;

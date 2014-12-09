@@ -192,8 +192,8 @@ bool getArguments(std::string input, int *pos) {
     if(i != 3) {
     	return false;
     } else {
-        if(abs(pos[0]) > 300) return false;
-        else if(abs(pos[1]) > 300) return false;
+        if(abs(pos[0]) > 3000) return false;
+        else if(abs(pos[1]) > 3000) return false;
         else if(pos[2] < 0 || pos[2] > 360) return false;
     	else {
     		return true;

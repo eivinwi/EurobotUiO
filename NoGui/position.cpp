@@ -112,8 +112,8 @@ void Position::updatePosString() {
 		//update string
 		//PRINTLINE("UPDATING POS");
 		std::stringstream ss;
-		ss << (int) floor(x/10) << ",";
-		ss << (int) floor(y/10) << ",";
+		ss << (int) floor(x) << ",";
+		ss << (int) floor(y) << ",";
 		ss << (int) floor(getRotation());
 		pos_string = ss.str();
 		pos_mutex.unlock(); 
