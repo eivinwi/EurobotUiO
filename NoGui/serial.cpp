@@ -10,7 +10,7 @@ Serial::Serial(char *serial_port) {
     serial.SetCharSize( SerialStreamBuf::CHAR_SIZE_8 );
     serial.SetNumOfStopBits( SerialStreamBuf::DEFAULT_NO_OF_STOP_BITS);
     serial.SetParity( SerialStreamBuf::PARITY_NONE );
-    serial.SetFlowControl( SerialStreamBuf::FLOW_CONTROL_HARD );
+    serial.SetFlowControl( SerialStreamBuf::FLOW_CONTROL_NONE ); //FLOW_CONTROL_HARD
 }
 
 
@@ -39,13 +39,13 @@ void Serial::write(int arg) {
 
 uint8_t Serial::readNoWait(){
     DBPL("[SERIAL] readNW");
-    uint8_t r = 0x00;
+    int r = 0;
 
     if(available()) {
         r =  serial.get();
     } else {
         DBPL("In ELSE, sleeping for 50ms");
-        usleep(1000);
+        usleep(SERIAL_DELAY);
         if(available()) {
             r =  serial.get();
         }
@@ -54,18 +54,18 @@ uint8_t Serial::readNoWait(){
     return r;
 }
 
-#define MAX_WAIT 2000
+
 
 uint8_t Serial::read() {
-    usleep(2000);
+    usleep(SERIAL_DELAY);
     return readNoWait();
 
-    long waited = 0;
+  /*  long waited = 0;
     while(!available() && waited < MAX_WAIT) {
         usleep(1);
         waited++;
     }
-    return readNoWait();
+    return readNoWait();*/
 }
 
 

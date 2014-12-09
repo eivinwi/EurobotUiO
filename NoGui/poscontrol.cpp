@@ -31,6 +31,8 @@ void PosControl::setGoalPos(int x, int y, int rot) {
 	PRINTLINE("[POS] setGoalPos(" << x << "," << y << "," << rot << ")  : ");
 	x *= 10;
 	y *= 10;
+	if(rot == 360) rot = 0;
+	
 	int change = 0;
 	if(x != goalPos->getX()) change++;
 	if(y != goalPos->getY()) change++;
@@ -65,6 +67,7 @@ void PosControl::resetPosition() {
 	curSpeedRight = 0;
 	curSpeedLeft = 0;
 	curPos->updatePosString();
+	itr = 0;
 }
 
 
@@ -295,7 +298,7 @@ void PosControl::updatePosition(int action) {
 		DBPL("DriveX");
 		int ediff = encoderDifference();
 		if(ediff > 50) {
-			DBPL("[POS] Warning, large encoder difference(drivex): " << ediff);
+			PRINTLINE("[POS] Warning, large encoder difference(drivex): " << ediff);
 		}
 
 		if(goalPos->getRotation() == 180) {
@@ -309,7 +312,7 @@ void PosControl::updatePosition(int action) {
 		DBPL("DriveY");
 		int ediff = encoderDifference();
 		if(ediff > 50) {
-			DBPL("[POS] Warning, large encoder difference(drivey): " << ediff);
+			PRINTLINE("[POS] Warning, large encoder difference(drivey): " << ediff);
 		}
 
 		if(goalPos->getRotation() == 270) {
@@ -318,6 +321,13 @@ void PosControl::updatePosition(int action) {
 			curPos->incrY( leftEncoder.diffDist );
 		}
 	}
+
+	if(itr > 100) {
+		PRINTLINE("[POS] RESETTTING ENCODERS");
+		resetEncoders();
+		itr = 0;
+	}
+	itr++;
 }
 
 
@@ -357,6 +367,16 @@ void PosControl::updateRightEncoder() {
 	com->flush(); //unnecessary?
 	long enc = com->getEncR();
 	updateEncoder(enc, &rightEncoder);
+}
+
+void PosControl::resetEncoders() {
+	leftEncoder.prev = 0;
+	leftEncoder.diff = 0;
+	leftEncoder.diffDist = 0;
+	rightEncoder.prev = 0;
+	rightEncoder.diff = 0;
+	rightEncoder.diffDist = 0;	
+	com->resetEncoders();
 }
 
 
@@ -429,7 +449,7 @@ void PosControl::printCurrent() {
 
 
 void PosControl::printGoal() {
-	PRINT("[POS] Current: ");
+	PRINT("[POS] Goal: ");
 	//#ifdef DEBUG
 	goalPos->print();
 	//#endif

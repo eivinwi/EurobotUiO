@@ -10,4 +10,3 @@ position.o: position.cpp position.h rotation.h printing.h md49.h
 goalposition.o: goalposition.cpp goalposition.h rotation.h printing.h \
  md49.h
 rotation.o: rotation.cpp rotation.h printing.h md49.h
-sound.o: sound.cpp sound.h

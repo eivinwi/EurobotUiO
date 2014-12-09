@@ -30,6 +30,9 @@
 
 using namespace LibSerial ;
 
+#define MAX_WAIT 2000
+#define SERIAL_DELAY 500
+
 class Serial {
 public:
     Serial(char *s);

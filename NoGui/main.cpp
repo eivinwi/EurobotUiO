@@ -229,8 +229,8 @@ bool checkArguments(int argc, char *argv[]) {
 	PRINTLINE("READING Arguments");
 	m->serialSimDisable(); //just because
     if(argc < 2) {
-    	PRINTLINE("No arguments - expecting serial at: /dev/ttyACM0");
-    	m->setSerialPort("ttyACM0");
+    	PRINTLINE("No arguments - expecting serial at: /dev/ttyUSB0");
+    	m->setSerialPort("ttyUSB0");
     } else {
     	PRINT("Arguments: ");
     	for(int i = 0; i < argc; i++) {
@@ -246,7 +246,7 @@ bool checkArguments(int argc, char *argv[]) {
                 PRINTLINE("[SETUP] Sound enabled.");
                 sound_enabled = true;
             }
-			else if(strcmp(argv[i], "ttyUSB0") == 0) {
+			else if(strcmp(argv[i], "ttyACM0") == 0) {
 				PRINTLINE("[SETUP] Opening serial on: /dev/" << argv[i]);
 				m->setSerialPort(argv[1]);
 			}

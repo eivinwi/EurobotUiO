@@ -66,6 +66,7 @@ private:
 	void updateEncoder(long e, struct encoder *side);
 	void updateLeftEncoder();
 	void updateRightEncoder();
+	void resetEncoders();
 	float average(long a, long b);
 	void printGoal();
 	void printCurrent();
@@ -80,7 +81,7 @@ private:
 	Position *curPos;
 	Position *exactPos;
 
-
+	int itr;
 
 	int curSpeedLeft;
 	int curSpeedRight;
