@@ -16,9 +16,9 @@ int main (int argc, char *argv[])
 	if(argc < 4) {
 		std::cout << "Too few arguments (x y r). " << std::endl;
 		std::cout << "Example usage: 50 0 0" << std::endl; 
-	} else if(abs(atoi(argv[1])) > 300) {
+	} else if(abs(atoi(argv[1])) > 3000) {
 		std::cout << "argv[1] too large: " << argv[1] << "=" << atoi(argv[1]) << std::endl;
-	} else if(abs(atoi(argv[2])) > 300) {
+	} else if(abs(atoi(argv[2])) > 3000) {
 		std::cout << "argv[2] too large: " << argv[2] << "=" << atoi(argv[2]) << std::endl;
 	} else if(atoi(argv[3]) > 360 || atoi(argv[3]) < 0) {
 		std::cout << "argv[3] not an angle: " << argv[1] << "=" << atoi(argv[1]) << std::endl;
