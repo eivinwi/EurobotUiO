@@ -1,6 +1,20 @@
 #include "poscontrol.h"
 
-//TODO: implement position-queue
+/*TODO:
+ 	- implement position-queue
+ 	- complete rewrite:
+		* only input is new x/y values
+	    * calculate necessary angle
+		* get movement trough trigonometry
+
+ 	- use compass for angle untill beacon system is working
+
+ 	- encoders should be reset for each new goalpos
+
+ 	- looping is not yet complete
+*/
+
+
 
 struct encoder {
 	long prev;
@@ -24,25 +38,12 @@ PosControl::~PosControl() {
 }
 
 
-/* sets the new goal pos
- * WARNING: currently only one arguments should be changed at the time
-*/
+// sets the new goal pos. 360* == 0*
 void PosControl::setGoalPos(int x, int y, int rot) {
 	PRINTLINE("[POS] setGoalPos(" << x << "," << y << "," << rot << ")  : ");
 	if(rot == 360) rot = 0;
-	
-	int change = 0;
-	if(x != goalPos->getX()) change++;
-	if(y != goalPos->getY()) change++;
-	if(rot != goalPos->getRotation()) change++;
-
-	if(change == 0) {
-		PRINTLINE("already at specified goalPos->");
-	} else if(change > 1) {
-		PRINTLINE("only one position can be changed at a time.");
-	} else {
-		goalPos->set(x, y, rot);			
-	}
+	goalPos->set(x, y, rot);
+	//controlLoop();
 }
 
 
@@ -68,84 +69,75 @@ void PosControl::resetPosition() {
 	itr = 0;
 }
 
-
-//return false - no yet in goalPos
-//return true - in goalPos
-	/*if(goalPos.timeSinceUpdate()) > TOO_LONG) {
-		DBPL("Too long time since goal update, shutting down.");
-		fullStop();
-		exit(EXIT_SUCCESS);
-	}*/
+//CHECK: delays or not?
 void PosControl::controlLoop() {
-	working = false;
-	do {
-		//TODO: check if too long since position update
-
-		int distR = rotationOffset();
+	while(true) {
 		float distX = distanceX(); 
 		float distY = distanceY();
+		float distR = 0.0;
+		float angle = 0.0;
+		float dist = 0.0;
 
-	//	PRINTLINE("===== CONTROL-LOOP =====");
-	//	printGoal();    //DBP
-	//	printCurrent(); //is always printed
-	//	printDist();	//DBP
-	//	PRINTLINE("========================\n");*/
-
-		// Checking if rotation is necessary.
-		// If not: checking if position-change is necessary
-		if(abs(distR) > ROTATION_CLOSE_ENOUGH) {
-			working = true;
-			changeRotation(distR);
-			updatePosition(TURNING);
-			curPos->updatePosString();
-			printCurrent();
+		while(closeEnoughX() && closeEnoughY() && !closeEnoughAngle()) {
+			//PRINTLINE("LOOP");
+			distR = distanceAngle();
+			rotate(distR);
+			updateRotation();
+			usleep(1000);
 		}
-		else if(abs(distX) > POSITION_CLOSE_ENOUGH) {
-			working = true;
-			driveX(distX);
-			updatePosition(DRIVE_X);
-			curPos->updatePosString();
-			printCurrent();
-		} 	
-		else if(abs(distY) > POSITION_CLOSE_ENOUGH) {
-			working = true;	
-			driveY(distY);
-			updatePosition(DRIVE_Y);
-			curPos->updatePosString();
-			printCurrent();
-		} else {
-			if(working) {
-				TIMESTAMP(" GOAL REACHED ******");
-				printGoal();
+
+		if(!inGoal()) {
+			//get angle we need to rotate to before driving
+			angle = atan2(distY, distX) *(180/M_PI);
+			
+			
+			//calculate straigth distance
+			dist = updateDist(angle, distX, distY);
+
+			goalPos->setAngle(angle);
+
+			resetEncoders();
+			do {
+				distX = distanceX(); 
+				distY = distanceY();
+				distR = distanceAngle();
+				dist = updateDist(angle, distX, distY);
+
+				//PRINTLINE("CURRENT: " << curPos->getX() << " | " << curPos->getY() << " | " << curPos->getRotation());
 				printCurrent();
-				printDist();
-				PRINTLINE("************************\n\n\n");
-				curPos->set(goalPos->getX(), goalPos->getY(), goalPos->getRotation());
 
-				curPos->updatePosString();
-			}
-			fullStop();
-			working = false;
-			usleep(500);
+				if(!closeEnoughAngle()) {
+					//PRINTLINE("[LOOP] ROTATION: " << distR);
+					rotate(distR);
+					updateRotation();
+				} else {
+					curPos->setAngle(goalPos->getRotation()); 
+					//PRINTLINE("[LOOP] DRIVE: " << distX << "," << distY);
+					drive(dist);
+					updatePosition();
+				} 
+				usleep(2000);
+			} while(!inGoal());
 		}
-		//curPos->updatePosString();
-		usleep(1000);
-	} while(true);
 
-	PRINTLINE("*** EXITING CONTROL LOOP ***");
-	usleep(1000000);
+		fullStop();
+		//PRINTLINE("[POS] IN GOAL!");
+		usleep(10000);
+	}
+}
+
+float PosControl::updateDist(float angle, float distX, float distY) {
+	if(sin_d(angle) == 0) {
+		return distX;
+	} else {
+		return distY/sin_d(angle);
+	}
 }
 
 
-bool PosControl::inGoal() {
-	if(abs(rotationOffset()) > ROTATION_CLOSE_ENOUGH) return false;
-	if(abs(distanceX()) > ROTATION_CLOSE_ENOUGH) return false;
-	if(abs(distanceY()) > ROTATION_CLOSE_ENOUGH) return false;
-	return true;
-}
-
-
-void PosControl::changeRotation(float distR) {
+//TODO: get input from compass
+//need exact rotation to do small angle adjustments
+void PosControl::rotate(float distR) {
 	DBP("[POS] turning: ");
 	if(distR == 0) {
 		DBPL("Error, turn is 0.");
@@ -165,98 +157,50 @@ void PosControl::changeRotation(float distR) {
 			setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_POS);
 		}
 	}
+
+	//CHECK: too often?
+	updateRotation();
 }
 
 
-void PosControl::driveX(float distX) {
-	float rotation = curPos->getRotation();	
-	if(goalPos->getRotation() != 0 && goalPos->getRotation() != 180) {
-		DBPL("[POS] ERROR; goalX specified, but goalRot is " << goalPos->getRotation());
-	} 
-	else if(closeEnoughAngle(rotation, 0)) {
-		DBPL("[POS] driveX rotation: " << rotation);
-		if(distX > 0) {
-			if(distX > SLOWDOWN_DISTANCE) {
-				DBPL("FULLSPEED");
-				setSpeed(SPEED_MED_POS, SPEED_MED_POS);
-			} else {
-				DBPL("SLOWDOWN X");
-				setSpeed(SPEED_SLOW_POS, SPEED_SLOW_POS);
+void PosControl::drive(float dist) {	
+	float rotation = goalPos->getRotation();
+	if(closeEnoughAngle()) {
+		//PRINTLINE("[POS] driving with rotation:" << rotation << " dist:" << dist);
+		
+		//reset encoders??
+
+		//unneccsary test?
+		if(!inGoal()) {
+
+			if(dist < 0) {
+				if(dist > SLOWDOWN_DISTANCE) {
+					//PRINTLINE("FULLSPEED REVERSE");
+					setSpeed(SPEED_MED_NEG, SPEED_MED_NEG);
+				} else {
+					//PRINTLINE("SLOW REVERSE");
+					setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
+				}
+			}
+			else {
+				if(dist < -SLOWDOWN_DISTANCE) {
+					//PRINTLINE("FULLSPEED FORWARD");
+					setSpeed(SPEED_MED_POS, SPEED_MED_POS);
+				} else {
+					//PRINTLINE("SLOW FORWARD");					
+					setSpeed(SPEED_SLOW_POS, SPEED_SLOW_POS);
+				}
 			}
 		} else {
-			if(distX < -SLOWDOWN_DISTANCE) {
-				setSpeed(SPEED_MED_NEG, SPEED_MED_NEG);				
-			} else {
-				setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
-			}
-		}
-	} else if(closeEnoughAngle(rotation, 180)) {
-		DBPL("[POS] driveX rotation: " << rotation);
-		if(distX > 0) {
-			if(distX > SLOWDOWN_DISTANCE) {
-				DBPL("FULLSPEED");
-				setSpeed(SPEED_MED_NEG, SPEED_MED_NEG);
-			} else {
-				DBPL("SLOWDOWN X");
-				setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
-			}
-		} else {
-			if(distX < -SLOWDOWN_DISTANCE) {
-				setSpeed(SPEED_MED_POS, SPEED_MED_POS);
-			} else {
-				setSpeed(SPEED_SLOW_POS, SPEED_SLOW_POS);
-			}
+			PRINTLINE("[POS] ERROR; already in goal");
 		}
 	} 
 	else {
-		DBPL("[POS] ERROR; cur->angle is" << curPos->getRotation() << " should be 0/180. Attemting to fix by turning");
-		changeRotation(rotationOffset());
+		PRINTLINE("[POS] ERROR; cur->angle is" << rotation << " should be " << goalPos->getRotation() << ". Attemting to fix by turning");
+//		rotate(curPos->getRotation() - angle);
 	}
 }
 
-
-void PosControl::driveY(float distY) {
-	float rotation = curPos->getRotation();
-	if(goalPos->getRotation() != 90 && goalPos->getRotation() != 270) {
-		DBPL("[POS] ERROR; goalY specified, but goalRot is " << goalPos->getRotation());
-	} 
-	else if(closeEnoughAngle(rotation, 90)) {
-		DBPL("[POS] correct rotation, can drive Y.");
-		if(distY > 0) {
-			if(distY > SLOWDOWN_DISTANCE) {
-				setSpeed(SPEED_MED_POS, SPEED_MED_POS);
-			} else {
-				setSpeed(SPEED_SLOW_POS, SPEED_SLOW_POS);
-			}
-		} else {
-			if(distY < -SLOWDOWN_DISTANCE) {
-				setSpeed(SPEED_MED_NEG, SPEED_MED_NEG);
-			} else {
-				setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
-			}
-		}
-	} 
-	else if(closeEnoughAngle(rotation,270)) {
-		DBPL("[POS] correct rotation, can drive Y.");
-		if(distY > 0) {
-			if(distY > SLOWDOWN_DISTANCE) {
-				setSpeed(SPEED_MED_NEG, SPEED_MED_NEG);				
-			} else {
-				setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
-			}
-		} else {
-			if(distY < -SLOWDOWN_DISTANCE) {
-				setSpeed(SPEED_MED_POS, SPEED_MED_POS);
-			} else {
-				setSpeed(SPEED_SLOW_POS, SPEED_SLOW_POS);
-			}
-		}
-	} 	
-	else {
-		DBPL("[POS] ERROR; cur->angle is" << rotation << " should be 90/270. Attempting to fix by turning");
-		changeRotation(rotationOffset());		
-	}
-}
 
 
 std::string PosControl::getCurrentPos() {
@@ -281,54 +225,78 @@ std::string PosControl::getCurrentPos() {
  * enc per mm = 980/337 = 2.6
  * enc per grad = 2.88*2.6 = 7.5
  */
-void PosControl::updatePosition(int action) {
+ // CHECK: works with negative??
+ //TODO: DOES NOT WORK!!!
+void PosControl::updatePosition() {
+	DBPL("[POS] updatePos ");
+	
+	updateLeftEncoder();
+	updateRightEncoder();
+	
+	DBPL("[POS] encoders updated");
+	
+	float angle = goalPos->getRotation();
+//	angle = 0.0;
+
+	int ediff = encoderDifference();
+	if(ediff > 50) {
+		PRINTLINE("[POS] Warning, large encoder difference(drive): " << ediff);
+		return;
+	}
+
+	PRINTLINE("L: " << leftEncoder.diffDist << "  R: " << rightEncoder.diffDist);
+	float avg_dist = (abs(leftEncoder.diffDist) + abs(rightEncoder.diffDist)) / 2;
+	
+	float x_distance = cos_d(angle)*avg_dist; //45 = +
+	float y_distance = sin_d(angle)*avg_dist; //45 = +
+
+//CHECK: dont know if necessary
+//	if(goalPos->getRotation() < 180) {
+//		curPos->decrX( leftEncoder.diffDist );
+//	} else {
+/*	if(leftEncoder.diffDist < 0) {
+		curPos->incrX( x_distance );
+	} else {
+		curPos->decrX( x_distance );
+	} 
+
+	if(rightEncoder.diffDist > 0) {
+		curPos->incrY( y_distance );
+	} else {
+		curPos->decrY( y_distance );
+	}
+*/
+
+//	if(angle >= 0.0 && angle < 90) {
+		//++
+		curPos->incrX( x_distance );
+		curPos->incrY( y_distance );
+/*	} else if(angle >= 90 && angle < 180) {
+		//-+
+		curPos->decrX( x_distance );
+		curPos->incrY( y_distance );
+	} else if(angle >= 180 && angle < 270) {
+		//--
+		curPos->decrX( x_distance );
+		curPos->decrY( y_distance );
+	} else {
+		//+-
+		curPos->incrX( x_distance );
+		curPos->decrY( y_distance );
+
+	}
+*/
+}
+
+void PosControl::updateRotation() {
 	updateLeftEncoder();
 	updateRightEncoder();
 
-	DBP("[POS] updatePos ");
-	if(action == TURNING) {
-		DBPL("Turning");
-		//curX and curY should not really be updated
-		// update angle
-		curPos->updateAngle(leftEncoder.diff, rightEncoder.diff);
-	}
-	else if(action == DRIVE_X) {
-		DBPL("DriveX");
-		int ediff = encoderDifference();
-		if(ediff > 50) {
-			PRINTLINE("[POS] Warning, large encoder difference(drivex): " << ediff);
-		}
-
-		if(goalPos->getRotation() == 180) {
-			curPos->decrX( leftEncoder.diffDist );
-		} else {
-			curPos->incrX( leftEncoder.diffDist );
-		}
-
-	}
-	else {  //if(action == DRIVE_Y) {
-		DBPL("DriveY");
-		int ediff = encoderDifference();
-		if(ediff > 50) {
-			PRINTLINE("[POS] Warning, large encoder difference(drivey): " << ediff);
-		}
-
-		if(goalPos->getRotation() == 270) {
-			curPos->decrY( leftEncoder.diffDist );
-		} else {
-			curPos->incrY( leftEncoder.diffDist );
-		}
-	}
-
-	if(itr > 100) {
-		PRINTLINE("[POS] RESETTTING ENCODERS");
-		resetEncoders();
-		itr = 0;
-	}
-	itr++;
+	DBP("[POS] updateRot ");
+	//curX and curY should not really be updated
+	// update angle
+	curPos->updateAngle(leftEncoder.diff, rightEncoder.diff);
 }
-
-
 
 void PosControl::updateEncoder(long e, struct encoder *enc) {
 	long diff = e - enc->prev;
@@ -405,7 +373,7 @@ float PosControl::distanceY() {
  * =0 : at exact angle
  * <0 : goal angle in negative direction
  */
-float PosControl::rotationOffset() {
+float PosControl::distanceAngle() {
 	float dist = curPos->distanceRot(goalPos->getRotation());
 	return dist;
 }
@@ -418,20 +386,27 @@ float PosControl::average(long a, long b) {
 
 
 bool PosControl::closeEnoughEnc(long a, long b) {
-	if((abs(a) - abs(b)) < 20) {
-		return true;
-	} else {
-		return false;
-	}
+	return ((abs(a) - abs(b)) < 20);
 }
 
 
-bool PosControl::closeEnoughAngle(int a, int b) {
-	if((abs(a) - abs(b)) < ROTATION_CLOSE_ENOUGH) {
-		return true;
-	} else {
-		return false;
-	}
+bool PosControl::closeEnoughX() {
+	return (abs(distanceX()) < POSITION_CLOSE_ENOUGH);
+}
+
+
+bool PosControl::closeEnoughY() {
+	return (abs(distanceY()) < POSITION_CLOSE_ENOUGH);
+}
+
+
+bool PosControl::closeEnoughAngle() {
+	return (abs(distanceAngle()) < ROTATION_CLOSE_ENOUGH);
+}
+
+
+bool PosControl::inGoal() {
+	return closeEnoughX() && closeEnoughY() && closeEnoughAngle();
 }
 
 
@@ -455,7 +430,7 @@ void PosControl::printGoal() {
 
 
 void PosControl::printDist() {
-	PRINTLINE("[POS] dist: " << distanceX() << "," << distanceY() << "," << rotationOffset());
+	PRINTLINE("[POS] dist: " << distanceX() << "," << distanceY() << "," << distanceAngle());
 }
 
 void PosControl::setSpeed(int l, int r) {
@@ -467,4 +442,12 @@ void PosControl::setSpeed(int l, int r) {
 		com->setSpeedR(r);
 		curSpeedRight = r;
 	}
+}
+
+float PosControl::sin_d(float angle) {
+	return sin(angle*M_PI/180);
+}
+
+float PosControl::cos_d(float angle) {
+	return cos(angle*M_PI/180);
 }

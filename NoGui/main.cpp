@@ -226,10 +226,10 @@ void testDrive() {
  * TODO: -sound
 */
 bool checkArguments(int argc, char *argv[]) {
-	PRINTLINE("READING Arguments");
+	PRINTLINE("[SETUP] Reading arguments:   ");
 	m->serialSimDisable(); //just because
     if(argc < 2) {
-    	PRINTLINE("No arguments - expecting serial at: /dev/ttyUSB0");
+    	PRINTLINE("    No arguments - expecting serial at: /dev/ttyUSB0");
     	m->setSerialPort("ttyUSB0");
     } else {
     	PRINT("Arguments: ");
@@ -240,29 +240,29 @@ bool checkArguments(int argc, char *argv[]) {
 
     	for(int i = 1; i < argc; i++) {
 			if(strcmp(argv[i], "sim") == 0) {
-				PRINTLINE("[SETUP] Simulating serial.");	
+				PRINTLINE("     Simulating serial.");	
 				m->serialSimEnable();
 			} else if(strcmp(argv[i], "sound") == 0) {
-                PRINTLINE("[SETUP] Sound enabled.");
+                PRINTLINE("     Sound enabled.");
                 sound_enabled = true;
             }
 			else if(strcmp(argv[i], "ttyACM0") == 0) {
-				PRINTLINE("[SETUP] Opening serial on: /dev/" << argv[i]);
+				PRINTLINE("     Opening serial on: /dev/" << argv[i]);
 				m->setSerialPort(argv[1]);
 			}
 			else if(strcmp(argv[i], "ttyS0") == 0) {
-				PRINTLINE("[SETUP] Opening serial on: /dev/" << argv[i]);
+				PRINTLINE("     Opening serial on: /dev/" << argv[i]);
 				m->setSerialPort(argv[1]);
 			}
 			else if(strcmp(argv[i], "ttyACM1") == 0) {
-				PRINTLINE("[SETUP] Opening serial on: /dev/" << argv[i]);
+				PRINTLINE("     Opening serial on: /dev/" << argv[i]);
 				m->setSerialPort(argv[1]);
 			}
 			else if(strcmp(argv[i], "ttyUSB1") == 0) {
-				PRINTLINE("[SETUP] Opening serial on: /dev/" << argv[i]);
+				PRINTLINE("     Opening serial on: /dev/" << argv[i]);
 				m->setSerialPort(argv[1]);
 			} else {
-				PRINTLINE("[SETUP] Invalid argument: " << argv[i]);
+				PRINTLINE("     Invalid argument: " << argv[i]);
 				return false;
 			}
 		}
@@ -281,7 +281,7 @@ int main(int argc, char *argv[]) {
 
     PRINTLINE("[SETUP] starting serial");
     m->startSerial();
-
+    usleep(10000);
     PRINTLINE("[SETUP] resetting encoders and flushing serial");
     m->resetEncoders();
     usleep(5000);
@@ -295,7 +295,6 @@ int main(int argc, char *argv[]) {
     input_pos.x = 0;
     input_pos.y = 0;
     input_pos.rot = 0;
-
 
     std::thread read_thread(readLoop);
     usleep(5000);

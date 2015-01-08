@@ -29,8 +29,9 @@ public:
 	Position();
 	~Position();
 	void reset();
-	void set(int n_x, int n_y, int n_rotation);
-	
+	void set(int n_x, int n_y, float n_rotation);
+	void setAngle(float angle);
+
 	//currently unused, done in poscontrol.h
 	void updateEncoder(); 
 	

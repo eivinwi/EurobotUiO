@@ -11,7 +11,7 @@
 int main (int argc, char *argv[])
 {
 	//default testing:
-	std::string position = "20,0,0";
+	std::string position = "100,0,0";
 
 	if(argc < 4) {
 		std::cout << "Too few arguments (x y r). " << std::endl;

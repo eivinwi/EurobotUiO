@@ -20,7 +20,7 @@ void MotorCom::startSerial() {
             PRINTLINE("Error, empty serial_port. Setting to /dev/ttyACM0");
             strcpy(serial_port, "ttyACM0");
         }     
-        DBP("[MOTOR]  serial\n")
+        PRINTLINE("[MOTOR] Starting serial at: " << serial_port)
 		port = new Serial(serial_port);
 	}
 }
@@ -103,10 +103,13 @@ void MotorCom::setMode(uint8_t mode) {
 
 
 void MotorCom::resetEncoders() {
+    PRINTLINE("[MOTOR] re sync");
     sync();
+    PRINTLINE("[MOTOR] Resetting encoders");
     writeToSerial(RESET_ENCODERS);
     prev_encL = 0;
     prev_encR = 0;
+    PRINTLINE("[MOTOR] Encoders reset");
 }
 
 
@@ -140,7 +143,7 @@ long MotorCom::getEncL() {
     writeToSerial(GET_ENCODERL);
     long result = readLongFromSerial();
     DBPL("[MOTOR] EncL: " << result << " (diff: " << (result - prev_encL) << ")\nWheel rotations: " <<  ((result-prev_encL)/980.0) << 
-                "\nDistance: " << diff*0.385);
+                "\nDistance: " << (result - prev_encL)*0.385);
     prev_encL = result;
     return result;
 }
@@ -151,7 +154,7 @@ long MotorCom::getEncR() {
     writeToSerial(GET_ENCODERR);
     long result = readLongFromSerial();
     DBPL("[MOTOR] EncR: " << result << " (diff: " << (result - prev_encR) << ")\nWheel rotations: " 
-        << (diff/980.0) << "\nDistance: " << ((result - prev_encR)*0.385));
+        << ((result - prev_encL)/980.0) << "\nDistance: " << ((result - prev_encR)*0.385));
     prev_encR = result;
     return result;
 }

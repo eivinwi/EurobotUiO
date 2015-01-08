@@ -17,6 +17,8 @@
 #ifndef POSCONTROL_H
 #define POSCONTROL_H
 
+#define _USE_MATH_DEFINES
+
 #include "motorcom.h"
 #include "printing.h"
 #include "position.h"
@@ -31,6 +33,9 @@
 #include <time.h>
 #include <math.h>
 #include <thread>
+
+
+#define PI 3.14159265
 
 // Game area resolution in mm:
 #define XRES 30000
@@ -50,28 +55,41 @@ public:
 	
 private:
 	bool inGoal();
-	long encoderDifference();
-    void changeRotation(float distR);
-    void driveX(float distX);
-    void driveY(float distY);
+    void rotate(float distR);
+    void drive(float dist);
     void fullStop();
 //    float currentRotation();
 	float distanceX();
 	float distanceY();
-	float rotationOffset();
-	void updatePosition(int action);
-	bool closeEnoughAngle(int a, int b); 
-	bool closeEnoughPos(float a, float b);
+	float distanceAngle();
+
+	float updateDist(float angle, float distX, float distY);
+
+	void updatePosition();
+	void updateRotation();
+
+	//bool closeEnoughPos(float a, float b);
 	bool closeEnoughEnc(long a, long b);
+
+	bool closeEnoughX();
+	bool closeEnoughY();
+	bool closeEnoughAngle();
+
+
+	long encoderDifference();
 	void updateEncoder(long e, struct encoder *side);
 	void updateLeftEncoder();
 	void updateRightEncoder();
 	void resetEncoders();
+
 	float average(long a, long b);
 	void printGoal();
 	void printCurrent();
 	void printDist();
 	void setSpeed(int l, int r);
+
+	float sin_d(float angle);
+	float cos_d(float angle);
 
 	std::string in;
 	MotorCom *com;

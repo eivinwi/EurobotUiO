@@ -18,11 +18,18 @@ void GoalPosition::reset() {
 
 
 //should perhaps check x/y, but checking is also performed in PosControl
-void GoalPosition::set(int n_x, int n_y, int n_rotation) {	
+void GoalPosition::set(int n_x, int n_y, float n_rotation) {	
 	x = n_x;
 	y = n_y;
-	if(n_rotation > 0 || n_rotation <= 360) {
-		rotation = n_rotation;
+	setAngle(n_rotation);
+}
+
+
+void GoalPosition::setAngle(float angle) {
+	if(angle > 0.0 || angle < 360.0) {
+		rotation = angle;
+	} else if(angle == 360) {
+		rotation = 0.0;
 	}
 }
 

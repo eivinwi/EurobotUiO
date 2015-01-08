@@ -1,0 +1,21 @@
+DONE
+printing
+md49
+
+
+WORKING
+serial
+motorcom
+
+UNFINISHED
+serialsim
+sound
+
+
+NEEDS POLISH
+poscontrol (lots to do)
+
+UNKNOWN: 
+	position     (done?)
+	goalposition (done?)
+		rotation (done?)

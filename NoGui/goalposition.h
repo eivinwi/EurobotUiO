@@ -30,7 +30,8 @@ public:
 	~GoalPosition();
 
 	void reset();
-	void set(int n_x, int n_y, int n_rotation);
+	void set(int n_x, int n_y, float n_rotation);
+	void setAngle(float angle);
 	double timeSinceUpdate();
 	float getRotation();
 	float getX();
