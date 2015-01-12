@@ -12,25 +12,30 @@ GoalPosition::~GoalPosition() {
 void GoalPosition::reset() {
 	x = 0;
 	y = 0;
-	rotation = 0;
+	rotation = 0.0;
 	changed = time(0);
 }
 
 
-//should perhaps check x/y, but checking is also performed in PosControl
-void GoalPosition::set(int n_x, int n_y, float n_rotation) {	
-	x = n_x;
-	y = n_y;
-	setAngle(n_rotation);
-}
-
-
 void GoalPosition::setAngle(float angle) {
-	if(angle > 0.0 || angle < 360.0) {
+	if(angle > 0.0 && angle < 360.0) {
 		rotation = angle;
 	} else if(angle == 360) {
 		rotation = 0.0;
 	}
+}
+
+//should perhaps check for reasonable values
+void GoalPosition::setPosition(int n_x, int n_y){
+	x = n_x;
+	y = n_y;
+}
+
+//should not be used!
+void GoalPosition::set(int n_x, int n_y, float n_rotation) {	
+	PRINTLINE("[GOALPOS] Warning; using deprecated function set(x,y,r)");
+	setPosition(n_x, n_y);
+	setAngle(n_rotation);
 }
 
 

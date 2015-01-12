@@ -14,8 +14,20 @@ struct encoder {
 	float diffDist;
 	long total;
 	float totalDist;
+
 } leftEncoder, rightEncoder;
 
+//type definitions
+#define NONE 0
+#define ROTATION 1
+#define POSITION 2
+
+struct qPos {
+	int x;
+	int y;
+	float rot;
+	int type;
+};
 
 PosControl::PosControl(MotorCom *s) {
 	com = s;
@@ -53,10 +65,32 @@ void PosControl::resetPosition() {
 }
 
 
+void PosControl::enqueue(int x, int y, float rot, int type) {
+	qPos qp = {x, y, rot, type};
+
+	std::lock_guard<std::mutex> lock(qMutex);	
+	q.push(qp);
+	notifier.notify_one();
+}
+
+
+qPos PosControl::dequeue() {
+	std::unique_lock<std::mutex> lock(qMutex);
+
+	while(q.empty()) {
+		notifier.wait(lock); //alternative implementation try_unlock with crono ms-timeout
+	}
+
+	qPos qp = q.front();
+	q.pop();
+	return qp;
+}
+
+
 //CHECK: should check if position is in goal?
 void PosControl::setGoalRotation(int rot) {
 	if(rot == 360) rot = 0;
-	goalPos->setRotation(rot);
+	goalPos->setAngle(rot);
 	goToRotation();
 }
 
@@ -68,15 +102,29 @@ void PosControl::setGoalPosition(int x, int y) {
 	goToPosition();
 }
 
+//runs in its own thread, initialized in main.cpp
+void PosControl::controlLoop() {
+	while(true) {
+		qPos qp = dequeue();
+
+		if(qp.type == ROTATION) {
+			goToRotation();
+		} else if(qp.type == POSITION) {
+			goToPosition();
+		}
+	}
+}
+
 
 void PosControl::goToRotation() {
-	PRINTLINE("[POS] goToRotation " << curPos->getRotation() << "->" goalPos->getRotation());
+	PRINTLINE("[POS] goToRotation " << curPos->getRotation() << "->" << goalPos->getRotation());
 
-	bool rotated = false;
+	float distR = 0.0;
+//	bool rotated = false;
 	if(closeEnoughX() && closeEnoughY() && !closeEnoughAngle()) {
 		
 		do {
-			resetEncoders(); //here??	
+			resetEncoders(); //here??	 
 
 			distR = distanceAngle();
 			rotate(distR);
@@ -94,7 +142,7 @@ void PosControl::goToRotation() {
 
 //CHECK: delays or not?
 void PosControl::goToPosition() {
-	PRINTLINE("[POS] goToPosition (" << curPos->getX() << "," << curPos->getY() << ") -> (" goalPos->getX() << "," << goalPos->getY() << ")");
+	PRINTLINE("[POS] goToPosition (" << curPos->getX() << "," << curPos->getY() << ") -> (" << goalPos->getX() << "," << goalPos->getY() << ")");
 
 	float distX = distanceX(); 
 	float distY = distanceY();
@@ -425,7 +473,7 @@ bool PosControl::inGoalPosition() {
 
 
 bool PosControl::inGoal() {
-	return closeEnoughPosition() && closeEnoughAngle();
+	return inGoalPosition() && closeEnoughAngle();
 }
 
 

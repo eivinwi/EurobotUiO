@@ -4,7 +4,7 @@
  *
  * Created on 26. september 2014, 14:15
  *
-*
+ * TODO: change com-protocol from (x, y, r) -> (x,y) OR (r)
  */
 
 #include "motorcom.h"
@@ -322,14 +322,14 @@ int main(int argc, char *argv[]) {
 
             //attempt to lock mutex, read values, unlock mutex, set pos_ready to false
             if(read_mutex.try_lock()) {
-                p->setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
+//                p->setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
                 //PRINTLINE();
                 read_mutex.unlock();
                 new_pos_ready = false; 
             } else {
                 usleep(1000);
                 if(read_mutex.try_lock()) {
-                    p->setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
+  //                  p->setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
                     read_mutex.unlock();
                     new_pos_ready = false; 
                 } else {

@@ -33,7 +33,9 @@
 #include <time.h>
 #include <math.h>
 #include <thread>
-
+#include <queue>
+#include <mutex>
+#include <condition_variable>
 
 #define PI 3.14159265
 
@@ -41,40 +43,43 @@
 #define XRES 30000
 #define YRES 20000
 
-#define REASONABLE_ENC_DIFF 980
-#define TOO_LONG 20
+#define REASONABLE_ENC_DIFF 980 // == one rotation. Sould possibly be smaller
+#define TOO_LONG 20             //timeout in ms. Currently not in use (?)
 
 class PosControl {
 public:
     PosControl(MotorCom *s);
     ~PosControl();
-    void resetPosition();
     void controlLoop();
-	void setGoalPos(int x, int y, int r);
+	void enqueue(int x, int y, float rot, int type);
+	struct qPos dequeue();
+
+    void resetPosition();
+	void setGoalRotation(int r);
+	void setGoalPosition(int x, int y);
 	std::string getCurrentPos();
 	
 private:
-	bool inGoal();
+	void goToRotation();
+    void goToPosition();
+
     void rotate(float distR);
     void drive(float dist);
     void fullStop();
-//    float currentRotation();
 	float distanceX();
 	float distanceY();
 	float distanceAngle();
 
 	float updateDist(float angle, float distX, float distY);
-
 	void updatePosition();
 	void updateRotation();
 
-	//bool closeEnoughPos(float a, float b);
 	bool closeEnoughEnc(long a, long b);
-
 	bool closeEnoughX();
 	bool closeEnoughY();
 	bool closeEnoughAngle();
-
+	bool inGoalPosition();
+	bool inGoal();
 
 	long encoderDifference();
 	void updateEncoder(long e, struct encoder *side);
@@ -90,6 +95,10 @@ private:
 
 	float sin_d(float angle);
 	float cos_d(float angle);
+
+	std::queue <qPos>q;
+	std::mutex qMutex;
+	std::condition_variable notifier;
 
 	std::string in;
 	MotorCom *com;

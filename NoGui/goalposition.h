@@ -4,6 +4,10 @@
  *
  * Contains the current (exact) goal position, and functions for using/updating it.
  * 
+ * IMPORTANT:
+ * - Is EITHER a rotational or a positional change. 
+ * - Can only be both rotational and positional when used internally by PosControl
+ *
  */
 
 #ifndef GOALPOSITION_H
@@ -30,8 +34,9 @@ public:
 	~GoalPosition();
 
 	void reset();
-	void set(int n_x, int n_y, float n_rotation);
 	void setAngle(float angle);
+	void setPosition(int n_x, int n_y);
+	void set(int n_x, int n_y, float n_rotation);
 	double timeSinceUpdate();
 	float getRotation();
 	float getX();
@@ -41,9 +46,9 @@ public:
 	void print();
 
 private:
-	std::atomic<int> x;
-	std::atomic<int> y;
-	std::atomic<int> rotation;
+	int x;
+	int y;
+	float rotation;
 	time_t changed;
 
 };
