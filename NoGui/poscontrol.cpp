@@ -2,19 +2,11 @@
 
 /*TODO:
  	- implement position-queue
- 	- complete rewrite:
-		* only input is new x/y values
-	    * calculate necessary angle
-		* get movement trough trigonometry
-
+ 	
  	- use compass for angle untill beacon system is working
 
- 	- encoders should be reset for each new goalpos
-
- 	- looping is not yet complete
+ 	- encoders should be reset for each new goalpos (?)
 */
-
-
 
 struct encoder {
 	long prev;
@@ -35,15 +27,6 @@ PosControl::PosControl(MotorCom *s) {
 
 
 PosControl::~PosControl() {
-}
-
-
-// sets the new goal pos. 360* == 0*
-void PosControl::setGoalPos(int x, int y, int rot) {
-	PRINTLINE("[POS] setGoalPos(" << x << "," << y << "," << rot << ")  : ");
-	if(rot == 360) rot = 0;
-	goalPos->set(x, y, rot);
-	//controlLoop();
 }
 
 
@@ -69,61 +52,92 @@ void PosControl::resetPosition() {
 	itr = 0;
 }
 
-//CHECK: delays or not?
-void PosControl::controlLoop() {
-	while(true) {
-		float distX = distanceX(); 
-		float distY = distanceY();
-		float distR = 0.0;
-		float angle = 0.0;
-		float dist = 0.0;
 
-		while(closeEnoughX() && closeEnoughY() && !closeEnoughAngle()) {
-			//PRINTLINE("LOOP");
+//CHECK: should check if position is in goal?
+void PosControl::setGoalRotation(int rot) {
+	if(rot == 360) rot = 0;
+	goalPos->setRotation(rot);
+	goToRotation();
+}
+
+//CHECK: should check rotation? (probably not)
+// sets the new goal pos. 360* == 0*
+void PosControl::setGoalPosition(int x, int y) {
+	PRINTLINE("[POS] setGoalPos(" << x << "," << y << ")");
+	goalPos->setPosition(x, y);
+	goToPosition();
+}
+
+
+void PosControl::goToRotation() {
+	PRINTLINE("[POS] goToRotation " << curPos->getRotation() << "->" goalPos->getRotation());
+
+	bool rotated = false;
+	if(closeEnoughX() && closeEnoughY() && !closeEnoughAngle()) {
+		
+		do {
+			resetEncoders(); //here??	
+
 			distR = distanceAngle();
 			rotate(distR);
 			updateRotation();
 			usleep(1000);
-		}
+		} while(!closeEnoughAngle());
+		
+		PRINTLINE("[POS] 	rotation finished");		
+	} 
+	else {
+		PRINTLINE("[POS] 	already at specified rotation");
+	}
+}
 
-		if(!inGoal()) {
-			//get angle we need to rotate to before driving
-			angle = atan2(distY, distX) *(180/M_PI);
-			
-			
-			//calculate straigth distance
+
+//CHECK: delays or not?
+void PosControl::goToPosition() {
+	PRINTLINE("[POS] goToPosition (" << curPos->getX() << "," << curPos->getY() << ") -> (" goalPos->getX() << "," << goalPos->getY() << ")");
+
+	float distX = distanceX(); 
+	float distY = distanceY();
+	float distR = 0.0;
+	float angle = 0.0;
+	float dist = 0.0;
+
+	if(!inGoalPosition()) {
+		resetEncoders(); //here??
+
+		//get angle we need to rotate to before driving
+		angle = atan2(distY, distX) *(180/M_PI);
+		goalPos->setAngle(angle);
+				
+		//calculate straigth distance
+		dist = updateDist(angle, distX, distY);
+		
+		do {
+			distX = distanceX(); 
+			distY = distanceY();
+			distR = distanceAngle();
 			dist = updateDist(angle, distX, distY);
 
-			goalPos->setAngle(angle);
+			//PRINTLINE("CURRENT: " << curPos->getX() << " | " << curPos->getY() << " | " << curPos->getRotation());
+			printCurrent();
 
-			resetEncoders();
-			do {
-				distX = distanceX(); 
-				distY = distanceY();
-				distR = distanceAngle();
-				dist = updateDist(angle, distX, distY);
-
-				//PRINTLINE("CURRENT: " << curPos->getX() << " | " << curPos->getY() << " | " << curPos->getRotation());
-				printCurrent();
-
-				if(!closeEnoughAngle()) {
-					//PRINTLINE("[LOOP] ROTATION: " << distR);
-					rotate(distR);
-					updateRotation();
-				} else {
-					curPos->setAngle(goalPos->getRotation()); 
-					//PRINTLINE("[LOOP] DRIVE: " << distX << "," << distY);
-					drive(dist);
-					updatePosition();
-				} 
-				usleep(2000);
-			} while(!inGoal());
-		}
-
-		fullStop();
-		//PRINTLINE("[POS] IN GOAL!");
-		usleep(10000);
+			if(!closeEnoughAngle()) {
+				//PRINTLINE("[LOOP] ROTATION: " << distR);
+				rotate(distR);
+				updateRotation();
+			} else {
+				curPos->setAngle(goalPos->getRotation()); 
+				//PRINTLINE("[LOOP] DRIVE: " << distX << "," << distY);
+				drive(dist);
+				updatePosition();
+			} 
+			usleep(2000);
+		} while(!inGoal());
 	}
+
+	fullStop();
+	PRINTLINE("[POS] IN GOAL! We did it guys!");
+	usleep(3000);
 }
 
 float PosControl::updateDist(float angle, float distX, float distY) {
@@ -405,8 +419,13 @@ bool PosControl::closeEnoughAngle() {
 }
 
 
+bool PosControl::inGoalPosition() {
+	return closeEnoughX() && closeEnoughY();	
+}
+
+
 bool PosControl::inGoal() {
-	return closeEnoughX() && closeEnoughY() && closeEnoughAngle();
+	return closeEnoughPosition() && closeEnoughAngle();
 }
 
 

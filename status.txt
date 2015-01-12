@@ -13,7 +13,7 @@ sound
 
 
 NEEDS POLISH
-poscontrol (lots to do)
+poscontrol
 
 UNKNOWN: 
 	position     (done?)
