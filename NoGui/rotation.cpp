@@ -81,7 +81,7 @@ float Rotation::distanceTo(float goalRot) {
 	float l = distanceLeft(goalRot);
 	float r = distanceRight(goalRot);
 	DBPL("[ROT] distanceTo: l=" << l << " r=" << r);
-	if(abs(l) <= abs(r)) {
+	if(abs(l) < abs(r)) {
 		return l;
 	} else {
 		return r;

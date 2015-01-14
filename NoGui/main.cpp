@@ -5,8 +5,9 @@
  * Created on 26. september 2014, 14:15
  *
  * TODO: 
- *      - change com-protocol from (x, y, r) -> (x,y) OR (r)
  *      - com should perhaps return more verbose error-messages to clients
+ *      - noCom for program startup without read/write threads (probably not)
+ *      - sound
  */
 
 #include "motorcom.h"
@@ -45,7 +46,6 @@ int ACCELERATION = 3;
 bool sound_enabled = false;
 
 /* Waits for input on socket, mainly position. 
- * TODO: define an extensive communication protocol
  */
 void readLoop() {
 	TIMESTAMP("[COM] starting");
@@ -286,8 +286,6 @@ int getArguments(std::string input, int *pos) {
  *  	true - if good/no arguments
  *		false - if invalid argument exists
  *
- * TODO: -noCom for program startup without read/write threads
- * TODO: -sound
 */
 bool checkArguments(int argc, char *argv[]) {
 	PRINTLINE("[SETUP] Reading arguments:   ");

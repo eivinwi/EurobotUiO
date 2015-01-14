@@ -132,10 +132,12 @@ void PosControl::goToRotation() {
 			updateRotation();
 			usleep(1000);
 		} while(!closeEnoughAngle());
-		completeCurrent();		
+		completeCurrent();
+		fullStop();		
 		PRINTLINE("[POS] 	rotation finished: " << curPos->getRotation() << "=" << goalPos->getRotation());		
 	} 
 	else {
+		fullStop();
 		completeCurrent();
 		PRINTLINE("[POS] 	already at specified rotation: " << curPos->getRotation() << "=" << goalPos->getRotation());
 	}
@@ -157,6 +159,8 @@ void PosControl::goToPosition() {
 
 		//get angle we need to rotate to before driving
 		angle = atan2(distY, distX) *(180/M_PI);
+		if(angle < 0) angle = angle+360;
+		PRINTLINE("[POS] CALCULATED ANGLE=" << angle);
 		goalPos->setAngle(angle);
 				
 		//calculate straigth distance
@@ -201,7 +205,7 @@ float PosControl::updateDist(float angle, float distX, float distY) {
 }
 
 
-//TODO: get input from compass
+//TODO: get input from IMU
 //need exact rotation to do small angle adjustments
 void PosControl::rotate(float distR) {
 	DBP("[POS] turning: ");
@@ -225,7 +229,7 @@ void PosControl::rotate(float distR) {
 	}
 
 	//CHECK: too often?
-	updateRotation();
+//	updateRotation();
 }
 
 
@@ -318,7 +322,7 @@ void PosControl::updatePosition() {
 		return;
 	}
 
-	PRINTLINE("L: " << leftEncoder.diffDist << "  R: " << rightEncoder.diffDist);
+//	PRINTLINE("L: " << leftEncoder.diffDist << "  R: " << rightEncoder.diffDist);
 	float avg_dist = (abs(leftEncoder.diffDist) + abs(rightEncoder.diffDist)) / 2;
 	
 	float x_distance = cos_d(angle)*avg_dist; //45 = +
