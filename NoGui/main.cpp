@@ -4,7 +4,9 @@
  *
  * Created on 26. september 2014, 14:15
  *
- * TODO: change com-protocol from (x, y, r) -> (x,y) OR (r)
+ * TODO: 
+ *      - change com-protocol from (x, y, r) -> (x,y) OR (r)
+ *      - com should perhaps return more verbose error-messages to clients
  */
 
 #include "motorcom.h"
@@ -21,7 +23,8 @@
 bool checkArguments(int argc, char *argv[]);
 void drive();
 void testDrive();
-bool getArguments(std::string input, int *pos);
+int getArguments(std::string input, int *pos);
+bool sendToPos(int num_args, int *args);
 void readLoop();
 
 struct position {
@@ -47,8 +50,6 @@ void readLoop() {
 	TIMESTAMP("[COM] starting");
 	// Prepare context and socket
 	zmq::context_t context (1);
-//    zmq::context_t *context = (zmq::context_t *) arg;
-
 	zmq::socket_t socket (context, ZMQ_REP);
 	socket.bind ("tcp://*:5555");
 
@@ -59,6 +60,7 @@ void readLoop() {
 		std::string recv_str = std::string(static_cast<char*>(request.data()), request.size());
 		TIMESTAMP("[COM] received" << recv_str);
 
+        // Request for position
         if(recv_str.compare("getpos") == 0) {
             //return position
             //check if position can be read.
@@ -88,46 +90,37 @@ void readLoop() {
                 usleep(100);
                 socket.send (reply);
             }
-        } else {
-    		//check arguments
+        } 
+
+        //Not request, should be either a position or rotation
+        else {
+    	   	//check arguments
     		int pos[3];
-    		bool isPosition = getArguments(recv_str, pos);
-    		zmq::message_t reply(2);
-    		if(isPosition) {
-                TIMESTAMP("[COM] got position");
-    			//set position in struct
-    			//if(pthread_mutex_trylock(&read_pos_mutex) != 0) {
-    			if(!read_mutex.try_lock()) {
-    				TIMESTAMP("[COM] mutex locked, wait and retry");
-    				usleep(1000);
-    				if(!read_mutex.try_lock()) {//mutex) {
-    					TIMESTAMP("[COM] error, mutex still locked");
-    				} else {
-    					//PRINTLINE("READLOOP: mutex now open, setting position");
-                        input_pos.x = pos[0];
-                        input_pos.y = pos[1];
-                        input_pos.rot = pos[2];
-                        TIMESTAMP("[COM] mutex now open, setting position: [" << input_pos.x << "," << input_pos.y << "," << input_pos.rot << "]");
-    					new_pos_ready = true;
-    					read_mutex.unlock();
-    				}
-    			} else {
-    				input_pos.x = pos[0];
-    				input_pos.y = pos[1];
-    				input_pos.rot = pos[2];
-    				TIMESTAMP("[COM] setting position: [" << input_pos.x << "," << input_pos.y << "," << input_pos.rot << "]");
-    				new_pos_ready = true;
-    				read_mutex.unlock();
-    			}
-    			//return OK to client
-                TIMESTAMP("[COM] reply=ok");
-    			memcpy ((void *) reply.data (), "ok", 2);
-    		} 
-            else {
-    			//recv_str is invalid, return negative to client
+            int args = getArguments(recv_str, pos);
+            zmq::message_t reply(2);
+
+            if(args <= 1 || args > 3) {
+                TIMESTAMP("[COM] invalid number arguments(" << args << "): " << recv_str);
+                
+                //recv_str is invalid, return negative to client
                 TIMESTAMP("[COM] reply=no");
-    			memcpy ((void *) reply.data (), "no", 2);
-    		}
+                memcpy ((void *) reply.data (), "no", 2);
+            } 
+            else {
+                TIMESTAMP("[COM] got position: " << args);
+
+                bool success = sendToPos(args, pos);
+                if(success) {
+                    //return OK to client
+                    TIMESTAMP("[COM] reply=ok");
+                    memcpy ((void *) reply.data (), "ok", 2);
+                } 
+                else {
+                    //return negative to client
+                    TIMESTAMP("[COM] reply=no");
+                    memcpy ((void *) reply.data (), "no", 2);
+                }
+            } 
             //sleep(1);
             usleep(100);
             TIMESTAMP("[COM] sending reply: " << std::string(static_cast<char*>(reply.data()), reply.size()));
@@ -135,6 +128,34 @@ void readLoop() {
         }
 	}
 }	
+
+
+//attempts twice to lock mutex, write values, and unlock mutex
+bool sendToPos(int num_args, int *args) {
+    if(read_mutex.try_lock()) {
+        if(num_args == 2) {
+            p->enqueue(args[0], 0, 0, args[1], ROTATION);
+        } else if(num_args == 3) {
+            p->enqueue(args[0], args[1], args[2], 0, POSITION);
+        }
+        read_mutex.unlock();
+        return true;
+    } 
+    else {
+        usleep(1000);
+        if(read_mutex.try_lock()) {
+            if(num_args == 2) {
+               p->enqueue(args[0], 0, 0, args[1], ROTATION);
+            } else if(num_args == 3) {
+                p->enqueue(args[0], args[1], args[2], 0, POSITION);
+            }
+            read_mutex.unlock();
+            return true;
+        }
+    }
+    PRINTLINE("MAIN: try_lock read_mutex unsuccessful");
+    return false;
+}
 
 /*
 void writeLoop() {
@@ -179,26 +200,20 @@ void writeLoop() {
 }*/
 
 
-
-bool getArguments(std::string input, int *pos) {
+//could be written simpler/more efficient
+int getArguments(std::string input, int *pos) {
 	int i = 0;
     std::istringstream f(input);
     std::string s;
     while(getline(f, s, ',')) {
         pos[i] = atoi(s.c_str());
         i++;
-        if(i > 2) break;
+        if(i > 2) break; //hack!! probably incorrect
     }
-    if(i != 3) {
-    	return false;
-    } else {
-        if(abs(pos[0]) > 3000) return false;
-        else if(abs(pos[1]) > 3000) return false;
-        else if(pos[2] < 0 || pos[2] > 360) return false;
-    	else {
-    		return true;
-    	}
-    }
+    //i=1 invalid
+    //i=2 rotation+id
+    //i=3 position+id
+    return i;
 }
 
 
@@ -317,13 +332,14 @@ int main(int argc, char *argv[]) {
     usleep(2000);
 
     PRINTLINE("[SETUP] done, looping and checking for input");
+    
+/*
+    //should be done in com-loop?!
     while(true) {
         if(new_pos_ready) {
-
             //attempt to lock mutex, read values, unlock mutex, set pos_ready to false
             if(read_mutex.try_lock()) {
 //                p->setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
-                //PRINTLINE();
                 read_mutex.unlock();
                 new_pos_ready = false; 
             } else {
@@ -338,9 +354,7 @@ int main(int argc, char *argv[]) {
             }
         }
         usleep(500);
-    }
-
- //   testDrive();
+    }*/
 
     PRINTLINE("[SETUP] Exiting");
     if(read_thread.joinable()) {

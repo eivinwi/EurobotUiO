@@ -46,12 +46,18 @@
 #define REASONABLE_ENC_DIFF 980 // == one rotation. Sould possibly be smaller
 #define TOO_LONG 20             //timeout in ms. Currently not in use (?)
 
+//type definitions
+#define NONE 0
+#define ROTATION 1
+#define POSITION 2
+
+
 class PosControl {
 public:
     PosControl(MotorCom *s);
     ~PosControl();
     void controlLoop();
-	void enqueue(int x, int y, float rot, int type);
+	void enqueue(int id, int x, int y, float rot, int type);
 	struct qPos dequeue();
 
     void resetPosition();
@@ -112,6 +118,8 @@ private:
 
 	int curSpeedLeft;
 	int curSpeedRight;
+
+	bool completed[200];
 };
 
 #endif /* POSCONTROL_H */

@@ -1,11 +1,8 @@
 #include "poscontrol.h"
 
-/*TODO:
- 	- implement position-queue
- 	
- 	- use compass for angle untill beacon system is working
-
- 	- encoders should be reset for each new goalpos (?)
+/*TODO: 	
+ 	- use IMU for angle untill beacon system is workinh
+ 	- should continually check angle instead of once!! (impossible with only encoders)
 */
 
 struct encoder {
@@ -17,12 +14,9 @@ struct encoder {
 
 } leftEncoder, rightEncoder;
 
-//type definitions
-#define NONE 0
-#define ROTATION 1
-#define POSITION 2
 
 struct qPos {
+	int id;
 	int x;
 	int y;
 	float rot;
@@ -65,8 +59,9 @@ void PosControl::resetPosition() {
 }
 
 
-void PosControl::enqueue(int x, int y, float rot, int type) {
-	qPos qp = {x, y, rot, type};
+void PosControl::enqueue(int id, int x, int y, float rot, int type) {
+	qPos qp = {id, x, y, rot, type};
+	PRINTLINE("[POS] enqueueing qPos {" << id << "," << x << "," << y << "," << rot << "," << type << "}");
 
 	std::lock_guard<std::mutex> lock(qMutex);	
 	q.push(qp);
@@ -107,6 +102,10 @@ void PosControl::controlLoop() {
 	while(true) {
 		qPos qp = dequeue();
 
+		//create goalPos from qp
+		goalPos = new GoalPosition(qp.id, qp.x, qp.y, qp.rot);
+		PRINTLINE("[POS] dequeued qPos {" << qp.id << "," << qp.x << "," << qp.y << "," << qp.rot << "," << qp.type << "}");	
+
 		if(qp.type == ROTATION) {
 			goToRotation();
 		} else if(qp.type == POSITION) {
@@ -119,12 +118,12 @@ void PosControl::controlLoop() {
 void PosControl::goToRotation() {
 	PRINTLINE("[POS] goToRotation " << curPos->getRotation() << "->" << goalPos->getRotation());
 
+	resetEncoders(); //here??	 
 	float distR = 0.0;
 //	bool rotated = false;
 	if(closeEnoughX() && closeEnoughY() && !closeEnoughAngle()) {
 		
 		do {
-			resetEncoders(); //here??	 
 
 			distR = distanceAngle();
 			rotate(distR);
@@ -132,10 +131,10 @@ void PosControl::goToRotation() {
 			usleep(1000);
 		} while(!closeEnoughAngle());
 		
-		PRINTLINE("[POS] 	rotation finished");		
+		PRINTLINE("[POS] 	rotation finished: " << curPos->getRotation() << "=" << goalPos->getRotation());		
 	} 
 	else {
-		PRINTLINE("[POS] 	already at specified rotation");
+		PRINTLINE("[POS] 	already at specified rotation: " << curPos->getRotation() << "=" << goalPos->getRotation());
 	}
 }
 
@@ -144,6 +143,7 @@ void PosControl::goToRotation() {
 void PosControl::goToPosition() {
 	PRINTLINE("[POS] goToPosition (" << curPos->getX() << "," << curPos->getY() << ") -> (" << goalPos->getX() << "," << goalPos->getY() << ")");
 
+	resetEncoders(); //here??
 	float distX = distanceX(); 
 	float distY = distanceY();
 	float distR = 0.0;
@@ -151,7 +151,6 @@ void PosControl::goToPosition() {
 	float dist = 0.0;
 
 	if(!inGoalPosition()) {
-		resetEncoders(); //here??
 
 		//get angle we need to rotate to before driving
 		angle = atan2(distY, distX) *(180/M_PI);
@@ -184,7 +183,8 @@ void PosControl::goToPosition() {
 	}
 
 	fullStop();
-	PRINTLINE("[POS] IN GOAL! We did it guys!");
+	PRINTLINE("[POS] IN GOAL! " << curPos->getX() << "=" << goalPos->getX() << curPos->getY() << "=" << goalPos->getY());
+
 	usleep(3000);
 }
 

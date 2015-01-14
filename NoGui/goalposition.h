@@ -23,7 +23,6 @@
 #include <math.h>
 #include <atomic>
 
-
 /* curPos - current estimated position based on dead reckoning with encoders. Is updated regularly to be Exactpos
  * ExactPos   - input position from SENS
  * GoalPos    - input from main or AI 
@@ -31,6 +30,7 @@
 class GoalPosition {
 public:
 	GoalPosition();
+	GoalPosition(int id, int x, int y, int r);
 	~GoalPosition();
 
 	void reset();
@@ -39,6 +39,7 @@ public:
 	void set(int n_x, int n_y, float n_rotation);
 	double timeSinceUpdate();
 	float getRotation();
+	int getId();
 	float getX();
 	float getY();
 	std::string getPosString();
@@ -46,6 +47,7 @@ public:
 	void print();
 
 private:
+	int id;
 	int x;
 	int y;
 	float rotation;

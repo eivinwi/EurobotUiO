@@ -4,12 +4,20 @@ GoalPosition::GoalPosition() {
 	reset();
 }
 
+GoalPosition::GoalPosition(int n_id, int n_x, int n_y, int r) {
+	id = n_id;
+	x = n_x; 
+	y = n_y;
+	rotation = r;
+}
+
 
 GoalPosition::~GoalPosition() {
 }
 
 
 void GoalPosition::reset() {
+	id = 0;
 	x = 0;
 	y = 0;
 	rotation = 0.0;
@@ -46,6 +54,11 @@ double GoalPosition::timeSinceUpdate() {
 
 float GoalPosition::getRotation() {
 	return static_cast<float>(rotation);
+}
+
+
+int GoalPosition::getId() {
+	return id;
 }
 
 
