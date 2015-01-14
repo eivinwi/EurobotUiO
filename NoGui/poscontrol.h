@@ -51,6 +51,7 @@
 #define ROTATION 1
 #define POSITION 2
 
+#define ACTION_STORAGE 200
 
 class PosControl {
 public:
@@ -66,6 +67,7 @@ public:
 	std::string getCurrentPos();
 	
 private:
+	void completeCurrent();
 	void goToRotation();
     void goToPosition();
 
@@ -119,7 +121,7 @@ private:
 	int curSpeedLeft;
 	int curSpeedRight;
 
-	bool completed[200];
+	bool completed_actions[ACTION_STORAGE];
 };
 
 #endif /* POSCONTROL_H */

@@ -13,18 +13,20 @@
 #include "poscontrol.h"
 #include "printing.h"
 #include "sound.h"
+#include "protocol.h"
 #include <string>
 #include <cstring>
 #include <thread>
 #include <mutex>
-#include <atomic>
 #include <zmq.hpp>
+
 
 bool checkArguments(int argc, char *argv[]);
 void drive();
 void testDrive();
 int getArguments(std::string input, int *pos);
-bool sendToPos(int num_args, int *args);
+bool enqRotation(int num_args, int *args);
+bool enqPosition (int num_args, int *args);
 void readLoop();
 
 struct position {
@@ -38,7 +40,6 @@ struct position input_pos;
 MotorCom *m;
 PosControl *p;
 std::mutex read_mutex;
-std::atomic<bool> new_pos_ready(false);
 
 int ACCELERATION = 3;
 bool sound_enabled = false;
@@ -58,7 +59,7 @@ void readLoop() {
 		// Wait for next request from client
 		socket.recv (&request);
 		std::string recv_str = std::string(static_cast<char*>(request.data()), request.size());
-		TIMESTAMP("[COM] received" << recv_str);
+		TIMESTAMP("[COM] recv_str: " << recv_str);
 
         // Request for position
         if(recv_str.compare("getpos") == 0) {
@@ -95,21 +96,53 @@ void readLoop() {
         //Not request, should be either a position or rotation
         else {
     	   	//check arguments
-    		int pos[3];
-            int args = getArguments(recv_str, pos);
+    		int args[4];
+            int num_args = getArguments(recv_str, args);
             zmq::message_t reply(2);
 
-            if(args <= 1 || args > 3) {
-                TIMESTAMP("[COM] invalid number arguments(" << args << "): " << recv_str);
+            if(num_args < 1 || num_args > 4) {
+                TIMESTAMP("[COM] invalid number arguments(" << num_args << "): " << recv_str);
                 
                 //recv_str is invalid, return negative to client
                 TIMESTAMP("[COM] reply=no");
                 memcpy ((void *) reply.data (), "no", 2);
             } 
             else {
-                TIMESTAMP("[COM] got position: " << args);
+                TIMESTAMP("[COM] arguments recv: " << recv_str);
+                for(int a : args) {
+                    TIMESTAMP("  " << a);
+                }
 
-                bool success = sendToPos(args, pos);
+                bool success = false;
+
+                switch(args[0]) {
+                    case REQUEST: 
+                        //request for information
+                        
+                        break;
+                    case RESET_ALL: 
+                        //order to reset all
+                        break;
+                    case SET_ROTATION: 
+                        success = enqRotation(num_args, args);
+                        break;
+                    case SET_POSITION: 
+                        success = enqPosition(num_args, args);
+                        break;
+                    case LIFT: 
+                        //TODO
+                        break;
+                    case GRAB: 
+                        //TODO
+                        break;
+                    case SHUTTER: 
+                        //TODO
+                        break;
+                    default:
+                        TIMESTAMP("[COM] invalid command: " << args[0]);
+                        break;
+                }                
+
                 if(success) {
                     //return OK to client
                     TIMESTAMP("[COM] reply=ok");
@@ -131,31 +164,62 @@ void readLoop() {
 
 
 //attempts twice to lock mutex, write values, and unlock mutex
-bool sendToPos(int num_args, int *args) {
-    if(read_mutex.try_lock()) {
-        if(num_args == 2) {
-            p->enqueue(args[0], 0, 0, args[1], ROTATION);
-        } else if(num_args == 3) {
-            p->enqueue(args[0], args[1], args[2], 0, POSITION);
-        }
-        read_mutex.unlock();
-        return true;
-    } 
+//returns: true if successfully sent rotation to PosControl,
+//         false if not
+bool enqRotation(int num_args, int *args) {
+    if(num_args != 3) {
+        TIMESTAMP("[COM] Rotation: wrong number of arguments: " << num_args);
+    }
+    else if(args[0] != SET_ROTATION) {
+        TIMESTAMP("[COM] Rotation: incorrect arguments: " << args[1]);  //should never happen      
+    }
     else {
-        usleep(1000);
         if(read_mutex.try_lock()) {
-            if(num_args == 2) {
-               p->enqueue(args[0], 0, 0, args[1], ROTATION);
-            } else if(num_args == 3) {
-                p->enqueue(args[0], args[1], args[2], 0, POSITION);
-            }
+            p->enqueue(args[1], 0, 0, args[2], ROTATION);
             read_mutex.unlock();
             return true;
+        } 
+        else {
+            usleep(1000);
+            if(read_mutex.try_lock()) {
+                p->enqueue(args[1], 0, 0, args[2], ROTATION);
+                read_mutex.unlock();
+                return true;
+            }
         }
+        TIMESTAMP("[COM] try_lock read_mutex unsuccessful");
     }
-    PRINTLINE("MAIN: try_lock read_mutex unsuccessful");
     return false;
 }
+
+//see enqRotation
+bool enqPosition(int num_args, int *args) {
+    if(num_args != 4) {
+        TIMESTAMP("[COM] Position: wrong number of arguments: " << num_args);
+    }
+    else if(args[0] != SET_POSITION) {
+        TIMESTAMP("[COM] Position: incorrect arguments: " << args[1]);  //should never happen      
+    }
+    else {
+        if(read_mutex.try_lock()) {
+            p->enqueue(args[1], args[2], args[3], 0, POSITION);
+            read_mutex.unlock();
+            return true;
+        } 
+        else {
+            usleep(1000);
+            if(read_mutex.try_lock()) {
+                p->enqueue(args[1], args[2], args[3], 0, POSITION);
+                read_mutex.unlock();
+                return true;
+            }
+        }
+        TIMESTAMP("[COM] try_lock read_mutex unsuccessful");
+    }
+    return false;
+
+}
+
 
 /*
 void writeLoop() {
@@ -201,34 +265,19 @@ void writeLoop() {
 
 
 //could be written simpler/more efficient
+//i=1 invalid    
+//i=2 rotation+id
+//i=3 position+id
 int getArguments(std::string input, int *pos) {
-	int i = 0;
+    int i = 0;
     std::istringstream f(input);
     std::string s;
     while(getline(f, s, ',')) {
         pos[i] = atoi(s.c_str());
         i++;
-        if(i > 2) break; //hack!! probably incorrect
+        if(i > 4) break; //hack!! probably incorrect
     }
-    //i=1 invalid
-    //i=2 rotation+id
-    //i=3 position+id
     return i;
-}
-
-
-//Warning: not updated to the new poscontrol-setup (loops continuosly)
-void testDrive() {
-	/*
-    p->setGoalPos(50,0,0);
-    p->setGoalPos(50,0, 90);
-    p->setGoalPos(50,50, 90);
-    p->setGoalPos(50,50, 180);
-    p->setGoalPos(0,50, 180);
-    p->setGoalPos(0,50, 270);
-    p->setGoalPos(0,0, 270);
-    p->setGoalPos(0,0, 0);
-    */
 }
 
 
@@ -285,6 +334,7 @@ bool checkArguments(int argc, char *argv[]) {
     return true;
 }
 
+
 int main(int argc, char *argv[]) {
     PRINTLINE("[SETUP] creating MotorCom");
     m = new MotorCom;
@@ -333,30 +383,6 @@ int main(int argc, char *argv[]) {
 
     PRINTLINE("[SETUP] done, looping and checking for input");
     
-/*
-    //should be done in com-loop?!
-    while(true) {
-        if(new_pos_ready) {
-            //attempt to lock mutex, read values, unlock mutex, set pos_ready to false
-            if(read_mutex.try_lock()) {
-//                p->setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
-                read_mutex.unlock();
-                new_pos_ready = false; 
-            } else {
-                usleep(1000);
-                if(read_mutex.try_lock()) {
-  //                  p->setGoalPos(input_pos.x, input_pos.y, input_pos.rot);
-                    read_mutex.unlock();
-                    new_pos_ready = false; 
-                } else {
-                    PRINTLINE("MAIN: try_lock read_mutex unsuccessful");
-                }
-            }
-        }
-        usleep(500);
-    }*/
-
-    PRINTLINE("[SETUP] Exiting");
     if(read_thread.joinable()) {
         read_thread.join();
     }
@@ -364,5 +390,6 @@ int main(int argc, char *argv[]) {
         pos_thread.join();
     }
 
+    PRINTLINE("[SETUP] Exiting");
     return 0;
 }

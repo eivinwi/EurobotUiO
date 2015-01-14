@@ -1,5 +1,5 @@
 main.o: main.cpp motorcom.h serialsim.h printing.h md49.h serial.h \
- poscontrol.h position.h rotation.h goalposition.h sound.h
+ poscontrol.h position.h rotation.h goalposition.h sound.h protocol.h
 motorcom.o: motorcom.cpp motorcom.h serialsim.h printing.h md49.h \
  serial.h
 serial.o: serial.cpp serial.h md49.h printing.h

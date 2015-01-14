@@ -1,8 +1,8 @@
 #include "poscontrol.h"
-
 /*TODO: 	
  	- use IMU for angle untill beacon system is workinh
  	- should continually check angle instead of once!! (impossible with only encoders)
+	- pooling wait has poor performance
 */
 
 struct encoder {
@@ -11,7 +11,6 @@ struct encoder {
 	float diffDist;
 	long total;
 	float totalDist;
-
 } leftEncoder, rightEncoder;
 
 
@@ -22,6 +21,7 @@ struct qPos {
 	float rot;
 	int type;
 };
+
 
 PosControl::PosControl(MotorCom *s) {
 	com = s;
@@ -56,6 +56,8 @@ void PosControl::resetPosition() {
 	curSpeedLeft = 0;
 	curPos->updatePosString();
 	itr = 0;
+
+	std::fill(std::begin(completed_actions), std::end(completed_actions), false);
 }
 
 
@@ -130,10 +132,11 @@ void PosControl::goToRotation() {
 			updateRotation();
 			usleep(1000);
 		} while(!closeEnoughAngle());
-		
+		completeCurrent();		
 		PRINTLINE("[POS] 	rotation finished: " << curPos->getRotation() << "=" << goalPos->getRotation());		
 	} 
 	else {
+		completeCurrent();
 		PRINTLINE("[POS] 	already at specified rotation: " << curPos->getRotation() << "=" << goalPos->getRotation());
 	}
 }
@@ -183,8 +186,9 @@ void PosControl::goToPosition() {
 	}
 
 	fullStop();
-	PRINTLINE("[POS] IN GOAL! " << curPos->getX() << "=" << goalPos->getX() << curPos->getY() << "=" << goalPos->getY());
-
+	PRINTLINE("[POS] IN GOAL!  (" << curPos->getX() << " , " << goalPos->getX() << ") ~= (" << curPos->getY() << " , " << goalPos->getY() << ")");
+ 
+	completeCurrent();
 	usleep(3000);
 }
 
@@ -259,10 +263,18 @@ void PosControl::drive(float dist) {
 	} 
 	else {
 		PRINTLINE("[POS] ERROR; cur->angle is" << rotation << " should be " << goalPos->getRotation() << ". Attemting to fix by turning");
-//		rotate(curPos->getRotation() - angle);
+		PRINTLINE("[POS] Scratch that last part, fixing is not yet implemented.");	
 	}
 }
 
+
+void PosControl::completeCurrent() {
+	PRINTLINE("[POS] action " << goalPos->getId() << " completed.");	
+	if(completed_actions[goalPos->getId()]) {
+		PRINTLINE("[POS] action " << goalPos->getId() << " was already finished.");
+	}
+	completed_actions[goalPos->getId()] = true;
+}
 
 
 std::string PosControl::getCurrentPos() {
