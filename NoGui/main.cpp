@@ -13,7 +13,7 @@
 #include "motorcom.h"
 #include "poscontrol.h"
 #include "printing.h"
-#include "sound.h"
+//#include "sound.h"
 #include "protocol.h"
 #include <string>
 #include <cstring>
