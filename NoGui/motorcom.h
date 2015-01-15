@@ -27,6 +27,7 @@ public:
     MotorCom();
     ~MotorCom();
 
+    bool test();
     void startSerial();
 	void serialSimEnable();
 	void serialSimDisable();
@@ -58,7 +59,6 @@ public:
     uint8_t readFromSerial();
     uint8_t readFromSerialNoWait();
     long readLongFromSerial();
-    void testSerial();
 
 private:
     SerialSim *simport;

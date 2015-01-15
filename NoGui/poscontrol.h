@@ -56,6 +56,7 @@ class PosControl {
 public:
     PosControl(MotorCom *s, bool testing);
     ~PosControl();
+    bool test();
     void enableTesting();
     void controlLoop();
 	void enqueue(int id, int x, int y, float rot, int type);
@@ -67,6 +68,7 @@ public:
 
 	int getCurrentId();
 	std::string getCurrentPos();
+	bool running();
 	
 private:
 	void completeCurrent();
@@ -125,6 +127,7 @@ private:
 
 	bool completed_actions[ACTION_STORAGE];
 	bool testing;
+	bool pos_running;
 };
 
 #endif /* POSCONTROL_H */

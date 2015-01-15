@@ -61,10 +61,15 @@ void PosControl::resetPosition() {
 	std::fill(std::begin(completed_actions), std::end(completed_actions), false);
 }
 
+bool PosControl::test() {
+	enqueue(0, 1, 2, 3, NONE);
+	qPos test = dequeue();
+	return (test.id == 0 && test.x == 1 && test.y == 2 && test.rot == 3 && test.type == NONE);
+}
 
 void PosControl::enqueue(int id, int x, int y, float rot, int type) {
 	qPos qp = {id, x, y, rot, type};
-	PRINTLINE("[POS] enqueueing qPos {" << id << "," << x << "," << y << "," << rot << "," << type << "}");
+	DBPL("[POS] enqueueing qPos {" << id << "," << x << "," << y << "," << rot << "," << type << "}");
 
 	std::lock_guard<std::mutex> lock(qMutex);	
 	q.push(qp);
@@ -104,6 +109,7 @@ void PosControl::setGoalPosition(int x, int y) {
 
 //runs in its own thread, initialized in main.cpp
 void PosControl::controlLoop() {
+	pos_running = true;
 	while(true) {
 		qPos qp = dequeue();
 
@@ -128,6 +134,7 @@ void PosControl::controlLoop() {
 			}
 		}
 	}
+	pos_running = false;
 }
 
 
@@ -305,6 +312,10 @@ std::string PosControl::getCurrentPos() {
 	}
 	ss << curPos->getPosString();
 	return ss.str();
+}
+
+bool PosControl::running() {
+	return pos_running;
 }
 
 

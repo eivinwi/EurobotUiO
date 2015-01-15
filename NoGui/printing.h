@@ -22,9 +22,6 @@
 #define PRINTLINE(x) std::cout << x << std::endl;
 #define PRINT(x) std::cout << x;
 
-#define PRINT_OK() std::cout << "\033[0;32mok\033[0m\n" << std::endl;
-#define PRINT_FAIL() std::cout << "\033[0;31mfail\033[0m\n" << std::endl; 
-
 static auto time_start = std::chrono::high_resolution_clock::now();
 #define TIMESTAMP(x) std::cout << std::chrono::duration<double, std::milli>( std::chrono::high_resolution_clock::now() - time_start ).count() << ": " << x << std::endl;
 

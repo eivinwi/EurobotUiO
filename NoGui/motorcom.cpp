@@ -10,6 +10,23 @@ MotorCom::MotorCom() {
 MotorCom::~MotorCom() {
 }
 
+bool MotorCom::test() {
+    if(simulating) {
+        return true; 
+    } 
+    else {
+        int ver = getVersion();
+        usleep(1000);
+        ver = getVersion();
+        usleep(500);
+        if(ver == 2) {
+            return true;    
+        } else {
+            return false;
+        }
+    }
+}
+
 
 void MotorCom::startSerial() {
 	if(simulating) {
@@ -282,22 +299,5 @@ long MotorCom::readLongFromSerial() {
         return simport->readLong();
     } else {
         return port->readLong();
-    }
-}
-
-void MotorCom::testSerial() {
-    if(simulating) {
-        PRINT_OK();   
-    } 
-    else {
-        int wat = getVersion();
-        usleep(1000);
-        wat = getVersion();
-        usleep(500);
-        if(wat == 2) {
-            PRINT_OK();
-        } else {
-            PRINT_FAIL();
-        }
     }
 }

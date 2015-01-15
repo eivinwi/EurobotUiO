@@ -30,6 +30,8 @@ int getArguments(std::string input, int *pos);
 bool enqRotation(int num_args, int *args);
 bool enqPosition (int num_args, int *args);
 void readLoop();
+void testSystem();
+void printResult(std::string text, bool success);
 
 struct position {
 	int x;
@@ -44,12 +46,15 @@ PosControl *p;
 std::mutex read_mutex;
 
 int ACCELERATION = 3;
+int MODE = 1;
 bool sound_enabled = false;
+bool com_running = false;
 
 /* Waits for input on socket, mainly position. 
  */
 void readLoop() {
 	TIMESTAMP("[COM] starting");
+    com_running = true;
 	// Prepare context and socket
 	zmq::context_t context (1);
 	zmq::socket_t socket (context, ZMQ_REP);
@@ -171,6 +176,7 @@ void readLoop() {
             socket.send (reply);
         }
 	}
+    com_running = false;
 }	
 
 
@@ -363,11 +369,8 @@ int main(int argc, char *argv[]) {
     usleep(100000);
     m->flush();
 
-    m->testSerial();
-
     PRINTLINE("[SETUP] resetting encoders");
     m->resetEncoders();
-    PRINT_OK();
     usleep(5000);
 
 
@@ -394,24 +397,79 @@ int main(int argc, char *argv[]) {
 
     //m->testSerial();
 
-    int acc2 = m->getAcceleration();
-    PRINTLINE("[SETUP] Acceleration is: " << acc2 << ", setting new acceleration" << ACCELERATION);
-    usleep(1000);
-    m->setAcceleration(ACCELERATION);
-    usleep(1000);
-    acc2 = m->getAcceleration();
-    PRINTLINE("[SETUP] acceleration is now: " << acc2);
-    usleep(2000);
-
-    PRINTLINE("[SETUP] done, looping and checking for input");
+    int acc2 = m->getAcceleration(); 
+    if(acc2 != ACCELERATION) {
+        PRINTLINE("[SETUP] Acceleration is: " << acc2 << ", setting new acceleration" << ACCELERATION);
+        usleep(1000);
+        m->setAcceleration(ACCELERATION);
+    }
     
+    usleep(1000);
+    int mode = m->getAcceleration();
+    if(mode != 0) {
+        PRINTLINE("[SETUP] Mode is: " << m << ", setting new mode" << MODE);
+        usleep(1000);
+        m->setMode(MODE);
+    }
+
+
+    PRINTLINE("[SETUP] done");
+    PRINTLINE("[SETUP] Testing components:");
+    testSystem();
+
+
+    TIMESTAMP("[SETUP] \nTesting completed, waiting for input");
     if(read_thread.joinable()) {
         read_thread.join();
     }
     if(pos_thread.joinable()) {
         pos_thread.join();
     }
-
-    PRINTLINE("[SETUP] Exiting");
     return 0;
 }
+
+void testSystem() {
+    if(m->test()) {
+        printResult("[TEST] MotorCom active:", true);
+        printResult("[TEST] Serial open:", true);
+    } 
+    printResult("[TEST] PosControl active:", p->test()); //poscontrol test
+    printResult("[TEST] Read_thread running:", com_running);
+    printResult("[TEST] Pos_thread running:", p->running());
+    //print Vi
+    uint8_t voltage = m->getVoltage();
+    usleep(5000);
+    voltage = m->getVoltage();
+    printResult("[TEST] Voltage = " + std::to_string((int)voltage) +"v", (voltage > 20 && voltage < 25));
+
+    uint8_t error = m->getError();
+    usleep(5000);
+    error = m->getError();
+    printResult("[TEST] MD49_Error = " + std::to_string((int) error), (error == 0));
+
+    int acc = m->getAcceleration();
+    usleep(5000);
+    acc = m->getAcceleration();
+    printResult("[TEST] Acceleration = " + std::to_string((int) acc), (acc == ACCELERATION));
+    
+
+    int mode = m->getMode();
+    usleep(5000);
+    mode = m->getMode();
+    printResult("[TEST] Mode = " + std::to_string((int) mode), (mode == MODE));
+}
+
+void printResult(std::string text, bool success) {
+    if(success) {
+        std::cout << std::left << std::setw(30) << text
+             << std::right << std::setw(30) << "\033[0;32m[ok]\033[0m" << std::endl;
+    } else {
+        std::cout << std::left << std::setw(30) << text
+             << std::right << std::setw(30) << "\033[0;31m[fail]\033[0m"<< std::endl;
+    }
+}
+
+//#define PRINT_OK() std::cout << std::right << std::setw(40) << "\033[0;32m[ok]\033[0m" << std::endl;
+
+
+//#define PRINT_FAIL() std::cout << std::right << std::setw(40) << "\033[0;31m[fail]\033[0m" << std::endl; 
