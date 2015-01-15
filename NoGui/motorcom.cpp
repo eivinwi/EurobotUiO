@@ -13,33 +13,33 @@ MotorCom::~MotorCom() {
 
 void MotorCom::startSerial() {
 	if(simulating) {
-        DBP("[MOTOR] Starting serialsim\n")
+        DBP("   [MOTOR] Starting serialsim\n")
 		simport = new SerialSim;
 	} else {
         if(strcmp(serial_port, "") == 0) {
-            PRINTLINE("Error, empty serial_port. Setting to /dev/ttyACM0");
+            PRINTLINE("    Error, empty serial_port. Setting to /dev/ttyACM0");
             strcpy(serial_port, "ttyACM0");
         }     
-        PRINTLINE("[MOTOR] Starting serial at: " << serial_port)
+        PRINTLINE("    [MOTOR] Starting serial at: " << serial_port)
 		port = new Serial(serial_port);
 	}
 }
 
 
 void MotorCom::serialSimEnable() {
-    PRINTLINE("[MOTOR] Simulating=true\n");
+    PRINTLINE("    [MOTOR] Simulating=true\n");
 	simulating = true;
 }
 
 
 void MotorCom::serialSimDisable() {
-    DBP("[MOTOR] Simulating=false\n");
+    DBP("   [MOTOR] Simulating=false\n");
     simulating = false;
 }
 
 
 void MotorCom::setSerialPort(const char *s) {
-    DBPL("[MOTOR] serial_port=" << s)
+    DBPL("  [MOTOR] serial_port=" << s)
 	strcpy(serial_port, s);
 }
 
@@ -103,7 +103,7 @@ void MotorCom::setMode(uint8_t mode) {
 
 
 void MotorCom::resetEncoders() {
-    DBPL("[MOTOR] Resetting encoders");
+    DBPL("  [MOTOR] Resetting encoders");
     sync();
     writeToSerial(RESET_ENCODERS);
     prev_encL = 0;
@@ -192,7 +192,7 @@ uint8_t MotorCom::getMode() {
 uint8_t MotorCom::getVersion() {
     sync();
     writeToSerial(GET_VERSION);
-    int version = 0;
+    uint8_t version = 0;
     version = readFromSerial();
     return version;
 }
@@ -285,6 +285,19 @@ long MotorCom::readLongFromSerial() {
     }
 }
 
-bool MotorCom::testSerial() {
-    return true;
+void MotorCom::testSerial() {
+    if(simulating) {
+        PRINT_OK();   
+    } 
+    else {
+        int wat = getVersion();
+        usleep(1000);
+        wat = getVersion();
+        usleep(500);
+        if(wat == 2) {
+            PRINT_OK();
+        } else {
+            PRINT_FAIL();
+        }
+    }
 }

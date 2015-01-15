@@ -13,7 +13,7 @@
 #include "motorcom.h"
 #include "poscontrol.h"
 #include "printing.h"
-//#include "sound.h"
+//include "sound.h"
 #include "protocol.h"
 #include <string>
 #include <cstring>
@@ -358,20 +358,23 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    PRINTLINE("[SETUP] starting serial... ");
+    PRINTLINE("[SETUP] starting and flushing serial");
     m->startSerial();
-    usleep(10000);
+    usleep(100000);
+    m->flush();
+
     m->testSerial();
 
-    PRINTLINE("[SETUP] resetting encoders and flushing serial");
+    PRINTLINE("[SETUP] resetting encoders");
     m->resetEncoders();
-    PRINTLINE("[SETUP] Encoders reset");
+    PRINT_OK();
     usleep(5000);
-    m->flush();
 
 
     PRINTLINE("[SETUP] initializing PosControl");
     p = new PosControl(m, testing);
+
+
 
     PRINTLINE("[SETUP] initializing readLoop thread");
     input_pos.x = 0;
@@ -388,6 +391,8 @@ int main(int argc, char *argv[]) {
     PRINTLINE("[SETUP] initializing controlLoop thread");
     std::thread pos_thread(&PosControl::controlLoop, p);
     usleep(5000);
+
+    //m->testSerial();
 
     int acc2 = m->getAcceleration();
     PRINTLINE("[SETUP] Acceleration is: " << acc2 << ", setting new acceleration" << ACCELERATION);
