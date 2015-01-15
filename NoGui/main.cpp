@@ -399,7 +399,7 @@ int main(int argc, char *argv[]) {
 
     int acc2 = m->getAcceleration(); 
     if(acc2 != ACCELERATION) {
-        PRINTLINE("[SETUP] Acceleration is: " << acc2 << ", setting new acceleration" << ACCELERATION);
+        PRINTLINE("[SETUP] Acceleration is: " << acc2 << ", setting new acceleration: " << ACCELERATION);
         usleep(1000);
         m->setAcceleration(ACCELERATION);
     }
@@ -407,18 +407,19 @@ int main(int argc, char *argv[]) {
     usleep(1000);
     int mode = m->getAcceleration();
     if(mode != 0) {
-        PRINTLINE("[SETUP] Mode is: " << m << ", setting new mode" << MODE);
+        PRINTLINE("[SETUP] Mode is: " << m << ", setting new mode: " << MODE);
         usleep(1000);
         m->setMode(MODE);
     }
 
 
     PRINTLINE("[SETUP] done");
-    PRINTLINE("[SETUP] Testing components:");
+    PRINTLINE("[SETUP] Testing components:\n");
     testSystem();
 
 
-    TIMESTAMP("[SETUP] \nTesting completed, waiting for input");
+    PRINTLINE("");
+    TIMESTAMP("[SETUP] Testing completed, waiting for client input");
     if(read_thread.joinable()) {
         read_thread.join();
     }
