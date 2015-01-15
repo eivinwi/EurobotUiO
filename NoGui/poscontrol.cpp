@@ -23,7 +23,8 @@ struct qPos {
 };
 
 
-PosControl::PosControl(MotorCom *s) {
+PosControl::PosControl(MotorCom *s, bool test) {
+	testing = test;
 	com = s;
 	goalPos = new GoalPosition;
 	curPos = new Position;
@@ -91,6 +92,7 @@ void PosControl::setGoalRotation(int rot) {
 	goToRotation();
 }
 
+
 //CHECK: should check rotation? (probably not)
 // sets the new goal pos. 360* == 0*
 void PosControl::setGoalPosition(int x, int y) {
@@ -99,6 +101,7 @@ void PosControl::setGoalPosition(int x, int y) {
 	goToPosition();
 }
 
+
 //runs in its own thread, initialized in main.cpp
 void PosControl::controlLoop() {
 	while(true) {
@@ -106,12 +109,23 @@ void PosControl::controlLoop() {
 
 		//create goalPos from qp
 		goalPos = new GoalPosition(qp.id, qp.x, qp.y, qp.rot);
-		PRINTLINE("[POS] dequeued qPos {" << qp.id << "," << qp.x << "," << qp.y << "," << qp.rot << "," << qp.type << "}");	
+		if(!testing) {
+			PRINTLINE("[POS] dequeued qPos {" << qp.id << "," << qp.x << "," << qp.y << "," << qp.rot << "," << qp.type << "}");	
 
-		if(qp.type == ROTATION) {
-			goToRotation();
-		} else if(qp.type == POSITION) {
-			goToPosition();
+			if(qp.type == ROTATION) {
+				goToRotation();
+			} else if(qp.type == POSITION) {
+				goToPosition();
+			}
+		} 
+		else {
+			if(qp.type == ROTATION) {
+				curPos->setAngle(goalPos->getRotation());
+				completeCurrent();
+			} else if(qp.type == POSITION) {
+				curPos->set(goalPos->getX(), goalPos->getY(), curPos->getRotation());
+				completeCurrent();
+			}
 		}
 	}
 }
@@ -196,6 +210,7 @@ void PosControl::goToPosition() {
 	usleep(3000);
 }
 
+
 float PosControl::updateDist(float angle, float distX, float distY) {
 	if(sin_d(angle) == 0) {
 		return distX;
@@ -227,19 +242,14 @@ void PosControl::rotate(float distR) {
 			setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_POS);
 		}
 	}
-
-	//CHECK: too often?
-//	updateRotation();
 }
 
 
 void PosControl::drive(float dist) {	
 	float rotation = goalPos->getRotation();
 	if(closeEnoughAngle()) {
-		//PRINTLINE("[POS] driving with rotation:" << rotation << " dist:" << dist);
-		
+		//PRINTLINE("[POS] driving with rotation:" << rotation << " dist:" << dist);	
 		//reset encoders??
-
 		//unneccsary test?
 		if(!inGoal()) {
 
@@ -281,7 +291,12 @@ void PosControl::completeCurrent() {
 }
 
 
+int PosControl::getCurrentId() {
+	return goalPos->getId();
+}
+
 std::string PosControl::getCurrentPos() {
+	curPos->updatePosString();
 	std::stringstream ss;
 	if(working) {
 		ss << "w,";
@@ -328,43 +343,11 @@ void PosControl::updatePosition() {
 	float x_distance = cos_d(angle)*avg_dist; //45 = +
 	float y_distance = sin_d(angle)*avg_dist; //45 = +
 
-//CHECK: dont know if necessary
-//	if(goalPos->getRotation() < 180) {
-//		curPos->decrX( leftEncoder.diffDist );
-//	} else {
-/*	if(leftEncoder.diffDist < 0) {
-		curPos->incrX( x_distance );
-	} else {
-		curPos->decrX( x_distance );
-	} 
 
-	if(rightEncoder.diffDist > 0) {
-		curPos->incrY( y_distance );
-	} else {
-		curPos->decrY( y_distance );
-	}
-*/
-
-//	if(angle >= 0.0 && angle < 90) {
-		//++
-		curPos->incrX( x_distance );
-		curPos->incrY( y_distance );
-/*	} else if(angle >= 90 && angle < 180) {
-		//-+
-		curPos->decrX( x_distance );
-		curPos->incrY( y_distance );
-	} else if(angle >= 180 && angle < 270) {
-		//--
-		curPos->decrX( x_distance );
-		curPos->decrY( y_distance );
-	} else {
-		//+-
-		curPos->incrX( x_distance );
-		curPos->decrY( y_distance );
-
-	}
-*/
+	curPos->updateX( x_distance );
+	curPos->updateY( y_distance );
 }
+
 
 void PosControl::updateRotation() {
 	updateLeftEncoder();
@@ -375,6 +358,7 @@ void PosControl::updateRotation() {
 	// update angle
 	curPos->updateAngle(leftEncoder.diff, rightEncoder.diff);
 }
+
 
 void PosControl::updateEncoder(long e, struct encoder *enc) {
 	long diff = e - enc->prev;
@@ -412,6 +396,7 @@ void PosControl::updateRightEncoder() {
 	long enc = com->getEncR();
 	updateEncoder(enc, &rightEncoder);
 }
+
 
 void PosControl::resetEncoders() {
 	leftEncoder.prev = 0;
@@ -516,6 +501,7 @@ void PosControl::printDist() {
 	PRINTLINE("[POS] dist: " << distanceX() << "," << distanceY() << "," << distanceAngle());
 }
 
+
 void PosControl::setSpeed(int l, int r) {
 	if(curSpeedLeft != l) {
 		com->setSpeedL(l);
@@ -527,9 +513,11 @@ void PosControl::setSpeed(int l, int r) {
 	}
 }
 
+
 float PosControl::sin_d(float angle) {
 	return sin(angle*M_PI/180);
 }
+
 
 float PosControl::cos_d(float angle) {
 	return cos(angle*M_PI/180);

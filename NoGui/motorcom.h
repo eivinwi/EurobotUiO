@@ -4,6 +4,8 @@
  *
  * Implements a interface for working with the MD49 motor controller, either via serial
  * or serialsim (decided in main.cpp based on program arguments). 
+ *
+ * TODO: some of the methods should be private
  */
 
 #ifndef MOTORCOM_H
@@ -56,6 +58,7 @@ public:
     uint8_t readFromSerial();
     uint8_t readFromSerialNoWait();
     long readLongFromSerial();
+    bool testSerial();
 
 private:
     SerialSim *simport;

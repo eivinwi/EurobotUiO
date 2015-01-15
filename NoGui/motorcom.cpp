@@ -103,13 +103,11 @@ void MotorCom::setMode(uint8_t mode) {
 
 
 void MotorCom::resetEncoders() {
-    PRINTLINE("[MOTOR] re sync");
+    DBPL("[MOTOR] Resetting encoders");
     sync();
-    PRINTLINE("[MOTOR] Resetting encoders");
     writeToSerial(RESET_ENCODERS);
     prev_encL = 0;
     prev_encR = 0;
-    PRINTLINE("[MOTOR] Encoders reset");
 }
 
 
@@ -285,4 +283,8 @@ long MotorCom::readLongFromSerial() {
     } else {
         return port->readLong();
     }
+}
+
+bool MotorCom::testSerial() {
+    return true;
 }

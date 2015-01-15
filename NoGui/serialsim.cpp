@@ -124,7 +124,7 @@ void SerialSim::write(uint8_t arg) {
 				readCounter = 0;
 	        	break;
 	        default:
-	        	PRINTLINE("Invalid serial-cmd in [SIM] " << arg);
+	        	//PRINTLINE("Invalid serial-cmd in [SIM] " << arg);
 		    	break;
 
 		}

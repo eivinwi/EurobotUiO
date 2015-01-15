@@ -18,22 +18,19 @@ void Position::reset() {
 
 
 //should perhaps check x/y, but checking is also performed in PosControl
-void Position::set(int n_x, int n_y, float n_rotation) {	
+void Position::set(float n_x, float n_y, float n_rotation) {	
 	pos_mutex.lock();
-	x = static_cast<float>( n_x );
-	y = static_cast<float>( n_y );
+	x = n_x;
+	y = n_y;
 	setAngle(n_rotation);
 	pos_mutex.unlock();
 }
+
 
 void Position::setAngle(float angle) {
 	if(angle > 0 && angle <= 360) {
 		rotation->set(angle);
 	}	
-}
-
-void Position::updateEncoder() {
-	//TODO: move encoder updates in here?
 }
 
 
@@ -91,24 +88,15 @@ void Position::updateAngle(float leftDiff, float rightDiff) {
 }
 
 
-void Position::incrX(float dist) {
+void Position::updateX(float dist) {
 	x += dist;//*POS_DIR;
 }
 
 
-void Position::decrX(float dist) {
-	x -= dist;//*POS_DIR;
-}
-
-
-void Position::incrY(float dist) {
+void Position::updateY(float dist) {
 	y += dist;//*POS_DIR;
 }
 
-
-void Position::decrY(float dist) {
-	y -= dist;//*POS_DIR;
-}
 
 void Position::updatePosString() {
 	if(pos_mutex.try_lock()) {

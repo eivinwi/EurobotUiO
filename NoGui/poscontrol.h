@@ -24,7 +24,6 @@
 #include "position.h"
 #include "goalposition.h"
 #include "rotation.h"
-#include <iostream>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -55,8 +54,9 @@
 
 class PosControl {
 public:
-    PosControl(MotorCom *s);
+    PosControl(MotorCom *s, bool testing);
     ~PosControl();
+    void enableTesting();
     void controlLoop();
 	void enqueue(int id, int x, int y, float rot, int type);
 	struct qPos dequeue();
@@ -64,6 +64,8 @@ public:
     void resetPosition();
 	void setGoalRotation(int r);
 	void setGoalPosition(int x, int y);
+
+	int getCurrentId();
 	std::string getCurrentPos();
 	
 private:
@@ -122,6 +124,7 @@ private:
 	int curSpeedRight;
 
 	bool completed_actions[ACTION_STORAGE];
+	bool testing;
 };
 
 #endif /* POSCONTROL_H */

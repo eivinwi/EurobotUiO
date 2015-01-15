@@ -2,12 +2,13 @@
  * File: position.h
  * Author: Eivind Wikheim
  *
- * Contains the current estimated robot position, and functions for using/updating
- *
+ * Contains the current estimated robot position, and functions for using/updating.
+ * Is used by PosControl for calculating path, and is updated continuosly.
  */
 
 #ifndef POSITION_H
 #define POSITION_H
+
 #include "rotation.h"
 #include "md49.h"
 #include "printing.h"
@@ -16,25 +17,16 @@
 #include <string>
 #include <sstream>
 #include <math.h>
-#include <thread>
 #include <mutex>
 
 
-/* curPos - current estimated position based on dead reckoning with encoders. Is updated regularly to be Exactpos
- * ExactPos   - input position from SENS
- * GoalPos    - input from main or AI 
-*/
 class Position {
 public:
 	Position();
 	~Position();
 	void reset();
-	void set(int n_x, int n_y, float n_rotation);
+	void set(float n_x, float n_y, float n_rotation);
 	void setAngle(float angle);
-
-	//currently unused, done in poscontrol.h
-	void updateEncoder(); 
-	
 	float distanceX(float to);
 	float distanceY(float to);
 	float distanceRot(float to);
@@ -44,12 +36,12 @@ public:
 	float getY();
 	void updateAngle(float leftDiff, float rightDiff);
 	std::string getPosString();
-	void incrX(float dist);
-	void decrX(float dist);
-	void incrY(float dist);
-	void decrY(float dist);
-	void print();
+	
+	//update x/y based on encoder readings
+	void updateX(float dist);
+	void updateY(float dist);
 
+	void print();
 	void updatePosString();
 
 private:
