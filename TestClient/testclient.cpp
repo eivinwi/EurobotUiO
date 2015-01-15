@@ -11,40 +11,26 @@
 int main (int argc, char *argv[])
 {
 	//default testing:
-	std::string position = "0,0";
+	std::string position = "";
 
-	if(argc < 2) {
-		std::cout << "Too few arguments: " << argc <<  ". Either <x y> or  <r>. " << std::endl;
-		std::cout << "Example usage: <50 0> for position, <90> for rotation " << std::endl; 
-		return 0;
-	} 
-	else if(argc == 2) {
-		//rotation
-		if(atoi(argv[1]) > 360 || atoi(argv[1]) < 0) {
-			std::cout << "argv[1] not an angle: " << argv[1] << "=" << atoi(argv[1]) << std::endl;
-			return 0;
-		} else {
-			position = argv[1];
-		}
-	} else if(argc == 3) {
-		//position
-		if(atoi(argv[1]) > 3000) {
-			std::cout << "argv[1] too large: " << argv[1] << "=" << atoi(argv[1]) << std::endl;
-			return 0;
-		}
-		if(abs(atoi(argv[2])) > 3000) {
-			std::cout << "argv[2] too large: " << argv[2] << "=" << atoi(argv[2]) << std::endl;
-			return 0;
-		}
+	std::stringstream ss;
 
-		std::stringstream ss;
-		ss << argv[1] << "," << argv[2];
-		position = ss.str();
-		
-	} else {
-		std::cout << "Too many arguments: " << argc << ". Either <x y> or  <r>. " << std::endl;
-		std::cout << "Example usage: <50 0> for position, <90> for rotation " << std::endl; 		
+	if(argc == 1 || argc > 5) {
+		std::cout << "Wrong number of arguments: " << argc << std::endl;
 	}
+	if(argc > 1) {
+		ss << argv[1];//argv[1];
+	} 
+	if(argc > 2) {
+		ss << "," << argv[2];
+	}
+	if(argc > 3) {
+		ss << "," << argv[3];
+	} 
+	if(argc > 4) {
+		ss << "," << argv[4]; 
+	}
+	position = ss.str();
 
 
 	// Prepare our context and socket
