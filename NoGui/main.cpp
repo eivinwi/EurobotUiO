@@ -46,7 +46,7 @@ PosControl *p;
 std::mutex read_mutex;
 
 int ACCELERATION = 3;
-int MODE = 1;
+int MODE = 0;
 bool sound_enabled = false;
 bool com_running = false;
 
