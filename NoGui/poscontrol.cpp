@@ -305,11 +305,6 @@ int PosControl::getCurrentId() {
 std::string PosControl::getCurrentPos() {
 	curPos->updatePosString();
 	std::stringstream ss;
-	if(working) {
-		ss << "w,";
-	} else {
-		ss << "s,";
-	}
 	ss << curPos->getPosString();
 	return ss.str();
 }
