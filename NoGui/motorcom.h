@@ -59,6 +59,7 @@ public:
     uint8_t readFromSerial();
     uint8_t readFromSerialNoWait();
     long readLongFromSerial();
+    bool isSimulating();
 
 private:
     SerialSim *simport;

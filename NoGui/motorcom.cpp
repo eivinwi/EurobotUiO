@@ -301,3 +301,7 @@ long MotorCom::readLongFromSerial() {
         return port->readLong();
     }
 }
+
+bool MotorCom::isSimulating() {
+    return simulating;
+}

@@ -430,7 +430,8 @@ void testSystem() {
 
     if(m->test()) {
         printResult("[TEST] MotorCom active", true);
-        printResult("[TEST] Serial open", true);
+        if(m->isSimulating()) printResult("[TEST] Serial open", true);
+        else           printResult("[TEST] Serial open (sim)", true);
     } 
     printResult("[TEST] PosControl active", p->test()); //poscontrol test
     printResult("[TEST] Read_thread running", com_running);
