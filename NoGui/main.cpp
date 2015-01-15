@@ -412,11 +412,7 @@ int main(int argc, char *argv[]) {
         m->setMode(MODE);
     }
 
-
-    PRINTLINE("[SETUP] done");
-    PRINTLINE("[SETUP] Testing components:\n");
     testSystem();
-
 
     PRINTLINE("");
     TIMESTAMP("[SETUP] Testing completed, waiting for client input");
@@ -430,13 +426,15 @@ int main(int argc, char *argv[]) {
 }
 
 void testSystem() {
+    PRINTLINE("[SETUP] Complete, testing components:\n");
+
     if(m->test()) {
-        printResult("[TEST] MotorCom active:", true);
-        printResult("[TEST] Serial open:", true);
+        printResult("[TEST] MotorCom active", true);
+        printResult("[TEST] Serial open", true);
     } 
-    printResult("[TEST] PosControl active:", p->test()); //poscontrol test
-    printResult("[TEST] Read_thread running:", com_running);
-    printResult("[TEST] Pos_thread running:", p->running());
+    printResult("[TEST] PosControl active", p->test()); //poscontrol test
+    printResult("[TEST] Read_thread running", com_running);
+    printResult("[TEST] Pos_thread running", p->running());
     //print Vi
     uint8_t voltage = m->getVoltage();
     usleep(5000);
