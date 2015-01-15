@@ -263,7 +263,7 @@ void PosControl::drive(float dist) {
 			if(dist < 0) {
 				if(dist > SLOWDOWN_DISTANCE) {
 					//PRINTLINE("FULLSPEED REVERSE");
-					setSpeed(SPEED_MED_NEG, SPEED_MED_NEG);
+					setSpeed(SPEED_MAX_NEG, SPEED_MAX_NEG);
 				} else {
 					//PRINTLINE("SLOW REVERSE");
 					setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
@@ -272,7 +272,7 @@ void PosControl::drive(float dist) {
 			else {
 				if(dist < -SLOWDOWN_DISTANCE) {
 					//PRINTLINE("FULLSPEED FORWARD");
-					setSpeed(SPEED_MED_POS, SPEED_MED_POS);
+					setSpeed(SPEED_MAX_POS, SPEED_MAX_POS);
 				} else {
 					//PRINTLINE("SLOW FORWARD");					
 					setSpeed(SPEED_SLOW_POS, SPEED_SLOW_POS);
