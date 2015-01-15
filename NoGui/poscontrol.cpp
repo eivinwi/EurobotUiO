@@ -112,6 +112,7 @@ void PosControl::controlLoop() {
 	pos_running = true;
 	while(true) {
 		qPos qp = dequeue();
+		working = true;
 
 		//create goalPos from qp
 		goalPos = new GoalPosition(qp.id, qp.x, qp.y, qp.rot);
@@ -140,7 +141,6 @@ void PosControl::controlLoop() {
 
 void PosControl::goToRotation() {
 	PRINTLINE("[POS] goToRotation " << curPos->getRotation() << "->" << goalPos->getRotation());
-
 	resetEncoders(); //here??	 
 	float distR = 0.0;
 //	bool rotated = false;
@@ -290,6 +290,7 @@ void PosControl::drive(float dist) {
 
 
 void PosControl::completeCurrent() {
+	working = false;
 	PRINTLINE("[POS] action " << goalPos->getId() << " completed.");	
 	if(completed_actions[goalPos->getId()]) {
 		PRINTLINE("[POS] action " << goalPos->getId() << " was already finished.");
@@ -305,6 +306,11 @@ int PosControl::getCurrentId() {
 std::string PosControl::getCurrentPos() {
 	curPos->updatePosString();
 	std::stringstream ss;
+	if(working) {
+		ss << "w,";
+	} else {
+		ss << "s,";
+	}
 	ss << curPos->getPosString();
 	return ss.str();
 }
