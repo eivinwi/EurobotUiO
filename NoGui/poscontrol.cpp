@@ -31,7 +31,7 @@ PosControl::PosControl(MotorCom *s, bool test) {
 	goalPos = new GoalPosition;
 	curPos = new Position;
 	exactPos = new Position;
-	resetPosition();
+	reset();
 }
 
 
@@ -39,7 +39,7 @@ PosControl::~PosControl() {
 }
 
 
-void PosControl::resetPosition() {
+void PosControl::reset() {
 	curPos->reset();
 	goalPos->reset();
 	
@@ -61,6 +61,9 @@ void PosControl::resetPosition() {
 	itr = 0;
 
 	std::fill(std::begin(completed_actions), std::end(completed_actions), false);
+	while(!q.empty()) {
+		q.pop();
+	}
 }
 
 bool PosControl::test() {

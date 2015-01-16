@@ -36,7 +36,7 @@
 #include <mutex>
 #include <condition_variable>
 
-#define PI 3.14159265
+//#define PI 3.14159265
 
 // Game area resolution in mm:
 #define XRES 30000
@@ -56,13 +56,14 @@ class PosControl {
 public:
     PosControl(MotorCom *s, bool testing);
     ~PosControl();
+    void reset();
     bool test();
+
     void enableTesting();
     void controlLoop();
 	void enqueue(int id, int x, int y, float rot, int type);
 	struct qPos dequeue();
 
-    void resetPosition();
 	void setGoalRotation(int r);
 	void setGoalPosition(int x, int y);
 

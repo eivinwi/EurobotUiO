@@ -133,6 +133,7 @@ void readLoop() {
                     case RESET_ALL: 
                         //order to reset all
                         TIMESTAMP("[COM]  Received RESET_ALL");
+                        p->reset();
                         reply_str = "ok";
                         break;
                     case SET_ROTATION: 
@@ -162,7 +163,7 @@ void readLoop() {
                         break;
                     default:
                         TIMESTAMP("[COM] invalid command: " << args[0]);
-                        reply_str = "ok";
+                        reply_str = "no";
                         break;
                 }                
             } 
