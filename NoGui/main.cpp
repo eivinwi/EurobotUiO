@@ -144,6 +144,7 @@ void readLoop() {
                         TIMESTAMP("[COM]  Received SET_POSITION(id=" << args[1] << ", x=" << args[2] << ", y=" << args[3] << ")");
                         enqPosition(num_args, args);
                         reply_str = "ok";
+                        break;
                     case LIFT: 
                         TIMESTAMP("[COM]  Received LIFT");
                         //TODO

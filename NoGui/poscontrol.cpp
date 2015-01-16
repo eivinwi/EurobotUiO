@@ -2,7 +2,7 @@
 /*TODO: 	
  	- use IMU for angle untill beacon system is workinh
  	- should continually check angle instead of once!! (impossible with only encoders)
-	- pooling wait has poor performance
+	- pooling wait has poor performance (?)
 
 	- Overshoot protection
 */
