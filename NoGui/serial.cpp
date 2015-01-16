@@ -128,11 +128,11 @@ bool Serial::available() {
 
 
 void Serial::printAll() {
-    PRINT("Flushed serial: [");
+    DBP("Flushed serial: [");
     while(serial.rdbuf()->in_avail()) {
         uint8_t b = serial.get();
-        PRINT((int) b);
+        DBP((int) b);
         (void) b;
     }
-    PRINTLINE("]");
+    DBPL("]");
 }
