@@ -149,8 +149,8 @@ void PosControl::goToRotation() {
 	resetEncoders(); //here??	 
 	float distR = 0.0;
 //	bool rotated = false;
-	if(closeEnoughX() && closeEnoughY() && !closeEnoughAngle()) {
-		
+//	if(closeEnoughX() && closeEnoughY() && !closeEnoughAngle()) {
+	if(!closeEnoughAngle()) {
 		do {
 
 			distR = distanceAngle();
@@ -165,7 +165,8 @@ void PosControl::goToRotation() {
 	else {
 		fullStop();
 		completeCurrent();
-		PRINTLINE("[POS] 	already at specified rotation: " << curPos->getAngle() << "=" << goalPos->getAngle());
+		PRINTLINE("cx: " << distanceX() << " cy: " << distanceY() << " cr: " << distanceAngle());
+		PRINTLINE("[POS] 	already at specified rotation(" << goalPos->getId() << "): " << curPos->getAngle() << "=" << goalPos->getAngle());
 		usleep(3000);
 	}
 }
@@ -407,16 +408,16 @@ void PosControl::updateEncoder(long e, struct encoder *enc) {
 
 
 void PosControl::updateLeftEncoder() {
-	DBPL("[POS]updating left encoder");
-	com->flush(); //unnecessary?
+	//PRINTLINE("[POS]updating left encoder");
+	//com->flush(); //unnecessary?
 	long enc = com->getEncL();
 	updateEncoder(enc, &leftEncoder);
 }
 
 
 void PosControl::updateRightEncoder() {
-	DBPL("[POS]updating right encoder");
-	com->flush(); //unnecessary?
+	//DBPL("[POS]updating right encoder");
+	//com->flush(); //unnecessary?
 	long enc = com->getEncR();
 	updateEncoder(enc, &rightEncoder);
 }
