@@ -135,7 +135,7 @@ void PosControl::controlLoop() {
 				curPos->setAngle(goalPos->getAngle());
 				completeCurrent();
 			} else if(qp.type == POSITION) {
-				curPos->set(goalPos->getX(), goalPos->getY(), curPos->getRotation());
+				curPos->set(goalPos->getX(), goalPos->getY(), curPos->getAngle());
 				completeCurrent();
 			}
 		}
@@ -145,7 +145,7 @@ void PosControl::controlLoop() {
 
 
 void PosControl::goToRotation() {
-	PRINTLINE("[POS] goToRotation " << curPos->getRotation() << "->" << goalPos->getAngle());
+	PRINTLINE("[POS] goToRotation " << curPos->getAngle() << "->" << goalPos->getAngle());
 	resetEncoders(); //here??	 
 	float distR = 0.0;
 //	bool rotated = false;
@@ -160,12 +160,13 @@ void PosControl::goToRotation() {
 		} while(!closeEnoughAngle());
 		completeCurrent();
 		fullStop();		
-		PRINTLINE("[POS] 	rotation finished: " << curPos->getRotation() << "=" << goalPos->getAngle());		
+		PRINTLINE("[POS] 	rotation finished: " << curPos->getAngle() << "=" << goalPos->getAngle());		
 	} 
 	else {
 		fullStop();
 		completeCurrent();
-		PRINTLINE("[POS] 	already at specified rotation: " << curPos->getRotation() << "=" << goalPos->getAngle());
+		PRINTLINE("[POS] 	already at specified rotation: " << curPos->getAngle() << "=" << goalPos->getAngle());
+		usleep(3000);
 	}
 }
 
@@ -198,7 +199,7 @@ void PosControl::goToPosition() {
 			distR = distanceAngle();
 			dist = updateDist(angle, distX, distY);
 
-			//PRINTLINE("CURRENT: " << curPos->getX() << " | " << curPos->getY() << " | " << curPos->getRotation());
+			//PRINTLINE("CURRENT: " << curPos->getX() << " | " << curPos->getY() << " | " << curPos->getAngle());
 			printCurrent();
 
 			if(!closeEnoughAngle()) {
@@ -216,9 +217,8 @@ void PosControl::goToPosition() {
 	}
 
 	fullStop();
-	PRINTLINE("[POS] IN GOAL!  (" << curPos->getX() << " , " << goalPos->getX() << ") ~= (" << curPos->getY() << " , " << goalPos->getY() << ")");
- 
 	completeCurrent();
+	PRINTLINE("[POS] IN GOAL!  (" << curPos->getX() << " , " <<  curPos->getY() << ") ~= (" << goalPos->getX() << " , " << goalPos->getY() << ")");
 	usleep(3000);
 }
 

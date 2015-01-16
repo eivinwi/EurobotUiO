@@ -428,6 +428,8 @@ int main(int argc, char *argv[]) {
 }
 
 void testSystem() {
+    usleep(20000);
+    m->flush();
     PRINTLINE("[SETUP] Complete, testing components:\n");
 
     if(m->test()) {
@@ -438,26 +440,16 @@ void testSystem() {
     printResult("[TEST] PosControl active", p->test()); //poscontrol test
     printResult("[TEST] Read_thread running", com_running);
     printResult("[TEST] Pos_thread running", p->running());
-    //print Vi
+
     uint8_t voltage = m->getVoltage();
-    usleep(5000);
-    voltage = m->getVoltage();
     printResult("[TEST] Voltage = " + std::to_string((int)voltage) +"v", (voltage > 20 && voltage < 25));
-
     uint8_t error = m->getError();
-    usleep(5000);
-    error = m->getError();
     printResult("[TEST] MD49_Error = " + std::to_string((int) error), (error == 0));
-
     int acc = m->getAcceleration();
-    usleep(5000);
-    acc = m->getAcceleration();
     printResult("[TEST] Acceleration = " + std::to_string((int) acc), (acc == ACCELERATION));
     
 
     int mode = m->getMode();
-    usleep(5000);
-    mode = m->getMode();
     printResult("[TEST] Mode = " + std::to_string((int) mode), (mode == MODE));
 }
 

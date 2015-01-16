@@ -54,7 +54,7 @@ double Position::timeSinceUpdate() {
 }
 
 
-float Position::getRotation() {
+float Position::getAngle() {
 	return rotation->get();
 }
 
@@ -78,7 +78,7 @@ std::string Position::getPosString() {
 
 
 void Position::print() {
-	PRINTLINE("x:" << x << " y:" << y << " r:" << getRotation());
+	PRINTLINE("x:" << x << " y:" << y << " r:" << getAngle());
 }
 
 
@@ -104,7 +104,7 @@ void Position::updatePosString() {
 		std::stringstream ss;
 		ss << (int) floor(x) << ",";
 		ss << (int) floor(y) << ",";
-		ss << (int) floor(getRotation());
+		ss << (int) floor(getAngle());
 		pos_string = ss.str();
 		pos_mutex.unlock(); 
 	}

@@ -85,4 +85,8 @@ This means:
  */
 #define ENCODER_CONSTANT 0.40
 
+
+#define MAX_WAIT 2000
+#define SERIAL_DELAY 500
+
 #endif /* MD49_H */

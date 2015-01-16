@@ -31,7 +31,7 @@ public:
 	float distanceY(float to);
 	float distanceRot(float to);
 	double timeSinceUpdate();
-	float getRotation();
+	float getAngle();
 	float getX();
 	float getY();
 	void updateAngle(float leftDiff, float rightDiff);

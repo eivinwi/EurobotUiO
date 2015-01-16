@@ -109,7 +109,8 @@ uint8_t MotorCom::getSpeedR() {
 uint8_t MotorCom::getAcceleration() {
     sync();
     writeToSerial(GET_ACCELERATION);
-    return readFromSerial();
+    uint8_t acc = readFromSerial(); 
+    return acc;
 }
 
 
@@ -117,18 +118,23 @@ uint8_t MotorCom::getVoltage() {
     DBPL("[MOTOR] getVoltage");
     sync();
     writeToSerial(GET_VOLT);
-    int volt = 0;
-    volt = readFromSerial(); //readNoWait();
-    DBPL("[MOTOR] volt: " << volt << " (int val is: " << (int) volt << ")");
+//    usleep(4000);
+   // flush();
+     //   usleep(1000);
+    //flush();
+      //  usleep(1000);
+  //  flush();
+    PRINTLINE("Moving on");
+    int volt = readFromSerial(); //readNoWait();
+    PRINTLINE("[MOTOR] volt: " << volt << " (int val is: " << (int) volt << ")");
     return volt;
 }
 
 
 long MotorCom::getVi() {
-    long vi = 0;
     sync();
     writeToSerial(GET_VI);
-    vi = readLongFromSerial();
+    long vi = readLongFromSerial();
     return vi;
 }
 
@@ -136,8 +142,7 @@ long MotorCom::getVi() {
 uint8_t MotorCom::getMode() {
     sync();
     writeToSerial(GET_MODE);
-    int mode = 0;
-    mode = readFromSerial();
+    int mode = readFromSerial();
     return mode;
 }
 
@@ -145,8 +150,7 @@ uint8_t MotorCom::getMode() {
 uint8_t MotorCom::getVersion() {
     sync();
     writeToSerial(GET_VERSION);
-    uint8_t version = 0;
-    version = readFromSerial();
+    uint8_t version = readFromSerial();
     return version;
 }
 
@@ -154,8 +158,7 @@ uint8_t MotorCom::getVersion() {
 uint8_t MotorCom::getError() {
     sync();
     writeToSerial(GET_ERROR);
-    uint8_t error = 0;
-    error = readFromSerial();
+    uint8_t error = readFromSerial();
     return error;
 }
 
