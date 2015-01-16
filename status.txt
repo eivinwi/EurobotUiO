@@ -1,21 +1,25 @@
+TODO:
+move remaining comments to headers
+
+--------------------------------
 DONE
 printing
 md49
+goalposition
 
-
-WORKING
+ALMOST DONE
+position + rotation
 serial
 motorcom
+
+NEEDS TESTING
+poscontrol
 
 UNFINISHED
 serialsim
 sound
 
 
-NEEDS POLISH
-poscontrol
 
-UNKNOWN: 
-	position     (done?)
-	goalposition (done?)
-		rotation (done?)
+TODO: 
+- perhaps avoid adding improbable encoder readings
