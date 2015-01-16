@@ -50,11 +50,6 @@ void GoalPosition::set(float n_x, float n_y, float n_rotation) {
 }
 
 
-float GoalPosition::getRotation() {
-	return rotation;
-}
-
-
 int GoalPosition::getId() {
 	return id;
 }
@@ -62,6 +57,11 @@ int GoalPosition::getId() {
 
 float GoalPosition::getX() {
 	return x;
+}
+
+
+float GoalPosition::getAngle() {
+	return rotation;
 }
 
 

@@ -69,7 +69,6 @@ float Position::getY() {
 }
 
 
-//used externally
 std::string Position::getPosString() {
 	pos_mutex.lock();
 	std::string pos = pos_string;

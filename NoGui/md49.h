@@ -53,19 +53,20 @@ This means:
 #define SPEED_MED_POS 192
 #define SPEED_MAX_POS 255
 */
-#define SPEED_MAX_NEG 255
+#define SPEED_MAX_NEG 235
 #define SPEED_MED_NEG 192
 #define SPEED_SLOW_NEG 160
 #define SPEED_STOP 128
 #define SPEED_SLOW_POS 96
 #define SPEED_MED_POS 64
-#define SPEED_MAX_POS 0
+#define SPEED_MAX_POS 20
 //*/
 
 #define POS_DIR (-1) //-1
 
 
-#define SLOWDOWN_DISTANCE 40
+#define SLOWDOWN_MAX_DIST 120
+#define SLOWDOWN_MED_DIST 60
 #define SLOWDOWN_DISTANCE_ROT 10
 
 #define TURNING 0
@@ -73,7 +74,7 @@ This means:
 #define DRIVE_Y 2
 
 #define ROTATION_CLOSE_ENOUGH 1.0
-#define POSITION_CLOSE_ENOUGH 1.0
+#define POSITION_CLOSE_ENOUGH 2.0
 
 
 /*

@@ -1,5 +1,6 @@
 #include "motorcom.h"
 
+
 MotorCom::MotorCom() {
     prev_encL = 0;
     prev_encR = 0;
@@ -9,6 +10,7 @@ MotorCom::MotorCom() {
 
 MotorCom::~MotorCom() {
 }
+
 
 bool MotorCom::test() {
     if(simulating) {
@@ -111,70 +113,6 @@ uint8_t MotorCom::getAcceleration() {
 }
 
 
-//input 0 [default], 1, 2 or 3
-void MotorCom::setMode(uint8_t mode) {
-    sync();
-    writeToSerial(SET_MODE);
-    writeToSerial(mode);
-}
-
-
-void MotorCom::resetEncoders() {
-    DBPL("  [MOTOR] Resetting encoders");
-    sync();
-    writeToSerial(RESET_ENCODERS);
-    prev_encL = 0;
-    prev_encR = 0;
-}
-
-
-/*
- * Encoder counts: 980 per output shaft turn
- * Wheel diameter: 120mm
- * Wheel circumference: 377mm
- * Distance per count: 0.385mm
- */
-void MotorCom::getEncoders() {
-    sync();
-    writeToSerial(GET_ENCODERS);
-    flush();
-    long result1;
-    long result2;
-    result1 = readFromSerial() << 24ul;
-    result1 += readFromSerialNoWait() << 16ul;
-    result1 += readFromSerialNoWait() << 8ul;
-    result1 += readFromSerialNoWait();
-
-    result2 = readFromSerialNoWait() << 24ul;
-    result2 += readFromSerialNoWait() << 16ul;
-    result2 += readFromSerialNoWait() << 8ul;
-    result2 += readFromSerialNoWait();
-    DBPL("[MOTOR] EncL: " << result1 << "\nEncR" << result2); 
-}
-
-
-long MotorCom::getEncL() {
-    sync();
-    writeToSerial(GET_ENCODERL);
-    long result = readLongFromSerial();
-    DBPL("[MOTOR] EncL: " << result << " (diff: " << (result - prev_encL) << ")\nWheel rotations: " <<  ((result-prev_encL)/980.0) << 
-                "\nDistance: " << (result - prev_encL)*0.385);
-    prev_encL = result;
-    return result;
-}
-
-
-long MotorCom::getEncR() {
-    sync();
-    writeToSerial(GET_ENCODERR);
-    long result = readLongFromSerial();
-    DBPL("[MOTOR] EncR: " << result << " (diff: " << (result - prev_encR) << ")\nWheel rotations: " 
-        << ((result - prev_encL)/980.0) << "\nDistance: " << ((result - prev_encR)*0.385));
-    prev_encR = result;
-    return result;
-}
-
-
 uint8_t MotorCom::getVoltage() {
     DBPL("[MOTOR] getVoltage");
     sync();
@@ -190,9 +128,7 @@ long MotorCom::getVi() {
     long vi = 0;
     sync();
     writeToSerial(GET_VI);
-    vi = readFromSerial() << 16ul;
-    vi += readFromSerialNoWait() << 8ul;
-    vi += readFromSerialNoWait();
+    vi = readLongFromSerial();
     return vi;
 }
 
@@ -224,9 +160,75 @@ uint8_t MotorCom::getError() {
 }
 
 
-void MotorCom::enableReg(bool b) {
+//input 0 [default], 1, 2 or 3
+void MotorCom::setMode(uint8_t mode) {
     sync();
-    if(b) {
+    writeToSerial(SET_MODE);
+    writeToSerial(mode);
+}
+
+
+void MotorCom::resetEncoders() {
+    DBPL("  [MOTOR] Resetting encoders");
+    sync();
+    writeToSerial(RESET_ENCODERS);
+    prev_encL = 0;
+    prev_encR = 0;
+}
+
+
+/* unused?
+ *
+ * Encoder counts: 980 per output shaft turn
+ * Wheel diameter: 120mm
+ * Wheel circumference: 377mm
+ * Distance per count: 0.385mm
+ */
+void MotorCom::getEncoders() {
+    sync();
+    writeToSerial(GET_ENCODERS);
+    flush();
+    long result1;// = readLongFromSerial();
+    long result2;// = readLongFromSerial();
+    result1 = readFromSerial() << 24ul;
+    result1 += readFromSerialNoWait() << 16ul;
+    result1 += readFromSerialNoWait() << 8ul;
+    result1 += readFromSerialNoWait();
+
+
+    result2 = readFromSerialNoWait() << 24ul;
+    result2 += readFromSerialNoWait() << 16ul;
+    result2 += readFromSerialNoWait() << 8ul;
+    result2 += readFromSerialNoWait();
+    DBPL("[MOTOR] EncL: " << result1 << "\nEncR" << result2); 
+}
+
+
+long MotorCom::getEncL() {
+    sync();
+    writeToSerial(GET_ENCODERL);
+    long result = readLongFromSerial();
+    DBPL("[MOTOR] EncL: " << result << " (diff: " << (result - prev_encL) << ")\nWheel rotations: " <<  ((result-prev_encL)/980.0) << 
+                "\nDistance: " << (result - prev_encL)*0.385);
+    prev_encL = result;
+    return result;
+}
+
+
+long MotorCom::getEncR() {
+    sync();
+    writeToSerial(GET_ENCODERR);
+    long result = readLongFromSerial();
+    DBPL("[MOTOR] EncR: " << result << " (diff: " << (result - prev_encR) << ")\nWheel rotations: " 
+        << ((result - prev_encR)/980.0) << "\nDistance: " << ((result - prev_encR)*0.385));
+    prev_encR = result;
+    return result;
+}
+
+
+void MotorCom::enableReg(bool enable) {
+    sync();
+    if(enable) {
         writeToSerial(ENABLE_REGULATOR);
     } else {
         writeToSerial(DISABLE_REGULATOR);
@@ -234,9 +236,9 @@ void MotorCom::enableReg(bool b) {
 }
 
 
-void MotorCom::enableTimeout(bool b) {
+void MotorCom::enableTimeout(bool enable) {
     sync();
-    if(b) {
+    if(enable) {
         writeToSerial(ENABLE_TIMEOUT);
     } else {
         writeToSerial(DISABLE_TIMEOUT);
@@ -301,6 +303,7 @@ long MotorCom::readLongFromSerial() {
         return port->readLong();
     }
 }
+
 
 bool MotorCom::isSimulating() {
     return simulating;

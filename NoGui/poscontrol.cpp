@@ -3,6 +3,8 @@
  	- use IMU for angle untill beacon system is workinh
  	- should continually check angle instead of once!! (impossible with only encoders)
 	- pooling wait has poor performance
+
+	- Overshoot protection
 */
 
 struct encoder {
@@ -127,7 +129,7 @@ void PosControl::controlLoop() {
 		} 
 		else {
 			if(qp.type == ROTATION) {
-				curPos->setAngle(goalPos->getRotation());
+				curPos->setAngle(goalPos->getAngle());
 				completeCurrent();
 			} else if(qp.type == POSITION) {
 				curPos->set(goalPos->getX(), goalPos->getY(), curPos->getRotation());
@@ -140,7 +142,7 @@ void PosControl::controlLoop() {
 
 
 void PosControl::goToRotation() {
-	PRINTLINE("[POS] goToRotation " << curPos->getRotation() << "->" << goalPos->getRotation());
+	PRINTLINE("[POS] goToRotation " << curPos->getRotation() << "->" << goalPos->getAngle());
 	resetEncoders(); //here??	 
 	float distR = 0.0;
 //	bool rotated = false;
@@ -155,12 +157,12 @@ void PosControl::goToRotation() {
 		} while(!closeEnoughAngle());
 		completeCurrent();
 		fullStop();		
-		PRINTLINE("[POS] 	rotation finished: " << curPos->getRotation() << "=" << goalPos->getRotation());		
+		PRINTLINE("[POS] 	rotation finished: " << curPos->getRotation() << "=" << goalPos->getAngle());		
 	} 
 	else {
 		fullStop();
 		completeCurrent();
-		PRINTLINE("[POS] 	already at specified rotation: " << curPos->getRotation() << "=" << goalPos->getRotation());
+		PRINTLINE("[POS] 	already at specified rotation: " << curPos->getRotation() << "=" << goalPos->getAngle());
 	}
 }
 
@@ -201,7 +203,7 @@ void PosControl::goToPosition() {
 				rotate(distR);
 				updateRotation();
 			} else {
-				curPos->setAngle(goalPos->getRotation()); 
+				curPos->setAngle(goalPos->getAngle()); 
 				//PRINTLINE("[LOOP] DRIVE: " << distX << "," << distY);
 				drive(dist);
 				updatePosition();
@@ -251,9 +253,10 @@ void PosControl::rotate(float distR) {
 	}
 }
 
-
+//something is very wrong
 void PosControl::drive(float dist) {	
-	float rotation = goalPos->getRotation();
+	PRINTLINE("DISTR: " << dist);
+	float rotation = goalPos->getAngle();
 	if(closeEnoughAngle()) {
 		//PRINTLINE("[POS] driving with rotation:" << rotation << " dist:" << dist);	
 		//reset encoders??
@@ -261,20 +264,26 @@ void PosControl::drive(float dist) {
 		if(!inGoal()) {
 
 			if(dist < 0) {
-				if(dist > SLOWDOWN_DISTANCE) {
-					//PRINTLINE("FULLSPEED REVERSE");
+				if(dist < -SLOWDOWN_MAX_DIST) {
+					PRINTLINE("FULLSPEED REVERSE");
 					setSpeed(SPEED_MAX_NEG, SPEED_MAX_NEG);
+				} else if(dist < -SLOWDOWN_MED_DIST) {
+					PRINTLINE("HALFSPEED REVERSE");
+					setSpeed(SPEED_MED_NEG, SPEED_MED_NEG);					
 				} else {
-					//PRINTLINE("SLOW REVERSE");
+					PRINTLINE("SLOW REVERSE");
 					setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
 				}
 			}
 			else {
-				if(dist < -SLOWDOWN_DISTANCE) {
-					//PRINTLINE("FULLSPEED FORWARD");
+				if(dist > SLOWDOWN_MAX_DIST) {
+					PRINTLINE("FULLSPEED FORWARD");
 					setSpeed(SPEED_MAX_POS, SPEED_MAX_POS);
+				} else if(dist > SLOWDOWN_MED_DIST) {
+					PRINTLINE("HALFSPEED FORWARD");
+					setSpeed(SPEED_MED_POS, SPEED_MED_POS);
 				} else {
-					//PRINTLINE("SLOW FORWARD");					
+					PRINTLINE("SLOW FORWARD");					
 					setSpeed(SPEED_SLOW_POS, SPEED_SLOW_POS);
 				}
 			}
@@ -283,7 +292,7 @@ void PosControl::drive(float dist) {
 		}
 	} 
 	else {
-		PRINTLINE("[POS] ERROR; cur->angle is" << rotation << " should be " << goalPos->getRotation() << ". Attemting to fix by turning");
+		PRINTLINE("[POS] ERROR; cur->angle is" << rotation << " should be " << goalPos->getAngle() << ". Attemting to fix by turning");
 		PRINTLINE("[POS] Scratch that last part, fixing is not yet implemented.");	
 	}
 }
@@ -340,7 +349,7 @@ void PosControl::updatePosition() {
 	
 	DBPL("[POS] encoders updated");
 	
-	float angle = goalPos->getRotation();
+	float angle = goalPos->getAngle();
 //	angle = 0.0;
 
 	int ediff = encoderDifference();
@@ -449,7 +458,7 @@ float PosControl::distanceY() {
  * <0 : goal angle in negative direction
  */
 float PosControl::distanceAngle() {
-	float dist = curPos->distanceRot(goalPos->getRotation());
+	float dist = curPos->distanceRot(goalPos->getAngle());
 	return dist;
 }
 

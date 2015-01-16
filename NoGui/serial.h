@@ -43,11 +43,11 @@ public:
     uint8_t readNoWait();
     uint8_t read();
     long readLong();
-    bool available();
     void printAll();
 
 
 private:
+    bool available();
     SerialStream serial;
 //    SerialPort serial;
 

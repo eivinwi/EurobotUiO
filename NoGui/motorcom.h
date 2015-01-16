@@ -36,32 +36,36 @@ public:
     void setSpeedL(uint8_t speed);
     void setSpeedR(uint8_t speed);
     void setSpeedBoth(uint8_t speed);
+    void resetEncoders();
+
     uint8_t getSpeedL();
     uint8_t getSpeedR();
     uint8_t getAcceleration();
-    void resetEncoders();
-    long getEncL();
-    long getEncR();
-    void getEncoders();
     uint8_t getVoltage();
-    long getVi();
     uint8_t getMode();
     uint8_t getVersion();
     uint8_t getError();
+    long getVi();
+    
+    long getEncL();
+    long getEncR();
+    void getEncoders();
+    
     void setMode(uint8_t mode);
-    void enableReg(bool b);
-    void enableTimeout(bool b);
+    void enableReg(bool enable);
+    void enableTimeout(bool enable);
     void flush();
-    void sync();
     void writeToSerial(uint8_t a);
     void writeToSerial(int a);
-    //int readFromSerial();
-    uint8_t readFromSerial();
-    uint8_t readFromSerialNoWait();
-    long readLongFromSerial();
+
     bool isSimulating();
 
 private:
+    uint8_t readFromSerial();
+    uint8_t readFromSerialNoWait();
+    long readLongFromSerial();
+    void sync();
+
     SerialSim *simport;
     Serial *port;
 

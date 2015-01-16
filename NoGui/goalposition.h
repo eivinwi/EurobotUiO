@@ -36,10 +36,11 @@ public:
 	void setPosition(float n_x, float n_y);
 	void set(float n_x, float n_y, float n_rotation);
 	double timeSinceUpdate();
-	float getRotation();
+
 	int getId();
 	float getX();
 	float getY();
+	float getAngle();
 	std::string getPosString();
 
 	void print();

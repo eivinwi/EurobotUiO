@@ -21,8 +21,7 @@ public:
     Rotation();
     ~Rotation();
     void reset();
-    void rotateTowards(float goalRot);
-
+    
     //calculate new angle based on encoders
     void updateAngle(long diffL, long diffR);
 
