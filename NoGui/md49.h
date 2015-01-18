@@ -60,7 +60,6 @@ This means:
 #define SPEED_SLOW_POS 96
 #define SPEED_MED_POS 64
 #define SPEED_MAX_POS 20
-//*/
 
 #define POS_DIR (-1) //-1
 
