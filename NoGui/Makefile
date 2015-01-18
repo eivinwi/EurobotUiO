@@ -1,5 +1,5 @@
 CC=gcc
-CXX=g++ -Wall -lpthread -std=c++11
+CXX=g++ -Wall -std=c++11 -lpthread -D_ELPP_DEBUG_ERRORS
 RM=rm -f
 CPPFLAGS=-g $(shell root-config --cflags)
 LDFLAGS=-g $(shell root-config --ldflags)

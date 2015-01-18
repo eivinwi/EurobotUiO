@@ -74,8 +74,6 @@ bool PosControl::test() {
 
 void PosControl::enqueue(int id, int x, int y, float rot, int type) {
 	qPos qp = {id, x, y, rot, type};
-	DBPL("[POS] enqueueing qPos {" << id << "," << x << "," << y << "," << rot << "," << type << "}");
-
 	std::lock_guard<std::mutex> lock(qMutex);	
 	q.push(qp);
 	notifier.notify_one();
@@ -84,7 +82,6 @@ void PosControl::enqueue(int id, int x, int y, float rot, int type) {
 
 qPos PosControl::dequeue() {
 	std::unique_lock<std::mutex> lock(qMutex);
-
 	while(q.empty()) {
 		notifier.wait(lock); //alternative implementation try_unlock with crono ms-timeout
 	}
@@ -106,7 +103,7 @@ void PosControl::setGoalRotation(int rot) {
 //CHECK: should check rotation? (probably not)
 // sets the new goal pos. 360* == 0*
 void PosControl::setGoalPosition(int x, int y) {
-	PRINTLINE("[POS] setGoalPos(" << x << "," << y << ")");
+	//LOG(DEBUG) << "[POS] setGoalPos(" << x << "," << y << ")";
 	goalPos->setPosition(x, y);
 	goToPosition();
 }
@@ -122,7 +119,7 @@ void PosControl::controlLoop() {
 		//create goalPos from qp
 		goalPos = new GoalPosition(qp.id, qp.x, qp.y, qp.rot);
 		if(!testing) {
-			PRINTLINE("[POS] dequeued qPos {" << qp.id << "," << qp.x << "," << qp.y << "," << qp.rot << "," << qp.type << "}");	
+			//LOG(DEBUG) << "[POS] dequeued qPos {" << qp.id << "," << qp.x << "," << qp.y << "," << qp.rot << "," << qp.type << "}";
 
 			if(qp.type == ROTATION) {
 				goToRotation();
@@ -145,7 +142,7 @@ void PosControl::controlLoop() {
 
 
 void PosControl::goToRotation() {
-	PRINTLINE("[POS] goToRotation " << curPos->getAngle() << "->" << goalPos->getAngle());
+	//LOG(DEBUG) << "[POS] goToRotation " << curPos->getAngle() << "->" << goalPos->getAngle();
 	resetEncoders(); //here??	 
 	float distR = 0.0;
 //	bool rotated = false;
@@ -160,13 +157,13 @@ void PosControl::goToRotation() {
 		} while(!closeEnoughAngle());
 		completeCurrent();
 		fullStop();		
-		PRINTLINE("[POS] 	rotation finished: " << curPos->getAngle() << "=" << goalPos->getAngle());		
+		//LOG(DEBUG) << "[POS] rotation finished: " << curPos->getAngle() << "=" << goalPos->getAngle();
 	} 
 	else {
 		fullStop();
 		completeCurrent();
 		PRINTLINE("cx: " << distanceX() << " cy: " << distanceY() << " cr: " << distanceAngle());
-		PRINTLINE("[POS] 	already at specified rotation(" << goalPos->getId() << "): " << curPos->getAngle() << "=" << goalPos->getAngle());
+		//LOG(DEBUG) << "[POS] already at specified rotation(" << goalPos->getId() << "): " << curPos->getAngle() << "=" << goalPos->getAngle();
 		usleep(3000);
 	}
 }
@@ -174,9 +171,9 @@ void PosControl::goToRotation() {
 
 //CHECK: delays or not?
 void PosControl::goToPosition() {
-	PRINTLINE("[POS] goToPosition (" << curPos->getX() << "," << curPos->getY() << ") -> (" << goalPos->getX() << "," << goalPos->getY() << ")");
+	//LOG(DEBUG) << "[POS] goToPosition (" << curPos->getX() << "," << curPos->getY() << ") -> (" << goalPos->getX() << "," << goalPos->getY() << ")";
 
-	resetEncoders(); //here??
+	resetEncoders(); //CHECK: here??
 	float distX = distanceX(); 
 	float distY = distanceY();
 	float distR = 0.0;
@@ -184,14 +181,13 @@ void PosControl::goToPosition() {
 	float dist = 0.0;
 
 	if(!inGoalPosition()) {
-
 		//get angle we need to rotate to before driving
 		angle = atan2(distY, distX) *(180/M_PI);
 		if(angle < 0) angle = angle+360;
-		PRINTLINE("[POS] CALCULATED ANGLE=" << angle);
 		goalPos->setAngle(angle);
-				
-		//calculate straigth distance
+		//LOG(DEBUG) << "[POS] CALCULATED ANGLE=" << angle;
+		
+		//calculate straight distance
 		dist = updateDist(angle, distX, distY);
 		
 		do {
@@ -200,16 +196,16 @@ void PosControl::goToPosition() {
 			distR = distanceAngle();
 			dist = updateDist(angle, distX, distY);
 
-			//PRINTLINE("CURRENT: " << curPos->getX() << " | " << curPos->getY() << " | " << curPos->getAngle());
+			////LOG(DEBUG) << "CURRENT: " << curPos->getX() << " | " << curPos->getY() << " | " << curPos->getAngle();
 			printCurrent();
 
-			if(!closeEnoughAngle()) {
-				//PRINTLINE("[LOOP] ROTATION: " << distR);
+			if(!closeEnoughAngle()) {				
+				////LOG(DEBUG) << "[LOOP] ROTATION: " << distR;
 				rotate(distR);
 				updateRotation();
 			} else {
 				curPos->setAngle(goalPos->getAngle()); 
-				//PRINTLINE("[LOOP] DRIVE: " << distX << "," << distY);
+				////LOG(DEBUG) << "[LOOP] DRIVE: " << distX << "," << distY;
 				drive(dist);
 				updatePosition();
 			} 
@@ -219,7 +215,7 @@ void PosControl::goToPosition() {
 
 	fullStop();
 	completeCurrent();
-	PRINTLINE("[POS] IN GOAL!  (" << curPos->getX() << " , " <<  curPos->getY() << ") ~= (" << goalPos->getX() << " , " << goalPos->getY() << ")");
+	//LOG(INFO) << "[POS] IN GOAL!  (" << curPos->getX() << " , " <<  curPos->getY() << ") ~= (" << goalPos->getX() << " , " << goalPos->getY() << ")";
 	usleep(3000);
 }
 
@@ -235,20 +231,20 @@ float PosControl::updateDist(float angle, float distX, float distY) {
 
 //TODO: get input from IMU
 //need exact rotation to do small angle adjustments
+//CHECK: could make turning more accurate
 void PosControl::rotate(float distR) {
-	DBP("[POS] turning: ");
+	//LOG(DEBUG) << "[POS] turning: ";
 	if(distR == 0) {
-		DBPL("Error, turn is 0.");
+		//LOG(DEBUG) << "Error, turn is 0.";
 	} else if(distR > 0) {
-		DBPL("Positive dir (" << distR << ")");
+		//LOG(DEBUG) << "Positive dir (" << distR << ")";
 		if(distR > SLOWDOWN_DISTANCE_ROT) {
 			setSpeed(SPEED_MED_POS, SPEED_MED_NEG);
 		} else {
-			DBPL("SLOWDOWN ROT");
 			setSpeed(SPEED_SLOW_POS, SPEED_SLOW_NEG);
 		}
 	} else {
-		DBPL("Negative dir (" << distR << ")");
+		//LOG(DEBUG) << "Negative dir (" << distR << ")";
 		if(distR < -SLOWDOWN_DISTANCE_ROT) {
 			setSpeed(SPEED_MED_NEG, SPEED_MED_POS);
 		} else {
@@ -257,58 +253,54 @@ void PosControl::rotate(float distR) {
 	}
 }
 
-//something is very wrong
+
+
+//CHECK: stuff
 void PosControl::drive(float dist) {	
-	PRINTLINE("DISTR: " << dist);
+	//LOG(DEBUG) << "DISTR: " << dist;
 	float rotation = goalPos->getAngle();
 	if(closeEnoughAngle()) {
-		//PRINTLINE("[POS] driving with rotation:" << rotation << " dist:" << dist);	
+		//LOG(DEBUG) << "[POS] driving with rotation:" << rotation << " dist:" << dist;
+
 		//reset encoders??
 		//unneccsary test?
 		if(!inGoal()) {
-
 			if(dist < 0) {
 				if(dist < -SLOWDOWN_MAX_DIST) {
-					PRINTLINE("FULLSPEED REVERSE");
 					setSpeed(SPEED_MAX_NEG, SPEED_MAX_NEG);
 				} else if(dist < -SLOWDOWN_MED_DIST) {
-					PRINTLINE("HALFSPEED REVERSE");
 					setSpeed(SPEED_MED_NEG, SPEED_MED_NEG);					
 				} else {
-					PRINTLINE("SLOW REVERSE");
 					setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
 				}
 			}
 			else {
 				if(dist > SLOWDOWN_MAX_DIST) {
-					PRINTLINE("FULLSPEED FORWARD");
 					setSpeed(SPEED_MAX_POS, SPEED_MAX_POS);
 				} else if(dist > SLOWDOWN_MED_DIST) {
-					PRINTLINE("HALFSPEED FORWARD");
 					setSpeed(SPEED_MED_POS, SPEED_MED_POS);
 				} else {
-					PRINTLINE("SLOW FORWARD");					
 					setSpeed(SPEED_SLOW_POS, SPEED_SLOW_POS);
 				}
 			}
 		} else {
-			PRINTLINE("[POS] ERROR; already in goal");
+			//LOG(DEBUG) << "[POS] ERROR; already in goal";
 		}
 	} 
 	else {
-		PRINTLINE("[POS] ERROR; cur->angle is" << rotation << " should be " << goalPos->getAngle() << ". Attemting to fix by turning");
-		PRINTLINE("[POS] Scratch that last part, fixing is not yet implemented.");	
+		//LOG(ERROR) << "[POS] ERROR; cur->angle is" << rotation << " should be " << goalPos->getAngle();
 	}
 }
 
 
 void PosControl::completeCurrent() {
 	working = false;
-	PRINTLINE("[POS] action " << goalPos->getId() << " completed.");	
 	if(completed_actions[goalPos->getId()]) {
-		PRINTLINE("[POS] action " << goalPos->getId() << " was already finished.");
+		//LOG(INFO) << "[POS] action " << goalPos->getId() << " was already finished.";
+	} else {
+		//LOG(INFO) << "[POS] action " << goalPos->getId() << " completed.";	
+		completed_actions[goalPos->getId()] = true;
 	}
-	completed_actions[goalPos->getId()] = true;
 }
 
 
@@ -343,26 +335,23 @@ bool PosControl::running() {
  * enc per mm = 980/337 = 2.6
  * enc per grad = 2.88*2.6 = 7.5
  */
- // CHECK: works with negative??
- //TODO: DOES NOT WORK!!!
+ // CHECK: is avg_dist optimal? probably not
 void PosControl::updatePosition() {
-	DBPL("[POS] updatePos ");
+	//LOG(DEBUG) << "[POS] updatePos ";
 	
 	updateLeftEncoder();
-	updateRightEncoder();
-	
-	DBPL("[POS] encoders updated");
+	updateRightEncoder();	
+	//LOG(DEBUG) << "[POS] encoders updated";
 	
 	float angle = goalPos->getAngle();
-//	angle = 0.0;
 
 	int ediff = encoderDifference();
 	if(ediff > 50) {
-		PRINTLINE("[POS] Warning, large encoder difference(drive): " << ediff);
+		//LOG(WARNING) << "[POS] Warning, large encoder difference(drive): " << ediff;
 		return;
 	}
 
-//	PRINTLINE("L: " << leftEncoder.diffDist << "  R: " << rightEncoder.diffDist);
+	//LOG(DEBUG) << "L: " << leftEncoder.diffDist << "  R: " << rightEncoder.diffDist;
 	float avg_dist = (abs(leftEncoder.diffDist) + abs(rightEncoder.diffDist)) / 2;
 	
 	float x_distance = cos_d(angle)*avg_dist; //45 = +
@@ -378,7 +367,6 @@ void PosControl::updateRotation() {
 	updateLeftEncoder();
 	updateRightEncoder();
 
-	DBP("[POS] updateRot ");
 	//curX and curY should not really be updated
 	// update angle
 	curPos->updateAngle(leftEncoder.diff, rightEncoder.diff);
@@ -392,9 +380,8 @@ void PosControl::updateEncoder(long e, struct encoder *enc) {
 
 	if(absDiff > REASONABLE_ENC_DIFF) {
 		//TODO: reset encoders while taking care of values in a controlled manner
-		DBPL("Error: unreasonable encoder value.");
+		//LOG(WARNING) << "Unreasonable encoder value.";
 	}
-
 
 	enc->prev = e;
 	enc->diff = diff;
@@ -402,22 +389,18 @@ void PosControl::updateEncoder(long e, struct encoder *enc) {
 	enc->total += diff;
 	enc->totalDist += distance;
 
-	DBPL("enc: " << e << " diff: " << diff << " distance: " << distance);
-	DBPL("total: " << enc->total << " totalDist: " << enc->totalDist);
+	//LOG(DEBUG) << "enc: " << e << " diff: " << diff << " distance: " << distance;
+	//LOG(DEBUG) << "total: " << enc->total << " totalDist: " << enc->totalDist;
 }
 
 
 void PosControl::updateLeftEncoder() {
-	//PRINTLINE("[POS]updating left encoder");
-	//com->flush(); //unnecessary?
 	long enc = com->getEncL();
 	updateEncoder(enc, &leftEncoder);
 }
 
 
 void PosControl::updateRightEncoder() {
-	//DBPL("[POS]updating right encoder");
-	//com->flush(); //unnecessary?
 	long enc = com->getEncR();
 	updateEncoder(enc, &rightEncoder);
 }
@@ -435,6 +418,7 @@ void PosControl::resetEncoders() {
 
 
 void PosControl::fullStop() {
+	//LOG(DEBUG) << "[POS] Stopping";
 	setSpeed(SPEED_STOP, SPEED_STOP);
 }
 
@@ -466,7 +450,7 @@ float PosControl::distanceAngle() {
 	return dist;
 }
 
-
+//CHECK: unused?
 float PosControl::average(long a, long b) {
 	//TODO: negative values!!!
 	return (a - b)/2; 
@@ -509,19 +493,18 @@ long PosControl::encoderDifference() {
 
 
 void PosControl::printCurrent() {
-	PRINT("[POS] Current: ");
+	//LOG(INFO) << "[POS] Current: ";
 	curPos->print();
 }
 
 
 void PosControl::printGoal() {
-	PRINT("[POS] Goal: ");
-	//#ifdef DEBUG
-	goalPos->print();
-	//#endif
+	//LOG(INFO) << "[POS] Goal: (" 
+//		<< goalPos->getX() << "," << goalPos->getY() << "," << goalPos->getAngle() << ")";
 }
 
 
+//CHECK: unused?
 void PosControl::printDist() {
 	PRINTLINE("[POS] dist: " << distanceX() << "," << distanceY() << "," << distanceAngle());
 }

@@ -1,6 +1,5 @@
 #include "motorcom.h"
 
-
 MotorCom::MotorCom() {
     prev_encL = 0;
     prev_encR = 0;
@@ -32,33 +31,30 @@ bool MotorCom::test() {
 
 void MotorCom::startSerial() {
 	if(simulating) {
-        DBP("   [MOTOR] Starting serialsim\n")
 		simport = new SerialSim;
 	} else {
         if(strcmp(serial_port, "") == 0) {
-            PRINTLINE("    Error, empty serial_port. Setting to /dev/ttyACM0");
+            //LOG(WARNING) << "[MOTOR] Error, empty serial_port. Setting to /dev/ttyACM0";
             strcpy(serial_port, "ttyACM0");
         }     
-        PRINTLINE("    [MOTOR] Starting serial at: " << serial_port)
+        //LOG(INFO) << "    [MOTOR] Starting serial at: " << serial_port;
 		port = new Serial(serial_port);
 	}
 }
 
 
 void MotorCom::serialSimEnable() {
-    PRINTLINE("    [MOTOR] Simulating=true\n");
 	simulating = true;
 }
 
 
 void MotorCom::serialSimDisable() {
-    DBP("   [MOTOR] Simulating=false\n");
     simulating = false;
 }
 
 
 void MotorCom::setSerialPort(const char *s) {
-    DBPL("  [MOTOR] serial_port=" << s)
+    //LOG(DEBUG) << "[MOTOR] serial_port=" << s;
 	strcpy(serial_port, s);
 }
 
@@ -115,18 +111,9 @@ uint8_t MotorCom::getAcceleration() {
 
 
 uint8_t MotorCom::getVoltage() {
-    DBPL("[MOTOR] getVoltage");
     sync();
     writeToSerial(GET_VOLT);
-//    usleep(4000);
-   // flush();
-     //   usleep(1000);
-    //flush();
-      //  usleep(1000);
-  //  flush();
-    PRINTLINE("Moving on");
-    int volt = readFromSerial(); //readNoWait();
-    PRINTLINE("[MOTOR] volt: " << volt << " (int val is: " << (int) volt << ")");
+    int volt = readFromSerial();
     return volt;
 }
 
@@ -172,7 +159,7 @@ void MotorCom::setMode(uint8_t mode) {
 
 
 void MotorCom::resetEncoders() {
-    DBPL("  [MOTOR] Resetting encoders");
+    //LOG(DEBUG) << "[MOTOR] Resetting encoders";
     sync();
     writeToSerial(RESET_ENCODERS);
     prev_encL = 0;
@@ -203,7 +190,7 @@ void MotorCom::getEncoders() {
     result2 += readFromSerialNoWait() << 16ul;
     result2 += readFromSerialNoWait() << 8ul;
     result2 += readFromSerialNoWait();
-    DBPL("[MOTOR] EncL: " << result1 << "\nEncR" << result2); 
+    //LOG(DEBUG) << "[MOTOR] EncL: " << result1 << "\nEncR" << result2;
 }
 
 
@@ -211,8 +198,8 @@ long MotorCom::getEncL() {
     sync();
     writeToSerial(GET_ENCODERL);
     long result = readLongFromSerial();
-    DBPL("[MOTOR] EncL: " << result << " (diff: " << (result - prev_encL) << ")\nWheel rotations: " <<  ((result-prev_encL)/980.0) << 
-                "\nDistance: " << (result - prev_encL)*0.385);
+   // LOG(DEBUG) << "[MOTOR] EncL: " << result << " (diff: " << (result - prev_encL) << ")\nWheel rotations: " <<  ((result-prev_encL)/980.0) << 
+     //           "\nDistance: " << (result - prev_encL)*0.385;
     prev_encL = result;
     return result;
 }
@@ -222,8 +209,8 @@ long MotorCom::getEncR() {
     sync();
     writeToSerial(GET_ENCODERR);
     long result = readLongFromSerial();
-    DBPL("[MOTOR] EncR: " << result << " (diff: " << (result - prev_encR) << ")\nWheel rotations: " 
-        << ((result - prev_encR)/980.0) << "\nDistance: " << ((result - prev_encR)*0.385));
+    //LOG(DEBUG) << "[MOTOR] EncR: " << result << " (diff: " << (result - prev_encR) << ")\nWheel rotations: " 
+      //  << ((result - prev_encR)/980.0) << "\nDistance: " << ((result - prev_encR)*0.385);
     prev_encR = result;
     return result;
 }
@@ -250,6 +237,7 @@ void MotorCom::enableTimeout(bool enable) {
 
 
 void MotorCom::flush() {
+    //LOG(DEBUG) << "[MOTOR] Flushing serial";
     if(simulating) {
         simport->printAll();
     } else {
