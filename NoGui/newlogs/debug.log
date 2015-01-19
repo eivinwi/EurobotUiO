@@ -1,5 +1,2730 @@
-2015-01-19 12:05:43,934 DEBUG Testing yo
-2015-01-19 12:07:56,432 DEBUG Testing yo
-2015-01-19 12:07:56,532 DEBUG [MOTOR] Flushing serial
-2015-01-19 12:07:56,533 DEBUG [MOTOR] Resetting encoders
-2015-01-19 12:07:56,572 DEBUG [MOTOR] Flushing serial
+12:50:05,294 DEBUG [MOTOR] serial_port=ttyUSB0
+12:50:05,395 DEBUG [MOTOR] Flushing serial
+12:50:05,395 DEBUG [MOTOR] Resetting encoders
+12:50:05,438 DEBUG [MOTOR] Flushing serial
+12:50:10,009 DEBUG [POS] dequeued qPos {0,100,100,[COM] sending reply: ok.0,2}
+12:50:10,009 DEBUG [POS] goToPosition (0,0) -> (100,100)
+12:50:10,009 DEBUG [MOTOR] Resetting encoders
+12:50:10,009 DEBUG [POS] CALCULATED ANGLE=45
+12:50:10,009 DEBUG CURRENT: 0 | 0 | 0
+12:50:10,009 DEBUG [LOOP] ROTATION: 45
+12:50:10,009 DEBUG [POS] turning: 
+12:50:10,010 DEBUG Positive dir (45)
+12:50:10,015 DEBUG [MOTOR] EncL: 0 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:10,015 DEBUG enc: 0 diff: 0 distance: 0
+12:50:10,015 DEBUG total: 0 totalDist: 0
+12:50:10,019 DEBUG [MOTOR] EncR: 0 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:10,019 DEBUG enc: 0 diff: 0 distance: 0
+12:50:10,019 DEBUG total: 0 totalDist: 0
+12:50:10,021 DEBUG CURRENT: 0 | 0 | 0
+12:50:10,021 DEBUG [LOOP] ROTATION: 45
+12:50:10,021 DEBUG [POS] turning: 
+12:50:10,021 DEBUG Positive dir (45)
+12:50:10,025 DEBUG [MOTOR] EncL: 0 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:10,025 DEBUG enc: 0 diff: 0 distance: 0
+12:50:10,025 DEBUG total: 0 totalDist: 0
+12:50:10,029 DEBUG [MOTOR] EncR: 0 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:10,029 DEBUG enc: 0 diff: 0 distance: 0
+12:50:10,029 DEBUG total: 0 totalDist: 0
+12:50:10,031 DEBUG CURRENT: 0 | 0 | 0
+12:50:10,032 DEBUG [LOOP] ROTATION: 45
+12:50:10,032 DEBUG [POS] turning: 
+12:50:10,032 DEBUG Positive dir (45)
+12:50:10,036 DEBUG [MOTOR] EncL: 0 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:10,036 DEBUG enc: 0 diff: 0 distance: 0
+12:50:10,036 DEBUG total: 0 totalDist: 0
+12:50:10,039 DEBUG [MOTOR] EncR: 0 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:10,039 DEBUG enc: 0 diff: 0 distance: 0
+12:50:10,039 DEBUG total: 0 totalDist: 0
+12:50:10,041 DEBUG CURRENT: 0 | 0 | 0
+12:50:10,041 DEBUG [LOOP] ROTATION: 45
+12:50:10,041 DEBUG [POS] turning: 
+12:50:10,041 DEBUG Positive dir (45)
+12:50:10,045 DEBUG [MOTOR] EncL: 0 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:10,045 DEBUG enc: 0 diff: 0 distance: 0
+12:50:10,046 DEBUG total: 0 totalDist: 0
+12:50:10,049 DEBUG [MOTOR] EncR: 0 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:10,049 DEBUG enc: 0 diff: 0 distance: 0
+12:50:10,049 DEBUG total: 0 totalDist: 0
+12:50:10,051 DEBUG CURRENT: 0 | 0 | 0
+12:50:10,051 DEBUG [LOOP] ROTATION: 45
+12:50:10,051 DEBUG [POS] turning: 
+12:50:10,051 DEBUG Positive dir (45)
+12:50:10,055 DEBUG [MOTOR] EncL: 0 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:10,055 DEBUG enc: 0 diff: 0 distance: 0
+12:50:10,055 DEBUG total: 0 totalDist: 0
+12:50:10,058 DEBUG [MOTOR] EncR: 0 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:10,058 DEBUG enc: 0 diff: 0 distance: 0
+12:50:10,058 DEBUG total: 0 totalDist: 0
+12:50:10,060 DEBUG CURRENT: 0 | 0 | 0
+12:50:10,061 DEBUG [LOOP] ROTATION: 45
+12:50:10,061 DEBUG [POS] turning: 
+12:50:10,061 DEBUG Positive dir (45)
+12:50:10,064 DEBUG [MOTOR] EncL: 0 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:10,064 DEBUG enc: 0 diff: 0 distance: 0
+12:50:10,064 DEBUG total: 0 totalDist: 0
+12:50:10,068 DEBUG [MOTOR] EncR: 0 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:10,068 DEBUG enc: 0 diff: 0 distance: 0
+12:50:10,068 DEBUG total: 0 totalDist: 0
+12:50:10,070 DEBUG CURRENT: 0 | 0 | 0
+12:50:10,070 DEBUG [LOOP] ROTATION: 45
+12:50:10,070 DEBUG [POS] turning: 
+12:50:10,070 DEBUG Positive dir (45)
+12:50:10,074 DEBUG [MOTOR] EncL: 0 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:10,074 DEBUG enc: 0 diff: 0 distance: 0
+12:50:10,074 DEBUG total: 0 totalDist: 0
+12:50:10,078 DEBUG [MOTOR] EncR: 1 (diff: 1)
+Wheel rotations: 0.00102041
+Distance: 0.385
+12:50:10,078 DEBUG enc: 1 diff: 1 distance: 0.4
+12:50:10,078 DEBUG total: 1 totalDist: 0.4
+12:50:10,081 DEBUG CURRENT: 0 | 0 | 0
+12:50:10,081 DEBUG [LOOP] ROTATION: 45
+12:50:10,081 DEBUG [POS] turning: 
+12:50:10,081 DEBUG Positive dir (45)
+12:50:10,085 DEBUG [MOTOR] EncL: 0 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:10,085 DEBUG enc: 0 diff: 0 distance: 0
+12:50:10,085 DEBUG total: 0 totalDist: 0
+12:50:10,088 DEBUG [MOTOR] EncR: 1 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:10,088 DEBUG enc: 1 diff: 0 distance: 0
+12:50:10,088 DEBUG total: 1 totalDist: 0.4
+12:50:10,090 DEBUG CURRENT: 0 | 0 | 0
+12:50:10,090 DEBUG [LOOP] ROTATION: 45
+12:50:10,090 DEBUG [POS] turning: 
+12:50:10,090 DEBUG Positive dir (45)
+12:50:10,094 DEBUG [MOTOR] EncL: -1 (diff: -1)
+Wheel rotations: -0.00102041
+Distance: -0.385
+12:50:10,094 DEBUG enc: -1 diff: -1 distance: -0.4
+12:50:10,094 DEBUG total: -1 totalDist: -0.4
+12:50:10,100 DEBUG [MOTOR] EncR: 1 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:10,100 DEBUG enc: 1 diff: 0 distance: 0
+12:50:10,100 DEBUG total: 1 totalDist: 0.4
+12:50:10,102 DEBUG CURRENT: 0 | 0 | 0
+12:50:10,103 DEBUG [LOOP] ROTATION: 45
+12:50:10,103 DEBUG [POS] turning: 
+12:50:10,103 DEBUG Positive dir (45)
+12:50:10,106 DEBUG [MOTOR] EncL: -1 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:10,106 DEBUG enc: -1 diff: 0 distance: 0
+12:50:10,106 DEBUG total: -1 totalDist: -0.4
+12:50:10,109 DEBUG [MOTOR] EncR: 1 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:10,109 DEBUG enc: 1 diff: 0 distance: 0
+12:50:10,109 DEBUG total: 1 totalDist: 0.4
+12:50:10,112 DEBUG CURRENT: 0 | 0 | 0
+12:50:10,112 DEBUG [LOOP] ROTATION: 45
+12:50:10,112 DEBUG [POS] turning: 
+12:50:10,112 DEBUG Positive dir (45)
+12:50:10,116 DEBUG [MOTOR] EncL: -2 (diff: -1)
+Wheel rotations: -0.00102041
+Distance: -0.385
+12:50:10,116 DEBUG enc: -2 diff: -1 distance: -0.4
+12:50:10,116 DEBUG total: -2 totalDist: -0.8
+12:50:10,119 DEBUG [MOTOR] EncR: 2 (diff: 1)
+Wheel rotations: 0.00102041
+Distance: 0.385
+12:50:10,119 DEBUG enc: 2 diff: 1 distance: 0.4
+12:50:10,119 DEBUG total: 2 totalDist: 0.8
+12:50:10,121 DEBUG CURRENT: 0 | 0 | 0.16129
+12:50:10,121 DEBUG [LOOP] ROTATION: 44.8387
+12:50:10,121 DEBUG [POS] turning: 
+12:50:10,121 DEBUG Positive dir (44.8387)
+12:50:10,125 DEBUG [MOTOR] EncL: -3 (diff: -1)
+Wheel rotations: -0.00102041
+Distance: -0.385
+12:50:10,125 DEBUG enc: -3 diff: -1 distance: -0.4
+12:50:10,125 DEBUG total: -3 totalDist: -1.2
+12:50:10,128 DEBUG [MOTOR] EncR: 3 (diff: 1)
+Wheel rotations: 0.00102041
+Distance: 0.385
+12:50:10,128 DEBUG enc: 3 diff: 1 distance: 0.4
+12:50:10,128 DEBUG total: 3 totalDist: 1.2
+12:50:10,130 DEBUG CURRENT: 0 | 0 | 0.322581
+12:50:10,130 DEBUG [LOOP] ROTATION: 44.6774
+12:50:10,130 DEBUG [POS] turning: 
+12:50:10,130 DEBUG Positive dir (44.6774)
+12:50:10,134 DEBUG [MOTOR] EncL: -4 (diff: -1)
+Wheel rotations: -0.00102041
+Distance: -0.385
+12:50:10,134 DEBUG enc: -4 diff: -1 distance: -0.4
+12:50:10,134 DEBUG total: -4 totalDist: -1.6
+12:50:10,138 DEBUG [MOTOR] EncR: 4 (diff: 1)
+Wheel rotations: 0.00102041
+Distance: 0.385
+12:50:10,138 DEBUG enc: 4 diff: 1 distance: 0.4
+12:50:10,138 DEBUG total: 4 totalDist: 1.6
+12:50:10,140 DEBUG CURRENT: 0 | 0 | 0.483871
+12:50:10,141 DEBUG [LOOP] ROTATION: 44.5161
+12:50:10,141 DEBUG [POS] turning: 
+12:50:10,141 DEBUG Positive dir (44.5161)
+12:50:10,144 DEBUG [MOTOR] EncL: -6 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:10,144 DEBUG enc: -6 diff: -2 distance: -0.8
+12:50:10,144 DEBUG total: -6 totalDist: -2.4
+12:50:10,148 DEBUG [MOTOR] EncR: 5 (diff: 1)
+Wheel rotations: 0.00102041
+Distance: 0.385
+12:50:10,148 DEBUG enc: 5 diff: 1 distance: 0.4
+12:50:10,148 DEBUG total: 5 totalDist: 2
+12:50:10,150 DEBUG CURRENT: 0 | 0 | 0.645161
+12:50:10,150 DEBUG [LOOP] ROTATION: 44.3548
+12:50:10,150 DEBUG [POS] turning: 
+12:50:10,150 DEBUG Positive dir (44.3548)
+12:50:10,154 DEBUG [MOTOR] EncL: -7 (diff: -1)
+Wheel rotations: -0.00102041
+Distance: -0.385
+12:50:10,154 DEBUG enc: -7 diff: -1 distance: -0.4
+12:50:10,154 DEBUG total: -7 totalDist: -2.8
+12:50:10,158 DEBUG [MOTOR] EncR: 7 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:10,158 DEBUG enc: 7 diff: 2 distance: 0.8
+12:50:10,158 DEBUG total: 7 totalDist: 2.8
+12:50:10,160 DEBUG CURRENT: 0 | 0 | 0.806452
+12:50:10,160 DEBUG [LOOP] ROTATION: 44.1936
+12:50:10,160 DEBUG [POS] turning: 
+12:50:10,160 DEBUG Positive dir (44.1936)
+12:50:10,164 DEBUG [MOTOR] EncL: -9 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:10,164 DEBUG enc: -9 diff: -2 distance: -0.8
+12:50:10,164 DEBUG total: -9 totalDist: -3.6
+12:50:10,167 DEBUG [MOTOR] EncR: 9 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:10,167 DEBUG enc: 9 diff: 2 distance: 0.8
+12:50:10,167 DEBUG total: 9 totalDist: 3.6
+12:50:10,169 DEBUG CURRENT: 0 | 0 | 1.12903
+12:50:10,169 DEBUG [LOOP] ROTATION: 43.871
+12:50:10,169 DEBUG [POS] turning: 
+12:50:10,169 DEBUG Positive dir (43.871)
+12:50:10,173 DEBUG [MOTOR] EncL: -10 (diff: -1)
+Wheel rotations: -0.00102041
+Distance: -0.385
+12:50:10,173 DEBUG enc: -10 diff: -1 distance: -0.4
+12:50:10,173 DEBUG total: -10 totalDist: -4
+12:50:10,177 DEBUG [MOTOR] EncR: 11 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:10,177 DEBUG enc: 11 diff: 2 distance: 0.8
+12:50:10,177 DEBUG total: 11 totalDist: 4.4
+12:50:10,179 DEBUG CURRENT: 0 | 0 | 1.29032
+12:50:10,180 DEBUG [LOOP] ROTATION: 43.7097
+12:50:10,180 DEBUG [POS] turning: 
+12:50:10,180 DEBUG Positive dir (43.7097)
+12:50:10,183 DEBUG [MOTOR] EncL: -12 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:10,183 DEBUG enc: -12 diff: -2 distance: -0.8
+12:50:10,183 DEBUG total: -12 totalDist: -4.8
+12:50:10,186 DEBUG [MOTOR] EncR: 13 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:10,186 DEBUG enc: 13 diff: 2 distance: 0.8
+12:50:10,186 DEBUG total: 13 totalDist: 5.2
+12:50:10,188 DEBUG CURRENT: 0 | 0 | 1.6129
+12:50:10,188 DEBUG [LOOP] ROTATION: 43.3871
+12:50:10,188 DEBUG [POS] turning: 
+12:50:10,188 DEBUG Positive dir (43.3871)
+12:50:10,192 DEBUG [MOTOR] EncL: -13 (diff: -1)
+Wheel rotations: -0.00102041
+Distance: -0.385
+12:50:10,192 DEBUG enc: -13 diff: -1 distance: -0.4
+12:50:10,192 DEBUG total: -13 totalDist: -5.2
+12:50:10,196 DEBUG [MOTOR] EncR: 14 (diff: 1)
+Wheel rotations: 0.00102041
+Distance: 0.385
+12:50:10,196 DEBUG enc: 14 diff: 1 distance: 0.4
+12:50:10,196 DEBUG total: 14 totalDist: 5.6
+12:50:10,198 DEBUG CURRENT: 0 | 0 | 1.77419
+12:50:10,198 DEBUG [LOOP] ROTATION: 43.2258
+12:50:10,198 DEBUG [POS] turning: 
+12:50:10,198 DEBUG Positive dir (43.2258)
+12:50:10,202 DEBUG [MOTOR] EncL: -15 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:10,202 DEBUG enc: -15 diff: -2 distance: -0.8
+12:50:10,202 DEBUG total: -15 totalDist: -6
+12:50:10,205 DEBUG [MOTOR] EncR: 16 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:10,205 DEBUG enc: 16 diff: 2 distance: 0.8
+12:50:10,205 DEBUG total: 16 totalDist: 6.4
+12:50:10,208 DEBUG CURRENT: 0 | 0 | 2.09677
+12:50:10,208 DEBUG [LOOP] ROTATION: 42.9032
+12:50:10,208 DEBUG [POS] turning: 
+12:50:10,208 DEBUG Positive dir (42.9032)
+12:50:10,213 DEBUG [MOTOR] EncL: -16 (diff: -1)
+Wheel rotations: -0.00102041
+Distance: -0.385
+12:50:10,213 DEBUG enc: -16 diff: -1 distance: -0.4
+12:50:10,213 DEBUG total: -16 totalDist: -6.4
+12:50:10,216 DEBUG [MOTOR] EncR: 18 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:10,216 DEBUG enc: 18 diff: 2 distance: 0.8
+12:50:10,216 DEBUG total: 18 totalDist: 7.2
+12:50:10,218 DEBUG CURRENT: 0 | 0 | 2.25806
+12:50:10,218 DEBUG [LOOP] ROTATION: 42.7419
+12:50:10,218 DEBUG [POS] turning: 
+12:50:10,218 DEBUG Positive dir (42.7419)
+12:50:10,222 DEBUG [MOTOR] EncL: -18 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:10,222 DEBUG enc: -18 diff: -2 distance: -0.8
+12:50:10,222 DEBUG total: -18 totalDist: -7.2
+12:50:10,226 DEBUG [MOTOR] EncR: 19 (diff: 1)
+Wheel rotations: 0.00102041
+Distance: 0.385
+12:50:10,226 DEBUG enc: 19 diff: 1 distance: 0.4
+12:50:10,226 DEBUG total: 19 totalDist: 7.6
+12:50:10,228 DEBUG CURRENT: 0 | 0 | 2.41935
+12:50:10,228 DEBUG [LOOP] ROTATION: 42.5806
+12:50:10,228 DEBUG [POS] turning: 
+12:50:10,228 DEBUG Positive dir (42.5806)
+12:50:10,232 DEBUG [MOTOR] EncL: -20 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:10,232 DEBUG enc: -20 diff: -2 distance: -0.8
+12:50:10,232 DEBUG total: -20 totalDist: -8
+12:50:10,235 DEBUG [MOTOR] EncR: 21 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:10,235 DEBUG enc: 21 diff: 2 distance: 0.8
+12:50:10,235 DEBUG total: 21 totalDist: 8.4
+12:50:10,237 DEBUG CURRENT: 0 | 0 | 2.74194
+12:50:10,237 DEBUG [LOOP] ROTATION: 42.2581
+12:50:10,237 DEBUG [POS] turning: 
+12:50:10,237 DEBUG Positive dir (42.2581)
+12:50:10,241 DEBUG [MOTOR] EncL: -22 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:10,241 DEBUG enc: -22 diff: -2 distance: -0.8
+12:50:10,241 DEBUG total: -22 totalDist: -8.8
+12:50:10,246 DEBUG [MOTOR] EncR: 23 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:10,246 DEBUG enc: 23 diff: 2 distance: 0.8
+12:50:10,246 DEBUG total: 23 totalDist: 9.2
+12:50:10,248 DEBUG CURRENT: 0 | 0 | 3.06452
+12:50:10,248 DEBUG [LOOP] ROTATION: 41.9355
+12:50:10,248 DEBUG [POS] turning: 
+12:50:10,248 DEBUG Positive dir (41.9355)
+12:50:10,252 DEBUG [MOTOR] EncL: -24 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:10,252 DEBUG enc: -24 diff: -2 distance: -0.8
+12:50:10,252 DEBUG total: -24 totalDist: -9.6
+12:50:10,256 DEBUG [MOTOR] EncR: 25 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:10,256 DEBUG enc: 25 diff: 2 distance: 0.8
+12:50:10,256 DEBUG total: 25 totalDist: 10
+12:50:10,258 DEBUG CURRENT: 0 | 0 | 3.3871
+12:50:10,258 DEBUG [LOOP] ROTATION: 41.6129
+12:50:10,258 DEBUG [POS] turning: 
+12:50:10,258 DEBUG Positive dir (41.6129)
+12:50:10,262 DEBUG [MOTOR] EncL: -26 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:10,262 DEBUG enc: -26 diff: -2 distance: -0.8
+12:50:10,262 DEBUG total: -26 totalDist: -10.4
+12:50:10,266 DEBUG [MOTOR] EncR: 27 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:10,266 DEBUG enc: 27 diff: 2 distance: 0.8
+12:50:10,266 DEBUG total: 27 totalDist: 10.8
+12:50:10,268 DEBUG CURRENT: 0 | 0 | 3.70968
+12:50:10,268 DEBUG [LOOP] ROTATION: 41.2903
+12:50:10,268 DEBUG [POS] turning: 
+12:50:10,268 DEBUG Positive dir (41.2903)
+12:50:10,272 DEBUG [MOTOR] EncL: -29 (diff: -3)
+Wheel rotations: -0.00306122
+Distance: -1.155
+12:50:10,272 DEBUG enc: -29 diff: -3 distance: -1.2
+12:50:10,272 DEBUG total: -29 totalDist: -11.6
+12:50:10,276 DEBUG [MOTOR] EncR: 30 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:10,276 DEBUG enc: 30 diff: 3 distance: 1.2
+12:50:10,276 DEBUG total: 30 totalDist: 12
+12:50:10,279 DEBUG CURRENT: 0 | 0 | 4.19355
+12:50:10,279 DEBUG [LOOP] ROTATION: 40.8064
+12:50:10,279 DEBUG [POS] turning: 
+12:50:10,279 DEBUG Positive dir (40.8064)
+12:50:10,282 DEBUG [MOTOR] EncL: -32 (diff: -3)
+Wheel rotations: -0.00306122
+Distance: -1.155
+12:50:10,282 DEBUG enc: -32 diff: -3 distance: -1.2
+12:50:10,282 DEBUG total: -32 totalDist: -12.8
+12:50:10,286 DEBUG [MOTOR] EncR: 33 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:10,286 DEBUG enc: 33 diff: 3 distance: 1.2
+12:50:10,286 DEBUG total: 33 totalDist: 13.2
+12:50:10,288 DEBUG CURRENT: 0 | 0 | 4.67742
+12:50:10,288 DEBUG [LOOP] ROTATION: 40.3226
+12:50:10,288 DEBUG [POS] turning: 
+12:50:10,288 DEBUG Positive dir (40.3226)
+12:50:10,293 DEBUG [MOTOR] EncL: -34 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:10,293 DEBUG enc: -34 diff: -2 distance: -0.8
+12:50:10,293 DEBUG total: -34 totalDist: -13.6
+12:50:10,297 DEBUG [MOTOR] EncR: 35 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:10,297 DEBUG enc: 35 diff: 2 distance: 0.8
+12:50:10,297 DEBUG total: 35 totalDist: 14
+12:50:10,299 DEBUG CURRENT: 0 | 0 | 5
+12:50:10,299 DEBUG [LOOP] ROTATION: 40
+12:50:10,299 DEBUG [POS] turning: 
+12:50:10,299 DEBUG Positive dir (40)
+12:50:10,303 DEBUG [MOTOR] EncL: -37 (diff: -3)
+Wheel rotations: -0.00306122
+Distance: -1.155
+12:50:10,303 DEBUG enc: -37 diff: -3 distance: -1.2
+12:50:10,303 DEBUG total: -37 totalDist: -14.8
+12:50:10,306 DEBUG [MOTOR] EncR: 38 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:10,306 DEBUG enc: 38 diff: 3 distance: 1.2
+12:50:10,306 DEBUG total: 38 totalDist: 15.2
+12:50:10,308 DEBUG CURRENT: 0 | 0 | 5.48387
+12:50:10,308 DEBUG [LOOP] ROTATION: 39.5161
+12:50:10,308 DEBUG [POS] turning: 
+12:50:10,308 DEBUG Positive dir (39.5161)
+12:50:10,312 DEBUG [MOTOR] EncL: -40 (diff: -3)
+Wheel rotations: -0.00306122
+Distance: -1.155
+12:50:10,312 DEBUG enc: -40 diff: -3 distance: -1.2
+12:50:10,312 DEBUG total: -40 totalDist: -16
+12:50:10,316 DEBUG [MOTOR] EncR: 41 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:10,316 DEBUG enc: 41 diff: 3 distance: 1.2
+12:50:10,316 DEBUG total: 41 totalDist: 16.4
+12:50:10,318 DEBUG CURRENT: 0 | 0 | 5.96774
+12:50:10,318 DEBUG [LOOP] ROTATION: 39.0323
+12:50:10,318 DEBUG [POS] turning: 
+12:50:10,318 DEBUG Positive dir (39.0323)
+12:50:10,322 DEBUG [MOTOR] EncL: -43 (diff: -3)
+Wheel rotations: -0.00306122
+Distance: -1.155
+12:50:10,322 DEBUG enc: -43 diff: -3 distance: -1.2
+12:50:10,322 DEBUG total: -43 totalDist: -17.2
+12:50:10,326 DEBUG [MOTOR] EncR: 43 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:10,326 DEBUG enc: 43 diff: 2 distance: 0.8
+12:50:10,326 DEBUG total: 43 totalDist: 17.2
+12:50:10,328 DEBUG CURRENT: 0 | 0 | 6.29032
+12:50:10,328 DEBUG [LOOP] ROTATION: 38.7097
+12:50:10,328 DEBUG [POS] turning: 
+12:50:10,328 DEBUG Positive dir (38.7097)
+12:50:10,332 DEBUG [MOTOR] EncL: -46 (diff: -3)
+Wheel rotations: -0.00306122
+Distance: -1.155
+12:50:10,332 DEBUG enc: -46 diff: -3 distance: -1.2
+12:50:10,332 DEBUG total: -46 totalDist: -18.4
+12:50:10,335 DEBUG [MOTOR] EncR: 47 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:10,335 DEBUG enc: 47 diff: 4 distance: 1.6
+12:50:10,335 DEBUG total: 47 totalDist: 18.8
+12:50:10,337 DEBUG CURRENT: 0 | 0 | 6.77419
+12:50:10,337 DEBUG [LOOP] ROTATION: 38.2258
+12:50:10,337 DEBUG [POS] turning: 
+12:50:10,337 DEBUG Positive dir (38.2258)
+12:50:10,341 DEBUG [MOTOR] EncL: -49 (diff: -3)
+Wheel rotations: -0.00306122
+Distance: -1.155
+12:50:10,341 DEBUG enc: -49 diff: -3 distance: -1.2
+12:50:10,341 DEBUG total: -49 totalDist: -19.6
+12:50:10,344 DEBUG [MOTOR] EncR: 50 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:10,344 DEBUG enc: 50 diff: 3 distance: 1.2
+12:50:10,344 DEBUG total: 50 totalDist: 20
+12:50:10,346 DEBUG CURRENT: 0 | 0 | 7.25806
+12:50:10,347 DEBUG [LOOP] ROTATION: 37.7419
+12:50:10,347 DEBUG [POS] turning: 
+12:50:10,347 DEBUG Positive dir (37.7419)
+12:50:10,351 DEBUG [MOTOR] EncL: -51 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:10,351 DEBUG enc: -51 diff: -2 distance: -0.8
+12:50:10,351 DEBUG total: -51 totalDist: -20.4
+12:50:10,355 DEBUG [MOTOR] EncR: 53 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:10,355 DEBUG enc: 53 diff: 3 distance: 1.2
+12:50:10,355 DEBUG total: 53 totalDist: 21.2
+12:50:10,357 DEBUG CURRENT: 0 | 0 | 7.58065
+12:50:10,357 DEBUG [LOOP] ROTATION: 37.4194
+12:50:10,357 DEBUG [POS] turning: 
+12:50:10,357 DEBUG Positive dir (37.4194)
+12:50:10,361 DEBUG [MOTOR] EncL: -55 (diff: -4)
+Wheel rotations: -0.00408163
+Distance: -1.54
+12:50:10,361 DEBUG enc: -55 diff: -4 distance: -1.6
+12:50:10,361 DEBUG total: -55 totalDist: -22
+12:50:10,365 DEBUG [MOTOR] EncR: 57 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:10,365 DEBUG enc: 57 diff: 4 distance: 1.6
+12:50:10,365 DEBUG total: 57 totalDist: 22.8
+12:50:10,367 DEBUG CURRENT: 0 | 0 | 8.22581
+12:50:10,367 DEBUG [LOOP] ROTATION: 36.7742
+12:50:10,367 DEBUG [POS] turning: 
+12:50:10,367 DEBUG Positive dir (36.7742)
+12:50:10,371 DEBUG [MOTOR] EncL: -58 (diff: -3)
+Wheel rotations: -0.00306122
+Distance: -1.155
+12:50:10,371 DEBUG enc: -58 diff: -3 distance: -1.2
+12:50:10,371 DEBUG total: -58 totalDist: -23.2
+12:50:10,374 DEBUG [MOTOR] EncR: 61 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:10,374 DEBUG enc: 61 diff: 4 distance: 1.6
+12:50:10,374 DEBUG total: 61 totalDist: 24.4
+12:50:10,376 DEBUG CURRENT: 0 | 0 | 8.70968
+12:50:10,376 DEBUG [LOOP] ROTATION: 36.2903
+12:50:10,376 DEBUG [POS] turning: 
+12:50:10,376 DEBUG Positive dir (36.2903)
+12:50:10,380 DEBUG [MOTOR] EncL: -61 (diff: -3)
+Wheel rotations: -0.00306122
+Distance: -1.155
+12:50:10,380 DEBUG enc: -61 diff: -3 distance: -1.2
+12:50:10,380 DEBUG total: -61 totalDist: -24.4
+12:50:10,384 DEBUG [MOTOR] EncR: 64 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:10,384 DEBUG enc: 64 diff: 3 distance: 1.2
+12:50:10,384 DEBUG total: 64 totalDist: 25.6
+12:50:10,386 DEBUG CURRENT: 0 | 0 | 9.19355
+12:50:10,386 DEBUG [LOOP] ROTATION: 35.8064
+12:50:10,386 DEBUG [POS] turning: 
+12:50:10,386 DEBUG Positive dir (35.8064)
+12:50:10,390 DEBUG [MOTOR] EncL: -65 (diff: -4)
+Wheel rotations: -0.00408163
+Distance: -1.54
+12:50:10,390 DEBUG enc: -65 diff: -4 distance: -1.6
+12:50:10,390 DEBUG total: -65 totalDist: -26
+12:50:10,393 DEBUG [MOTOR] EncR: 67 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:10,393 DEBUG enc: 67 diff: 3 distance: 1.2
+12:50:10,393 DEBUG total: 67 totalDist: 26.8
+12:50:10,395 DEBUG CURRENT: 0 | 0 | 9.67742
+12:50:10,395 DEBUG [LOOP] ROTATION: 35.3226
+12:50:10,395 DEBUG [POS] turning: 
+12:50:10,395 DEBUG Positive dir (35.3226)
+12:50:10,399 DEBUG [MOTOR] EncL: -68 (diff: -3)
+Wheel rotations: -0.00306122
+Distance: -1.155
+12:50:10,399 DEBUG enc: -68 diff: -3 distance: -1.2
+12:50:10,399 DEBUG total: -68 totalDist: -27.2
+12:50:10,402 DEBUG [MOTOR] EncR: 71 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:10,402 DEBUG enc: 71 diff: 4 distance: 1.6
+12:50:10,402 DEBUG total: 71 totalDist: 28.4
+12:50:10,404 DEBUG CURRENT: 0 | 0 | 10.1613
+12:50:10,404 DEBUG [LOOP] ROTATION: 34.8387
+12:50:10,404 DEBUG [POS] turning: 
+12:50:10,404 DEBUG Positive dir (34.8387)
+12:50:10,408 DEBUG [MOTOR] EncL: -71 (diff: -3)
+Wheel rotations: -0.00306122
+Distance: -1.155
+12:50:10,408 DEBUG enc: -71 diff: -3 distance: -1.2
+12:50:10,408 DEBUG total: -71 totalDist: -28.4
+12:50:10,412 DEBUG [MOTOR] EncR: 74 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:10,412 DEBUG enc: 74 diff: 3 distance: 1.2
+12:50:10,412 DEBUG total: 74 totalDist: 29.6
+12:50:10,415 DEBUG CURRENT: 0 | 0 | 10.6452
+12:50:10,415 DEBUG [LOOP] ROTATION: 34.3548
+12:50:10,415 DEBUG [POS] turning: 
+12:50:10,415 DEBUG Positive dir (34.3548)
+12:50:10,419 DEBUG [MOTOR] EncL: -76 (diff: -5)
+Wheel rotations: -0.00510204
+Distance: -1.925
+12:50:10,419 DEBUG enc: -76 diff: -5 distance: -2
+12:50:10,419 DEBUG total: -76 totalDist: -30.4
+12:50:10,422 DEBUG [MOTOR] EncR: 78 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:10,422 DEBUG enc: 78 diff: 4 distance: 1.6
+12:50:10,422 DEBUG total: 78 totalDist: 31.2
+12:50:10,424 DEBUG CURRENT: 0 | 0 | 11.2903
+12:50:10,424 DEBUG [LOOP] ROTATION: 33.7097
+12:50:10,424 DEBUG [POS] turning: 
+12:50:10,424 DEBUG Positive dir (33.7097)
+12:50:10,428 DEBUG [MOTOR] EncL: -80 (diff: -4)
+Wheel rotations: -0.00408163
+Distance: -1.54
+12:50:10,428 DEBUG enc: -80 diff: -4 distance: -1.6
+12:50:10,428 DEBUG total: -80 totalDist: -32
+12:50:10,431 DEBUG [MOTOR] EncR: 82 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:10,431 DEBUG enc: 82 diff: 4 distance: 1.6
+12:50:10,431 DEBUG total: 82 totalDist: 32.8
+12:50:10,433 DEBUG CURRENT: 0 | 0 | 11.9355
+12:50:10,433 DEBUG [LOOP] ROTATION: 33.0645
+12:50:10,433 DEBUG [POS] turning: 
+12:50:10,433 DEBUG Positive dir (33.0645)
+12:50:10,437 DEBUG [MOTOR] EncL: -83 (diff: -3)
+Wheel rotations: -0.00306122
+Distance: -1.155
+12:50:10,437 DEBUG enc: -83 diff: -3 distance: -1.2
+12:50:10,437 DEBUG total: -83 totalDist: -33.2
+12:50:10,440 DEBUG [MOTOR] EncR: 85 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:10,440 DEBUG enc: 85 diff: 3 distance: 1.2
+12:50:10,440 DEBUG total: 85 totalDist: 34
+12:50:10,442 DEBUG CURRENT: 0 | 0 | 12.4194
+12:50:10,444 DEBUG [LOOP] ROTATION: 32.5806
+12:50:10,444 DEBUG [POS] turning: 
+12:50:10,444 DEBUG Positive dir (32.5806)
+12:50:10,448 DEBUG [MOTOR] EncL: -88 (diff: -5)
+Wheel rotations: -0.00510204
+Distance: -1.925
+12:50:10,448 DEBUG enc: -88 diff: -5 distance: -2
+12:50:10,448 DEBUG total: -88 totalDist: -35.2
+12:50:10,452 DEBUG [MOTOR] EncR: 90 (diff: 5)
+Wheel rotations: 0.00510204
+Distance: 1.925
+12:50:10,452 DEBUG enc: 90 diff: 5 distance: 2
+12:50:10,452 DEBUG total: 90 totalDist: 36
+12:50:10,454 DEBUG CURRENT: 0 | 0 | 13.2258
+12:50:10,454 DEBUG [LOOP] ROTATION: 31.7742
+12:50:10,454 DEBUG [POS] turning: 
+12:50:10,454 DEBUG Positive dir (31.7742)
+12:50:10,458 DEBUG [MOTOR] EncL: -92 (diff: -4)
+Wheel rotations: -0.00408163
+Distance: -1.54
+12:50:10,458 DEBUG enc: -92 diff: -4 distance: -1.6
+12:50:10,458 DEBUG total: -92 totalDist: -36.8
+12:50:10,461 DEBUG [MOTOR] EncR: 94 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:10,461 DEBUG enc: 94 diff: 4 distance: 1.6
+12:50:10,461 DEBUG total: 94 totalDist: 37.6
+12:50:10,463 DEBUG CURRENT: 0 | 0 | 13.871
+12:50:10,463 DEBUG [LOOP] ROTATION: 31.129
+12:50:10,463 DEBUG [POS] turning: 
+12:50:10,463 DEBUG Positive dir (31.129)
+12:50:10,467 DEBUG [MOTOR] EncL: -96 (diff: -4)
+Wheel rotations: -0.00408163
+Distance: -1.54
+12:50:10,467 DEBUG enc: -96 diff: -4 distance: -1.6
+12:50:10,467 DEBUG total: -96 totalDist: -38.4
+12:50:10,471 DEBUG [MOTOR] EncR: 98 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:10,471 DEBUG enc: 98 diff: 4 distance: 1.6
+12:50:10,471 DEBUG total: 98 totalDist: 39.2
+12:50:10,473 DEBUG CURRENT: 0 | 0 | 14.5161
+12:50:10,473 DEBUG [LOOP] ROTATION: 30.4839
+12:50:10,473 DEBUG [POS] turning: 
+12:50:10,473 DEBUG Positive dir (30.4839)
+12:50:10,477 DEBUG [MOTOR] EncL: -100 (diff: -4)
+Wheel rotations: -0.00408163
+Distance: -1.54
+12:50:10,477 DEBUG enc: -100 diff: -4 distance: -1.6
+12:50:10,478 DEBUG total: -100 totalDist: -40
+12:50:10,481 DEBUG [MOTOR] EncR: 103 (diff: 5)
+Wheel rotations: 0.00510204
+Distance: 1.925
+12:50:10,481 DEBUG enc: 103 diff: 5 distance: 2
+12:50:10,481 DEBUG total: 103 totalDist: 41.2
+12:50:10,483 DEBUG CURRENT: 0 | 0 | 15.1613
+12:50:10,483 DEBUG [LOOP] ROTATION: 29.8387
+12:50:10,483 DEBUG [POS] turning: 
+12:50:10,483 DEBUG Positive dir (29.8387)
+12:50:10,487 DEBUG [MOTOR] EncL: -104 (diff: -4)
+Wheel rotations: -0.00408163
+Distance: -1.54
+12:50:10,487 DEBUG enc: -104 diff: -4 distance: -1.6
+12:50:10,487 DEBUG total: -104 totalDist: -41.6
+12:50:10,490 DEBUG [MOTOR] EncR: 107 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:10,491 DEBUG enc: 107 diff: 4 distance: 1.6
+12:50:10,491 DEBUG total: 107 totalDist: 42.8
+12:50:10,493 DEBUG CURRENT: 0 | 0 | 15.8065
+12:50:10,493 DEBUG [LOOP] ROTATION: 29.1935
+12:50:10,493 DEBUG [POS] turning: 
+12:50:10,493 DEBUG Positive dir (29.1935)
+12:50:10,497 DEBUG [MOTOR] EncL: -109 (diff: -5)
+Wheel rotations: -0.00510204
+Distance: -1.925
+12:50:10,497 DEBUG enc: -109 diff: -5 distance: -2
+12:50:10,497 DEBUG total: -109 totalDist: -43.6
+12:50:10,501 DEBUG [MOTOR] EncR: 111 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:10,501 DEBUG enc: 111 diff: 4 distance: 1.6
+12:50:10,501 DEBUG total: 111 totalDist: 44.4
+12:50:10,503 DEBUG CURRENT: 0 | 0 | 16.4516
+12:50:10,503 DEBUG [LOOP] ROTATION: 28.5484
+12:50:10,503 DEBUG [POS] turning: 
+12:50:10,503 DEBUG Positive dir (28.5484)
+12:50:10,507 DEBUG [MOTOR] EncL: -113 (diff: -4)
+Wheel rotations: -0.00408163
+Distance: -1.54
+12:50:10,507 DEBUG enc: -113 diff: -4 distance: -1.6
+12:50:10,507 DEBUG total: -113 totalDist: -45.2
+12:50:10,511 DEBUG [MOTOR] EncR: 116 (diff: 5)
+Wheel rotations: 0.00510204
+Distance: 1.925
+12:50:10,511 DEBUG enc: 116 diff: 5 distance: 2
+12:50:10,511 DEBUG total: 116 totalDist: 46.4
+12:50:10,513 DEBUG CURRENT: 0 | 0 | 17.0968
+12:50:10,514 DEBUG [LOOP] ROTATION: 27.9032
+12:50:10,514 DEBUG [POS] turning: 
+12:50:10,514 DEBUG Positive dir (27.9032)
+12:50:10,520 DEBUG [MOTOR] EncL: -118 (diff: -5)
+Wheel rotations: -0.00510204
+Distance: -1.925
+12:50:10,521 DEBUG enc: -118 diff: -5 distance: -2
+12:50:10,521 DEBUG total: -118 totalDist: -47.2
+12:50:10,525 DEBUG [MOTOR] EncR: 122 (diff: 6)
+Wheel rotations: 0.00612245
+Distance: 2.31
+12:50:10,525 DEBUG enc: 122 diff: 6 distance: 2.4
+12:50:10,525 DEBUG total: 122 totalDist: 48.8
+12:50:10,527 DEBUG CURRENT: 0 | 0 | 17.9032
+12:50:10,527 DEBUG [LOOP] ROTATION: 27.0968
+12:50:10,527 DEBUG [POS] turning: 
+12:50:10,527 DEBUG Positive dir (27.0968)
+12:50:10,530 DEBUG [MOTOR] EncL: -125 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:10,530 DEBUG enc: -125 diff: -7 distance: -2.8
+12:50:10,531 DEBUG total: -125 totalDist: -50
+12:50:10,535 DEBUG [MOTOR] EncR: 127 (diff: 5)
+Wheel rotations: 0.00510204
+Distance: 1.925
+12:50:10,535 DEBUG enc: 127 diff: 5 distance: 2
+12:50:10,535 DEBUG total: 127 totalDist: 50.8
+12:50:10,537 DEBUG CURRENT: 0 | 0 | 18.871
+12:50:10,537 DEBUG [LOOP] ROTATION: 26.129
+12:50:10,537 DEBUG [POS] turning: 
+12:50:10,537 DEBUG Positive dir (26.129)
+12:50:10,541 DEBUG [MOTOR] EncL: -130 (diff: -5)
+Wheel rotations: -0.00510204
+Distance: -1.925
+12:50:10,541 DEBUG enc: -130 diff: -5 distance: -2
+12:50:10,541 DEBUG total: -130 totalDist: -52
+12:50:10,545 DEBUG [MOTOR] EncR: 132 (diff: 5)
+Wheel rotations: 0.00510204
+Distance: 1.925
+12:50:10,545 DEBUG enc: 132 diff: 5 distance: 2
+12:50:10,545 DEBUG total: 132 totalDist: 52.8
+12:50:10,547 DEBUG CURRENT: 0 | 0 | 19.6774
+12:50:10,547 DEBUG [LOOP] ROTATION: 25.3226
+12:50:10,547 DEBUG [POS] turning: 
+12:50:10,547 DEBUG Positive dir (25.3226)
+12:50:10,550 DEBUG [MOTOR] EncL: -136 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:10,551 DEBUG enc: -136 diff: -6 distance: -2.4
+12:50:10,551 DEBUG total: -136 totalDist: -54.4
+12:50:10,554 DEBUG [MOTOR] EncR: 137 (diff: 5)
+Wheel rotations: 0.00510204
+Distance: 1.925
+12:50:10,554 DEBUG enc: 137 diff: 5 distance: 2
+12:50:10,554 DEBUG total: 137 totalDist: 54.8
+12:50:10,556 DEBUG CURRENT: 0 | 0 | 20.4839
+12:50:10,556 DEBUG [LOOP] ROTATION: 24.5161
+12:50:10,556 DEBUG [POS] turning: 
+12:50:10,556 DEBUG Positive dir (24.5161)
+12:50:10,560 DEBUG [MOTOR] EncL: -141 (diff: -5)
+Wheel rotations: -0.00510204
+Distance: -1.925
+12:50:10,560 DEBUG enc: -141 diff: -5 distance: -2
+12:50:10,560 DEBUG total: -141 totalDist: -56.4
+12:50:10,564 DEBUG [MOTOR] EncR: 141 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:10,565 DEBUG enc: 141 diff: 4 distance: 1.6
+12:50:10,565 DEBUG total: 141 totalDist: 56.4
+12:50:10,567 DEBUG CURRENT: 0 | 0 | 21.129
+12:50:10,567 DEBUG [LOOP] ROTATION: 23.871
+12:50:10,567 DEBUG [POS] turning: 
+12:50:10,567 DEBUG Positive dir (23.871)
+12:50:10,571 DEBUG [MOTOR] EncL: -146 (diff: -5)
+Wheel rotations: -0.00510204
+Distance: -1.925
+12:50:10,571 DEBUG enc: -146 diff: -5 distance: -2
+12:50:10,571 DEBUG total: -146 totalDist: -58.4
+12:50:10,575 DEBUG [MOTOR] EncR: 147 (diff: 6)
+Wheel rotations: 0.00612245
+Distance: 2.31
+12:50:10,575 DEBUG enc: 147 diff: 6 distance: 2.4
+12:50:10,575 DEBUG total: 147 totalDist: 58.8
+12:50:10,577 DEBUG CURRENT: 0 | 0 | 21.9355
+12:50:10,577 DEBUG [LOOP] ROTATION: 23.0645
+12:50:10,577 DEBUG [POS] turning: 
+12:50:10,578 DEBUG Positive dir (23.0645)
+12:50:10,582 DEBUG [MOTOR] EncL: -152 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:10,582 DEBUG enc: -152 diff: -6 distance: -2.4
+12:50:10,582 DEBUG total: -152 totalDist: -60.8
+12:50:10,586 DEBUG [MOTOR] EncR: 153 (diff: 6)
+Wheel rotations: 0.00612245
+Distance: 2.31
+12:50:10,586 DEBUG enc: 153 diff: 6 distance: 2.4
+12:50:10,586 DEBUG total: 153 totalDist: 61.2
+12:50:10,588 DEBUG CURRENT: 0 | 0 | 22.9032
+12:50:10,589 DEBUG [LOOP] ROTATION: 22.0968
+12:50:10,589 DEBUG [POS] turning: 
+12:50:10,589 DEBUG Positive dir (22.0968)
+12:50:10,591 DEBUG [MOTOR] EncL: -158 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:10,592 DEBUG enc: -158 diff: -6 distance: -2.4
+12:50:10,592 DEBUG total: -158 totalDist: -63.2
+12:50:10,595 DEBUG [MOTOR] EncR: 159 (diff: 6)
+Wheel rotations: 0.00612245
+Distance: 2.31
+12:50:10,596 DEBUG enc: 159 diff: 6 distance: 2.4
+12:50:10,596 DEBUG total: 159 totalDist: 63.6
+12:50:10,598 DEBUG CURRENT: 0 | 0 | 23.871
+12:50:10,598 DEBUG [LOOP] ROTATION: 21.129
+12:50:10,598 DEBUG [POS] turning: 
+12:50:10,598 DEBUG Positive dir (21.129)
+12:50:10,601 DEBUG [MOTOR] EncL: -164 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:10,602 DEBUG enc: -164 diff: -6 distance: -2.4
+12:50:10,602 DEBUG total: -164 totalDist: -65.6
+12:50:10,606 DEBUG [MOTOR] EncR: 165 (diff: 6)
+Wheel rotations: 0.00612245
+Distance: 2.31
+12:50:10,606 DEBUG enc: 165 diff: 6 distance: 2.4
+12:50:10,606 DEBUG total: 165 totalDist: 66
+12:50:10,608 DEBUG CURRENT: 0 | 0 | 24.8387
+12:50:10,609 DEBUG [LOOP] ROTATION: 20.1613
+12:50:10,609 DEBUG [POS] turning: 
+12:50:10,609 DEBUG Positive dir (20.1613)
+12:50:10,613 DEBUG [MOTOR] EncL: -170 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:10,614 DEBUG enc: -170 diff: -6 distance: -2.4
+12:50:10,614 DEBUG total: -170 totalDist: -68
+12:50:10,617 DEBUG [MOTOR] EncR: 172 (diff: 7)
+Wheel rotations: 0.00714286
+Distance: 2.695
+12:50:10,617 DEBUG enc: 172 diff: 7 distance: 2.8
+12:50:10,617 DEBUG total: 172 totalDist: 68.8
+12:50:10,619 DEBUG CURRENT: 0 | 0 | 25.8064
+12:50:10,619 DEBUG [LOOP] ROTATION: 19.1936
+12:50:10,619 DEBUG [POS] turning: 
+12:50:10,619 DEBUG Positive dir (19.1936)
+12:50:10,622 DEBUG [MOTOR] EncL: -176 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:10,622 DEBUG enc: -176 diff: -6 distance: -2.4
+12:50:10,623 DEBUG total: -176 totalDist: -70.4
+12:50:10,625 DEBUG [MOTOR] EncR: 177 (diff: 5)
+Wheel rotations: 0.00510204
+Distance: 1.925
+12:50:10,625 DEBUG enc: 177 diff: 5 distance: 2
+12:50:10,625 DEBUG total: 177 totalDist: 70.8
+12:50:10,628 DEBUG CURRENT: 0 | 0 | 26.6129
+12:50:10,628 DEBUG [LOOP] ROTATION: 18.3871
+12:50:10,628 DEBUG [POS] turning: 
+12:50:10,628 DEBUG Positive dir (18.3871)
+12:50:10,631 DEBUG [MOTOR] EncL: -181 (diff: -5)
+Wheel rotations: -0.00510204
+Distance: -1.925
+12:50:10,631 DEBUG enc: -181 diff: -5 distance: -2
+12:50:10,631 DEBUG total: -181 totalDist: -72.4
+12:50:10,634 DEBUG [MOTOR] EncR: 183 (diff: 6)
+Wheel rotations: 0.00612245
+Distance: 2.31
+12:50:10,634 DEBUG enc: 183 diff: 6 distance: 2.4
+12:50:10,635 DEBUG total: 183 totalDist: 73.2
+12:50:10,637 DEBUG CURRENT: 0 | 0 | 27.4193
+12:50:10,637 DEBUG [LOOP] ROTATION: 17.5807
+12:50:10,637 DEBUG [POS] turning: 
+12:50:10,637 DEBUG Positive dir (17.5807)
+12:50:10,641 DEBUG [MOTOR] EncL: -187 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:10,642 DEBUG enc: -187 diff: -6 distance: -2.4
+12:50:10,642 DEBUG total: -187 totalDist: -74.8
+12:50:10,646 DEBUG [MOTOR] EncR: 189 (diff: 6)
+Wheel rotations: 0.00612245
+Distance: 2.31
+12:50:10,646 DEBUG enc: 189 diff: 6 distance: 2.4
+12:50:10,646 DEBUG total: 189 totalDist: 75.6
+12:50:10,648 DEBUG CURRENT: 0 | 0 | 28.3871
+12:50:10,648 DEBUG [LOOP] ROTATION: 16.6129
+12:50:10,648 DEBUG [POS] turning: 
+12:50:10,649 DEBUG Positive dir (16.6129)
+12:50:10,652 DEBUG [MOTOR] EncL: -194 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:10,652 DEBUG enc: -194 diff: -7 distance: -2.8
+12:50:10,652 DEBUG total: -194 totalDist: -77.6
+12:50:10,656 DEBUG [MOTOR] EncR: 195 (diff: 6)
+Wheel rotations: 0.00612245
+Distance: 2.31
+12:50:10,656 DEBUG enc: 195 diff: 6 distance: 2.4
+12:50:10,656 DEBUG total: 195 totalDist: 78
+12:50:10,658 DEBUG CURRENT: 0 | 0 | 29.3548
+12:50:10,658 DEBUG [LOOP] ROTATION: 15.6452
+12:50:10,658 DEBUG [POS] turning: 
+12:50:10,658 DEBUG Positive dir (15.6452)
+12:50:10,662 DEBUG [MOTOR] EncL: -200 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:10,662 DEBUG enc: -200 diff: -6 distance: -2.4
+12:50:10,662 DEBUG total: -200 totalDist: -80
+12:50:10,666 DEBUG [MOTOR] EncR: 202 (diff: 7)
+Wheel rotations: 0.00714286
+Distance: 2.695
+12:50:10,666 DEBUG enc: 202 diff: 7 distance: 2.8
+12:50:10,666 DEBUG total: 202 totalDist: 80.8
+12:50:10,668 DEBUG CURRENT: 0 | 0 | 30.3226
+12:50:10,669 DEBUG [LOOP] ROTATION: 14.6774
+12:50:10,669 DEBUG [POS] turning: 
+12:50:10,669 DEBUG Positive dir (14.6774)
+12:50:10,672 DEBUG [MOTOR] EncL: -206 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:10,672 DEBUG enc: -206 diff: -6 distance: -2.4
+12:50:10,673 DEBUG total: -206 totalDist: -82.4
+12:50:10,677 DEBUG [MOTOR] EncR: 208 (diff: 6)
+Wheel rotations: 0.00612245
+Distance: 2.31
+12:50:10,677 DEBUG enc: 208 diff: 6 distance: 2.4
+12:50:10,677 DEBUG total: 208 totalDist: 83.2
+12:50:10,679 DEBUG CURRENT: 0 | 0 | 31.2903
+12:50:10,680 DEBUG [LOOP] ROTATION: 13.7097
+12:50:10,680 DEBUG [POS] turning: 
+12:50:10,680 DEBUG Positive dir (13.7097)
+12:50:10,684 DEBUG [MOTOR] EncL: -213 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:10,684 DEBUG enc: -213 diff: -7 distance: -2.8
+12:50:10,684 DEBUG total: -213 totalDist: -85.2
+12:50:10,688 DEBUG [MOTOR] EncR: 215 (diff: 7)
+Wheel rotations: 0.00714286
+Distance: 2.695
+12:50:10,688 DEBUG enc: 215 diff: 7 distance: 2.8
+12:50:10,688 DEBUG total: 215 totalDist: 86
+12:50:10,690 DEBUG CURRENT: 0 | 0 | 32.4193
+12:50:10,690 DEBUG [LOOP] ROTATION: 12.5807
+12:50:10,690 DEBUG [POS] turning: 
+12:50:10,690 DEBUG Positive dir (12.5807)
+12:50:10,695 DEBUG [MOTOR] EncL: -219 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:10,695 DEBUG enc: -219 diff: -6 distance: -2.4
+12:50:10,695 DEBUG total: -219 totalDist: -87.6
+12:50:10,698 DEBUG [MOTOR] EncR: 222 (diff: 7)
+Wheel rotations: 0.00714286
+Distance: 2.695
+12:50:10,698 DEBUG enc: 222 diff: 7 distance: 2.8
+12:50:10,698 DEBUG total: 222 totalDist: 88.8
+12:50:10,701 DEBUG CURRENT: 0 | 0 | 33.3871
+12:50:10,701 DEBUG [LOOP] ROTATION: 11.6129
+12:50:10,701 DEBUG [POS] turning: 
+12:50:10,701 DEBUG Positive dir (11.6129)
+12:50:10,704 DEBUG [MOTOR] EncL: -226 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:10,704 DEBUG enc: -226 diff: -7 distance: -2.8
+12:50:10,704 DEBUG total: -226 totalDist: -90.4
+12:50:10,708 DEBUG [MOTOR] EncR: 229 (diff: 7)
+Wheel rotations: 0.00714286
+Distance: 2.695
+12:50:10,709 DEBUG enc: 229 diff: 7 distance: 2.8
+12:50:10,709 DEBUG total: 229 totalDist: 91.6
+12:50:10,711 DEBUG CURRENT: 0 | 0 | 34.5161
+12:50:10,712 DEBUG [LOOP] ROTATION: 10.4839
+12:50:10,712 DEBUG [POS] turning: 
+12:50:10,712 DEBUG Positive dir (10.4839)
+12:50:10,716 DEBUG [MOTOR] EncL: -234 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:10,716 DEBUG enc: -234 diff: -8 distance: -3.2
+12:50:10,716 DEBUG total: -234 totalDist: -93.6
+12:50:10,719 DEBUG [MOTOR] EncR: 236 (diff: 7)
+Wheel rotations: 0.00714286
+Distance: 2.695
+12:50:10,720 DEBUG enc: 236 diff: 7 distance: 2.8
+12:50:10,720 DEBUG total: 236 totalDist: 94.4
+12:50:10,722 DEBUG CURRENT: 0 | 0 | 35.6452
+12:50:10,722 DEBUG [LOOP] ROTATION: 9.35485
+12:50:10,722 DEBUG [POS] turning: 
+12:50:10,722 DEBUG Positive dir (9.35485)
+12:50:10,728 DEBUG [MOTOR] EncL: -242 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:10,728 DEBUG enc: -242 diff: -8 distance: -3.2
+12:50:10,728 DEBUG total: -242 totalDist: -96.8
+12:50:10,731 DEBUG [MOTOR] EncR: 244 (diff: 8)
+Wheel rotations: 0.00816327
+Distance: 3.08
+12:50:10,731 DEBUG enc: 244 diff: 8 distance: 3.2
+12:50:10,731 DEBUG total: 244 totalDist: 97.6
+12:50:10,734 DEBUG CURRENT: 0 | 0 | 36.9355
+12:50:10,734 DEBUG [LOOP] ROTATION: 8.06453
+12:50:10,734 DEBUG [POS] turning: 
+12:50:10,734 DEBUG Positive dir (8.06453)
+12:50:10,737 DEBUG [MOTOR] EncL: -249 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:10,737 DEBUG enc: -249 diff: -7 distance: -2.8
+12:50:10,737 DEBUG total: -249 totalDist: -99.6
+12:50:10,742 DEBUG [MOTOR] EncR: 251 (diff: 7)
+Wheel rotations: 0.00714286
+Distance: 2.695
+12:50:10,742 DEBUG enc: 251 diff: 7 distance: 2.8
+12:50:10,742 DEBUG total: 251 totalDist: 100.4
+12:50:10,744 DEBUG CURRENT: 0 | 0 | 38.0645
+12:50:10,744 DEBUG [LOOP] ROTATION: 6.93549
+12:50:10,744 DEBUG [POS] turning: 
+12:50:10,744 DEBUG Positive dir (6.93549)
+12:50:10,748 DEBUG [MOTOR] EncL: -257 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:10,748 DEBUG enc: -257 diff: -8 distance: -3.2
+12:50:10,748 DEBUG total: -257 totalDist: -102.8
+12:50:10,751 DEBUG [MOTOR] EncR: 258 (diff: 7)
+Wheel rotations: 0.00714286
+Distance: 2.695
+12:50:10,752 DEBUG enc: 258 diff: 7 distance: 2.8
+12:50:10,752 DEBUG total: 258 totalDist: 103.2
+12:50:10,754 DEBUG CURRENT: 0 | 0 | 39.1935
+12:50:10,754 DEBUG [LOOP] ROTATION: 5.80646
+12:50:10,754 DEBUG [POS] turning: 
+12:50:10,754 DEBUG Positive dir (5.80646)
+12:50:10,759 DEBUG [MOTOR] EncL: -264 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:10,759 DEBUG enc: -264 diff: -7 distance: -2.8
+12:50:10,759 DEBUG total: -264 totalDist: -105.6
+12:50:10,762 DEBUG [MOTOR] EncR: 266 (diff: 8)
+Wheel rotations: 0.00816327
+Distance: 3.08
+12:50:10,763 DEBUG enc: 266 diff: 8 distance: 3.2
+12:50:10,763 DEBUG total: 266 totalDist: 106.4
+12:50:10,765 DEBUG CURRENT: 0 | 0 | 40.3226
+12:50:10,765 DEBUG [LOOP] ROTATION: 4.67743
+12:50:10,765 DEBUG [POS] turning: 
+12:50:10,765 DEBUG Positive dir (4.67743)
+12:50:10,768 DEBUG [MOTOR] EncL: -271 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:10,768 DEBUG enc: -271 diff: -7 distance: -2.8
+12:50:10,768 DEBUG total: -271 totalDist: -108.4
+12:50:10,771 DEBUG [MOTOR] EncR: 273 (diff: 7)
+Wheel rotations: 0.00714286
+Distance: 2.695
+12:50:10,771 DEBUG enc: 273 diff: 7 distance: 2.8
+12:50:10,771 DEBUG total: 273 totalDist: 109.2
+12:50:10,774 DEBUG CURRENT: 0 | 0 | 41.4516
+12:50:10,774 DEBUG [LOOP] ROTATION: 3.5484
+12:50:10,774 DEBUG [POS] turning: 
+12:50:10,774 DEBUG Positive dir (3.5484)
+12:50:10,777 DEBUG [MOTOR] EncL: -277 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:10,778 DEBUG enc: -277 diff: -6 distance: -2.4
+12:50:10,778 DEBUG total: -277 totalDist: -110.8
+12:50:10,782 DEBUG [MOTOR] EncR: 279 (diff: 6)
+Wheel rotations: 0.00612245
+Distance: 2.31
+12:50:10,782 DEBUG enc: 279 diff: 6 distance: 2.4
+12:50:10,782 DEBUG total: 279 totalDist: 111.6
+12:50:10,784 DEBUG CURRENT: 0 | 0 | 42.4193
+12:50:10,784 DEBUG [LOOP] ROTATION: 2.58065
+12:50:10,784 DEBUG [POS] turning: 
+12:50:10,784 DEBUG Positive dir (2.58065)
+12:50:10,787 DEBUG [MOTOR] EncL: -284 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:10,787 DEBUG enc: -284 diff: -7 distance: -2.8
+12:50:10,788 DEBUG total: -284 totalDist: -113.6
+12:50:10,791 DEBUG [MOTOR] EncR: 286 (diff: 7)
+Wheel rotations: 0.00714286
+Distance: 2.695
+12:50:10,791 DEBUG enc: 286 diff: 7 distance: 2.8
+12:50:10,791 DEBUG total: 286 totalDist: 114.4
+12:50:10,793 DEBUG CURRENT: 0 | 0 | 43.5484
+12:50:10,794 DEBUG [LOOP] ROTATION: 1.45162
+12:50:10,794 DEBUG [POS] turning: 
+12:50:10,794 DEBUG Positive dir (1.45162)
+12:50:10,798 DEBUG [MOTOR] EncL: -290 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:10,798 DEBUG enc: -290 diff: -6 distance: -2.4
+12:50:10,798 DEBUG total: -290 totalDist: -116
+12:50:10,801 DEBUG [MOTOR] EncR: 293 (diff: 7)
+Wheel rotations: 0.00714286
+Distance: 2.695
+12:50:10,801 DEBUG enc: 293 diff: 7 distance: 2.8
+12:50:10,801 DEBUG total: 293 totalDist: 117.2
+12:50:10,804 DEBUG CURRENT: 0 | 0 | 44.5161
+12:50:10,804 DEBUG [LOOP] DRIVE: 100,100
+12:50:10,804 DEBUG DISTR: 141.421
+12:50:10,804 DEBUG [POS] driving with rotation:45 dist:141.421
+12:50:10,804 DEBUG [POS] updatePos 
+12:50:10,808 DEBUG [MOTOR] EncL: -297 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:10,808 DEBUG enc: -297 diff: -7 distance: -2.8
+12:50:10,808 DEBUG total: -297 totalDist: -118.8
+12:50:10,812 DEBUG [MOTOR] EncR: 301 (diff: 8)
+Wheel rotations: 0.00816327
+Distance: 3.08
+12:50:10,812 DEBUG enc: 301 diff: 8 distance: 3.2
+12:50:10,812 DEBUG total: 301 totalDist: 120.4
+12:50:10,813 DEBUG [POS] encoders updated
+12:50:10,813 DEBUG L: -2.8  R: 3.2
+12:50:10,816 DEBUG CURRENT: 1.41421 | 1.41421 | 45
+12:50:10,816 DEBUG [LOOP] DRIVE: 98.5858,98.5858
+12:50:10,816 DEBUG DISTR: 139.421
+12:50:10,816 DEBUG [POS] driving with rotation:45 dist:139.421
+12:50:10,816 DEBUG [POS] updatePos 
+12:50:10,828 DEBUG [MOTOR] EncL: -304 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:10,828 DEBUG enc: -304 diff: -7 distance: -2.8
+12:50:10,828 DEBUG total: -304 totalDist: -121.6
+12:50:10,831 DEBUG [MOTOR] EncR: 313 (diff: 12)
+Wheel rotations: 0.0122449
+Distance: 4.62
+12:50:10,831 DEBUG enc: 313 diff: 12 distance: 4.8
+12:50:10,831 DEBUG total: 313 totalDist: 125.2
+12:50:10,831 DEBUG [POS] encoders updated
+12:50:10,831 DEBUG L: -2.8  R: 4.8
+12:50:10,834 DEBUG CURRENT: 3.53553 | 3.53553 | 45
+12:50:10,834 DEBUG [LOOP] DRIVE: 96.4645,96.4645
+12:50:10,834 DEBUG DISTR: 136.421
+12:50:10,834 DEBUG [POS] driving with rotation:45 dist:136.421
+12:50:10,834 DEBUG [POS] updatePos 
+12:50:10,837 DEBUG [MOTOR] EncL: -315 (diff: -11)
+Wheel rotations: -0.0112245
+Distance: -4.235
+12:50:10,838 DEBUG enc: -315 diff: -11 distance: -4.4
+12:50:10,838 DEBUG total: -315 totalDist: -126
+12:50:10,841 DEBUG [MOTOR] EncR: 319 (diff: 6)
+Wheel rotations: 0.00612245
+Distance: 2.31
+12:50:10,842 DEBUG enc: 319 diff: 6 distance: 2.4
+12:50:10,842 DEBUG total: 319 totalDist: 127.6
+12:50:10,842 DEBUG [POS] encoders updated
+12:50:10,842 DEBUG L: -4.4  R: 2.4
+12:50:10,844 DEBUG CURRENT: 5.65685 | 5.65685 | 45
+12:50:10,844 DEBUG [LOOP] DRIVE: 94.3431,94.3431
+12:50:10,844 DEBUG DISTR: 133.421
+12:50:10,844 DEBUG [POS] driving with rotation:45 dist:133.421
+12:50:10,844 DEBUG [POS] updatePos 
+12:50:10,847 DEBUG [MOTOR] EncL: -321 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:10,847 DEBUG enc: -321 diff: -6 distance: -2.4
+12:50:10,848 DEBUG total: -321 totalDist: -128.4
+12:50:10,850 DEBUG [MOTOR] EncR: 325 (diff: 6)
+Wheel rotations: 0.00612245
+Distance: 2.31
+12:50:10,851 DEBUG enc: 325 diff: 6 distance: 2.4
+12:50:10,851 DEBUG total: 325 totalDist: 130
+12:50:10,851 DEBUG [POS] encoders updated
+12:50:10,851 DEBUG L: -2.4  R: 2.4
+12:50:10,853 DEBUG CURRENT: 7.07107 | 7.07107 | 45
+12:50:10,853 DEBUG [LOOP] DRIVE: 92.9289,92.9289
+12:50:10,853 DEBUG DISTR: 131.421
+12:50:10,853 DEBUG [POS] driving with rotation:45 dist:131.421
+12:50:10,853 DEBUG [POS] updatePos 
+12:50:10,857 DEBUG [MOTOR] EncL: -326 (diff: -5)
+Wheel rotations: -0.00510204
+Distance: -1.925
+12:50:10,857 DEBUG enc: -326 diff: -5 distance: -2
+12:50:10,857 DEBUG total: -326 totalDist: -130.4
+12:50:10,860 DEBUG [MOTOR] EncR: 330 (diff: 5)
+Wheel rotations: 0.00510204
+Distance: 1.925
+12:50:10,860 DEBUG enc: 330 diff: 5 distance: 2
+12:50:10,860 DEBUG total: 330 totalDist: 132
+12:50:10,860 DEBUG [POS] encoders updated
+12:50:10,860 DEBUG L: -2  R: 2
+12:50:10,863 DEBUG CURRENT: 8.48528 | 8.48528 | 45
+12:50:10,863 DEBUG [LOOP] DRIVE: 91.5147,91.5147
+12:50:10,863 DEBUG DISTR: 129.421
+12:50:10,863 DEBUG [POS] driving with rotation:45 dist:129.421
+12:50:10,863 DEBUG [POS] updatePos 
+12:50:10,866 DEBUG [MOTOR] EncL: -332 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:10,866 DEBUG enc: -332 diff: -6 distance: -2.4
+12:50:10,866 DEBUG total: -332 totalDist: -132.8
+12:50:10,870 DEBUG [MOTOR] EncR: 335 (diff: 5)
+Wheel rotations: 0.00510204
+Distance: 1.925
+12:50:10,871 DEBUG enc: 335 diff: 5 distance: 2
+12:50:10,871 DEBUG total: 335 totalDist: 134
+12:50:10,871 DEBUG [POS] encoders updated
+12:50:10,871 DEBUG L: -2.4  R: 2
+12:50:10,873 DEBUG CURRENT: 9.89949 | 9.89949 | 45
+12:50:10,873 DEBUG [LOOP] DRIVE: 90.1005,90.1005
+12:50:10,873 DEBUG DISTR: 127.421
+12:50:10,873 DEBUG [POS] driving with rotation:45 dist:127.421
+12:50:10,873 DEBUG [POS] updatePos 
+12:50:10,876 DEBUG [MOTOR] EncL: -339 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:10,876 DEBUG enc: -339 diff: -7 distance: -2.8
+12:50:10,876 DEBUG total: -339 totalDist: -135.6
+12:50:10,879 DEBUG [MOTOR] EncR: 341 (diff: 6)
+Wheel rotations: 0.00612245
+Distance: 2.31
+12:50:10,880 DEBUG enc: 341 diff: 6 distance: 2.4
+12:50:10,880 DEBUG total: 341 totalDist: 136.4
+12:50:10,880 DEBUG [POS] encoders updated
+12:50:10,880 DEBUG L: -2.8  R: 2.4
+12:50:10,882 DEBUG CURRENT: 11.3137 | 11.3137 | 45
+12:50:10,882 DEBUG [LOOP] DRIVE: 88.6863,88.6863
+12:50:10,882 DEBUG DISTR: 125.421
+12:50:10,882 DEBUG [POS] driving with rotation:45 dist:125.421
+12:50:10,882 DEBUG [POS] updatePos 
+12:50:10,886 DEBUG [MOTOR] EncL: -346 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:10,886 DEBUG enc: -346 diff: -7 distance: -2.8
+12:50:10,886 DEBUG total: -346 totalDist: -138.4
+12:50:10,889 DEBUG [MOTOR] EncR: 346 (diff: 5)
+Wheel rotations: 0.00510204
+Distance: 1.925
+12:50:10,890 DEBUG enc: 346 diff: 5 distance: 2
+12:50:10,890 DEBUG total: 346 totalDist: 138.4
+12:50:10,890 DEBUG [POS] encoders updated
+12:50:10,890 DEBUG L: -2.8  R: 2
+12:50:10,892 DEBUG CURRENT: 12.7279 | 12.7279 | 45
+12:50:10,892 DEBUG [LOOP] DRIVE: 87.2721,87.2721
+12:50:10,892 DEBUG DISTR: 123.421
+12:50:10,892 DEBUG [POS] driving with rotation:45 dist:123.421
+12:50:10,892 DEBUG [POS] updatePos 
+12:50:10,895 DEBUG [MOTOR] EncL: -353 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:10,895 DEBUG enc: -353 diff: -7 distance: -2.8
+12:50:10,895 DEBUG total: -353 totalDist: -141.2
+12:50:10,898 DEBUG [MOTOR] EncR: 351 (diff: 5)
+Wheel rotations: 0.00510204
+Distance: 1.925
+12:50:10,898 DEBUG enc: 351 diff: 5 distance: 2
+12:50:10,898 DEBUG total: 351 totalDist: 140.4
+12:50:10,898 DEBUG [POS] encoders updated
+12:50:10,898 DEBUG L: -2.8  R: 2
+12:50:10,901 DEBUG CURRENT: 14.1421 | 14.1421 | 45
+12:50:10,901 DEBUG [LOOP] DRIVE: 85.8579,85.8579
+12:50:10,901 DEBUG DISTR: 121.421
+12:50:10,901 DEBUG [POS] driving with rotation:45 dist:121.421
+12:50:10,901 DEBUG [POS] updatePos 
+12:50:10,904 DEBUG [MOTOR] EncL: -359 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:10,905 DEBUG enc: -359 diff: -6 distance: -2.4
+12:50:10,905 DEBUG total: -359 totalDist: -143.6
+12:50:10,909 DEBUG [MOTOR] EncR: 356 (diff: 5)
+Wheel rotations: 0.00510204
+Distance: 1.925
+12:50:10,909 DEBUG enc: 356 diff: 5 distance: 2
+12:50:10,909 DEBUG total: 356 totalDist: 142.4
+12:50:10,909 DEBUG [POS] encoders updated
+12:50:10,909 DEBUG L: -2.4  R: 2
+12:50:10,912 DEBUG CURRENT: 15.5563 | 15.5563 | 45
+12:50:10,912 DEBUG [LOOP] DRIVE: 84.4436,84.4436
+12:50:10,912 DEBUG DISTR: 119.421
+12:50:10,912 DEBUG [POS] driving with rotation:45 dist:119.421
+12:50:10,912 DEBUG [POS] updatePos 
+12:50:10,917 DEBUG [MOTOR] EncL: -368 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:10,917 DEBUG enc: -368 diff: -9 distance: -3.6
+12:50:10,917 DEBUG total: -368 totalDist: -147.2
+12:50:10,920 DEBUG [MOTOR] EncR: 363 (diff: 7)
+Wheel rotations: 0.00714286
+Distance: 2.695
+12:50:10,921 DEBUG enc: 363 diff: 7 distance: 2.8
+12:50:10,921 DEBUG total: 363 totalDist: 145.2
+12:50:10,921 DEBUG [POS] encoders updated
+12:50:10,921 DEBUG L: -3.6  R: 2.8
+12:50:10,923 DEBUG CURRENT: 16.9706 | 16.9706 | 45
+12:50:10,923 DEBUG [LOOP] DRIVE: 83.0294,83.0294
+12:50:10,923 DEBUG DISTR: 117.421
+12:50:10,923 DEBUG [POS] driving with rotation:45 dist:117.421
+12:50:10,923 DEBUG [POS] updatePos 
+12:50:10,926 DEBUG [MOTOR] EncL: -375 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:10,927 DEBUG enc: -375 diff: -7 distance: -2.8
+12:50:10,927 DEBUG total: -375 totalDist: -150
+12:50:10,930 DEBUG [MOTOR] EncR: 367 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:10,930 DEBUG enc: 367 diff: 4 distance: 1.6
+12:50:10,930 DEBUG total: 367 totalDist: 146.8
+12:50:10,930 DEBUG [POS] encoders updated
+12:50:10,930 DEBUG L: -2.8  R: 1.6
+12:50:10,933 DEBUG CURRENT: 17.6777 | 17.6777 | 45
+12:50:10,933 DEBUG [LOOP] DRIVE: 82.3223,82.3223
+12:50:10,933 DEBUG DISTR: 116.421
+12:50:10,933 DEBUG [POS] driving with rotation:45 dist:116.421
+12:50:10,933 DEBUG [POS] updatePos 
+12:50:10,936 DEBUG [MOTOR] EncL: -383 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:10,936 DEBUG enc: -383 diff: -8 distance: -3.2
+12:50:10,936 DEBUG total: -383 totalDist: -153.2
+12:50:10,940 DEBUG [MOTOR] EncR: 372 (diff: 5)
+Wheel rotations: 0.00510204
+Distance: 1.925
+12:50:10,940 DEBUG enc: 372 diff: 5 distance: 2
+12:50:10,941 DEBUG total: 372 totalDist: 148.8
+12:50:10,941 DEBUG [POS] encoders updated
+12:50:10,941 DEBUG L: -3.2  R: 2
+12:50:10,943 DEBUG CURRENT: 19.0919 | 19.0919 | 45
+12:50:10,943 DEBUG [LOOP] DRIVE: 80.9081,80.9081
+12:50:10,943 DEBUG DISTR: 114.421
+12:50:10,943 DEBUG [POS] driving with rotation:45 dist:114.421
+12:50:10,943 DEBUG [POS] updatePos 
+12:50:10,946 DEBUG [MOTOR] EncL: -390 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:10,946 DEBUG enc: -390 diff: -7 distance: -2.8
+12:50:10,946 DEBUG total: -390 totalDist: -156
+12:50:10,950 DEBUG [MOTOR] EncR: 377 (diff: 5)
+Wheel rotations: 0.00510204
+Distance: 1.925
+12:50:10,950 DEBUG enc: 377 diff: 5 distance: 2
+12:50:10,950 DEBUG total: 377 totalDist: 150.8
+12:50:10,950 DEBUG [POS] encoders updated
+12:50:10,950 DEBUG L: -2.8  R: 2
+12:50:10,953 DEBUG CURRENT: 20.5061 | 20.5061 | 45
+12:50:10,953 DEBUG [LOOP] DRIVE: 79.4939,79.4939
+12:50:10,953 DEBUG DISTR: 112.421
+12:50:10,953 DEBUG [POS] driving with rotation:45 dist:112.421
+12:50:10,953 DEBUG [POS] updatePos 
+12:50:10,956 DEBUG [MOTOR] EncL: -398 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:10,956 DEBUG enc: -398 diff: -8 distance: -3.2
+12:50:10,956 DEBUG total: -398 totalDist: -159.2
+12:50:10,959 DEBUG [MOTOR] EncR: 382 (diff: 5)
+Wheel rotations: 0.00510204
+Distance: 1.925
+12:50:10,959 DEBUG enc: 382 diff: 5 distance: 2
+12:50:10,960 DEBUG total: 382 totalDist: 152.8
+12:50:10,960 DEBUG [POS] encoders updated
+12:50:10,960 DEBUG L: -3.2  R: 2
+12:50:10,962 DEBUG CURRENT: 21.9203 | 21.9203 | 45
+12:50:10,962 DEBUG [LOOP] DRIVE: 78.0797,78.0797
+12:50:10,962 DEBUG DISTR: 110.421
+12:50:10,962 DEBUG [POS] driving with rotation:45 dist:110.421
+12:50:10,962 DEBUG [POS] updatePos 
+12:50:10,966 DEBUG [MOTOR] EncL: -405 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:10,966 DEBUG enc: -405 diff: -7 distance: -2.8
+12:50:10,966 DEBUG total: -405 totalDist: -162
+12:50:10,969 DEBUG [MOTOR] EncR: 387 (diff: 5)
+Wheel rotations: 0.00510204
+Distance: 1.925
+12:50:10,969 DEBUG enc: 387 diff: 5 distance: 2
+12:50:10,969 DEBUG total: 387 totalDist: 154.8
+12:50:10,969 DEBUG [POS] encoders updated
+12:50:10,969 DEBUG L: -2.8  R: 2
+12:50:10,971 DEBUG CURRENT: 23.3345 | 23.3345 | 45
+12:50:10,971 DEBUG [LOOP] DRIVE: 76.6655,76.6655
+12:50:10,972 DEBUG DISTR: 108.421
+12:50:10,972 DEBUG [POS] driving with rotation:45 dist:108.421
+12:50:10,972 DEBUG [POS] updatePos 
+12:50:10,976 DEBUG [MOTOR] EncL: -412 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:10,976 DEBUG enc: -412 diff: -7 distance: -2.8
+12:50:10,976 DEBUG total: -412 totalDist: -164.8
+12:50:10,979 DEBUG [MOTOR] EncR: 392 (diff: 5)
+Wheel rotations: 0.00510204
+Distance: 1.925
+12:50:10,979 DEBUG enc: 392 diff: 5 distance: 2
+12:50:10,979 DEBUG total: 392 totalDist: 156.8
+12:50:10,979 DEBUG [POS] encoders updated
+12:50:10,979 DEBUG L: -2.8  R: 2
+12:50:10,982 DEBUG CURRENT: 24.7487 | 24.7487 | 45
+12:50:10,982 DEBUG [LOOP] DRIVE: 75.2513,75.2513
+12:50:10,982 DEBUG DISTR: 106.421
+12:50:10,982 DEBUG [POS] driving with rotation:45 dist:106.421
+12:50:10,982 DEBUG [POS] updatePos 
+12:50:10,985 DEBUG [MOTOR] EncL: -420 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:10,985 DEBUG enc: -420 diff: -8 distance: -3.2
+12:50:10,985 DEBUG total: -420 totalDist: -168
+12:50:10,988 DEBUG [MOTOR] EncR: 396 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:10,988 DEBUG enc: 396 diff: 4 distance: 1.6
+12:50:10,989 DEBUG total: 396 totalDist: 158.4
+12:50:10,989 DEBUG [POS] encoders updated
+12:50:10,989 DEBUG L: -3.2  R: 1.6
+12:50:10,991 DEBUG CURRENT: 26.1629 | 26.1629 | 45
+12:50:10,991 DEBUG [LOOP] DRIVE: 73.8371,73.8371
+12:50:10,991 DEBUG DISTR: 104.421
+12:50:10,991 DEBUG [POS] driving with rotation:45 dist:104.421
+12:50:10,991 DEBUG [POS] updatePos 
+12:50:10,994 DEBUG [MOTOR] EncL: -427 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:10,995 DEBUG enc: -427 diff: -7 distance: -2.8
+12:50:10,995 DEBUG total: -427 totalDist: -170.8
+12:50:10,998 DEBUG [MOTOR] EncR: 400 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:10,998 DEBUG enc: 400 diff: 4 distance: 1.6
+12:50:10,998 DEBUG total: 400 totalDist: 160
+12:50:10,998 DEBUG [POS] encoders updated
+12:50:10,998 DEBUG L: -2.8  R: 1.6
+12:50:11,000 DEBUG CURRENT: 26.8701 | 26.8701 | 45
+12:50:11,001 DEBUG [LOOP] DRIVE: 73.1299,73.1299
+12:50:11,001 DEBUG DISTR: 103.421
+12:50:11,001 DEBUG [POS] driving with rotation:45 dist:103.421
+12:50:11,001 DEBUG [POS] updatePos 
+12:50:11,004 DEBUG [MOTOR] EncL: -435 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:11,004 DEBUG enc: -435 diff: -8 distance: -3.2
+12:50:11,004 DEBUG total: -435 totalDist: -174
+12:50:11,007 DEBUG [MOTOR] EncR: 405 (diff: 5)
+Wheel rotations: 0.00510204
+Distance: 1.925
+12:50:11,008 DEBUG enc: 405 diff: 5 distance: 2
+12:50:11,008 DEBUG total: 405 totalDist: 162
+12:50:11,008 DEBUG [POS] encoders updated
+12:50:11,008 DEBUG L: -3.2  R: 2
+12:50:11,010 DEBUG CURRENT: 28.2843 | 28.2843 | 45
+12:50:11,010 DEBUG [LOOP] DRIVE: 71.7157,71.7157
+12:50:11,010 DEBUG DISTR: 101.421
+12:50:11,010 DEBUG [POS] driving with rotation:45 dist:101.421
+12:50:11,010 DEBUG [POS] updatePos 
+12:50:11,014 DEBUG [MOTOR] EncL: -442 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:11,014 DEBUG enc: -442 diff: -7 distance: -2.8
+12:50:11,014 DEBUG total: -442 totalDist: -176.8
+12:50:11,018 DEBUG [MOTOR] EncR: 409 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:11,018 DEBUG enc: 409 diff: 4 distance: 1.6
+12:50:11,018 DEBUG total: 409 totalDist: 163.6
+12:50:11,018 DEBUG [POS] encoders updated
+12:50:11,018 DEBUG L: -2.8  R: 1.6
+12:50:11,020 DEBUG CURRENT: 28.9914 | 28.9914 | 45
+12:50:11,021 DEBUG [LOOP] DRIVE: 71.0086,71.0086
+12:50:11,021 DEBUG DISTR: 100.421
+12:50:11,021 DEBUG [POS] driving with rotation:45 dist:100.421
+12:50:11,021 DEBUG [POS] updatePos 
+12:50:11,024 DEBUG [MOTOR] EncL: -451 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:11,025 DEBUG enc: -451 diff: -9 distance: -3.6
+12:50:11,025 DEBUG total: -451 totalDist: -180.4
+12:50:11,028 DEBUG [MOTOR] EncR: 413 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:11,029 DEBUG enc: 413 diff: 4 distance: 1.6
+12:50:11,029 DEBUG total: 413 totalDist: 165.2
+12:50:11,029 DEBUG [POS] encoders updated
+12:50:11,029 DEBUG L: -3.6  R: 1.6
+12:50:11,031 DEBUG CURRENT: 30.4056 | 30.4056 | 45
+12:50:11,031 DEBUG [LOOP] DRIVE: 69.5944,69.5944
+12:50:11,031 DEBUG DISTR: 98.4214
+12:50:11,031 DEBUG [POS] driving with rotation:45 dist:98.4214
+12:50:11,031 DEBUG [POS] updatePos 
+12:50:11,034 DEBUG [MOTOR] EncL: -459 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:11,034 DEBUG enc: -459 diff: -8 distance: -3.2
+12:50:11,034 DEBUG total: -459 totalDist: -183.6
+12:50:11,037 DEBUG [MOTOR] EncR: 417 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:11,037 DEBUG enc: 417 diff: 4 distance: 1.6
+12:50:11,037 DEBUG total: 417 totalDist: 166.8
+12:50:11,037 DEBUG [POS] encoders updated
+12:50:11,037 DEBUG L: -3.2  R: 1.6
+12:50:11,040 DEBUG CURRENT: 31.8198 | 31.8198 | 45
+12:50:11,040 DEBUG [LOOP] DRIVE: 68.1802,68.1802
+12:50:11,040 DEBUG DISTR: 96.4214
+12:50:11,040 DEBUG [POS] driving with rotation:45 dist:96.4214
+12:50:11,040 DEBUG [POS] updatePos 
+12:50:11,043 DEBUG [MOTOR] EncL: -467 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:11,043 DEBUG enc: -467 diff: -8 distance: -3.2
+12:50:11,043 DEBUG total: -467 totalDist: -186.8
+12:50:11,047 DEBUG [MOTOR] EncR: 420 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:11,047 DEBUG enc: 420 diff: 3 distance: 1.2
+12:50:11,047 DEBUG total: 420 totalDist: 168
+12:50:11,048 DEBUG [POS] encoders updated
+12:50:11,048 DEBUG L: -3.2  R: 1.2
+12:50:11,050 DEBUG CURRENT: 33.234 | 33.234 | 45
+12:50:11,050 DEBUG [LOOP] DRIVE: 66.766,66.766
+12:50:11,050 DEBUG DISTR: 94.4214
+12:50:11,050 DEBUG [POS] driving with rotation:45 dist:94.4214
+12:50:11,050 DEBUG [POS] updatePos 
+12:50:11,053 DEBUG [MOTOR] EncL: -476 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:11,053 DEBUG enc: -476 diff: -9 distance: -3.6
+12:50:11,053 DEBUG total: -476 totalDist: -190.4
+12:50:11,056 DEBUG [MOTOR] EncR: 424 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:11,056 DEBUG enc: 424 diff: 4 distance: 1.6
+12:50:11,056 DEBUG total: 424 totalDist: 169.6
+12:50:11,056 DEBUG [POS] encoders updated
+12:50:11,056 DEBUG L: -3.6  R: 1.6
+12:50:11,059 DEBUG CURRENT: 34.6482 | 34.6482 | 45
+12:50:11,059 DEBUG [LOOP] DRIVE: 65.3518,65.3518
+12:50:11,059 DEBUG DISTR: 92.4214
+12:50:11,059 DEBUG [POS] driving with rotation:45 dist:92.4214
+12:50:11,059 DEBUG [POS] updatePos 
+12:50:11,063 DEBUG [MOTOR] EncL: -483 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:11,063 DEBUG enc: -483 diff: -7 distance: -2.8
+12:50:11,063 DEBUG total: -483 totalDist: -193.2
+12:50:11,066 DEBUG [MOTOR] EncR: 427 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:11,066 DEBUG enc: 427 diff: 3 distance: 1.2
+12:50:11,066 DEBUG total: 427 totalDist: 170.8
+12:50:11,066 DEBUG [POS] encoders updated
+12:50:11,066 DEBUG L: -2.8  R: 1.2
+12:50:11,069 DEBUG CURRENT: 35.3553 | 35.3553 | 45
+12:50:11,069 DEBUG [LOOP] DRIVE: 64.6447,64.6447
+12:50:11,069 DEBUG DISTR: 91.4214
+12:50:11,069 DEBUG [POS] driving with rotation:45 dist:91.4214
+12:50:11,069 DEBUG [POS] updatePos 
+12:50:11,072 DEBUG [MOTOR] EncL: -492 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:11,072 DEBUG enc: -492 diff: -9 distance: -3.6
+12:50:11,072 DEBUG total: -492 totalDist: -196.8
+12:50:11,075 DEBUG [MOTOR] EncR: 431 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:11,075 DEBUG enc: 431 diff: 4 distance: 1.6
+12:50:11,075 DEBUG total: 431 totalDist: 172.4
+12:50:11,076 DEBUG [POS] encoders updated
+12:50:11,076 DEBUG L: -3.6  R: 1.6
+12:50:11,078 DEBUG CURRENT: 36.7696 | 36.7696 | 45
+12:50:11,079 DEBUG [LOOP] DRIVE: 63.2304,63.2304
+12:50:11,079 DEBUG DISTR: 89.4214
+12:50:11,079 DEBUG [POS] driving with rotation:45 dist:89.4214
+12:50:11,080 DEBUG [POS] updatePos 
+12:50:11,083 DEBUG [MOTOR] EncL: -502 (diff: -10)
+Wheel rotations: -0.0102041
+Distance: -3.85
+12:50:11,083 DEBUG enc: -502 diff: -10 distance: -4
+12:50:11,083 DEBUG total: -502 totalDist: -200.8
+12:50:11,086 DEBUG [MOTOR] EncR: 435 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:11,086 DEBUG enc: 435 diff: 4 distance: 1.6
+12:50:11,086 DEBUG total: 435 totalDist: 174
+12:50:11,086 DEBUG [POS] encoders updated
+12:50:11,086 DEBUG L: -4  R: 1.6
+12:50:11,089 DEBUG CURRENT: 38.1838 | 38.1838 | 45
+12:50:11,089 DEBUG [LOOP] DRIVE: 61.8162,61.8162
+12:50:11,089 DEBUG DISTR: 87.4214
+12:50:11,089 DEBUG [POS] driving with rotation:45 dist:87.4214
+12:50:11,089 DEBUG [POS] updatePos 
+12:50:11,092 DEBUG [MOTOR] EncL: -509 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:11,092 DEBUG enc: -509 diff: -7 distance: -2.8
+12:50:11,093 DEBUG total: -509 totalDist: -203.6
+12:50:11,096 DEBUG [MOTOR] EncR: 438 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:11,096 DEBUG enc: 438 diff: 3 distance: 1.2
+12:50:11,096 DEBUG total: 438 totalDist: 175.2
+12:50:11,096 DEBUG [POS] encoders updated
+12:50:11,096 DEBUG L: -2.8  R: 1.2
+12:50:11,098 DEBUG CURRENT: 38.8909 | 38.8909 | 45
+12:50:11,099 DEBUG [LOOP] DRIVE: 61.1091,61.1091
+12:50:11,099 DEBUG DISTR: 86.4213
+12:50:11,099 DEBUG [POS] driving with rotation:45 dist:86.4213
+12:50:11,099 DEBUG [POS] updatePos 
+12:50:11,102 DEBUG [MOTOR] EncL: -518 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:11,102 DEBUG enc: -518 diff: -9 distance: -3.6
+12:50:11,102 DEBUG total: -518 totalDist: -207.2
+12:50:11,105 DEBUG [MOTOR] EncR: 441 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:11,105 DEBUG enc: 441 diff: 3 distance: 1.2
+12:50:11,105 DEBUG total: 441 totalDist: 176.4
+12:50:11,105 DEBUG [POS] encoders updated
+12:50:11,105 DEBUG L: -3.6  R: 1.2
+12:50:11,108 DEBUG CURRENT: 40.3051 | 40.3051 | 45
+12:50:11,108 DEBUG [LOOP] DRIVE: 59.6949,59.6949
+12:50:11,108 DEBUG DISTR: 84.4213
+12:50:11,108 DEBUG [POS] driving with rotation:45 dist:84.4213
+12:50:11,108 DEBUG [POS] updatePos 
+12:50:11,113 DEBUG [MOTOR] EncL: -526 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:11,113 DEBUG enc: -526 diff: -8 distance: -3.2
+12:50:11,114 DEBUG total: -526 totalDist: -210.4
+12:50:11,117 DEBUG [MOTOR] EncR: 445 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:11,117 DEBUG enc: 445 diff: 4 distance: 1.6
+12:50:11,117 DEBUG total: 445 totalDist: 178
+12:50:11,117 DEBUG [POS] encoders updated
+12:50:11,117 DEBUG L: -3.2  R: 1.6
+12:50:11,120 DEBUG CURRENT: 41.7193 | 41.7193 | 45
+12:50:11,120 DEBUG [LOOP] DRIVE: 58.2807,58.2807
+12:50:11,120 DEBUG DISTR: 82.4213
+12:50:11,120 DEBUG [POS] driving with rotation:45 dist:82.4213
+12:50:11,120 DEBUG [POS] updatePos 
+12:50:11,123 DEBUG [MOTOR] EncL: -537 (diff: -11)
+Wheel rotations: -0.0112245
+Distance: -4.235
+12:50:11,123 DEBUG enc: -537 diff: -11 distance: -4.4
+12:50:11,123 DEBUG total: -537 totalDist: -214.8
+12:50:11,127 DEBUG [MOTOR] EncR: 449 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:11,128 DEBUG enc: 449 diff: 4 distance: 1.6
+12:50:11,128 DEBUG total: 449 totalDist: 179.6
+12:50:11,128 DEBUG [POS] encoders updated
+12:50:11,128 DEBUG L: -4.4  R: 1.6
+12:50:11,130 DEBUG CURRENT: 43.1335 | 43.1335 | 45
+12:50:11,130 DEBUG [LOOP] DRIVE: 56.8665,56.8665
+12:50:11,130 DEBUG DISTR: 80.4213
+12:50:11,130 DEBUG [POS] driving with rotation:45 dist:80.4213
+12:50:11,130 DEBUG [POS] updatePos 
+12:50:11,133 DEBUG [MOTOR] EncL: -547 (diff: -10)
+Wheel rotations: -0.0102041
+Distance: -3.85
+12:50:11,133 DEBUG enc: -547 diff: -10 distance: -4
+12:50:11,133 DEBUG total: -547 totalDist: -218.8
+12:50:11,136 DEBUG [MOTOR] EncR: 452 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:11,136 DEBUG enc: 452 diff: 3 distance: 1.2
+12:50:11,136 DEBUG total: 452 totalDist: 180.8
+12:50:11,136 DEBUG [POS] encoders updated
+12:50:11,136 DEBUG L: -4  R: 1.2
+12:50:11,138 DEBUG CURRENT: 44.5477 | 44.5477 | 45
+12:50:11,139 DEBUG [LOOP] DRIVE: 55.4523,55.4523
+12:50:11,139 DEBUG DISTR: 78.4213
+12:50:11,139 DEBUG [POS] driving with rotation:45 dist:78.4213
+12:50:11,139 DEBUG [POS] updatePos 
+12:50:11,143 DEBUG [MOTOR] EncL: -555 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:11,143 DEBUG enc: -555 diff: -8 distance: -3.2
+12:50:11,144 DEBUG total: -555 totalDist: -222
+12:50:11,147 DEBUG [MOTOR] EncR: 455 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:11,148 DEBUG enc: 455 diff: 3 distance: 1.2
+12:50:11,148 DEBUG total: 455 totalDist: 182
+12:50:11,148 DEBUG [POS] encoders updated
+12:50:11,148 DEBUG L: -3.2  R: 1.2
+12:50:11,150 DEBUG CURRENT: 45.962 | 45.962 | 45
+12:50:11,150 DEBUG [LOOP] DRIVE: 54.038,54.038
+12:50:11,150 DEBUG DISTR: 76.4213
+12:50:11,150 DEBUG [POS] driving with rotation:45 dist:76.4213
+12:50:11,150 DEBUG [POS] updatePos 
+12:50:11,153 DEBUG [MOTOR] EncL: -566 (diff: -11)
+Wheel rotations: -0.0112245
+Distance: -4.235
+12:50:11,153 DEBUG enc: -566 diff: -11 distance: -4.4
+12:50:11,153 DEBUG total: -566 totalDist: -226.4
+12:50:11,157 DEBUG [MOTOR] EncR: 459 (diff: 4)
+Wheel rotations: 0.00408163
+Distance: 1.54
+12:50:11,157 DEBUG enc: 459 diff: 4 distance: 1.6
+12:50:11,157 DEBUG total: 459 totalDist: 183.6
+12:50:11,157 DEBUG [POS] encoders updated
+12:50:11,157 DEBUG L: -4.4  R: 1.6
+12:50:11,160 DEBUG CURRENT: 47.3762 | 47.3762 | 45
+12:50:11,160 DEBUG [LOOP] DRIVE: 52.6238,52.6238
+12:50:11,160 DEBUG DISTR: 74.4213
+12:50:11,160 DEBUG [POS] driving with rotation:45 dist:74.4213
+12:50:11,160 DEBUG [POS] updatePos 
+12:50:11,163 DEBUG [MOTOR] EncL: -575 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:11,164 DEBUG enc: -575 diff: -9 distance: -3.6
+12:50:11,164 DEBUG total: -575 totalDist: -230
+12:50:11,167 DEBUG [MOTOR] EncR: 461 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:11,167 DEBUG enc: 461 diff: 2 distance: 0.8
+12:50:11,167 DEBUG total: 461 totalDist: 184.4
+12:50:11,167 DEBUG [POS] encoders updated
+12:50:11,167 DEBUG L: -3.6  R: 0.8
+12:50:11,170 DEBUG CURRENT: 48.0833 | 48.0833 | 45
+12:50:11,170 DEBUG [LOOP] DRIVE: 51.9167,51.9167
+12:50:11,170 DEBUG DISTR: 73.4213
+12:50:11,170 DEBUG [POS] driving with rotation:45 dist:73.4213
+12:50:11,170 DEBUG [POS] updatePos 
+12:50:11,173 DEBUG [MOTOR] EncL: -585 (diff: -10)
+Wheel rotations: -0.0102041
+Distance: -3.85
+12:50:11,174 DEBUG enc: -585 diff: -10 distance: -4
+12:50:11,174 DEBUG total: -585 totalDist: -234
+12:50:11,177 DEBUG [MOTOR] EncR: 464 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:11,177 DEBUG enc: 464 diff: 3 distance: 1.2
+12:50:11,177 DEBUG total: 464 totalDist: 185.6
+12:50:11,177 DEBUG [POS] encoders updated
+12:50:11,178 DEBUG L: -4  R: 1.2
+12:50:11,180 DEBUG CURRENT: 49.4975 | 49.4975 | 45
+12:50:11,180 DEBUG [LOOP] DRIVE: 50.5025,50.5025
+12:50:11,180 DEBUG DISTR: 71.4213
+12:50:11,180 DEBUG [POS] driving with rotation:45 dist:71.4213
+12:50:11,180 DEBUG [POS] updatePos 
+12:50:11,183 DEBUG [MOTOR] EncL: -595 (diff: -10)
+Wheel rotations: -0.0102041
+Distance: -3.85
+12:50:11,183 DEBUG enc: -595 diff: -10 distance: -4
+12:50:11,183 DEBUG total: -595 totalDist: -238
+12:50:11,187 DEBUG [MOTOR] EncR: 467 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:11,187 DEBUG enc: 467 diff: 3 distance: 1.2
+12:50:11,187 DEBUG total: 467 totalDist: 186.8
+12:50:11,187 DEBUG [POS] encoders updated
+12:50:11,187 DEBUG L: -4  R: 1.2
+12:50:11,189 DEBUG CURRENT: 50.9117 | 50.9117 | 45
+12:50:11,190 DEBUG [LOOP] DRIVE: 49.0883,49.0883
+12:50:11,190 DEBUG DISTR: 69.4213
+12:50:11,190 DEBUG [POS] driving with rotation:45 dist:69.4213
+12:50:11,190 DEBUG [POS] updatePos 
+12:50:11,193 DEBUG [MOTOR] EncL: -604 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:11,193 DEBUG enc: -604 diff: -9 distance: -3.6
+12:50:11,193 DEBUG total: -604 totalDist: -241.6
+12:50:11,196 DEBUG [MOTOR] EncR: 469 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:11,196 DEBUG enc: 469 diff: 2 distance: 0.8
+12:50:11,196 DEBUG total: 469 totalDist: 187.6
+12:50:11,196 DEBUG [POS] encoders updated
+12:50:11,196 DEBUG L: -3.6  R: 0.8
+12:50:11,198 DEBUG CURRENT: 51.6188 | 51.6188 | 45
+12:50:11,199 DEBUG [LOOP] DRIVE: 48.3812,48.3812
+12:50:11,199 DEBUG DISTR: 68.4213
+12:50:11,199 DEBUG [POS] driving with rotation:45 dist:68.4213
+12:50:11,199 DEBUG [POS] updatePos 
+12:50:11,202 DEBUG [MOTOR] EncL: -613 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:11,202 DEBUG enc: -613 diff: -9 distance: -3.6
+12:50:11,202 DEBUG total: -613 totalDist: -245.2
+12:50:11,206 DEBUG [MOTOR] EncR: 471 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:11,206 DEBUG enc: 471 diff: 2 distance: 0.8
+12:50:11,206 DEBUG total: 471 totalDist: 188.4
+12:50:11,206 DEBUG [POS] encoders updated
+12:50:11,206 DEBUG L: -3.6  R: 0.8
+12:50:11,210 DEBUG CURRENT: 52.3259 | 52.3259 | 45
+12:50:11,210 DEBUG [LOOP] DRIVE: 47.6741,47.6741
+12:50:11,211 DEBUG DISTR: 67.4213
+12:50:11,211 DEBUG [POS] driving with rotation:45 dist:67.4213
+12:50:11,211 DEBUG [POS] updatePos 
+12:50:11,214 DEBUG [MOTOR] EncL: -625 (diff: -12)
+Wheel rotations: -0.0122449
+Distance: -4.62
+12:50:11,214 DEBUG enc: -625 diff: -12 distance: -4.8
+12:50:11,214 DEBUG total: -625 totalDist: -250
+12:50:11,217 DEBUG [MOTOR] EncR: 474 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:11,217 DEBUG enc: 474 diff: 3 distance: 1.2
+12:50:11,217 DEBUG total: 474 totalDist: 189.6
+12:50:11,217 DEBUG [POS] encoders updated
+12:50:11,218 DEBUG L: -4.8  R: 1.2
+12:50:11,220 DEBUG CURRENT: 53.7401 | 53.7401 | 45
+12:50:11,220 DEBUG [LOOP] DRIVE: 46.2599,46.2599
+12:50:11,220 DEBUG DISTR: 65.4213
+12:50:11,220 DEBUG [POS] driving with rotation:45 dist:65.4213
+12:50:11,220 DEBUG [POS] updatePos 
+12:50:11,224 DEBUG [MOTOR] EncL: -634 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:11,225 DEBUG enc: -634 diff: -9 distance: -3.6
+12:50:11,225 DEBUG total: -634 totalDist: -253.6
+12:50:11,228 DEBUG [MOTOR] EncR: 476 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:11,229 DEBUG enc: 476 diff: 2 distance: 0.8
+12:50:11,229 DEBUG total: 476 totalDist: 190.4
+12:50:11,229 DEBUG [POS] encoders updated
+12:50:11,229 DEBUG L: -3.6  R: 0.8
+12:50:11,231 DEBUG CURRENT: 54.4472 | 54.4472 | 45
+12:50:11,231 DEBUG [LOOP] DRIVE: 45.5528,45.5528
+12:50:11,231 DEBUG DISTR: 64.4213
+12:50:11,231 DEBUG [POS] driving with rotation:45 dist:64.4213
+12:50:11,231 DEBUG [POS] updatePos 
+12:50:11,234 DEBUG [MOTOR] EncL: -645 (diff: -11)
+Wheel rotations: -0.0112245
+Distance: -4.235
+12:50:11,234 DEBUG enc: -645 diff: -11 distance: -4.4
+12:50:11,234 DEBUG total: -645 totalDist: -258
+12:50:11,238 DEBUG [MOTOR] EncR: 479 (diff: 3)
+Wheel rotations: 0.00306122
+Distance: 1.155
+12:50:11,238 DEBUG enc: 479 diff: 3 distance: 1.2
+12:50:11,238 DEBUG total: 479 totalDist: 191.6
+12:50:11,238 DEBUG [POS] encoders updated
+12:50:11,238 DEBUG L: -4.4  R: 1.2
+12:50:11,241 DEBUG CURRENT: 55.8615 | 55.8615 | 45
+12:50:11,241 DEBUG [LOOP] DRIVE: 44.1385,44.1385
+12:50:11,241 DEBUG DISTR: 62.4213
+12:50:11,241 DEBUG [POS] driving with rotation:45 dist:62.4213
+12:50:11,241 DEBUG [POS] updatePos 
+12:50:11,244 DEBUG [MOTOR] EncL: -655 (diff: -10)
+Wheel rotations: -0.0102041
+Distance: -3.85
+12:50:11,245 DEBUG enc: -655 diff: -10 distance: -4
+12:50:11,245 DEBUG total: -655 totalDist: -262
+12:50:11,248 DEBUG [MOTOR] EncR: 481 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:11,248 DEBUG enc: 481 diff: 2 distance: 0.8
+12:50:11,248 DEBUG total: 481 totalDist: 192.4
+12:50:11,248 DEBUG [POS] encoders updated
+12:50:11,248 DEBUG L: -4  R: 0.8
+12:50:11,251 DEBUG CURRENT: 57.2757 | 57.2757 | 45
+12:50:11,251 DEBUG [LOOP] DRIVE: 42.7243,42.7243
+12:50:11,251 DEBUG DISTR: 60.4213
+12:50:11,251 DEBUG [POS] driving with rotation:45 dist:60.4213
+12:50:11,251 DEBUG [POS] updatePos 
+12:50:11,255 DEBUG [MOTOR] EncL: -665 (diff: -10)
+Wheel rotations: -0.0102041
+Distance: -3.85
+12:50:11,255 DEBUG enc: -665 diff: -10 distance: -4
+12:50:11,255 DEBUG total: -665 totalDist: -266
+12:50:11,259 DEBUG [MOTOR] EncR: 483 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:11,259 DEBUG enc: 483 diff: 2 distance: 0.8
+12:50:11,259 DEBUG total: 483 totalDist: 193.2
+12:50:11,259 DEBUG [POS] encoders updated
+12:50:11,259 DEBUG L: -4  R: 0.8
+12:50:11,262 DEBUG CURRENT: 58.6899 | 58.6899 | 45
+12:50:11,262 DEBUG [LOOP] DRIVE: 41.3101,41.3101
+12:50:11,262 DEBUG DISTR: 58.4213
+12:50:11,262 DEBUG [POS] driving with rotation:45 dist:58.4213
+12:50:11,262 DEBUG [POS] updatePos 
+12:50:11,267 DEBUG [MOTOR] EncL: -678 (diff: -13)
+Wheel rotations: -0.0132653
+Distance: -5.005
+12:50:11,267 DEBUG enc: -678 diff: -13 distance: -5.2
+12:50:11,267 DEBUG total: -678 totalDist: -271.2
+12:50:11,271 DEBUG [MOTOR] EncR: 485 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:11,271 DEBUG enc: 485 diff: 2 distance: 0.8
+12:50:11,271 DEBUG total: 485 totalDist: 194
+12:50:11,271 DEBUG [POS] encoders updated
+12:50:11,271 DEBUG L: -5.2  R: 0.8
+12:50:11,274 DEBUG CURRENT: 60.1041 | 60.1041 | 45
+12:50:11,274 DEBUG [LOOP] DRIVE: 39.8959,39.8959
+12:50:11,274 DEBUG DISTR: 56.4213
+12:50:11,274 DEBUG [POS] driving with rotation:45 dist:56.4213
+12:50:11,274 DEBUG [POS] updatePos 
+12:50:11,277 DEBUG [MOTOR] EncL: -688 (diff: -10)
+Wheel rotations: -0.0102041
+Distance: -3.85
+12:50:11,278 DEBUG enc: -688 diff: -10 distance: -4
+12:50:11,278 DEBUG total: -688 totalDist: -275.2
+12:50:11,281 DEBUG [MOTOR] EncR: 486 (diff: 1)
+Wheel rotations: 0.00102041
+Distance: 0.385
+12:50:11,281 DEBUG enc: 486 diff: 1 distance: 0.4
+12:50:11,281 DEBUG total: 486 totalDist: 194.4
+12:50:11,281 DEBUG [POS] encoders updated
+12:50:11,281 DEBUG L: -4  R: 0.4
+12:50:11,284 DEBUG CURRENT: 61.5183 | 61.5183 | 45
+12:50:11,284 DEBUG [LOOP] DRIVE: 38.4817,38.4817
+12:50:11,284 DEBUG DISTR: 54.4213
+12:50:11,284 DEBUG [POS] driving with rotation:45 dist:54.4213
+12:50:11,284 DEBUG [POS] updatePos 
+12:50:11,288 DEBUG [MOTOR] EncL: -698 (diff: -10)
+Wheel rotations: -0.0102041
+Distance: -3.85
+12:50:11,288 DEBUG enc: -698 diff: -10 distance: -4
+12:50:11,288 DEBUG total: -698 totalDist: -279.2
+12:50:11,291 DEBUG [MOTOR] EncR: 488 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:11,291 DEBUG enc: 488 diff: 2 distance: 0.8
+12:50:11,291 DEBUG total: 488 totalDist: 195.2
+12:50:11,291 DEBUG [POS] encoders updated
+12:50:11,291 DEBUG L: -4  R: 0.8
+12:50:11,294 DEBUG CURRENT: 62.9325 | 62.9325 | 45
+12:50:11,294 DEBUG [LOOP] DRIVE: 37.0675,37.0675
+12:50:11,294 DEBUG DISTR: 52.4213
+12:50:11,294 DEBUG [POS] driving with rotation:45 dist:52.4213
+12:50:11,294 DEBUG [POS] updatePos 
+12:50:11,297 DEBUG [MOTOR] EncL: -707 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:11,297 DEBUG enc: -707 diff: -9 distance: -3.6
+12:50:11,297 DEBUG total: -707 totalDist: -282.8
+12:50:11,300 DEBUG [MOTOR] EncR: 489 (diff: 1)
+Wheel rotations: 0.00102041
+Distance: 0.385
+12:50:11,300 DEBUG enc: 489 diff: 1 distance: 0.4
+12:50:11,300 DEBUG total: 489 totalDist: 195.6
+12:50:11,300 DEBUG [POS] encoders updated
+12:50:11,300 DEBUG L: -3.6  R: 0.4
+12:50:11,302 DEBUG CURRENT: 63.6396 | 63.6396 | 45
+12:50:11,302 DEBUG [LOOP] DRIVE: 36.3604,36.3604
+12:50:11,303 DEBUG DISTR: 51.4213
+12:50:11,303 DEBUG [POS] driving with rotation:45 dist:51.4213
+12:50:11,303 DEBUG [POS] updatePos 
+12:50:11,306 DEBUG [MOTOR] EncL: -715 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:11,306 DEBUG enc: -715 diff: -8 distance: -3.2
+12:50:11,306 DEBUG total: -715 totalDist: -286
+12:50:11,309 DEBUG [MOTOR] EncR: 491 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:11,310 DEBUG enc: 491 diff: 2 distance: 0.8
+12:50:11,310 DEBUG total: 491 totalDist: 196.4
+12:50:11,310 DEBUG [POS] encoders updated
+12:50:11,310 DEBUG L: -3.2  R: 0.8
+12:50:11,312 DEBUG CURRENT: 64.3467 | 64.3467 | 45
+12:50:11,313 DEBUG [LOOP] DRIVE: 35.6533,35.6533
+12:50:11,313 DEBUG DISTR: 50.4213
+12:50:11,313 DEBUG [POS] driving with rotation:45 dist:50.4213
+12:50:11,313 DEBUG [POS] updatePos 
+12:50:11,316 DEBUG [MOTOR] EncL: -725 (diff: -10)
+Wheel rotations: -0.0102041
+Distance: -3.85
+12:50:11,316 DEBUG enc: -725 diff: -10 distance: -4
+12:50:11,316 DEBUG total: -725 totalDist: -290
+12:50:11,320 DEBUG [MOTOR] EncR: 492 (diff: 1)
+Wheel rotations: 0.00102041
+Distance: 0.385
+12:50:11,321 DEBUG enc: 492 diff: 1 distance: 0.4
+12:50:11,321 DEBUG total: 492 totalDist: 196.8
+12:50:11,321 DEBUG [POS] encoders updated
+12:50:11,321 DEBUG L: -4  R: 0.4
+12:50:11,323 DEBUG CURRENT: 65.761 | 65.761 | 45
+12:50:11,323 DEBUG [LOOP] DRIVE: 34.239,34.239
+12:50:11,323 DEBUG DISTR: 48.4213
+12:50:11,323 DEBUG [POS] driving with rotation:45 dist:48.4213
+12:50:11,323 DEBUG [POS] updatePos 
+12:50:11,327 DEBUG [MOTOR] EncL: -735 (diff: -10)
+Wheel rotations: -0.0102041
+Distance: -3.85
+12:50:11,327 DEBUG enc: -735 diff: -10 distance: -4
+12:50:11,327 DEBUG total: -735 totalDist: -294
+12:50:11,331 DEBUG [MOTOR] EncR: 494 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:11,331 DEBUG enc: 494 diff: 2 distance: 0.8
+12:50:11,332 DEBUG total: 494 totalDist: 197.6
+12:50:11,332 DEBUG [POS] encoders updated
+12:50:11,332 DEBUG L: -4  R: 0.8
+12:50:11,334 DEBUG CURRENT: 67.1752 | 67.1752 | 45
+12:50:11,334 DEBUG [LOOP] DRIVE: 32.8248,32.8248
+12:50:11,334 DEBUG DISTR: 46.4213
+12:50:11,334 DEBUG [POS] driving with rotation:45 dist:46.4213
+12:50:11,335 DEBUG [POS] updatePos 
+12:50:11,338 DEBUG [MOTOR] EncL: -745 (diff: -10)
+Wheel rotations: -0.0102041
+Distance: -3.85
+12:50:11,338 DEBUG enc: -745 diff: -10 distance: -4
+12:50:11,338 DEBUG total: -745 totalDist: -298
+12:50:11,341 DEBUG [MOTOR] EncR: 495 (diff: 1)
+Wheel rotations: 0.00102041
+Distance: 0.385
+12:50:11,341 DEBUG enc: 495 diff: 1 distance: 0.4
+12:50:11,341 DEBUG total: 495 totalDist: 198
+12:50:11,341 DEBUG [POS] encoders updated
+12:50:11,341 DEBUG L: -4  R: 0.4
+12:50:11,344 DEBUG CURRENT: 68.5894 | 68.5894 | 45
+12:50:11,344 DEBUG [LOOP] DRIVE: 31.4106,31.4106
+12:50:11,344 DEBUG DISTR: 44.4213
+12:50:11,344 DEBUG [POS] driving with rotation:45 dist:44.4213
+12:50:11,344 DEBUG [POS] updatePos 
+12:50:11,347 DEBUG [MOTOR] EncL: -754 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:11,347 DEBUG enc: -754 diff: -9 distance: -3.6
+12:50:11,347 DEBUG total: -754 totalDist: -301.6
+12:50:11,351 DEBUG [MOTOR] EncR: 496 (diff: 1)
+Wheel rotations: 0.00102041
+Distance: 0.385
+12:50:11,351 DEBUG enc: 496 diff: 1 distance: 0.4
+12:50:11,351 DEBUG total: 496 totalDist: 198.4
+12:50:11,351 DEBUG [POS] encoders updated
+12:50:11,351 DEBUG L: -3.6  R: 0.4
+12:50:11,354 DEBUG CURRENT: 69.2965 | 69.2965 | 45
+12:50:11,354 DEBUG [LOOP] DRIVE: 30.7035,30.7035
+12:50:11,354 DEBUG DISTR: 43.4213
+12:50:11,354 DEBUG [POS] driving with rotation:45 dist:43.4213
+12:50:11,354 DEBUG [POS] updatePos 
+12:50:11,357 DEBUG [MOTOR] EncL: -763 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:11,357 DEBUG enc: -763 diff: -9 distance: -3.6
+12:50:11,357 DEBUG total: -763 totalDist: -305.2
+12:50:11,360 DEBUG [MOTOR] EncR: 497 (diff: 1)
+Wheel rotations: 0.00102041
+Distance: 0.385
+12:50:11,360 DEBUG enc: 497 diff: 1 distance: 0.4
+12:50:11,360 DEBUG total: 497 totalDist: 198.8
+12:50:11,360 DEBUG [POS] encoders updated
+12:50:11,360 DEBUG L: -3.6  R: 0.4
+12:50:11,362 DEBUG CURRENT: 70.0036 | 70.0036 | 45
+12:50:11,363 DEBUG [LOOP] DRIVE: 29.9964,29.9964
+12:50:11,363 DEBUG DISTR: 42.4213
+12:50:11,363 DEBUG [POS] driving with rotation:45 dist:42.4213
+12:50:11,363 DEBUG [POS] updatePos 
+12:50:11,367 DEBUG [MOTOR] EncL: -771 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:11,367 DEBUG enc: -771 diff: -8 distance: -3.2
+12:50:11,367 DEBUG total: -771 totalDist: -308.4
+12:50:11,370 DEBUG [MOTOR] EncR: 499 (diff: 2)
+Wheel rotations: 0.00204082
+Distance: 0.77
+12:50:11,370 DEBUG enc: 499 diff: 2 distance: 0.8
+12:50:11,370 DEBUG total: 499 totalDist: 199.6
+12:50:11,370 DEBUG [POS] encoders updated
+12:50:11,370 DEBUG L: -3.2  R: 0.8
+12:50:11,373 DEBUG CURRENT: 70.7107 | 70.7107 | 45
+12:50:11,373 DEBUG [LOOP] DRIVE: 29.2893,29.2893
+12:50:11,373 DEBUG DISTR: 41.4213
+12:50:11,373 DEBUG [POS] driving with rotation:45 dist:41.4213
+12:50:11,373 DEBUG [POS] updatePos 
+12:50:11,377 DEBUG [MOTOR] EncL: -780 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:11,377 DEBUG enc: -780 diff: -9 distance: -3.6
+12:50:11,377 DEBUG total: -780 totalDist: -312
+12:50:11,381 DEBUG [MOTOR] EncR: 499 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:11,381 DEBUG enc: 499 diff: 0 distance: 0
+12:50:11,381 DEBUG total: 499 totalDist: 199.6
+12:50:11,381 DEBUG [POS] encoders updated
+12:50:11,381 DEBUG L: -3.6  R: 0
+12:50:11,384 DEBUG CURRENT: 71.4178 | 71.4178 | 45
+12:50:11,384 DEBUG [LOOP] DRIVE: 28.5822,28.5822
+12:50:11,384 DEBUG DISTR: 40.4213
+12:50:11,384 DEBUG [POS] driving with rotation:45 dist:40.4213
+12:50:11,384 DEBUG [POS] updatePos 
+12:50:11,387 DEBUG [MOTOR] EncL: -789 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:11,387 DEBUG enc: -789 diff: -9 distance: -3.6
+12:50:11,387 DEBUG total: -789 totalDist: -315.6
+12:50:11,390 DEBUG [MOTOR] EncR: 499 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:11,390 DEBUG enc: 499 diff: 0 distance: 0
+12:50:11,390 DEBUG total: 499 totalDist: 199.6
+12:50:11,390 DEBUG [POS] encoders updated
+12:50:11,390 DEBUG L: -3.6  R: 0
+12:50:11,393 DEBUG CURRENT: 72.1249 | 72.1249 | 45
+12:50:11,393 DEBUG [LOOP] DRIVE: 27.8751,27.8751
+12:50:11,393 DEBUG DISTR: 39.4213
+12:50:11,393 DEBUG [POS] driving with rotation:45 dist:39.4213
+12:50:11,393 DEBUG [POS] updatePos 
+12:50:11,396 DEBUG [MOTOR] EncL: -797 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:11,396 DEBUG enc: -797 diff: -8 distance: -3.2
+12:50:11,396 DEBUG total: -797 totalDist: -318.8
+12:50:11,400 DEBUG [MOTOR] EncR: 500 (diff: 1)
+Wheel rotations: 0.00102041
+Distance: 0.385
+12:50:11,400 DEBUG enc: 500 diff: 1 distance: 0.4
+12:50:11,400 DEBUG total: 500 totalDist: 200
+12:50:11,400 DEBUG [POS] encoders updated
+12:50:11,400 DEBUG L: -3.2  R: 0.4
+12:50:11,402 DEBUG CURRENT: 72.832 | 72.832 | 45
+12:50:11,402 DEBUG [LOOP] DRIVE: 27.168,27.168
+12:50:11,402 DEBUG DISTR: 38.4213
+12:50:11,402 DEBUG [POS] driving with rotation:45 dist:38.4213
+12:50:11,403 DEBUG [POS] updatePos 
+12:50:11,406 DEBUG [MOTOR] EncL: -806 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:11,406 DEBUG enc: -806 diff: -9 distance: -3.6
+12:50:11,406 DEBUG total: -806 totalDist: -322.4
+12:50:11,410 DEBUG [MOTOR] EncR: 501 (diff: 1)
+Wheel rotations: 0.00102041
+Distance: 0.385
+12:50:11,410 DEBUG enc: 501 diff: 1 distance: 0.4
+12:50:11,410 DEBUG total: 501 totalDist: 200.4
+12:50:11,411 DEBUG [POS] encoders updated
+12:50:11,411 DEBUG L: -3.6  R: 0.4
+12:50:11,413 DEBUG CURRENT: 73.5391 | 73.5391 | 45
+12:50:11,413 DEBUG [LOOP] DRIVE: 26.4609,26.4609
+12:50:11,413 DEBUG DISTR: 37.4213
+12:50:11,413 DEBUG [POS] driving with rotation:45 dist:37.4213
+12:50:11,413 DEBUG [POS] updatePos 
+12:50:11,417 DEBUG [MOTOR] EncL: -815 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:11,417 DEBUG enc: -815 diff: -9 distance: -3.6
+12:50:11,417 DEBUG total: -815 totalDist: -326
+12:50:11,420 DEBUG [MOTOR] EncR: 501 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:11,420 DEBUG enc: 501 diff: 0 distance: 0
+12:50:11,420 DEBUG total: 501 totalDist: 200.4
+12:50:11,420 DEBUG [POS] encoders updated
+12:50:11,420 DEBUG L: -3.6  R: 0
+12:50:11,423 DEBUG CURRENT: 74.2463 | 74.2463 | 45
+12:50:11,423 DEBUG [LOOP] DRIVE: 25.7537,25.7537
+12:50:11,423 DEBUG DISTR: 36.4213
+12:50:11,423 DEBUG [POS] driving with rotation:45 dist:36.4213
+12:50:11,423 DEBUG [POS] updatePos 
+12:50:11,426 DEBUG [MOTOR] EncL: -823 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:11,426 DEBUG enc: -823 diff: -8 distance: -3.2
+12:50:11,426 DEBUG total: -823 totalDist: -329.2
+12:50:11,431 DEBUG [MOTOR] EncR: 501 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:11,431 DEBUG enc: 501 diff: 0 distance: 0
+12:50:11,431 DEBUG total: 501 totalDist: 200.4
+12:50:11,431 DEBUG [POS] encoders updated
+12:50:11,431 DEBUG L: -3.2  R: 0
+12:50:11,433 DEBUG CURRENT: 74.9534 | 74.9534 | 45
+12:50:11,434 DEBUG [LOOP] DRIVE: 25.0466,25.0466
+12:50:11,434 DEBUG DISTR: 35.4213
+12:50:11,434 DEBUG [POS] driving with rotation:45 dist:35.4213
+12:50:11,434 DEBUG [POS] updatePos 
+12:50:11,437 DEBUG [MOTOR] EncL: -832 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:11,437 DEBUG enc: -832 diff: -9 distance: -3.6
+12:50:11,437 DEBUG total: -832 totalDist: -332.8
+12:50:11,440 DEBUG [MOTOR] EncR: 502 (diff: 1)
+Wheel rotations: 0.00102041
+Distance: 0.385
+12:50:11,440 DEBUG enc: 502 diff: 1 distance: 0.4
+12:50:11,440 DEBUG total: 502 totalDist: 200.8
+12:50:11,440 DEBUG [POS] encoders updated
+12:50:11,440 DEBUG L: -3.6  R: 0.4
+12:50:11,443 DEBUG CURRENT: 75.6605 | 75.6605 | 45
+12:50:11,443 DEBUG [LOOP] DRIVE: 24.3395,24.3395
+12:50:11,443 DEBUG DISTR: 34.4213
+12:50:11,443 DEBUG [POS] driving with rotation:45 dist:34.4213
+12:50:11,443 DEBUG [POS] updatePos 
+12:50:11,447 DEBUG [MOTOR] EncL: -840 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:11,447 DEBUG enc: -840 diff: -8 distance: -3.2
+12:50:11,447 DEBUG total: -840 totalDist: -336
+12:50:11,451 DEBUG [MOTOR] EncR: 502 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:11,451 DEBUG enc: 502 diff: 0 distance: 0
+12:50:11,451 DEBUG total: 502 totalDist: 200.8
+12:50:11,451 DEBUG [POS] encoders updated
+12:50:11,451 DEBUG L: -3.2  R: 0
+12:50:11,454 DEBUG CURRENT: 76.3676 | 76.3676 | 45
+12:50:11,454 DEBUG [LOOP] DRIVE: 23.6324,23.6324
+12:50:11,454 DEBUG DISTR: 33.4213
+12:50:11,454 DEBUG [POS] driving with rotation:45 dist:33.4213
+12:50:11,454 DEBUG [POS] updatePos 
+12:50:11,457 DEBUG [MOTOR] EncL: -849 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:11,457 DEBUG enc: -849 diff: -9 distance: -3.6
+12:50:11,457 DEBUG total: -849 totalDist: -339.6
+12:50:11,461 DEBUG [MOTOR] EncR: 502 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:11,462 DEBUG enc: 502 diff: 0 distance: 0
+12:50:11,462 DEBUG total: 502 totalDist: 200.8
+12:50:11,462 DEBUG [POS] encoders updated
+12:50:11,462 DEBUG L: -3.6  R: 0
+12:50:11,464 DEBUG CURRENT: 77.0747 | 77.0747 | 45
+12:50:11,464 DEBUG [LOOP] DRIVE: 22.9253,22.9253
+12:50:11,464 DEBUG DISTR: 32.4213
+12:50:11,465 DEBUG [POS] driving with rotation:45 dist:32.4213
+12:50:11,465 DEBUG [POS] updatePos 
+12:50:11,468 DEBUG [MOTOR] EncL: -857 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:11,468 DEBUG enc: -857 diff: -8 distance: -3.2
+12:50:11,468 DEBUG total: -857 totalDist: -342.8
+12:50:11,471 DEBUG [MOTOR] EncR: 502 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:11,471 DEBUG enc: 502 diff: 0 distance: 0
+12:50:11,471 DEBUG total: 502 totalDist: 200.8
+12:50:11,471 DEBUG [POS] encoders updated
+12:50:11,471 DEBUG L: -3.2  R: 0
+12:50:11,473 DEBUG CURRENT: 77.7818 | 77.7818 | 45
+12:50:11,474 DEBUG [LOOP] DRIVE: 22.2182,22.2182
+12:50:11,474 DEBUG DISTR: 31.4213
+12:50:11,474 DEBUG [POS] driving with rotation:45 dist:31.4213
+12:50:11,474 DEBUG [POS] updatePos 
+12:50:11,477 DEBUG [MOTOR] EncL: -864 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:11,478 DEBUG enc: -864 diff: -7 distance: -2.8
+12:50:11,478 DEBUG total: -864 totalDist: -345.6
+12:50:11,481 DEBUG [MOTOR] EncR: 502 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:11,481 DEBUG enc: 502 diff: 0 distance: 0
+12:50:11,481 DEBUG total: 502 totalDist: 200.8
+12:50:11,481 DEBUG [POS] encoders updated
+12:50:11,481 DEBUG L: -2.8  R: 0
+12:50:11,484 DEBUG CURRENT: 78.4889 | 78.4889 | 45
+12:50:11,484 DEBUG [LOOP] DRIVE: 21.5111,21.5111
+12:50:11,484 DEBUG DISTR: 30.4213
+12:50:11,484 DEBUG [POS] driving with rotation:45 dist:30.4213
+12:50:11,484 DEBUG [POS] updatePos 
+12:50:11,487 DEBUG [MOTOR] EncL: -871 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:11,487 DEBUG enc: -871 diff: -7 distance: -2.8
+12:50:11,487 DEBUG total: -871 totalDist: -348.4
+12:50:11,490 DEBUG [MOTOR] EncR: 502 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:11,490 DEBUG enc: 502 diff: 0 distance: 0
+12:50:11,490 DEBUG total: 502 totalDist: 200.8
+12:50:11,490 DEBUG [POS] encoders updated
+12:50:11,490 DEBUG L: -2.8  R: 0
+12:50:11,493 DEBUG CURRENT: 79.196 | 79.196 | 45
+12:50:11,493 DEBUG [LOOP] DRIVE: 20.804,20.804
+12:50:11,493 DEBUG DISTR: 29.4213
+12:50:11,493 DEBUG [POS] driving with rotation:45 dist:29.4213
+12:50:11,493 DEBUG [POS] updatePos 
+12:50:11,497 DEBUG [MOTOR] EncL: -878 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:11,497 DEBUG enc: -878 diff: -7 distance: -2.8
+12:50:11,497 DEBUG total: -878 totalDist: -351.2
+12:50:11,500 DEBUG [MOTOR] EncR: 501 (diff: -1)
+Wheel rotations: -0.00102041
+Distance: -0.385
+12:50:11,500 DEBUG enc: 501 diff: -1 distance: -0.4
+12:50:11,500 DEBUG total: 501 totalDist: 200.4
+12:50:11,500 DEBUG [POS] encoders updated
+12:50:11,500 DEBUG L: -2.8  R: -0.4
+12:50:11,502 DEBUG CURRENT: 79.9031 | 79.9031 | 45
+12:50:11,502 DEBUG [LOOP] DRIVE: 20.0969,20.0969
+12:50:11,503 DEBUG DISTR: 28.4213
+12:50:11,503 DEBUG [POS] driving with rotation:45 dist:28.4213
+12:50:11,503 DEBUG [POS] updatePos 
+12:50:11,506 DEBUG [MOTOR] EncL: -886 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:11,506 DEBUG enc: -886 diff: -8 distance: -3.2
+12:50:11,506 DEBUG total: -886 totalDist: -354.4
+12:50:11,510 DEBUG [MOTOR] EncR: 501 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:11,511 DEBUG enc: 501 diff: 0 distance: 0
+12:50:11,511 DEBUG total: 501 totalDist: 200.4
+12:50:11,511 DEBUG [POS] encoders updated
+12:50:11,511 DEBUG L: -3.2  R: 0
+12:50:11,513 DEBUG CURRENT: 80.6102 | 80.6102 | 45
+12:50:11,514 DEBUG [LOOP] DRIVE: 19.3898,19.3898
+12:50:11,514 DEBUG DISTR: 27.4213
+12:50:11,514 DEBUG [POS] driving with rotation:45 dist:27.4213
+12:50:11,514 DEBUG [POS] updatePos 
+12:50:11,517 DEBUG [MOTOR] EncL: -894 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:11,517 DEBUG enc: -894 diff: -8 distance: -3.2
+12:50:11,517 DEBUG total: -894 totalDist: -357.6
+12:50:11,521 DEBUG [MOTOR] EncR: 501 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:11,521 DEBUG enc: 501 diff: 0 distance: 0
+12:50:11,521 DEBUG total: 501 totalDist: 200.4
+12:50:11,521 DEBUG [POS] encoders updated
+12:50:11,521 DEBUG L: -3.2  R: 0
+12:50:11,524 DEBUG CURRENT: 81.3173 | 81.3173 | 45
+12:50:11,524 DEBUG [LOOP] DRIVE: 18.6827,18.6827
+12:50:11,524 DEBUG DISTR: 26.4213
+12:50:11,524 DEBUG [POS] driving with rotation:45 dist:26.4213
+12:50:11,524 DEBUG [POS] updatePos 
+12:50:11,528 DEBUG [MOTOR] EncL: -902 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:11,528 DEBUG enc: -902 diff: -8 distance: -3.2
+12:50:11,528 DEBUG total: -902 totalDist: -360.8
+12:50:11,532 DEBUG [MOTOR] EncR: 501 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:11,532 DEBUG enc: 501 diff: 0 distance: 0
+12:50:11,532 DEBUG total: 501 totalDist: 200.4
+12:50:11,532 DEBUG [POS] encoders updated
+12:50:11,532 DEBUG L: -3.2  R: 0
+12:50:11,534 DEBUG CURRENT: 82.0244 | 82.0244 | 45
+12:50:11,534 DEBUG [LOOP] DRIVE: 17.9756,17.9756
+12:50:11,535 DEBUG DISTR: 25.4213
+12:50:11,535 DEBUG [POS] driving with rotation:45 dist:25.4213
+12:50:11,535 DEBUG [POS] updatePos 
+12:50:11,538 DEBUG [MOTOR] EncL: -910 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:11,538 DEBUG enc: -910 diff: -8 distance: -3.2
+12:50:11,538 DEBUG total: -910 totalDist: -364
+12:50:11,542 DEBUG [MOTOR] EncR: 501 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:11,543 DEBUG enc: 501 diff: 0 distance: 0
+12:50:11,543 DEBUG total: 501 totalDist: 200.4
+12:50:11,543 DEBUG [POS] encoders updated
+12:50:11,543 DEBUG L: -3.2  R: 0
+12:50:11,546 DEBUG CURRENT: 82.7315 | 82.7315 | 45
+12:50:11,546 DEBUG [LOOP] DRIVE: 17.2685,17.2685
+12:50:11,546 DEBUG DISTR: 24.4213
+12:50:11,546 DEBUG [POS] driving with rotation:45 dist:24.4213
+12:50:11,546 DEBUG [POS] updatePos 
+12:50:11,549 DEBUG [MOTOR] EncL: -919 (diff: -9)
+Wheel rotations: -0.00918367
+Distance: -3.465
+12:50:11,549 DEBUG enc: -919 diff: -9 distance: -3.6
+12:50:11,549 DEBUG total: -919 totalDist: -367.6
+12:50:11,552 DEBUG [MOTOR] EncR: 501 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:11,552 DEBUG enc: 501 diff: 0 distance: 0
+12:50:11,552 DEBUG total: 501 totalDist: 200.4
+12:50:11,552 DEBUG [POS] encoders updated
+12:50:11,552 DEBUG L: -3.6  R: 0
+12:50:11,555 DEBUG CURRENT: 83.4387 | 83.4387 | 45
+12:50:11,555 DEBUG [LOOP] DRIVE: 16.5613,16.5613
+12:50:11,555 DEBUG DISTR: 23.4213
+12:50:11,555 DEBUG [POS] driving with rotation:45 dist:23.4213
+12:50:11,555 DEBUG [POS] updatePos 
+12:50:11,559 DEBUG [MOTOR] EncL: -925 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:11,559 DEBUG enc: -925 diff: -6 distance: -2.4
+12:50:11,559 DEBUG total: -925 totalDist: -370
+12:50:11,563 DEBUG [MOTOR] EncR: 501 (diff: 0)
+Wheel rotations: 0
+Distance: 0
+12:50:11,563 DEBUG enc: 501 diff: 0 distance: 0
+12:50:11,563 DEBUG total: 501 totalDist: 200.4
+12:50:11,563 DEBUG [POS] encoders updated
+12:50:11,563 DEBUG L: -2.4  R: 0
+12:50:11,566 DEBUG CURRENT: 84.1458 | 84.1458 | 45
+12:50:11,566 DEBUG [LOOP] DRIVE: 15.8542,15.8542
+12:50:11,566 DEBUG DISTR: 22.4213
+12:50:11,566 DEBUG [POS] driving with rotation:45 dist:22.4213
+12:50:11,566 DEBUG [POS] updatePos 
+12:50:11,569 DEBUG [MOTOR] EncL: -933 (diff: -8)
+Wheel rotations: -0.00816327
+Distance: -3.08
+12:50:11,569 DEBUG enc: -933 diff: -8 distance: -3.2
+12:50:11,569 DEBUG total: -933 totalDist: -373.2
+12:50:11,573 DEBUG [MOTOR] EncR: 500 (diff: -1)
+Wheel rotations: -0.00102041
+Distance: -0.385
+12:50:11,573 DEBUG enc: 500 diff: -1 distance: -0.4
+12:50:11,573 DEBUG total: 500 totalDist: 200
+12:50:11,573 DEBUG [POS] encoders updated
+12:50:11,573 DEBUG L: -3.2  R: -0.4
+12:50:11,575 DEBUG CURRENT: 84.8529 | 84.8529 | 45
+12:50:11,576 DEBUG [LOOP] DRIVE: 15.1471,15.1471
+12:50:11,576 DEBUG DISTR: 21.4213
+12:50:11,576 DEBUG [POS] driving with rotation:45 dist:21.4213
+12:50:11,576 DEBUG [POS] updatePos 
+12:50:11,579 DEBUG [MOTOR] EncL: -940 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:11,580 DEBUG enc: -940 diff: -7 distance: -2.8
+12:50:11,580 DEBUG total: -940 totalDist: -376
+12:50:11,583 DEBUG [MOTOR] EncR: 499 (diff: -1)
+Wheel rotations: -0.00102041
+Distance: -0.385
+12:50:11,583 DEBUG enc: 499 diff: -1 distance: -0.4
+12:50:11,583 DEBUG total: 499 totalDist: 199.6
+12:50:11,583 DEBUG [POS] encoders updated
+12:50:11,583 DEBUG L: -2.8  R: -0.4
+12:50:11,586 DEBUG CURRENT: 85.56 | 85.56 | 45
+12:50:11,586 DEBUG [LOOP] DRIVE: 14.44,14.44
+12:50:11,586 DEBUG DISTR: 20.4213
+12:50:11,586 DEBUG [POS] driving with rotation:45 dist:20.4213
+12:50:11,586 DEBUG [POS] updatePos 
+12:50:11,589 DEBUG [MOTOR] EncL: -947 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:11,589 DEBUG enc: -947 diff: -7 distance: -2.8
+12:50:11,589 DEBUG total: -947 totalDist: -378.8
+12:50:11,593 DEBUG [MOTOR] EncR: 498 (diff: -1)
+Wheel rotations: -0.00102041
+Distance: -0.385
+12:50:11,593 DEBUG enc: 498 diff: -1 distance: -0.4
+12:50:11,593 DEBUG total: 498 totalDist: 199.2
+12:50:11,593 DEBUG [POS] encoders updated
+12:50:11,593 DEBUG L: -2.8  R: -0.4
+12:50:11,595 DEBUG CURRENT: 86.2671 | 86.2671 | 45
+12:50:11,595 DEBUG [LOOP] DRIVE: 13.7329,13.7329
+12:50:11,595 DEBUG DISTR: 19.4213
+12:50:11,595 DEBUG [POS] driving with rotation:45 dist:19.4213
+12:50:11,595 DEBUG [POS] updatePos 
+12:50:11,599 DEBUG [MOTOR] EncL: -953 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:11,599 DEBUG enc: -953 diff: -6 distance: -2.4
+12:50:11,599 DEBUG total: -953 totalDist: -381.2
+12:50:11,602 DEBUG [MOTOR] EncR: 497 (diff: -1)
+Wheel rotations: -0.00102041
+Distance: -0.385
+12:50:11,602 DEBUG enc: 497 diff: -1 distance: -0.4
+12:50:11,602 DEBUG total: 497 totalDist: 198.8
+12:50:11,602 DEBUG [POS] encoders updated
+12:50:11,603 DEBUG L: -2.4  R: -0.4
+12:50:11,605 DEBUG CURRENT: 86.9742 | 86.9742 | 45
+12:50:11,605 DEBUG [LOOP] DRIVE: 13.0258,13.0258
+12:50:11,605 DEBUG DISTR: 18.4213
+12:50:11,605 DEBUG [POS] driving with rotation:45 dist:18.4213
+12:50:11,605 DEBUG [POS] updatePos 
+12:50:11,609 DEBUG [MOTOR] EncL: -959 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:11,609 DEBUG enc: -959 diff: -6 distance: -2.4
+12:50:11,609 DEBUG total: -959 totalDist: -383.6
+12:50:11,612 DEBUG [MOTOR] EncR: 495 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:11,612 DEBUG enc: 495 diff: -2 distance: -0.8
+12:50:11,612 DEBUG total: 495 totalDist: 198
+12:50:11,612 DEBUG [POS] encoders updated
+12:50:11,612 DEBUG L: -2.4  R: -0.8
+12:50:11,614 DEBUG CURRENT: 87.6813 | 87.6813 | 45
+12:50:11,614 DEBUG [LOOP] DRIVE: 12.3187,12.3187
+12:50:11,614 DEBUG DISTR: 17.4213
+12:50:11,615 DEBUG [POS] driving with rotation:45 dist:17.4213
+12:50:11,615 DEBUG [POS] updatePos 
+12:50:11,618 DEBUG [MOTOR] EncL: -966 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:11,618 DEBUG enc: -966 diff: -7 distance: -2.8
+12:50:11,618 DEBUG total: -966 totalDist: -386.4
+12:50:11,622 DEBUG [MOTOR] EncR: 493 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:11,622 DEBUG enc: 493 diff: -2 distance: -0.8
+12:50:11,622 DEBUG total: 493 totalDist: 197.2
+12:50:11,622 DEBUG [POS] encoders updated
+12:50:11,623 DEBUG L: -2.8  R: -0.8
+12:50:11,625 DEBUG CURRENT: 88.3884 | 88.3884 | 45
+12:50:11,625 DEBUG [LOOP] DRIVE: 11.6116,11.6116
+12:50:11,625 DEBUG DISTR: 16.4213
+12:50:11,625 DEBUG [POS] driving with rotation:45 dist:16.4213
+12:50:11,625 DEBUG [POS] updatePos 
+12:50:11,629 DEBUG [MOTOR] EncL: -973 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:11,629 DEBUG enc: -973 diff: -7 distance: -2.8
+12:50:11,629 DEBUG total: -973 totalDist: -389.2
+12:50:11,633 DEBUG [MOTOR] EncR: 491 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:11,633 DEBUG enc: 491 diff: -2 distance: -0.8
+12:50:11,633 DEBUG total: 491 totalDist: 196.4
+12:50:11,633 DEBUG [POS] encoders updated
+12:50:11,633 DEBUG L: -2.8  R: -0.8
+12:50:11,635 DEBUG CURRENT: 89.0955 | 89.0955 | 45
+12:50:11,636 DEBUG [LOOP] DRIVE: 10.9045,10.9045
+12:50:11,636 DEBUG DISTR: 15.4213
+12:50:11,636 DEBUG [POS] driving with rotation:45 dist:15.4213
+12:50:11,636 DEBUG [POS] updatePos 
+12:50:11,640 DEBUG [MOTOR] EncL: -979 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:11,641 DEBUG enc: -979 diff: -6 distance: -2.4
+12:50:11,641 DEBUG total: -979 totalDist: -391.6
+12:50:11,644 DEBUG [MOTOR] EncR: 489 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:11,644 DEBUG enc: 489 diff: -2 distance: -0.8
+12:50:11,644 DEBUG total: 489 totalDist: 195.6
+12:50:11,644 DEBUG [POS] encoders updated
+12:50:11,644 DEBUG L: -2.4  R: -0.8
+12:50:11,646 DEBUG CURRENT: 89.8026 | 89.8026 | 45
+12:50:11,647 DEBUG [LOOP] DRIVE: 10.1974,10.1974
+12:50:11,647 DEBUG DISTR: 14.4213
+12:50:11,647 DEBUG [POS] driving with rotation:45 dist:14.4213
+12:50:11,647 DEBUG [POS] updatePos 
+12:50:11,650 DEBUG [MOTOR] EncL: -986 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:11,650 DEBUG enc: -986 diff: -7 distance: -2.8
+12:50:11,650 DEBUG total: -986 totalDist: -394.4
+12:50:11,653 DEBUG [MOTOR] EncR: 487 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:11,653 DEBUG enc: 487 diff: -2 distance: -0.8
+12:50:11,653 DEBUG total: 487 totalDist: 194.8
+12:50:11,653 DEBUG [POS] encoders updated
+12:50:11,653 DEBUG L: -2.8  R: -0.8
+12:50:11,656 DEBUG CURRENT: 90.5097 | 90.5097 | 45
+12:50:11,656 DEBUG [LOOP] DRIVE: 9.49027,9.49027
+12:50:11,656 DEBUG DISTR: 13.4213
+12:50:11,656 DEBUG [POS] driving with rotation:45 dist:13.4213
+12:50:11,656 DEBUG [POS] updatePos 
+12:50:11,659 DEBUG [MOTOR] EncL: -992 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:11,659 DEBUG enc: -992 diff: -6 distance: -2.4
+12:50:11,659 DEBUG total: -992 totalDist: -396.8
+12:50:11,662 DEBUG [MOTOR] EncR: 485 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:11,662 DEBUG enc: 485 diff: -2 distance: -0.8
+12:50:11,662 DEBUG total: 485 totalDist: 194
+12:50:11,662 DEBUG [POS] encoders updated
+12:50:11,662 DEBUG L: -2.4  R: -0.8
+12:50:11,664 DEBUG CURRENT: 91.2168 | 91.2168 | 45
+12:50:11,665 DEBUG [LOOP] DRIVE: 8.78316,8.78316
+12:50:11,665 DEBUG DISTR: 12.4213
+12:50:11,665 DEBUG [POS] driving with rotation:45 dist:12.4213
+12:50:11,665 DEBUG [POS] updatePos 
+12:50:11,668 DEBUG [MOTOR] EncL: -997 (diff: -5)
+Wheel rotations: -0.00510204
+Distance: -1.925
+12:50:11,668 DEBUG enc: -997 diff: -5 distance: -2
+12:50:11,668 DEBUG total: -997 totalDist: -398.8
+12:50:11,672 DEBUG [MOTOR] EncR: 483 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:11,673 DEBUG enc: 483 diff: -2 distance: -0.8
+12:50:11,673 DEBUG total: 483 totalDist: 193.2
+12:50:11,673 DEBUG [POS] encoders updated
+12:50:11,673 DEBUG L: -2  R: -0.8
+12:50:11,675 DEBUG CURRENT: 91.9239 | 91.9239 | 45
+12:50:11,675 DEBUG [LOOP] DRIVE: 8.07606,8.07606
+12:50:11,675 DEBUG DISTR: 11.4213
+12:50:11,675 DEBUG [POS] driving with rotation:45 dist:11.4213
+12:50:11,675 DEBUG [POS] updatePos 
+12:50:11,678 DEBUG [MOTOR] EncL: -1004 (diff: -7)
+Wheel rotations: -0.00714286
+Distance: -2.695
+12:50:11,678 DEBUG enc: -1004 diff: -7 distance: -2.8
+12:50:11,678 DEBUG total: -1004 totalDist: -401.6
+12:50:11,681 DEBUG [MOTOR] EncR: 481 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:11,681 DEBUG enc: 481 diff: -2 distance: -0.8
+12:50:11,681 DEBUG total: 481 totalDist: 192.4
+12:50:11,681 DEBUG [POS] encoders updated
+12:50:11,681 DEBUG L: -2.8  R: -0.8
+12:50:11,683 DEBUG CURRENT: 92.6311 | 92.6311 | 45
+12:50:11,684 DEBUG [LOOP] DRIVE: 7.36895,7.36895
+12:50:11,684 DEBUG DISTR: 10.4213
+12:50:11,684 DEBUG [POS] driving with rotation:45 dist:10.4213
+12:50:11,684 DEBUG [POS] updatePos 
+12:50:11,688 DEBUG [MOTOR] EncL: -1009 (diff: -5)
+Wheel rotations: -0.00510204
+Distance: -1.925
+12:50:11,689 DEBUG enc: -1009 diff: -5 distance: -2
+12:50:11,689 DEBUG total: -1009 totalDist: -403.6
+12:50:11,692 DEBUG [MOTOR] EncR: 479 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:11,692 DEBUG enc: 479 diff: -2 distance: -0.8
+12:50:11,692 DEBUG total: 479 totalDist: 191.6
+12:50:11,692 DEBUG [POS] encoders updated
+12:50:11,692 DEBUG L: -2  R: -0.8
+12:50:11,695 DEBUG CURRENT: 93.3382 | 93.3382 | 45
+12:50:11,695 DEBUG [LOOP] DRIVE: 6.66184,6.66184
+12:50:11,695 DEBUG DISTR: 9.42127
+12:50:11,695 DEBUG [POS] driving with rotation:45 dist:9.42127
+12:50:11,695 DEBUG [POS] updatePos 
+12:50:11,698 DEBUG [MOTOR] EncL: -1015 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:11,698 DEBUG enc: -1015 diff: -6 distance: -2.4
+12:50:11,698 DEBUG total: -1015 totalDist: -406
+12:50:11,701 DEBUG [MOTOR] EncR: 477 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:11,701 DEBUG enc: 477 diff: -2 distance: -0.8
+12:50:11,701 DEBUG total: 477 totalDist: 190.8
+12:50:11,701 DEBUG [POS] encoders updated
+12:50:11,701 DEBUG L: -2.4  R: -0.8
+12:50:11,703 DEBUG CURRENT: 94.0453 | 94.0453 | 45
+12:50:11,704 DEBUG [LOOP] DRIVE: 5.95473,5.95473
+12:50:11,704 DEBUG DISTR: 8.42127
+12:50:11,704 DEBUG [POS] driving with rotation:45 dist:8.42127
+12:50:11,704 DEBUG [POS] updatePos 
+12:50:11,707 DEBUG [MOTOR] EncL: -1020 (diff: -5)
+Wheel rotations: -0.00510204
+Distance: -1.925
+12:50:11,707 DEBUG enc: -1020 diff: -5 distance: -2
+12:50:11,707 DEBUG total: -1020 totalDist: -408
+12:50:11,710 DEBUG [MOTOR] EncR: 475 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:11,710 DEBUG enc: 475 diff: -2 distance: -0.8
+12:50:11,710 DEBUG total: 475 totalDist: 190
+12:50:11,710 DEBUG [POS] encoders updated
+12:50:11,710 DEBUG L: -2  R: -0.8
+12:50:11,713 DEBUG CURRENT: 94.7524 | 94.7524 | 45
+12:50:11,713 DEBUG [LOOP] DRIVE: 5.24763,5.24763
+12:50:11,713 DEBUG DISTR: 7.42127
+12:50:11,713 DEBUG [POS] driving with rotation:45 dist:7.42127
+12:50:11,713 DEBUG [POS] updatePos 
+12:50:11,716 DEBUG [MOTOR] EncL: -1025 (diff: -5)
+Wheel rotations: -0.00510204
+Distance: -1.925
+12:50:11,716 DEBUG enc: -1025 diff: -5 distance: -2
+12:50:11,716 DEBUG total: -1025 totalDist: -410
+12:50:11,720 DEBUG [MOTOR] EncR: 473 (diff: -2)
+Wheel rotations: -0.00204082
+Distance: -0.77
+12:50:11,720 DEBUG enc: 473 diff: -2 distance: -0.8
+12:50:11,720 DEBUG total: 473 totalDist: 189.2
+12:50:11,720 DEBUG [POS] encoders updated
+12:50:11,720 DEBUG L: -2  R: -0.8
+12:50:11,723 DEBUG CURRENT: 95.4595 | 95.4595 | 45
+12:50:11,723 DEBUG [LOOP] DRIVE: 4.54052,4.54052
+12:50:11,723 DEBUG DISTR: 6.42126
+12:50:11,723 DEBUG [POS] driving with rotation:45 dist:6.42126
+12:50:11,723 DEBUG [POS] updatePos 
+12:50:11,726 DEBUG [MOTOR] EncL: -1031 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:11,726 DEBUG enc: -1031 diff: -6 distance: -2.4
+12:50:11,726 DEBUG total: -1031 totalDist: -412.4
+12:50:11,729 DEBUG [MOTOR] EncR: 470 (diff: -3)
+Wheel rotations: -0.00306122
+Distance: -1.155
+12:50:11,729 DEBUG enc: 470 diff: -3 distance: -1.2
+12:50:11,729 DEBUG total: 470 totalDist: 188
+12:50:11,729 DEBUG [POS] encoders updated
+12:50:11,729 DEBUG L: -2.4  R: -1.2
+12:50:11,731 DEBUG CURRENT: 96.1666 | 96.1666 | 45
+12:50:11,731 DEBUG [LOOP] DRIVE: 3.83341,3.83341
+12:50:11,731 DEBUG DISTR: 5.42126
+12:50:11,731 DEBUG [POS] driving with rotation:45 dist:5.42126
+12:50:11,731 DEBUG [POS] updatePos 
+12:50:11,736 DEBUG [MOTOR] EncL: -1035 (diff: -4)
+Wheel rotations: -0.00408163
+Distance: -1.54
+12:50:11,736 DEBUG enc: -1035 diff: -4 distance: -1.6
+12:50:11,736 DEBUG total: -1035 totalDist: -414
+12:50:11,740 DEBUG [MOTOR] EncR: 467 (diff: -3)
+Wheel rotations: -0.00306122
+Distance: -1.155
+12:50:11,740 DEBUG enc: 467 diff: -3 distance: -1.2
+12:50:11,740 DEBUG total: 467 totalDist: 186.8
+12:50:11,740 DEBUG [POS] encoders updated
+12:50:11,740 DEBUG L: -1.6  R: -1.2
+12:50:11,742 DEBUG CURRENT: 96.8737 | 96.8737 | 45
+12:50:11,742 DEBUG [LOOP] DRIVE: 3.1263,3.1263
+12:50:11,742 DEBUG DISTR: 4.42126
+12:50:11,742 DEBUG [POS] driving with rotation:45 dist:4.42126
+12:50:11,742 DEBUG [POS] updatePos 
+12:50:11,746 DEBUG [MOTOR] EncL: -1041 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:11,746 DEBUG enc: -1041 diff: -6 distance: -2.4
+12:50:11,746 DEBUG total: -1041 totalDist: -416.4
+12:50:11,750 DEBUG [MOTOR] EncR: 464 (diff: -3)
+Wheel rotations: -0.00306122
+Distance: -1.155
+12:50:11,750 DEBUG enc: 464 diff: -3 distance: -1.2
+12:50:11,750 DEBUG total: 464 totalDist: 185.6
+12:50:11,750 DEBUG [POS] encoders updated
+12:50:11,750 DEBUG L: -2.4  R: -1.2
+12:50:11,753 DEBUG CURRENT: 97.5808 | 97.5808 | 45
+12:50:11,753 DEBUG [LOOP] DRIVE: 2.4192,2.4192
+12:50:11,753 DEBUG DISTR: 3.42126
+12:50:11,753 DEBUG [POS] driving with rotation:45 dist:3.42126
+12:50:11,753 DEBUG [POS] updatePos 
+12:50:11,756 DEBUG [MOTOR] EncL: -1047 (diff: -6)
+Wheel rotations: -0.00612245
+Distance: -2.31
+12:50:11,756 DEBUG enc: -1047 diff: -6 distance: -2.4
+12:50:11,756 DEBUG total: -1047 totalDist: -418.8
+12:50:11,759 DEBUG [MOTOR] EncR: 461 (diff: -3)
+Wheel rotations: -0.00306122
+Distance: -1.155
+12:50:11,759 DEBUG enc: 461 diff: -3 distance: -1.2
+12:50:11,759 DEBUG total: 461 totalDist: 184.4
+12:50:11,759 DEBUG [POS] encoders updated
+12:50:11,759 DEBUG L: -2.4  R: -1.2
+12:50:11,762 DEBUG [POS] Stopping

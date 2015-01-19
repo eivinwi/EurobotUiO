@@ -72,6 +72,8 @@ public:
 	bool running();
 	
 private:
+	void logTrace();
+
 	void completeCurrent();
 	void goToRotation();
     void goToPosition();
