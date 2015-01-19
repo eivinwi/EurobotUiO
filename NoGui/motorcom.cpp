@@ -4,6 +4,7 @@ MotorCom::MotorCom() {
     prev_encL = 0;
     prev_encR = 0;
     simulating = false;
+    strcpy(serial_port, "ttyUSB0");
 }
 
 
@@ -34,8 +35,8 @@ void MotorCom::startSerial() {
 		simport = new SerialSim;
 	} else {
         if(strcmp(serial_port, "") == 0) {
-            LOG(WARNING) << "[MOTOR] Error, empty serial_port. Setting to /dev/ttyACM0";
-            strcpy(serial_port, "ttyACM0");
+            LOG(WARNING) << "[MOTOR] Error, empty serial_port. Setting to /dev/ttyUSB0";
+            strcpy(serial_port, "ttyUSB0");
         }     
         LOG(INFO) << "    [MOTOR] Starting serial at: " << serial_port;
 		port = new Serial(serial_port);
@@ -198,8 +199,8 @@ long MotorCom::getEncL() {
     sync();
     writeToSerial(GET_ENCODERL);
     long result = readLongFromSerial();
-    LOG(DEBUG) << "[MOTOR] EncL: " << result << " (diff: " << (result - prev_encL) << ")\nWheel rotations: " <<  ((result-prev_encL)/980.0) << 
-                "\nDistance: " << (result - prev_encL)*0.385;
+ //   LOG(DEBUG) << "[MOTOR] EncL: " << result << " (diff: " << (result - prev_encL) << ")\nWheel rotations: " <<  ((result-prev_encL)/980.0) << 
+   //             "\nDistance: " << (result - prev_encL)*0.385;
     prev_encL = result;
     return result;
 }
@@ -209,8 +210,8 @@ long MotorCom::getEncR() {
     sync();
     writeToSerial(GET_ENCODERR);
     long result = readLongFromSerial();
-    LOG(DEBUG) << "[MOTOR] EncR: " << result << " (diff: " << (result - prev_encR) << ")\nWheel rotations: " 
-        << ((result - prev_encR)/980.0) << "\nDistance: " << ((result - prev_encR)*0.385);
+   // LOG(DEBUG) << "[MOTOR] EncR: " << result << " (diff: " << (result - prev_encR) << ")\nWheel rotations: " 
+     //   << ((result - prev_encR)/980.0) << "\nDistance: " << ((result - prev_encR)*0.385);
     prev_encR = result;
     return result;
 }

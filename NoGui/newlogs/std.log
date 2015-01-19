@@ -1,208 +1,463 @@
-12:50:05,294 INFO  [SETUP] Attaching crashHandler
-12:50:05,294 INFO  [SETUP] creating MotorCom
-12:50:05,294 INFO  [SETUP] checking cmdline-arguments
-12:50:05,294 INFO  [SETUP] Reading arguments:   
-12:50:05,294 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
-12:50:05,294 INFO  [SETUP] starting and flushing serial
-12:50:05,294 INFO      [MOTOR] Starting serial at: ttyUSB0
-12:50:05,294 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
-12:50:05,295 INFO  [SERIAL]     Serial port open.
-12:50:05,395 INFO  [SETUP] resetting encoders
-12:50:05,400 INFO  [SETUP] initializing PosControl
-12:50:05,400 INFO  [SETUP] initializing readLoop thread
-12:50:05,400 INFO  [COM] starting
-12:50:05,405 INFO  [SETUP] initializing controlLoop thread
-12:50:05,417 INFO  [SETUP] Mode is: 0x189e660, setting new mode: 0
-12:50:05,438 INFO  [SETUP] Complete, testing components:
+13:10:12,789 INFO  [SETUP] Attaching crashHandler
+13:10:12,789 INFO  [SETUP] creating MotorCom
+13:10:12,789 INFO  [SETUP] checking cmdline-arguments
+13:10:12,789 INFO  [SETUP] Reading arguments:   
+13:10:12,789 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
+13:10:12,789 INFO  [SETUP] starting and flushing serial
+13:10:12,789 INFO      [MOTOR] Starting serial at: ttyUSB0
+13:10:12,789 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
+13:10:12,790 INFO  [SERIAL]     Serial port open.
+13:10:12,891 INFO  [SETUP] resetting encoders
+13:10:12,896 INFO  [SETUP] initializing PosControl
+13:10:12,896 INFO  [SETUP] initializing readLoop thread
+13:10:12,896 INFO  [COM] starting
+13:10:12,901 INFO  [SETUP] initializing controlLoop thread
+13:10:12,915 INFO  [SETUP] Mode is: 0x1e1e660, setting new mode: 0
+13:10:12,936 INFO  [SETUP] Complete, testing components:
 
-12:50:05,438 INFO  [TEST] LOGging:                              [0;32m[ok][0m
-12:50:05,448 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
-12:50:05,449 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
-12:50:05,449 INFO  [TEST] PosControl active                     [0;32m[ok][0m
-12:50:05,449 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
-12:50:05,449 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
-12:50:05,452 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
-12:50:05,454 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
-12:50:05,458 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
-12:50:05,461 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
-12:50:05,461 INFO  [SETUP] Testing completed, waiting for client input
-12:50:10,008 INFO  [COM] recv_str: 2,0,100,100
-12:50:10,008 INFO  [COM]  Received SET_POSITION(id=0, x=100, y=100)
-12:50:10,008 INFO  [POS] dequeued qPos {0,100,100,[COM] sending reply: ok.
-12:50:10,009 INFO  [POS] Current: (0, 0, 0)
-12:50:10,021 INFO  [POS] Current: (0, 0, 0)
-12:50:10,031 INFO  [POS] Current: (0, 0, 0)
-12:50:10,041 INFO  [POS] Current: (0, 0, 0)
-12:50:10,051 INFO  [POS] Current: (0, 0, 0)
-12:50:10,060 INFO  [POS] Current: (0, 0, 0)
-12:50:10,070 INFO  [POS] Current: (0, 0, 0)
-12:50:10,081 INFO  [POS] Current: (0, 0, 0)
-12:50:10,090 INFO  [POS] Current: (0, 0, 0)
-12:50:10,102 INFO  [POS] Current: (0, 0, 0)
-12:50:10,112 INFO  [POS] Current: (0, 0, 0)
-12:50:10,121 INFO  [POS] Current: (0, 0, 0.16129)
-12:50:10,130 INFO  [POS] Current: (0, 0, 0.322581)
-12:50:10,140 INFO  [POS] Current: (0, 0, 0.483871)
-12:50:10,150 INFO  [POS] Current: (0, 0, 0.645161)
-12:50:10,160 INFO  [POS] Current: (0, 0, 0.806452)
-12:50:10,169 INFO  [POS] Current: (0, 0, 1.12903)
-12:50:10,180 INFO  [POS] Current: (0, 0, 1.29032)
-12:50:10,188 INFO  [POS] Current: (0, 0, 1.6129)
-12:50:10,198 INFO  [POS] Current: (0, 0, 1.77419)
-12:50:10,208 INFO  [POS] Current: (0, 0, 2.09677)
-12:50:10,218 INFO  [POS] Current: (0, 0, 2.25806)
-12:50:10,228 INFO  [POS] Current: (0, 0, 2.41935)
-12:50:10,237 INFO  [POS] Current: (0, 0, 2.74194)
-12:50:10,248 INFO  [POS] Current: (0, 0, 3.06452)
-12:50:10,258 INFO  [POS] Current: (0, 0, 3.3871)
-12:50:10,268 INFO  [POS] Current: (0, 0, 3.70968)
-12:50:10,279 INFO  [POS] Current: (0, 0, 4.19355)
-12:50:10,288 INFO  [POS] Current: (0, 0, 4.67742)
-12:50:10,299 INFO  [POS] Current: (0, 0, 5)
-12:50:10,308 INFO  [POS] Current: (0, 0, 5.48387)
-12:50:10,318 INFO  [POS] Current: (0, 0, 5.96774)
-12:50:10,328 INFO  [POS] Current: (0, 0, 6.29032)
-12:50:10,337 INFO  [POS] Current: (0, 0, 6.77419)
-12:50:10,347 INFO  [POS] Current: (0, 0, 7.25806)
-12:50:10,357 INFO  [POS] Current: (0, 0, 7.58065)
-12:50:10,367 INFO  [POS] Current: (0, 0, 8.22581)
-12:50:10,376 INFO  [POS] Current: (0, 0, 8.70968)
-12:50:10,386 INFO  [POS] Current: (0, 0, 9.19355)
-12:50:10,395 INFO  [POS] Current: (0, 0, 9.67742)
-12:50:10,404 INFO  [POS] Current: (0, 0, 10.1613)
-12:50:10,415 INFO  [POS] Current: (0, 0, 10.6452)
-12:50:10,424 INFO  [POS] Current: (0, 0, 11.2903)
-12:50:10,433 INFO  [POS] Current: (0, 0, 11.9355)
-12:50:10,443 INFO  [POS] Current: (0, 0, 12.4194)
-12:50:10,454 INFO  [POS] Current: (0, 0, 13.2258)
-12:50:10,463 INFO  [POS] Current: (0, 0, 13.871)
-12:50:10,473 INFO  [POS] Current: (0, 0, 14.5161)
-12:50:10,483 INFO  [POS] Current: (0, 0, 15.1613)
-12:50:10,493 INFO  [POS] Current: (0, 0, 15.8065)
-12:50:10,503 INFO  [POS] Current: (0, 0, 16.4516)
-12:50:10,513 INFO  [POS] Current: (0, 0, 17.0968)
-12:50:10,527 INFO  [POS] Current: (0, 0, 17.9032)
-12:50:10,537 INFO  [POS] Current: (0, 0, 18.871)
-12:50:10,547 INFO  [POS] Current: (0, 0, 19.6774)
-12:50:10,556 INFO  [POS] Current: (0, 0, 20.4839)
-12:50:10,567 INFO  [POS] Current: (0, 0, 21.129)
-12:50:10,577 INFO  [POS] Current: (0, 0, 21.9355)
-12:50:10,588 INFO  [POS] Current: (0, 0, 22.9032)
-12:50:10,598 INFO  [POS] Current: (0, 0, 23.871)
-12:50:10,609 INFO  [POS] Current: (0, 0, 24.8387)
-12:50:10,619 INFO  [POS] Current: (0, 0, 25.8064)
-12:50:10,628 INFO  [POS] Current: (0, 0, 26.6129)
-12:50:10,637 INFO  [POS] Current: (0, 0, 27.4193)
-12:50:10,648 INFO  [POS] Current: (0, 0, 28.3871)
-12:50:10,658 INFO  [POS] Current: (0, 0, 29.3548)
-12:50:10,669 INFO  [POS] Current: (0, 0, 30.3226)
-12:50:10,680 INFO  [POS] Current: (0, 0, 31.2903)
-12:50:10,690 INFO  [POS] Current: (0, 0, 32.4193)
-12:50:10,701 INFO  [POS] Current: (0, 0, 33.3871)
-12:50:10,712 INFO  [POS] Current: (0, 0, 34.5161)
-12:50:10,722 INFO  [POS] Current: (0, 0, 35.6452)
-12:50:10,734 INFO  [POS] Current: (0, 0, 36.9355)
-12:50:10,744 INFO  [POS] Current: (0, 0, 38.0645)
-12:50:10,754 INFO  [POS] Current: (0, 0, 39.1935)
-12:50:10,765 INFO  [POS] Current: (0, 0, 40.3226)
-12:50:10,774 INFO  [POS] Current: (0, 0, 41.4516)
-12:50:10,784 INFO  [POS] Current: (0, 0, 42.4193)
-12:50:10,793 INFO  [POS] Current: (0, 0, 43.5484)
-12:50:10,804 INFO  [POS] Current: (0, 0, 44.5161)
-12:50:10,816 INFO  [POS] Current: (1.41421, 1.41421, 45)
-12:50:10,834 INFO  [POS] Current: (3.53553, 3.53553, 45)
-12:50:10,844 INFO  [POS] Current: (5.65685, 5.65685, 45)
-12:50:10,853 INFO  [POS] Current: (7.07107, 7.07107, 45)
-12:50:10,863 INFO  [POS] Current: (8.48528, 8.48528, 45)
-12:50:10,873 INFO  [POS] Current: (9.89949, 9.89949, 45)
-12:50:10,882 INFO  [POS] Current: (11.3137, 11.3137, 45)
-12:50:10,892 INFO  [POS] Current: (12.7279, 12.7279, 45)
-12:50:10,901 INFO  [POS] Current: (14.1421, 14.1421, 45)
-12:50:10,912 INFO  [POS] Current: (15.5563, 15.5563, 45)
-12:50:10,923 INFO  [POS] Current: (16.9706, 16.9706, 45)
-12:50:10,933 INFO  [POS] Current: (17.6777, 17.6777, 45)
-12:50:10,943 INFO  [POS] Current: (19.0919, 19.0919, 45)
-12:50:10,953 INFO  [POS] Current: (20.5061, 20.5061, 45)
-12:50:10,962 INFO  [POS] Current: (21.9203, 21.9203, 45)
-12:50:10,971 INFO  [POS] Current: (23.3345, 23.3345, 45)
-12:50:10,982 INFO  [POS] Current: (24.7487, 24.7487, 45)
-12:50:10,991 INFO  [POS] Current: (26.1629, 26.1629, 45)
-12:50:11,001 INFO  [POS] Current: (26.8701, 26.8701, 45)
-12:50:11,010 INFO  [POS] Current: (28.2843, 28.2843, 45)
-12:50:11,021 INFO  [POS] Current: (28.9914, 28.9914, 45)
-12:50:11,031 INFO  [POS] Current: (30.4056, 30.4056, 45)
-12:50:11,040 INFO  [POS] Current: (31.8198, 31.8198, 45)
-12:50:11,050 INFO  [POS] Current: (33.234, 33.234, 45)
-12:50:11,059 INFO  [POS] Current: (34.6482, 34.6482, 45)
-12:50:11,069 INFO  [POS] Current: (35.3553, 35.3553, 45)
-12:50:11,079 INFO  [POS] Current: (36.7696, 36.7696, 45)
-12:50:11,089 INFO  [POS] Current: (38.1838, 38.1838, 45)
-12:50:11,099 INFO  [POS] Current: (38.8909, 38.8909, 45)
-12:50:11,108 INFO  [POS] Current: (40.3051, 40.3051, 45)
-12:50:11,120 INFO  [POS] Current: (41.7193, 41.7193, 45)
-12:50:11,130 INFO  [POS] Current: (43.1335, 43.1335, 45)
-12:50:11,139 INFO  [POS] Current: (44.5477, 44.5477, 45)
-12:50:11,150 INFO  [POS] Current: (45.962, 45.962, 45)
-12:50:11,160 INFO  [POS] Current: (47.3762, 47.3762, 45)
-12:50:11,170 INFO  [POS] Current: (48.0833, 48.0833, 45)
-12:50:11,180 INFO  [POS] Current: (49.4975, 49.4975, 45)
-12:50:11,190 INFO  [POS] Current: (50.9117, 50.9117, 45)
-12:50:11,198 INFO  [POS] Current: (51.6188, 51.6188, 45)
-12:50:11,210 INFO  [POS] Current: (52.3259, 52.3259, 45)
-12:50:11,220 INFO  [POS] Current: (53.7401, 53.7401, 45)
-12:50:11,231 INFO  [POS] Current: (54.4472, 54.4472, 45)
-12:50:11,241 INFO  [POS] Current: (55.8615, 55.8615, 45)
-12:50:11,251 INFO  [POS] Current: (57.2757, 57.2757, 45)
-12:50:11,262 INFO  [POS] Current: (58.6899, 58.6899, 45)
-12:50:11,274 INFO  [POS] Current: (60.1041, 60.1041, 45)
-12:50:11,284 INFO  [POS] Current: (61.5183, 61.5183, 45)
-12:50:11,294 INFO  [POS] Current: (62.9325, 62.9325, 45)
-12:50:11,302 INFO  [POS] Current: (63.6396, 63.6396, 45)
-12:50:11,313 INFO  [POS] Current: (64.3467, 64.3467, 45)
-12:50:11,323 INFO  [POS] Current: (65.761, 65.761, 45)
-12:50:11,334 INFO  [POS] Current: (67.1752, 67.1752, 45)
-12:50:11,344 INFO  [POS] Current: (68.5894, 68.5894, 45)
-12:50:11,354 INFO  [POS] Current: (69.2965, 69.2965, 45)
-12:50:11,362 INFO  [POS] Current: (70.0036, 70.0036, 45)
-12:50:11,373 INFO  [POS] Current: (70.7107, 70.7107, 45)
-12:50:11,384 INFO  [POS] Current: (71.4178, 71.4178, 45)
-12:50:11,393 INFO  [POS] Current: (72.1249, 72.1249, 45)
-12:50:11,402 INFO  [POS] Current: (72.832, 72.832, 45)
-12:50:11,413 INFO  [POS] Current: (73.5391, 73.5391, 45)
-12:50:11,423 INFO  [POS] Current: (74.2463, 74.2463, 45)
-12:50:11,433 INFO  [POS] Current: (74.9534, 74.9534, 45)
-12:50:11,443 INFO  [POS] Current: (75.6605, 75.6605, 45)
-12:50:11,454 INFO  [POS] Current: (76.3676, 76.3676, 45)
-12:50:11,464 INFO  [POS] Current: (77.0747, 77.0747, 45)
-12:50:11,473 INFO  [POS] Current: (77.7818, 77.7818, 45)
-12:50:11,484 INFO  [POS] Current: (78.4889, 78.4889, 45)
-12:50:11,493 INFO  [POS] Current: (79.196, 79.196, 45)
-12:50:11,502 INFO  [POS] Current: (79.9031, 79.9031, 45)
-12:50:11,513 INFO  [POS] Current: (80.6102, 80.6102, 45)
-12:50:11,524 INFO  [POS] Current: (81.3173, 81.3173, 45)
-12:50:11,534 INFO  [POS] Current: (82.0244, 82.0244, 45)
-12:50:11,546 INFO  [POS] Current: (82.7315, 82.7315, 45)
-12:50:11,555 INFO  [POS] Current: (83.4387, 83.4387, 45)
-12:50:11,566 INFO  [POS] Current: (84.1458, 84.1458, 45)
-12:50:11,575 INFO  [POS] Current: (84.8529, 84.8529, 45)
-12:50:11,586 INFO  [POS] Current: (85.56, 85.56, 45)
-12:50:11,595 INFO  [POS] Current: (86.2671, 86.2671, 45)
-12:50:11,605 INFO  [POS] Current: (86.9742, 86.9742, 45)
-12:50:11,614 INFO  [POS] Current: (87.6813, 87.6813, 45)
-12:50:11,625 INFO  [POS] Current: (88.3884, 88.3884, 45)
-12:50:11,635 INFO  [POS] Current: (89.0955, 89.0955, 45)
-12:50:11,646 INFO  [POS] Current: (89.8026, 89.8026, 45)
-12:50:11,656 INFO  [POS] Current: (90.5097, 90.5097, 45)
-12:50:11,664 INFO  [POS] Current: (91.2168, 91.2168, 45)
-12:50:11,675 INFO  [POS] Current: (91.9239, 91.9239, 45)
-12:50:11,683 INFO  [POS] Current: (92.6311, 92.6311, 45)
-12:50:11,695 INFO  [POS] Current: (93.3382, 93.3382, 45)
-12:50:11,704 INFO  [POS] Current: (94.0453, 94.0453, 45)
-12:50:11,713 INFO  [POS] Current: (94.7524, 94.7524, 45)
-12:50:11,723 INFO  [POS] Current: (95.4595, 95.4595, 45)
-12:50:11,731 INFO  [POS] Current: (96.1666, 96.1666, 45)
-12:50:11,742 INFO  [POS] Current: (96.8737, 96.8737, 45)
-12:50:11,753 INFO  [POS] Current: (97.5808, 97.5808, 45)
-12:50:11,762 INFO  [POS] action 0 completed.
-12:50:11,762 INFO  [POS] IN GOAL!  (98.2879 , 98.2879) ~= (100 , 100)
-12:50:13,500 ERROR Program interrupted by user
+13:10:12,936 INFO  [TEST] LOGging:                              [0;32m[ok][0m
+13:10:12,942 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
+13:10:12,943 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
+13:10:12,943 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+13:10:12,943 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+13:10:12,943 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+13:10:12,946 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
+13:10:12,951 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
+13:10:12,954 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
+13:10:12,957 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
+13:10:12,957 INFO  [SETUP] Testing completed, waiting for client input
+13:10:14,444 INFO  [COM] recv_str: 2,0,500,500
+13:10:14,444 INFO  [COM]  Received SET_POSITION(id=0, x=500, y=500)
+13:10:14,445 INFO  [COM] sending reply: ok.
+13:10:14,483 INFO  (0, 0, 0)
+13:10:14,527 INFO  (0, 0, 0)
+13:10:14,598 INFO  (0, 0, 0.322581)
+13:10:14,640 INFO  (0, 0, 1.77419)
+13:10:14,685 INFO  (0, 0, 3.06452)
+13:10:14,730 INFO  (0, 0, 4.51613)
+13:10:14,774 INFO  (0, 0, 6.6129)
+13:10:14,817 INFO  (0, 0, 8.54839)
+13:10:14,863 INFO  (0, 0, 11.4516)
+13:10:14,907 INFO  (0, 0, 14.0323)
+13:10:14,951 INFO  (0, 0, 17.2581)
+13:10:14,996 INFO  (0, 0, 20.8064)
+13:10:15,042 INFO  (0, 0, 24.5161)
+13:10:15,087 INFO  (0, 0, 28.871)
+13:10:15,133 INFO  (0, 0, 33.2258)
+13:10:15,190 INFO  (0, 0, 39.5161)
+13:10:15,232 INFO  (0, 0, 44.1935)
+13:10:15,277 INFO  (7.07107, 7.07107, 45)
+13:10:15,322 INFO  (14.1421, 14.1421, 45)
+13:10:15,368 INFO  (21.2132, 21.2132, 45)
+13:10:15,417 INFO  (27.5772, 27.5772, 45)
+13:10:15,463 INFO  (32.5269, 32.5269, 45)
+13:10:15,509 INFO  (38.8909, 38.8909, 45)
+13:10:15,552 INFO  (43.8406, 43.8406, 45)
+13:10:15,598 INFO  (49.4975, 49.4975, 45)
+13:10:15,642 INFO  (54.4472, 54.4472, 45)
+13:10:15,687 INFO  (59.397, 59.397, 45)
+13:10:15,732 INFO  (65.761, 65.761, 45)
+13:10:15,777 INFO  (72.1249, 72.1249, 45)
+13:10:15,823 INFO  (79.196, 79.196, 45)
+13:10:15,867 INFO  (86.2671, 86.2671, 45)
+13:10:15,912 INFO  (93.3382, 93.3382, 45)
+13:10:15,956 INFO  (100.409, 100.409, 45)
+13:10:16,002 INFO  (107.48, 107.48, 45)
+13:10:16,048 INFO  (114.551, 114.551, 45)
+13:10:16,091 INFO  (121.622, 121.622, 45)
+13:10:16,138 INFO  (128.694, 128.694, 45)
+13:10:16,184 INFO  (137.886, 137.886, 45)
+13:10:16,231 INFO  (147.785, 147.785, 45)
+13:10:16,275 INFO  (157.685, 157.685, 45)
+13:10:16,321 INFO  (168.292, 168.292, 45)
+13:10:16,367 INFO  (178.898, 178.898, 45)
+13:10:16,410 INFO  (190.919, 190.919, 45)
+13:10:16,453 INFO  (202.233, 202.233, 45)
+13:10:16,500 INFO  (214.961, 214.961, 45)
+13:10:16,543 INFO  (226.981, 226.981, 45)
+13:10:16,589 INFO  (239.709, 239.709, 45)
+13:10:16,634 INFO  (252.437, 252.437, 45)
+13:10:16,680 INFO  (266.579, 266.579, 45)
+13:10:16,726 INFO  (280.722, 280.722, 45)
+13:10:16,772 INFO  (294.864, 294.864, 45)
+13:10:16,817 INFO  (309.006, 309.006, 45)
+13:10:16,861 INFO  (323.148, 323.148, 45)
+13:10:16,907 INFO  (337.997, 337.997, 45)
+13:10:16,951 INFO  (352.139, 352.139, 45)
+13:10:16,997 INFO  (368.403, 368.403, 45)
+13:10:17,044 INFO  (385.373, 385.373, 45)
+13:10:17,089 INFO  (400.93, 400.93, 45)
+13:10:17,136 INFO  (417.9, 417.9, 45)
+13:10:17,182 INFO  (434.871, 434.871, 45)
+13:10:17,226 INFO  (449.72, 449.72, 45)
+13:10:17,271 INFO  (465.276, 465.276, 45)
+13:10:17,316 INFO  (479.419, 479.419, 45)
+13:10:17,362 INFO  (493.561, 493.561, 45)
+13:10:17,382 INFO  [POS] action 0 completed.
+13:10:17,382 INFO  [POS] IN GOAL!  (500.632 , 500.632) ~= (500 , 500)
+13:10:18,495 ERROR Program interrupted by user
+13:11:27,208 INFO  [SETUP] Attaching crashHandler
+13:11:27,208 INFO  [SETUP] creating MotorCom
+13:11:27,208 INFO  [SETUP] checking cmdline-arguments
+13:11:27,208 INFO  [SETUP] Reading arguments:   
+13:11:27,208 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
+13:11:27,208 INFO  [SETUP] starting and flushing serial
+13:11:27,208 INFO      [MOTOR] Starting serial at: ttyUSB0
+13:11:27,208 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
+13:11:27,210 INFO  [SERIAL]     Serial port open.
+13:11:27,310 INFO  [SETUP] resetting encoders
+13:11:27,315 INFO  [SETUP] initializing PosControl
+13:11:27,315 INFO  [SETUP] initializing readLoop thread
+13:11:27,315 INFO  [COM] starting
+13:11:27,320 INFO  [SETUP] initializing controlLoop thread
+13:11:27,331 INFO  [SETUP] Mode is: 0x246c660, setting new mode: 0
+13:11:27,354 INFO  [SETUP] Complete, testing components:
+
+13:11:27,354 INFO  [TEST] LOGging:                              [0;32m[ok][0m
+13:11:27,361 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
+13:11:27,361 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
+13:11:27,361 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+13:11:27,361 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+13:11:27,361 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+13:11:27,364 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
+13:11:27,366 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
+13:11:27,369 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
+13:11:27,372 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
+13:11:27,373 INFO  [SETUP] Testing completed, waiting for client input
+13:11:31,341 INFO  [COM] recv_str: 2,0,500,500
+13:11:31,341 INFO  [COM]  Received SET_POSITION(id=0, x=500, y=500)
+13:11:31,342 INFO  [COM] sending reply: ok.
+13:11:31,378 INFO  (0, 0, 0)
+13:11:31,424 INFO  (0, 0, 0)
+13:11:31,470 INFO  (0, 0, 0.322581)
+13:11:31,515 INFO  (0, 0, 1.29032)
+13:11:31,559 INFO  (0, 0, 2.25806)
+13:11:31,603 INFO  (0, 0, 3.70968)
+13:11:31,651 INFO  (0, 0, 5.48387)
+13:11:31,697 INFO  (0, 0, 7.58065)
+13:11:31,743 INFO  (0, 0, 10.1613)
+13:11:31,787 INFO  (0, 0, 12.9032)
+13:11:31,832 INFO  (0, 0, 15.8065)
+13:11:31,877 INFO  (0, 0, 19.0323)
+13:11:31,923 INFO  (0, 0, 22.7419)
+13:11:31,969 INFO  (0, 0, 26.7742)
+13:11:32,021 INFO  (0, 0, 31.6129)
+13:11:32,070 INFO  (0, 0, 36.7742)
+13:11:32,117 INFO  (0, 0, 41.7742)
+13:11:32,162 INFO  (2.82843, 2.82843, 45)
+13:11:32,216 INFO  (11.3137, 11.3137, 45)
+13:11:32,260 INFO  (16.2635, 16.2635, 45)
+13:11:32,305 INFO  (21.2132, 21.2132, 45)
+13:11:32,350 INFO  (26.163, 26.163, 45)
+13:11:32,392 INFO  (29.6985, 29.6985, 45)
+13:11:32,439 INFO  (34.6482, 34.6482, 45)
+13:11:32,484 INFO  (40.3051, 40.3051, 45)
+13:11:32,532 INFO  (46.6691, 46.6691, 45)
+13:11:32,575 INFO  (50.9117, 50.9117, 45)
+13:11:32,621 INFO  (55.8615, 55.8615, 45)
+13:11:32,667 INFO  (62.2254, 62.2254, 45)
+13:11:32,711 INFO  (68.5894, 68.5894, 45)
+13:11:32,757 INFO  (74.9534, 74.9534, 45)
+13:11:32,805 INFO  (82.0244, 82.0244, 45)
+13:11:32,851 INFO  (89.0955, 89.0955, 45)
+13:11:32,893 INFO  (96.1666, 96.1666, 45)
+13:11:32,937 INFO  (103.238, 103.238, 45)
+13:11:32,982 INFO  (110.309, 110.309, 45)
+13:11:33,026 INFO  (117.38, 117.38, 45)
+13:11:33,072 INFO  (125.158, 125.158, 45)
+13:11:33,117 INFO  (135.058, 135.058, 45)
+13:11:33,162 INFO  (144.957, 144.957, 45)
+13:11:33,207 INFO  (154.857, 154.857, 45)
+13:11:33,251 INFO  (165.463, 165.463, 45)
+13:11:33,296 INFO  (176.07, 176.07, 45)
+13:11:33,342 INFO  (188.091, 188.091, 45)
+13:11:33,386 INFO  (200.819, 200.819, 45)
+13:11:33,433 INFO  (212.839, 212.839, 45)
+13:11:33,478 INFO  (226.274, 226.274, 45)
+13:11:33,529 INFO  (242.538, 242.538, 45)
+13:11:33,577 INFO  (255.973, 255.973, 45)
+13:11:33,621 INFO  (269.408, 269.408, 45)
+13:11:33,665 INFO  (282.843, 282.843, 45)
+13:11:33,711 INFO  (295.571, 295.571, 45)
+13:11:33,756 INFO  (309.713, 309.713, 45)
+13:11:33,800 INFO  (323.855, 323.855, 45)
+13:11:33,847 INFO  (339.411, 339.411, 45)
+13:11:33,891 INFO  (353.554, 353.554, 45)
+13:11:33,937 INFO  (369.817, 369.817, 45)
+13:11:33,981 INFO  (385.373, 385.373, 45)
+13:11:34,027 INFO  (403.051, 403.051, 45)
+13:11:34,075 INFO  (420.729, 420.729, 45)
+13:11:34,120 INFO  (436.285, 436.285, 45)
+13:11:34,163 INFO  (453.256, 453.256, 45)
+13:11:34,209 INFO  (468.812, 468.812, 45)
+13:11:34,252 INFO  (482.954, 482.954, 45)
+13:11:34,299 INFO  (497.803, 497.803, 45)
+13:11:34,307 INFO  [POS] action 0 completed.
+13:11:34,307 INFO  [POS] IN GOAL!  (500.632 , 500.632) ~= (500 , 500)
+13:11:37,225 ERROR Program interrupted by user
+13:12:29,068 INFO  [SETUP] Attaching crashHandler
+13:12:29,068 INFO  [SETUP] creating MotorCom
+13:12:29,068 INFO  [SETUP] checking cmdline-arguments
+13:12:29,068 INFO  [SETUP] Reading arguments:   
+13:12:29,068 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
+13:12:29,068 INFO  [SETUP] starting and flushing serial
+13:12:29,068 INFO      [MOTOR] Starting serial at: ttyUSB0
+13:12:29,068 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
+13:12:29,070 INFO  [SERIAL]     Serial port open.
+13:12:29,170 INFO  [SETUP] resetting encoders
+13:12:29,175 INFO  [SETUP] initializing PosControl
+13:12:29,175 INFO  [SETUP] initializing readLoop thread
+13:12:29,175 INFO  [COM] starting
+13:12:29,180 INFO  [SETUP] initializing controlLoop thread
+13:12:29,191 INFO  [SETUP] Mode is: 0x2167660, setting new mode: 0
+13:12:29,212 INFO  [SETUP] Complete, testing components:
+
+13:12:29,212 INFO  [TEST] LOGging:                              [0;32m[ok][0m
+13:12:29,219 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
+13:12:29,219 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
+13:12:29,219 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+13:12:29,220 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+13:12:29,220 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+13:12:29,223 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
+13:12:29,226 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
+13:12:29,229 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
+13:12:29,233 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
+13:12:29,233 INFO  [SETUP] Testing completed, waiting for client input
+13:12:32,909 INFO  [COM] recv_str: 2,0,100,100
+13:12:32,909 INFO  [COM]  Received SET_POSITION(id=0, x=100, y=100)
+13:12:32,909 INFO  [COM] sending reply: ok.
+13:12:32,958 INFO  (0, 0, 0)
+13:12:33,006 INFO  (0, 0, 0)
+13:12:33,049 INFO  (0, 0, 0.645161)
+13:12:33,102 INFO  (0, 0, 1.93548)
+13:12:33,148 INFO  (0, 0, 3.3871)
+13:12:33,193 INFO  (0, 0, 5)
+13:12:33,238 INFO  (0, 0, 6.93548)
+13:12:33,281 INFO  (0, 0, 9.03226)
+13:12:33,325 INFO  (0, 0, 11.6129)
+13:12:33,371 INFO  (0, 0, 14.5161)
+13:12:33,416 INFO  (0, 0, 17.7419)
+13:12:33,463 INFO  (0, 0, 21.2903)
+13:12:33,510 INFO  (0, 0, 25.3226)
+13:12:33,554 INFO  (0, 0, 29.6774)
+13:12:33,599 INFO  (0, 0, 34.0322)
+13:12:33,646 INFO  (0, 0, 38.7097)
+13:12:33,693 INFO  (0, 0, 43.5484)
+13:12:33,737 INFO  (4.24264, 4.24264, 45)
+13:12:33,783 INFO  (10.6066, 10.6066, 45)
+13:12:33,828 INFO  (16.2635, 16.2635, 45)
+13:12:33,875 INFO  (21.2132, 21.2132, 45)
+13:12:33,921 INFO  (25.4558, 25.4558, 45)
+13:12:33,966 INFO  (29.6985, 29.6985, 45)
+13:12:34,010 INFO  (34.6482, 34.6482, 45)
+13:12:34,055 INFO  (38.8909, 38.8909, 45)
+13:12:34,098 INFO  (43.1335, 43.1335, 45)
+13:12:34,144 INFO  (46.6691, 46.6691, 45)
+13:12:34,190 INFO  (51.6188, 51.6188, 45)
+13:12:34,234 INFO  (55.8615, 55.8615, 45)
+13:12:34,280 INFO  (60.8112, 60.8112, 45)
+13:12:34,324 INFO  (64.3468, 64.3468, 45)
+13:12:34,368 INFO  (67.8823, 67.8823, 45)
+13:12:34,431 INFO  (73.5392, 73.5392, 45)
+13:12:34,475 INFO  (77.7818, 77.7818, 45)
+13:12:34,518 INFO  (81.3173, 81.3173, 45)
+13:12:34,562 INFO  (84.8529, 84.8529, 45)
+13:12:34,607 INFO  (88.3884, 88.3884, 45)
+13:12:34,653 INFO  (91.924, 91.924, 45)
+13:12:34,699 INFO  (95.4595, 95.4595, 45)
+13:12:34,738 INFO  [POS] action 0 completed.
+13:12:34,739 INFO  [POS] IN GOAL!  (98.2879 , 98.2879) ~= (100 , 100)
+13:12:35,688 ERROR Program interrupted by user
+13:15:54,462 INFO  [SETUP] Attaching crashHandler
+13:15:54,462 INFO  [SETUP] creating MotorCom
+13:15:54,462 INFO  [SETUP] checking cmdline-arguments
+13:15:54,462 INFO  [SETUP] Reading arguments:   
+13:15:54,462 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
+13:15:54,462 INFO  [SETUP] starting and flushing serial
+13:15:54,462 INFO      [MOTOR] Starting serial at: ttyUSB0
+13:15:54,462 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
+13:15:54,464 INFO  [SERIAL]     Serial port open.
+13:15:54,565 INFO  [SETUP] resetting encoders
+13:15:54,570 INFO  [SETUP] initializing PosControl
+13:15:54,570 INFO  [SETUP] initializing readLoop thread
+13:15:54,570 INFO  [COM] starting
+13:15:54,575 INFO  [SETUP] initializing controlLoop thread
+13:15:54,586 INFO  [SETUP] Mode is: 0x1973660, setting new mode: 0
+13:15:54,607 INFO  [SETUP] Complete, testing components:
+
+13:15:54,607 INFO  [TEST] LOGging:                              [0;32m[ok][0m
+13:15:54,614 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
+13:15:54,615 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
+13:15:54,615 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+13:15:54,615 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+13:15:54,615 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+13:15:54,617 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
+13:15:54,619 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
+13:15:54,622 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
+13:15:54,625 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
+13:15:54,625 INFO  [SETUP] Testing completed, waiting for client input
+13:16:02,364 ERROR Program interrupted by user
+13:16:57,007 INFO  [SETUP] Attaching crashHandler
+13:16:57,007 INFO  [SETUP] creating MotorCom
+13:16:57,007 INFO  [SETUP] checking cmdline-arguments
+13:16:57,007 INFO  [SETUP] Reading arguments:   
+13:16:57,007 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
+13:16:57,007 INFO  [SETUP] starting and flushing serial
+13:16:57,007 INFO      [MOTOR] Starting serial at: ttyUSB0
+13:16:57,007 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
+13:16:57,009 INFO  [SERIAL]     Serial port open.
+13:16:57,109 INFO  [SETUP] resetting encoders
+13:16:57,114 INFO  [SETUP] initializing PosControl
+13:16:57,114 INFO  [SETUP] initializing readLoop thread
+13:16:57,114 INFO  [COM] starting
+13:16:57,119 INFO  [SETUP] initializing controlLoop thread
+13:16:57,131 INFO  [SETUP] Mode is: 0xc97660, setting new mode: 0
+13:16:57,153 INFO  [SETUP] Complete, testing components:
+
+13:16:57,153 INFO  [TEST] LOGging:                              [0;32m[ok][0m
+13:16:57,159 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
+13:16:57,159 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
+13:16:57,159 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+13:16:57,159 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+13:16:57,159 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+13:16:57,162 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
+13:16:57,164 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
+13:16:57,167 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
+13:16:57,170 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
+13:16:57,170 INFO  [SETUP] Testing completed, waiting for client input
+13:17:02,733 ERROR Program interrupted by user
+13:17:06,516 INFO  [SETUP] Attaching crashHandler
+13:17:06,542 INFO  [SETUP] creating MotorCom
+13:17:06,542 INFO  [SETUP] checking cmdline-arguments
+13:17:06,542 INFO  [SETUP] Reading arguments:   
+13:17:06,542 INFO  [SETUP] Arguments: ./exec debug 
+13:17:06,542 INFO  [SETUP]     Enabling debug-logging
+13:17:06,542 INFO  [SETUP] starting and flushing serial
+13:17:06,542 INFO      [MOTOR] Starting serial at: r**)
+13:17:06,542 INFO  [SERIAL]     Opening serial port: /dev/r**)
+13:17:06,542 INFO  [SERIAL]     Serial port open.
+13:17:24,412 ERROR Program interrupted by user
+13:17:33,271 INFO  [SETUP] Attaching crashHandler
+13:17:33,271 INFO  [SETUP] creating MotorCom
+13:17:33,271 INFO  [SETUP] checking cmdline-arguments
+13:17:33,271 INFO  [SETUP] Reading arguments:   
+13:17:33,271 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
+13:17:33,271 INFO  [SETUP] starting and flushing serial
+13:17:33,271 INFO      [MOTOR] Starting serial at: ttyUSB0
+13:17:33,271 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
+13:17:33,272 INFO  [SERIAL]     Serial port open.
+13:17:33,373 INFO  [SETUP] resetting encoders
+13:17:33,378 INFO  [SETUP] initializing PosControl
+13:17:33,378 INFO  [SETUP] initializing readLoop thread
+13:17:33,378 INFO  [COM] starting
+13:17:33,383 INFO  [SETUP] initializing controlLoop thread
+13:17:33,394 INFO  [SETUP] Mode is: 0x2399660, setting new mode: 0
+13:17:33,416 INFO  [SETUP] Complete, testing components:
+
+13:17:33,416 INFO  [TEST] LOGging:                              [0;32m[ok][0m
+13:17:33,422 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
+13:17:33,422 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
+13:17:33,422 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+13:17:33,422 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+13:17:33,422 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+13:17:33,424 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
+13:17:33,426 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
+13:17:33,430 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
+13:17:33,433 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
+13:17:33,433 INFO  [SETUP] Testing completed, waiting for client input
+13:17:34,250 ERROR Program interrupted by user
+13:17:37,145 INFO  [SETUP] Attaching crashHandler
+13:17:37,145 INFO  [SETUP] creating MotorCom
+13:17:37,145 INFO  [SETUP] checking cmdline-arguments
+13:17:37,145 INFO  [SETUP] Reading arguments:   
+13:17:37,145 INFO  [SETUP] Arguments: ./exec debug 
+13:17:37,145 INFO  [SETUP]     Enabling debug-logging
+13:17:37,145 INFO  [SETUP] starting and flushing serial
+13:17:37,145 INFO      [MOTOR] Starting serial at: r**)
+13:17:37,145 INFO  [SERIAL]     Opening serial port: /dev/r**)
+13:17:37,145 INFO  [SERIAL]     Serial port open.
+13:17:37,888 ERROR Program interrupted by user
+13:18:50,073 INFO  [SETUP] Attaching crashHandler
+13:18:50,073 INFO  [SETUP] creating MotorCom
+13:18:50,073 INFO  [SETUP] checking cmdline-arguments
+13:18:50,073 INFO  [SETUP] Reading arguments:   
+13:18:50,073 INFO  [SETUP] Arguments: ./exec debug 
+13:18:50,073 INFO  [SETUP]     Enabling debug-logging
+13:18:50,073 INFO  [SETUP] starting and flushing serial
+13:18:50,073 INFO      [MOTOR] Starting serial at: r**)
+13:18:50,073 INFO  [SERIAL]     Opening serial port: /dev/r**)
+13:18:50,074 INFO  [SERIAL]     Serial port open.
+13:18:51,008 ERROR Program interrupted by user
+13:20:46,427 INFO  [SETUP] Attaching crashHandler
+13:20:46,427 INFO  [SETUP] creating MotorCom
+13:20:46,427 INFO  [SETUP] checking cmdline-arguments
+13:20:46,427 INFO  [SETUP] Reading arguments:   
+13:20:46,427 INFO  [SETUP] Arguments: ./exec debug 
+13:20:46,428 INFO  [SETUP]     Enabling debug-logging
+13:20:46,428 INFO  [SETUP] starting and flushing serial
+13:20:46,428 INFO      [MOTOR] Starting serial at: ttyUSB0
+13:20:46,428 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
+13:20:46,430 INFO  [SERIAL]     Serial port open.
+13:20:46,530 INFO  [SETUP] resetting encoders
+13:20:46,535 INFO  [SETUP] initializing PosControl
+13:20:46,535 INFO  [SETUP] initializing readLoop thread
+13:20:46,536 INFO  [COM] starting
+13:20:46,541 INFO  [SETUP] initializing controlLoop thread
+13:20:46,551 INFO  [SETUP] Mode is: 0x1687660, setting new mode: 0
+13:20:46,572 INFO  [SETUP] Complete, testing components:
+
+13:20:46,573 INFO  [TEST] LOGging:                              [0;32m[ok][0m
+13:20:46,580 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
+13:20:46,580 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
+13:20:46,580 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+13:20:46,580 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+13:20:46,580 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+13:20:46,582 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
+13:20:46,584 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
+13:20:46,586 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
+13:20:46,588 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
+13:20:46,588 INFO  [SETUP] Testing completed, waiting for client input
+13:20:50,881 INFO  [COM] recv_str: 2,0,100,100
+13:20:50,881 INFO  [COM]  Received SET_POSITION(id=0, x=100, y=100)
+13:20:50,881 INFO  [COM] sending reply: ok.
+13:20:50,919 INFO  (0, 0, 0)
+13:20:50,964 INFO  (0, 0, 0)
+13:20:51,008 INFO  (0, 0, 0.322581)
+13:20:51,053 INFO  (0, 0, 1.29032)
+13:20:51,099 INFO  (0, 0, 2.25806)
+13:20:51,143 INFO  (0, 0, 3.70968)
+13:20:51,185 INFO  (0, 0, 5.32258)
+13:20:51,240 INFO  (0, 0, 7.90323)
+13:20:51,282 INFO  (0, 0, 10.4839)
+13:20:51,331 INFO  (0, 0, 13.3871)
+13:20:51,376 INFO  (0, 0, 16.6129)
+13:20:51,421 INFO  (0, 0, 20)
+13:20:51,466 INFO  (0, 0, 23.5484)
+13:20:51,510 INFO  (0, 0, 27.5806)
+13:20:51,555 INFO  (0, 0, 32.0968)
+13:20:51,603 INFO  (0, 0, 37.0968)
+13:20:51,647 INFO  (0, 0, 41.9355)
+13:20:51,696 INFO  (2.82843, 2.82843, 45)
+13:20:51,741 INFO  (9.89949, 9.89949, 45)
+13:20:51,789 INFO  (16.9706, 16.9706, 45)
+13:20:51,832 INFO  (21.9203, 21.9203, 45)
+13:20:51,878 INFO  (26.163, 26.163, 45)
+13:20:51,923 INFO  (31.1127, 31.1127, 45)
+13:20:51,969 INFO  (36.0625, 36.0625, 45)
+13:20:52,015 INFO  (42.4264, 42.4264, 45)
+13:20:52,061 INFO  (47.3762, 47.3762, 45)
+13:20:52,106 INFO  (53.033, 53.033, 45)
+13:20:52,151 INFO  (56.5686, 56.5686, 45)
+13:20:52,199 INFO  (61.5183, 61.5183, 45)
+13:20:52,245 INFO  (65.761, 65.761, 45)
+13:20:52,291 INFO  (69.2965, 69.2965, 45)
+13:20:52,340 INFO  (73.5392, 73.5392, 45)
+13:20:52,386 INFO  (77.0747, 77.0747, 45)
+13:20:52,428 INFO  (80.6102, 80.6102, 45)
+13:20:52,473 INFO  (84.1458, 84.1458, 45)
+13:20:52,517 INFO  (87.6813, 87.6813, 45)
+13:20:52,563 INFO  (91.2168, 91.2168, 45)
+13:20:52,609 INFO  (94.7524, 94.7524, 45)
+13:20:52,655 INFO  [POS] action 0 completed.
+13:20:52,655 INFO  [POS] IN GOAL!  (98.2879 , 98.2879) ~= (100 , 100)
+13:20:54,007 ERROR Program interrupted by user

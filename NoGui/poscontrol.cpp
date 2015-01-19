@@ -198,7 +198,8 @@ void PosControl::goToPosition() {
 			dist = updateDist(angle, distX, distY);
 
 			LOG(DEBUG) << "CURRENT: " << curPos->getX() << " | " << curPos->getY() << " | " << curPos->getAngle();
-			printCurrent();
+			//printCurrent();
+			LOG_EVERY_N(5, INFO) << "(" << curPos->getX() << ", " << curPos->getY() << ", " << curPos->getAngle() << ")";
 
 			if(!closeEnoughAngle()) {				
 				LOG(DEBUG) << "[LOOP] ROTATION: " << distR;
@@ -500,9 +501,7 @@ long PosControl::encoderDifference() {
 
 
 void PosControl::printCurrent() {
-	std::stringstream ss;
-	ss << "(" << curPos->getX() << ", " << curPos->getY() << ", " << curPos->getAngle() << ")"; 
-	LOG(INFO) << "[POS] Current: " << ss.str();
+	LOG(INFO) << "(" << curPos->getX() << ", " << curPos->getY() << ", " << curPos->getAngle() << ")";
 }
 
 

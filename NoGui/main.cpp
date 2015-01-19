@@ -21,7 +21,6 @@
 #include <mutex>
 #include <zmq.hpp>
 #include <iostream>
-//#include <easylogging++.h>
 INITIALIZE_EASYLOGGINGPP
 
 
@@ -45,6 +44,7 @@ int ACCELERATION = 1;
 int MODE = 0;
 bool sound_enabled = false;
 bool com_running = false;
+bool debug_printing = false;
 
 /* Waits for input on socket, mainly position. 
  */
@@ -245,6 +245,10 @@ bool checkArguments(int argc, char *argv[]) {
                 LOG(INFO) << "[SETUP]     Sound enabled.";
                 sound_enabled = true;
             }
+            else if(strcmp(argv[i], "debug") == 0) {
+                LOG(INFO) << "[SETUP]     Enabling debug-logging";
+                debug_printing = true;
+            }
             else if(strcmp(argv[i], "ttyACM0") == 0) {
                 LOG(INFO) << "[SETUP]     Opening serial on: /dev/" << argv[i];
                 m->setSerialPort(argv[1]);
@@ -260,7 +264,8 @@ bool checkArguments(int argc, char *argv[]) {
             else if(strcmp(argv[i], "ttyUSB1") == 0) {
                 LOG(INFO) << "[SETUP]     Opening serial on: /dev/" << argv[i];
                 m->setSerialPort(argv[1]);
-            } else {
+            } 
+            else {
                 LOG(INFO) << "[SETUP]     Invalid argument: " << argv[i];
                 return false;
             }
@@ -277,6 +282,18 @@ void configureLogger() {
     defaultConf.set(el::Level::Global, 
         el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/NoGui/newlogs/std.log"
     );
+
+    if(debug_printing) {
+        defaultConf.set(el::Level::Debug, 
+            el::ConfigurationType::Enabled, "TRUE"
+        );
+    }
+    else {
+        defaultConf.set(el::Level::Debug, 
+            el::ConfigurationType::Enabled, "FALSE"
+        );
+    }    
+
     defaultConf.set(el::Level::Debug, 
         el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/NoGui/newlogs/debug.log"
     );

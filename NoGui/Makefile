@@ -9,11 +9,10 @@ EXEC=exec
 SRCS=main.cpp motorcom.cpp serial.cpp serialsim.cpp poscontrol.cpp position.cpp goalposition.cpp rotation.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
 
-all: $(EXEC) $(SIMEXEC)
+all: $(EXEC)
 
 debug: CPPFLAGS += -DDEBUG -g
 debug: $(EXEC)
-debug: $(SIMEXEC)
 
 $(EXEC): $(OBJS)
 	$(CXX) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $@
