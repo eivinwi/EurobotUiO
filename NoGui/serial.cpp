@@ -5,7 +5,7 @@ Serial::Serial(char *serial_port) {
 	char s[20]; 
 	strcpy(s, "/dev/");
 	strcat(s, serial_port);
-    //LOG(INFO) << "[SERIAL]     Opening serial port: " << s;
+    LOG(INFO) << "[SERIAL]     Opening serial port: " << s;
     serial.Open(s);
 
     serial.SetBaudRate( SerialStreamBuf::BAUD_38400 );
@@ -14,7 +14,7 @@ Serial::Serial(char *serial_port) {
     serial.SetParity( SerialStreamBuf::PARITY_NONE );
     serial.SetFlowControl( SerialStreamBuf::FLOW_CONTROL_NONE ); //FLOW_CONTROL_HARD
 
-    //LOG(INFO) << "[SERIAL]     Serial port open.";
+    LOG(INFO) << "[SERIAL]     Serial port open.";
 }
 
 
