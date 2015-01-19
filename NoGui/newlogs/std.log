@@ -1,0 +1,61 @@
+2015-01-19 12:05:13,769 INFO  [SETUP] LOGgers reconfigured
+2015-01-19 12:05:13,769 INFO  //LOG active
+2015-01-19 12:05:13,769 INFO  [SETUP] creating MotorCom
+2015-01-19 12:05:13,909 INFO  [TEST] //LOGging:                            [0;32m[ok][0m
+2015-01-19 12:05:13,909 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
+2015-01-19 12:05:13,909 INFO  [TEST] Serial open                           [0;32m[ok][0m
+2015-01-19 12:05:13,909 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+2015-01-19 12:05:13,909 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+2015-01-19 12:05:13,909 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+2015-01-19 12:05:13,909 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
+2015-01-19 12:05:13,909 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
+2015-01-19 12:05:13,909 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
+2015-01-19 12:05:13,909 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
+2015-01-19 12:05:15,424 FATAL CRASH HANDLED; Application has crashed due to [SIGINT] signal
+2015-01-19 12:05:15,424 WARN  Aborting application. Reason: Fatal log at [/usr/local/include/easylogging++.h:5583]
+2015-01-19 12:05:43,934 INFO  [SETUP] LOGgers reconfigured
+2015-01-19 12:05:43,934 INFO  //LOG active
+2015-01-19 12:05:43,934 INFO  [SETUP] creating MotorCom
+2015-01-19 12:05:44,073 INFO  [TEST] //LOGging:                            [0;32m[ok][0m
+2015-01-19 12:05:44,073 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
+2015-01-19 12:05:44,073 INFO  [TEST] Serial open                           [0;32m[ok][0m
+2015-01-19 12:05:44,073 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+2015-01-19 12:05:44,073 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+2015-01-19 12:05:44,073 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+2015-01-19 12:05:44,074 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
+2015-01-19 12:05:44,074 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
+2015-01-19 12:05:44,074 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
+2015-01-19 12:05:44,074 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
+2015-01-19 12:05:44,960 FATAL CRASH HANDLED; Application has crashed due to [SIGINT] signal
+2015-01-19 12:05:44,960 WARN  Aborting application. Reason: Fatal log at [/usr/local/include/easylogging++.h:5583]
+2015-01-19 12:07:56,432 INFO  [SETUP] LOGgers reconfigured
+2015-01-19 12:07:56,432 INFO  LOG active
+2015-01-19 12:07:56,432 INFO  [SETUP] creating MotorCom
+2015-01-19 12:07:56,432 INFO  [SETUP] checking cmdline-arguments
+2015-01-19 12:07:56,432 INFO  [SETUP] Reading arguments:   
+2015-01-19 12:07:56,432 INFO  [SETUP] Arguments: ./exec sim testing 
+2015-01-19 12:07:56,432 INFO  [SETUP]     Simulating serial.
+2015-01-19 12:07:56,432 INFO  [SETUP]     Testing enabled.
+2015-01-19 12:07:56,432 INFO  [SETUP] starting and flushing serial
+2015-01-19 12:07:56,533 INFO  [SETUP] resetting encoders
+2015-01-19 12:07:56,538 INFO  [SETUP] initializing PosControl
+2015-01-19 12:07:56,538 INFO  [SETUP] initializing readLoop thread
+2015-01-19 12:07:56,538 INFO  [COM] starting
+2015-01-19 12:07:56,543 INFO  [SETUP] initializing controlLoop thread
+2015-01-19 12:07:56,548 INFO  [SETUP] Acceleration is: 5, setting new acceleration: 1
+2015-01-19 12:07:56,551 INFO  [SETUP] Mode is: 0x1267990, setting new mode: 0
+2015-01-19 12:07:56,572 INFO  [SETUP] Complete, testing components:
+
+2015-01-19 12:07:56,572 INFO  [TEST] LOGging:                              [0;32m[ok][0m
+2015-01-19 12:07:56,572 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
+2015-01-19 12:07:56,572 INFO  [TEST] Serial open                           [0;32m[ok][0m
+2015-01-19 12:07:56,572 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+2015-01-19 12:07:56,572 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+2015-01-19 12:07:56,572 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+2015-01-19 12:07:56,572 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
+2015-01-19 12:07:56,572 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
+2015-01-19 12:07:56,573 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
+2015-01-19 12:07:56,573 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
+2015-01-19 12:07:56,573 INFO  [SETUP] Testing completed, waiting for client input
+2015-01-19 12:07:58,458 FATAL CRASH HANDLED; Application has crashed due to [SIGINT] signal
+2015-01-19 12:07:58,458 WARN  Aborting application. Reason: Fatal log at [/usr/local/include/easylogging++.h:5583]

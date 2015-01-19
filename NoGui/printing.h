@@ -10,11 +10,11 @@
 #include <chrono>
 #include <ctime>
 #include <iostream>
-//#include <easylogging++.h>
+#include <easylogging++.h>
 
-//#ifndef ELPP_THREAD_SAFE
-//#define ELPP_THREAD_SAFE
-//#endif
+#ifndef ELPP_THREAD_SAFE
+#define ELPP_THREAD_SAFE
+#endif
 
 /* Logging print levels:
 Global 		Generic level that represents all levels. Useful when setting global configuration for all levels.
