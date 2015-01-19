@@ -1,15 +1,1 @@
-2015-01-19 11:57:46,680 INFO  [default] [SETUP] LOGgers reconfigured
-2015-01-19 11:57:46,680 INFO  [default] //LOG active
-2015-01-19 11:57:46,680 INFO  [default] [SETUP] creating MotorCom
-2015-01-19 11:57:46,819 INFO  [default] [TEST] //LOGging:                            [0;32m[ok][0m
-2015-01-19 11:57:46,819 INFO  [default] [TEST] MotorCom active                       [0;32m[ok][0m
-2015-01-19 11:57:46,819 INFO  [default] [TEST] Serial open                           [0;32m[ok][0m
-2015-01-19 11:57:46,819 INFO  [default] [TEST] PosControl active                     [0;32m[ok][0m
-2015-01-19 11:57:46,819 INFO  [default] [TEST] Read_thread running                   [0;32m[ok][0m
-2015-01-19 11:57:46,819 INFO  [default] [TEST] Pos_thread running                    [0;32m[ok][0m
-2015-01-19 11:57:46,819 INFO  [default] [TEST] Voltage = 24v                         [0;32m[ok][0m
-2015-01-19 11:57:46,819 INFO  [default] [TEST] MD49_Error = 0                        [0;32m[ok][0m
-2015-01-19 11:57:46,819 INFO  [default] [TEST] Acceleration = 1                      [0;32m[ok][0m
-2015-01-19 11:57:46,819 INFO  [default] [TEST] Mode = 0                              [0;32m[ok][0m
-2015-01-19 11:57:47,950 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGINT] signal
-2015-01-19 11:57:47,950 WARN  [default] Aborting application. Reason: Fatal log at [/usr/local/include/easylogging++.h:5583]
+2015-01-19 12:50:05,293 INFO  [default] [SETUP] Reconfiguring loggers

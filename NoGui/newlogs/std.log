@@ -1,61 +1,208 @@
-2015-01-19 12:05:13,769 INFO  [SETUP] LOGgers reconfigured
-2015-01-19 12:05:13,769 INFO  //LOG active
-2015-01-19 12:05:13,769 INFO  [SETUP] creating MotorCom
-2015-01-19 12:05:13,909 INFO  [TEST] //LOGging:                            [0;32m[ok][0m
-2015-01-19 12:05:13,909 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
-2015-01-19 12:05:13,909 INFO  [TEST] Serial open                           [0;32m[ok][0m
-2015-01-19 12:05:13,909 INFO  [TEST] PosControl active                     [0;32m[ok][0m
-2015-01-19 12:05:13,909 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
-2015-01-19 12:05:13,909 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
-2015-01-19 12:05:13,909 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
-2015-01-19 12:05:13,909 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
-2015-01-19 12:05:13,909 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
-2015-01-19 12:05:13,909 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
-2015-01-19 12:05:15,424 FATAL CRASH HANDLED; Application has crashed due to [SIGINT] signal
-2015-01-19 12:05:15,424 WARN  Aborting application. Reason: Fatal log at [/usr/local/include/easylogging++.h:5583]
-2015-01-19 12:05:43,934 INFO  [SETUP] LOGgers reconfigured
-2015-01-19 12:05:43,934 INFO  //LOG active
-2015-01-19 12:05:43,934 INFO  [SETUP] creating MotorCom
-2015-01-19 12:05:44,073 INFO  [TEST] //LOGging:                            [0;32m[ok][0m
-2015-01-19 12:05:44,073 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
-2015-01-19 12:05:44,073 INFO  [TEST] Serial open                           [0;32m[ok][0m
-2015-01-19 12:05:44,073 INFO  [TEST] PosControl active                     [0;32m[ok][0m
-2015-01-19 12:05:44,073 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
-2015-01-19 12:05:44,073 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
-2015-01-19 12:05:44,074 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
-2015-01-19 12:05:44,074 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
-2015-01-19 12:05:44,074 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
-2015-01-19 12:05:44,074 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
-2015-01-19 12:05:44,960 FATAL CRASH HANDLED; Application has crashed due to [SIGINT] signal
-2015-01-19 12:05:44,960 WARN  Aborting application. Reason: Fatal log at [/usr/local/include/easylogging++.h:5583]
-2015-01-19 12:07:56,432 INFO  [SETUP] LOGgers reconfigured
-2015-01-19 12:07:56,432 INFO  LOG active
-2015-01-19 12:07:56,432 INFO  [SETUP] creating MotorCom
-2015-01-19 12:07:56,432 INFO  [SETUP] checking cmdline-arguments
-2015-01-19 12:07:56,432 INFO  [SETUP] Reading arguments:   
-2015-01-19 12:07:56,432 INFO  [SETUP] Arguments: ./exec sim testing 
-2015-01-19 12:07:56,432 INFO  [SETUP]     Simulating serial.
-2015-01-19 12:07:56,432 INFO  [SETUP]     Testing enabled.
-2015-01-19 12:07:56,432 INFO  [SETUP] starting and flushing serial
-2015-01-19 12:07:56,533 INFO  [SETUP] resetting encoders
-2015-01-19 12:07:56,538 INFO  [SETUP] initializing PosControl
-2015-01-19 12:07:56,538 INFO  [SETUP] initializing readLoop thread
-2015-01-19 12:07:56,538 INFO  [COM] starting
-2015-01-19 12:07:56,543 INFO  [SETUP] initializing controlLoop thread
-2015-01-19 12:07:56,548 INFO  [SETUP] Acceleration is: 5, setting new acceleration: 1
-2015-01-19 12:07:56,551 INFO  [SETUP] Mode is: 0x1267990, setting new mode: 0
-2015-01-19 12:07:56,572 INFO  [SETUP] Complete, testing components:
+12:50:05,294 INFO  [SETUP] Attaching crashHandler
+12:50:05,294 INFO  [SETUP] creating MotorCom
+12:50:05,294 INFO  [SETUP] checking cmdline-arguments
+12:50:05,294 INFO  [SETUP] Reading arguments:   
+12:50:05,294 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
+12:50:05,294 INFO  [SETUP] starting and flushing serial
+12:50:05,294 INFO      [MOTOR] Starting serial at: ttyUSB0
+12:50:05,294 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
+12:50:05,295 INFO  [SERIAL]     Serial port open.
+12:50:05,395 INFO  [SETUP] resetting encoders
+12:50:05,400 INFO  [SETUP] initializing PosControl
+12:50:05,400 INFO  [SETUP] initializing readLoop thread
+12:50:05,400 INFO  [COM] starting
+12:50:05,405 INFO  [SETUP] initializing controlLoop thread
+12:50:05,417 INFO  [SETUP] Mode is: 0x189e660, setting new mode: 0
+12:50:05,438 INFO  [SETUP] Complete, testing components:
 
-2015-01-19 12:07:56,572 INFO  [TEST] LOGging:                              [0;32m[ok][0m
-2015-01-19 12:07:56,572 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
-2015-01-19 12:07:56,572 INFO  [TEST] Serial open                           [0;32m[ok][0m
-2015-01-19 12:07:56,572 INFO  [TEST] PosControl active                     [0;32m[ok][0m
-2015-01-19 12:07:56,572 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
-2015-01-19 12:07:56,572 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
-2015-01-19 12:07:56,572 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
-2015-01-19 12:07:56,572 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
-2015-01-19 12:07:56,573 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
-2015-01-19 12:07:56,573 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
-2015-01-19 12:07:56,573 INFO  [SETUP] Testing completed, waiting for client input
-2015-01-19 12:07:58,458 FATAL CRASH HANDLED; Application has crashed due to [SIGINT] signal
-2015-01-19 12:07:58,458 WARN  Aborting application. Reason: Fatal log at [/usr/local/include/easylogging++.h:5583]
+12:50:05,438 INFO  [TEST] LOGging:                              [0;32m[ok][0m
+12:50:05,448 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
+12:50:05,449 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
+12:50:05,449 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+12:50:05,449 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+12:50:05,449 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+12:50:05,452 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
+12:50:05,454 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
+12:50:05,458 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
+12:50:05,461 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
+12:50:05,461 INFO  [SETUP] Testing completed, waiting for client input
+12:50:10,008 INFO  [COM] recv_str: 2,0,100,100
+12:50:10,008 INFO  [COM]  Received SET_POSITION(id=0, x=100, y=100)
+12:50:10,008 INFO  [POS] dequeued qPos {0,100,100,[COM] sending reply: ok.
+12:50:10,009 INFO  [POS] Current: (0, 0, 0)
+12:50:10,021 INFO  [POS] Current: (0, 0, 0)
+12:50:10,031 INFO  [POS] Current: (0, 0, 0)
+12:50:10,041 INFO  [POS] Current: (0, 0, 0)
+12:50:10,051 INFO  [POS] Current: (0, 0, 0)
+12:50:10,060 INFO  [POS] Current: (0, 0, 0)
+12:50:10,070 INFO  [POS] Current: (0, 0, 0)
+12:50:10,081 INFO  [POS] Current: (0, 0, 0)
+12:50:10,090 INFO  [POS] Current: (0, 0, 0)
+12:50:10,102 INFO  [POS] Current: (0, 0, 0)
+12:50:10,112 INFO  [POS] Current: (0, 0, 0)
+12:50:10,121 INFO  [POS] Current: (0, 0, 0.16129)
+12:50:10,130 INFO  [POS] Current: (0, 0, 0.322581)
+12:50:10,140 INFO  [POS] Current: (0, 0, 0.483871)
+12:50:10,150 INFO  [POS] Current: (0, 0, 0.645161)
+12:50:10,160 INFO  [POS] Current: (0, 0, 0.806452)
+12:50:10,169 INFO  [POS] Current: (0, 0, 1.12903)
+12:50:10,180 INFO  [POS] Current: (0, 0, 1.29032)
+12:50:10,188 INFO  [POS] Current: (0, 0, 1.6129)
+12:50:10,198 INFO  [POS] Current: (0, 0, 1.77419)
+12:50:10,208 INFO  [POS] Current: (0, 0, 2.09677)
+12:50:10,218 INFO  [POS] Current: (0, 0, 2.25806)
+12:50:10,228 INFO  [POS] Current: (0, 0, 2.41935)
+12:50:10,237 INFO  [POS] Current: (0, 0, 2.74194)
+12:50:10,248 INFO  [POS] Current: (0, 0, 3.06452)
+12:50:10,258 INFO  [POS] Current: (0, 0, 3.3871)
+12:50:10,268 INFO  [POS] Current: (0, 0, 3.70968)
+12:50:10,279 INFO  [POS] Current: (0, 0, 4.19355)
+12:50:10,288 INFO  [POS] Current: (0, 0, 4.67742)
+12:50:10,299 INFO  [POS] Current: (0, 0, 5)
+12:50:10,308 INFO  [POS] Current: (0, 0, 5.48387)
+12:50:10,318 INFO  [POS] Current: (0, 0, 5.96774)
+12:50:10,328 INFO  [POS] Current: (0, 0, 6.29032)
+12:50:10,337 INFO  [POS] Current: (0, 0, 6.77419)
+12:50:10,347 INFO  [POS] Current: (0, 0, 7.25806)
+12:50:10,357 INFO  [POS] Current: (0, 0, 7.58065)
+12:50:10,367 INFO  [POS] Current: (0, 0, 8.22581)
+12:50:10,376 INFO  [POS] Current: (0, 0, 8.70968)
+12:50:10,386 INFO  [POS] Current: (0, 0, 9.19355)
+12:50:10,395 INFO  [POS] Current: (0, 0, 9.67742)
+12:50:10,404 INFO  [POS] Current: (0, 0, 10.1613)
+12:50:10,415 INFO  [POS] Current: (0, 0, 10.6452)
+12:50:10,424 INFO  [POS] Current: (0, 0, 11.2903)
+12:50:10,433 INFO  [POS] Current: (0, 0, 11.9355)
+12:50:10,443 INFO  [POS] Current: (0, 0, 12.4194)
+12:50:10,454 INFO  [POS] Current: (0, 0, 13.2258)
+12:50:10,463 INFO  [POS] Current: (0, 0, 13.871)
+12:50:10,473 INFO  [POS] Current: (0, 0, 14.5161)
+12:50:10,483 INFO  [POS] Current: (0, 0, 15.1613)
+12:50:10,493 INFO  [POS] Current: (0, 0, 15.8065)
+12:50:10,503 INFO  [POS] Current: (0, 0, 16.4516)
+12:50:10,513 INFO  [POS] Current: (0, 0, 17.0968)
+12:50:10,527 INFO  [POS] Current: (0, 0, 17.9032)
+12:50:10,537 INFO  [POS] Current: (0, 0, 18.871)
+12:50:10,547 INFO  [POS] Current: (0, 0, 19.6774)
+12:50:10,556 INFO  [POS] Current: (0, 0, 20.4839)
+12:50:10,567 INFO  [POS] Current: (0, 0, 21.129)
+12:50:10,577 INFO  [POS] Current: (0, 0, 21.9355)
+12:50:10,588 INFO  [POS] Current: (0, 0, 22.9032)
+12:50:10,598 INFO  [POS] Current: (0, 0, 23.871)
+12:50:10,609 INFO  [POS] Current: (0, 0, 24.8387)
+12:50:10,619 INFO  [POS] Current: (0, 0, 25.8064)
+12:50:10,628 INFO  [POS] Current: (0, 0, 26.6129)
+12:50:10,637 INFO  [POS] Current: (0, 0, 27.4193)
+12:50:10,648 INFO  [POS] Current: (0, 0, 28.3871)
+12:50:10,658 INFO  [POS] Current: (0, 0, 29.3548)
+12:50:10,669 INFO  [POS] Current: (0, 0, 30.3226)
+12:50:10,680 INFO  [POS] Current: (0, 0, 31.2903)
+12:50:10,690 INFO  [POS] Current: (0, 0, 32.4193)
+12:50:10,701 INFO  [POS] Current: (0, 0, 33.3871)
+12:50:10,712 INFO  [POS] Current: (0, 0, 34.5161)
+12:50:10,722 INFO  [POS] Current: (0, 0, 35.6452)
+12:50:10,734 INFO  [POS] Current: (0, 0, 36.9355)
+12:50:10,744 INFO  [POS] Current: (0, 0, 38.0645)
+12:50:10,754 INFO  [POS] Current: (0, 0, 39.1935)
+12:50:10,765 INFO  [POS] Current: (0, 0, 40.3226)
+12:50:10,774 INFO  [POS] Current: (0, 0, 41.4516)
+12:50:10,784 INFO  [POS] Current: (0, 0, 42.4193)
+12:50:10,793 INFO  [POS] Current: (0, 0, 43.5484)
+12:50:10,804 INFO  [POS] Current: (0, 0, 44.5161)
+12:50:10,816 INFO  [POS] Current: (1.41421, 1.41421, 45)
+12:50:10,834 INFO  [POS] Current: (3.53553, 3.53553, 45)
+12:50:10,844 INFO  [POS] Current: (5.65685, 5.65685, 45)
+12:50:10,853 INFO  [POS] Current: (7.07107, 7.07107, 45)
+12:50:10,863 INFO  [POS] Current: (8.48528, 8.48528, 45)
+12:50:10,873 INFO  [POS] Current: (9.89949, 9.89949, 45)
+12:50:10,882 INFO  [POS] Current: (11.3137, 11.3137, 45)
+12:50:10,892 INFO  [POS] Current: (12.7279, 12.7279, 45)
+12:50:10,901 INFO  [POS] Current: (14.1421, 14.1421, 45)
+12:50:10,912 INFO  [POS] Current: (15.5563, 15.5563, 45)
+12:50:10,923 INFO  [POS] Current: (16.9706, 16.9706, 45)
+12:50:10,933 INFO  [POS] Current: (17.6777, 17.6777, 45)
+12:50:10,943 INFO  [POS] Current: (19.0919, 19.0919, 45)
+12:50:10,953 INFO  [POS] Current: (20.5061, 20.5061, 45)
+12:50:10,962 INFO  [POS] Current: (21.9203, 21.9203, 45)
+12:50:10,971 INFO  [POS] Current: (23.3345, 23.3345, 45)
+12:50:10,982 INFO  [POS] Current: (24.7487, 24.7487, 45)
+12:50:10,991 INFO  [POS] Current: (26.1629, 26.1629, 45)
+12:50:11,001 INFO  [POS] Current: (26.8701, 26.8701, 45)
+12:50:11,010 INFO  [POS] Current: (28.2843, 28.2843, 45)
+12:50:11,021 INFO  [POS] Current: (28.9914, 28.9914, 45)
+12:50:11,031 INFO  [POS] Current: (30.4056, 30.4056, 45)
+12:50:11,040 INFO  [POS] Current: (31.8198, 31.8198, 45)
+12:50:11,050 INFO  [POS] Current: (33.234, 33.234, 45)
+12:50:11,059 INFO  [POS] Current: (34.6482, 34.6482, 45)
+12:50:11,069 INFO  [POS] Current: (35.3553, 35.3553, 45)
+12:50:11,079 INFO  [POS] Current: (36.7696, 36.7696, 45)
+12:50:11,089 INFO  [POS] Current: (38.1838, 38.1838, 45)
+12:50:11,099 INFO  [POS] Current: (38.8909, 38.8909, 45)
+12:50:11,108 INFO  [POS] Current: (40.3051, 40.3051, 45)
+12:50:11,120 INFO  [POS] Current: (41.7193, 41.7193, 45)
+12:50:11,130 INFO  [POS] Current: (43.1335, 43.1335, 45)
+12:50:11,139 INFO  [POS] Current: (44.5477, 44.5477, 45)
+12:50:11,150 INFO  [POS] Current: (45.962, 45.962, 45)
+12:50:11,160 INFO  [POS] Current: (47.3762, 47.3762, 45)
+12:50:11,170 INFO  [POS] Current: (48.0833, 48.0833, 45)
+12:50:11,180 INFO  [POS] Current: (49.4975, 49.4975, 45)
+12:50:11,190 INFO  [POS] Current: (50.9117, 50.9117, 45)
+12:50:11,198 INFO  [POS] Current: (51.6188, 51.6188, 45)
+12:50:11,210 INFO  [POS] Current: (52.3259, 52.3259, 45)
+12:50:11,220 INFO  [POS] Current: (53.7401, 53.7401, 45)
+12:50:11,231 INFO  [POS] Current: (54.4472, 54.4472, 45)
+12:50:11,241 INFO  [POS] Current: (55.8615, 55.8615, 45)
+12:50:11,251 INFO  [POS] Current: (57.2757, 57.2757, 45)
+12:50:11,262 INFO  [POS] Current: (58.6899, 58.6899, 45)
+12:50:11,274 INFO  [POS] Current: (60.1041, 60.1041, 45)
+12:50:11,284 INFO  [POS] Current: (61.5183, 61.5183, 45)
+12:50:11,294 INFO  [POS] Current: (62.9325, 62.9325, 45)
+12:50:11,302 INFO  [POS] Current: (63.6396, 63.6396, 45)
+12:50:11,313 INFO  [POS] Current: (64.3467, 64.3467, 45)
+12:50:11,323 INFO  [POS] Current: (65.761, 65.761, 45)
+12:50:11,334 INFO  [POS] Current: (67.1752, 67.1752, 45)
+12:50:11,344 INFO  [POS] Current: (68.5894, 68.5894, 45)
+12:50:11,354 INFO  [POS] Current: (69.2965, 69.2965, 45)
+12:50:11,362 INFO  [POS] Current: (70.0036, 70.0036, 45)
+12:50:11,373 INFO  [POS] Current: (70.7107, 70.7107, 45)
+12:50:11,384 INFO  [POS] Current: (71.4178, 71.4178, 45)
+12:50:11,393 INFO  [POS] Current: (72.1249, 72.1249, 45)
+12:50:11,402 INFO  [POS] Current: (72.832, 72.832, 45)
+12:50:11,413 INFO  [POS] Current: (73.5391, 73.5391, 45)
+12:50:11,423 INFO  [POS] Current: (74.2463, 74.2463, 45)
+12:50:11,433 INFO  [POS] Current: (74.9534, 74.9534, 45)
+12:50:11,443 INFO  [POS] Current: (75.6605, 75.6605, 45)
+12:50:11,454 INFO  [POS] Current: (76.3676, 76.3676, 45)
+12:50:11,464 INFO  [POS] Current: (77.0747, 77.0747, 45)
+12:50:11,473 INFO  [POS] Current: (77.7818, 77.7818, 45)
+12:50:11,484 INFO  [POS] Current: (78.4889, 78.4889, 45)
+12:50:11,493 INFO  [POS] Current: (79.196, 79.196, 45)
+12:50:11,502 INFO  [POS] Current: (79.9031, 79.9031, 45)
+12:50:11,513 INFO  [POS] Current: (80.6102, 80.6102, 45)
+12:50:11,524 INFO  [POS] Current: (81.3173, 81.3173, 45)
+12:50:11,534 INFO  [POS] Current: (82.0244, 82.0244, 45)
+12:50:11,546 INFO  [POS] Current: (82.7315, 82.7315, 45)
+12:50:11,555 INFO  [POS] Current: (83.4387, 83.4387, 45)
+12:50:11,566 INFO  [POS] Current: (84.1458, 84.1458, 45)
+12:50:11,575 INFO  [POS] Current: (84.8529, 84.8529, 45)
+12:50:11,586 INFO  [POS] Current: (85.56, 85.56, 45)
+12:50:11,595 INFO  [POS] Current: (86.2671, 86.2671, 45)
+12:50:11,605 INFO  [POS] Current: (86.9742, 86.9742, 45)
+12:50:11,614 INFO  [POS] Current: (87.6813, 87.6813, 45)
+12:50:11,625 INFO  [POS] Current: (88.3884, 88.3884, 45)
+12:50:11,635 INFO  [POS] Current: (89.0955, 89.0955, 45)
+12:50:11,646 INFO  [POS] Current: (89.8026, 89.8026, 45)
+12:50:11,656 INFO  [POS] Current: (90.5097, 90.5097, 45)
+12:50:11,664 INFO  [POS] Current: (91.2168, 91.2168, 45)
+12:50:11,675 INFO  [POS] Current: (91.9239, 91.9239, 45)
+12:50:11,683 INFO  [POS] Current: (92.6311, 92.6311, 45)
+12:50:11,695 INFO  [POS] Current: (93.3382, 93.3382, 45)
+12:50:11,704 INFO  [POS] Current: (94.0453, 94.0453, 45)
+12:50:11,713 INFO  [POS] Current: (94.7524, 94.7524, 45)
+12:50:11,723 INFO  [POS] Current: (95.4595, 95.4595, 45)
+12:50:11,731 INFO  [POS] Current: (96.1666, 96.1666, 45)
+12:50:11,742 INFO  [POS] Current: (96.8737, 96.8737, 45)
+12:50:11,753 INFO  [POS] Current: (97.5808, 97.5808, 45)
+12:50:11,762 INFO  [POS] action 0 completed.
+12:50:11,762 INFO  [POS] IN GOAL!  (98.2879 , 98.2879) ~= (100 , 100)
+12:50:13,500 ERROR Program interrupted by user

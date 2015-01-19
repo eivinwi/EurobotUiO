@@ -136,6 +136,7 @@ void PosControl::controlLoop() {
 				completeCurrent();
 			}
 		}
+		logTrace();
 	}
 	pos_running = false;
 }
@@ -153,6 +154,7 @@ void PosControl::goToRotation() {
 			distR = distanceAngle();
 			rotate(distR);
 			updateRotation();
+			logTrace();
 			usleep(1000);
 		} while(!closeEnoughAngle());
 		completeCurrent();
@@ -162,7 +164,6 @@ void PosControl::goToRotation() {
 	else {
 		fullStop();
 		completeCurrent();
-		PRINTLINE("cx: " << distanceX() << " cy: " << distanceY() << " cr: " << distanceAngle());
 		LOG(DEBUG) << "[POS] already at specified rotation(" << goalPos->getId() << "): " << curPos->getAngle() << "=" << goalPos->getAngle();
 		usleep(3000);
 	}
@@ -196,19 +197,20 @@ void PosControl::goToPosition() {
 			distR = distanceAngle();
 			dist = updateDist(angle, distX, distY);
 
-			//LOG(DEBUG) << "CURRENT: " << curPos->getX() << " | " << curPos->getY() << " | " << curPos->getAngle();
+			LOG(DEBUG) << "CURRENT: " << curPos->getX() << " | " << curPos->getY() << " | " << curPos->getAngle();
 			printCurrent();
 
 			if(!closeEnoughAngle()) {				
-				//LOG(DEBUG) << "[LOOP] ROTATION: " << distR;
+				LOG(DEBUG) << "[LOOP] ROTATION: " << distR;
 				rotate(distR);
 				updateRotation();
 			} else {
 				curPos->setAngle(goalPos->getAngle()); 
-				//LOG(DEBUG) << "[LOOP] DRIVE: " << distX << "," << distY;
+				LOG(DEBUG) << "[LOOP] DRIVE: " << distX << "," << distY;
 				drive(dist);
 				updatePosition();
 			} 
+			logTrace();
 			usleep(2000);
 		} while(!inGoal());
 	}
@@ -325,7 +327,12 @@ bool PosControl::running() {
 }
 
 
+
 /*** PRIVATE FUNCTIONS: ***/
+
+void PosControl::logTrace() {
+	LOG(TRACE) << goalPos->getId() << "," << curPos->getX() << "," << curPos->getY() << "," << curPos->getAngle();
+}
 
 
 /*
@@ -493,8 +500,9 @@ long PosControl::encoderDifference() {
 
 
 void PosControl::printCurrent() {
-	LOG(INFO) << "[POS] Current: ";
-	curPos->print();
+	std::stringstream ss;
+	ss << "(" << curPos->getX() << ", " << curPos->getY() << ", " << curPos->getAngle() << ")"; 
+	LOG(INFO) << "[POS] Current: " << ss.str();
 }
 
 

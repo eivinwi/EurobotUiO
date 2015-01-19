@@ -270,37 +270,37 @@ bool checkArguments(int argc, char *argv[]) {
 }
 
 
-int main(int argc, char *argv[]) {
-//   el::Configurations conf("/home/eivinwi/EurobotUiO/NoGui/el.conf");
-    
+void configureLogger() {
     el::Configurations defaultConf;
     defaultConf.setToDefault();
-
-    defaultConf.setGlobally( el::ConfigurationType::Format, "%datetime %level %msg" );
-    defaultConf.set( 
-        el::Level::Global, 
-        el::ConfigurationType::Filename, 
-        "/home/eivinwi/EurobotUiO/NoGui/newlogs/std.log"
+    defaultConf.setGlobally( el::ConfigurationType::Format, "%datetime{%H:%m:%s,%g} %level %msg" );
+    defaultConf.set(el::Level::Global, 
+        el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/NoGui/newlogs/std.log"
     );
-
-    defaultConf.set( 
-        el::Level::Debug, 
-        el::ConfigurationType::Filename, 
-        "/home/eivinwi/EurobotUiO/NoGui/newlogs/debug.log"
+    defaultConf.set(el::Level::Debug, 
+        el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/NoGui/newlogs/debug.log"
     );
-    defaultConf.set(
-        el::Level::Debug, 
-        el::ConfigurationType::ToStandardOutput, 
-        "FALSE"
+    defaultConf.set(el::Level::Debug, 
+        el::ConfigurationType::ToStandardOutput, "FALSE"
     );
-
+    defaultConf.set(el::Level::Trace, 
+        el::ConfigurationType::Format, "%datetime{%m:%s:%g} %msg"
+    );
+    defaultConf.set(el::Level::Trace, 
+        el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/NoGui/newlogs/position.log"
+    );
+    defaultConf.set(el::Level::Trace, 
+        el::ConfigurationType::ToStandardOutput, "FALSE"
+    );
     el::Loggers::reconfigureAllLoggers(defaultConf);
- 
+}
 
-    LOG(INFO) << "[SETUP] LOGgers reconfigured";
-   // el::Helpers::setCrashHandler(crashHandler);
-    LOG(INFO) << "LOG active";
-    LOG(DEBUG) << "Testing yo";
+
+int main(int argc, char *argv[]) {  
+    LOG(INFO) << "[SETUP] Reconfiguring loggers";
+    configureLogger();
+    LOG(INFO) << "[SETUP] Attaching crashHandler";
+    el::Helpers::setCrashHandler(crashHandler);
 
     LOG(INFO) << "[SETUP] creating MotorCom";
     m = new MotorCom;
