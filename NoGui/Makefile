@@ -6,7 +6,7 @@ LDFLAGS=-g $(shell root-config --ldflags)
 LDLIBS=$(shell root-config --libs) -lserial -lzmq -pthread
 
 EXEC=exec
-SRCS=main.cpp motorcom.cpp serial.cpp serialsim.cpp poscontrol.cpp position.cpp goalposition.cpp rotation.cpp
+SRCS=main.cpp motorcom.cpp liftcom.cpp serial.cpp serialsim.cpp poscontrol.cpp position.cpp goalposition.cpp rotation.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
 
 all: $(EXEC)
@@ -26,7 +26,6 @@ depend: .depend
 clean:
 	$(RM) $(OBJS)
 	$(RM) $(EXEC)
-	$(RM) $(SIMEXEC)
 
 dist-clean: clean
 	$(RM) *~ .dependtool

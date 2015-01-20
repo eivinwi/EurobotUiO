@@ -18,9 +18,6 @@ bool MotorCom::test() {
     } 
     else {
         int ver = getVersion();
-        usleep(1000);
-        ver = getVersion();
-        usleep(500);
         if(ver == 2) {
             return true;    
         } else {

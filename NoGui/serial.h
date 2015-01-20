@@ -41,10 +41,9 @@ public:
     uint8_t read();
     long readLong();
     void printAll();
-
+    bool available();
 
 private:
-    bool available();
     SerialStream serial;
 //    SerialPort serial;
 

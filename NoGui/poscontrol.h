@@ -20,10 +20,12 @@
 #define _USE_MATH_DEFINES
 
 #include "motorcom.h"
+#include "liftcom.h"
 #include "printing.h"
 #include "position.h"
 #include "goalposition.h"
 #include "rotation.h"
+
 #include <string>
 #include <sstream>
 #include <vector>
@@ -54,14 +56,14 @@
 
 class PosControl {
 public:
-    PosControl(MotorCom *s, bool testing);
+    PosControl(MotorCom *m, LiftCom *l, bool testing);
     ~PosControl();
     void reset();
     bool test();
 
     void enableTesting();
     void controlLoop();
-	void enqueue(int id, int x, int y, float rot, int type);
+	void enqueue(int id, int x, int y, float rot, int arg, int type);
 	struct qPos dequeue();
 
 	void setGoalRotation(int r);
@@ -69,6 +71,7 @@ public:
 
 	int getCurrentId();
 	std::string getCurrentPos();
+	int getLiftPos();
 	bool running();
 	
 private:
@@ -116,7 +119,8 @@ private:
 	std::condition_variable notifier;
 
 	std::string in;
-	MotorCom *com;
+	MotorCom *mcom;
+	LiftCom *lcom;
 	bool turning;
 	bool working;
 	GoalPosition *goalPos;

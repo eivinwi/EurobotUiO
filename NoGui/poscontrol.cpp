@@ -21,13 +21,15 @@ struct qPos {
 	int x;
 	int y;
 	float rot;
+	int argument;
 	int type;
 };
 
 
-PosControl::PosControl(MotorCom *s, bool test) {
+PosControl::PosControl(MotorCom *m, LiftCom *l, bool test) {
+	mcom = m;
+	lcom = l;
 	testing = test;
-	com = s;
 	goalPos = new GoalPosition;
 	curPos = new Position;
 	exactPos = new Position;
@@ -66,14 +68,16 @@ void PosControl::reset() {
 	}
 }
 
+
 bool PosControl::test() {
-	enqueue(0, 1, 2, 3, NONE);
+	enqueue(0, 1, 2, 3, 4, NONE);
 	qPos test = dequeue();
-	return (test.id == 0 && test.x == 1 && test.y == 2 && test.rot == 3 && test.type == NONE);
+	return (test.id == 0 && test.x == 1 && test.y == 2 && test.rot == 3 && test.argument == 4 && test.type == NONE);
 }
 
-void PosControl::enqueue(int id, int x, int y, float rot, int type) {
-	qPos qp = {id, x, y, rot, type};
+
+void PosControl::enqueue(int id, int x, int y, float rot, int arg, int type) {
+	qPos qp = {id, x, y, rot, arg, type};
 	std::lock_guard<std::mutex> lock(qMutex);	
 	q.push(qp);
 	notifier.notify_one();
@@ -125,6 +129,9 @@ void PosControl::controlLoop() {
 				goToRotation();
 			} else if(qp.type == POSITION) {
 				goToPosition();
+			} else if(qp.type == LIFT) {
+				lcom->goTo(qp.argument);
+				completeCurrent();
 			}
 		} 
 		else {
@@ -133,6 +140,9 @@ void PosControl::controlLoop() {
 				completeCurrent();
 			} else if(qp.type == POSITION) {
 				curPos->set(goalPos->getX(), goalPos->getY(), curPos->getAngle());
+				completeCurrent();
+			} else if(qp.type == LIFT) {
+				lcom->setCurrentPos(qp.argument);
 				completeCurrent();
 			}
 		}
@@ -304,6 +314,7 @@ void PosControl::completeCurrent() {
 		LOG(INFO) << "[POS] action " << goalPos->getId() << " completed.";	
 		completed_actions[goalPos->getId()] = true;
 	}
+	usleep(2000);
 }
 
 
@@ -322,6 +333,12 @@ std::string PosControl::getCurrentPos() {
 	ss << curPos->getPosString();
 	return ss.str();
 }
+
+
+int PosControl::getLiftPos() {
+	return lcom->getPosition();
+}
+
 
 bool PosControl::running() {
 	return pos_running;
@@ -403,13 +420,13 @@ void PosControl::updateEncoder(long e, struct encoder *enc) {
 
 
 void PosControl::updateLeftEncoder() {
-	long enc = com->getEncL();
+	long enc = mcom->getEncL();
 	updateEncoder(enc, &leftEncoder);
 }
 
 
 void PosControl::updateRightEncoder() {
-	long enc = com->getEncR();
+	long enc = mcom->getEncR();
 	updateEncoder(enc, &rightEncoder);
 }
 
@@ -421,7 +438,7 @@ void PosControl::resetEncoders() {
 	rightEncoder.prev = 0;
 	rightEncoder.diff = 0;
 	rightEncoder.diffDist = 0;	
-	com->resetEncoders();
+	mcom->resetEncoders();
 }
 
 
@@ -519,11 +536,11 @@ void PosControl::printDist() {
 
 void PosControl::setSpeed(int l, int r) {
 	if(curSpeedLeft != l) {
-		com->setSpeedL(l);
+		mcom->setSpeedL(l);
 		curSpeedLeft = l;
 	} 
 	if(curSpeedRight != r) {
-		com->setSpeedR(r);
+		mcom->setSpeedR(r);
 		curSpeedRight = r;
 	}
 }
