@@ -11,6 +11,7 @@
  */
 
 #include "motorcom.h"
+#include "liftcom.h"
 #include "poscontrol.h"
 #include "printing.h"
 //include "sound.h"
@@ -30,6 +31,7 @@ void testDrive();
 int getArguments(std::string input, int *pos);
 bool enqRotation(int num_args, int *args);
 bool enqPosition (int num_args, int *args);
+bool enqAction (int num_args, int *args);
 void readLoop();
 void testSystem();
 void printResult(std::string text, bool success);
@@ -37,6 +39,7 @@ void crashHandler(int sig);
 
 
 MotorCom *m;
+LiftCom *l;
 PosControl *p;
 std::mutex read_mutex;
 
@@ -45,28 +48,29 @@ int MODE = 0;
 bool sound_enabled = false;
 bool com_running = false;
 bool debug_printing = false;
+bool testing = false;
 
-/* Waits for input on socket, mainly position. 
- */
+
+/* Waits for input on socket, mainly position. */
 void readLoop() {
-	LOG(INFO) << "[COM] starting";
+    LOG(INFO) << "[COM] starting";
     com_running = true;
-	// Prepare context and socket
-	zmq::context_t context (1);
-	zmq::socket_t socket (context, ZMQ_REP);
-	socket.bind ("tcp://*:5555");
+    // Prepare context and socket
+    zmq::context_t context (1);
+    zmq::socket_t socket (context, ZMQ_REP);
+    socket.bind ("tcp://*:5555");
 
-	while (true) {
-		zmq::message_t request;
-		// Wait for next request from client
-		socket.recv (&request);
-		std::string recv_str = std::string(static_cast<char*>(request.data()), request.size());
-		LOG(INFO) << "[COM] recv_str: " << recv_str;
+    while (true) {
+        zmq::message_t request;
+        // Wait for next request from client
+        socket.recv (&request);
+        std::string recv_str = std::string(static_cast<char*>(request.data()), request.size());
+        LOG(INFO) << "[COM] recv_str: " << recv_str;
 
 
         std::string reply_str;
-	   	//check arguments
-		int args[4];
+        //check arguments
+        int args[4];
         int num_args = getArguments(recv_str, args);
         //zmq::message_t reply(20);
 
@@ -79,12 +83,16 @@ void readLoop() {
                 case REQUEST: 
                     LOG(INFO) << "[COM] Recieved REQUEST";
                     if(args[1] == 1) {
-                        LOG(INFO) << "[COM] REQUEST was for ID, returning: " << reply_str;
                         int id = p->getCurrentId();
                         reply_str = std::to_string(id);
+                        LOG(INFO) << "[COM] REQUEST was for ID, returning: " << reply_str;
                     } else if(args[1] == 2) {
-                        LOG(INFO) << "[COM] REQUEST was for POS, returning(length=" << reply_str.length() << "): " << reply_str;
                         reply_str = p->getCurrentPos();
+                        LOG(INFO) << "[COM] REQUEST was for POS, returning(length=" << reply_str.length() << "): " << reply_str;
+                    } else if(args[1] == 4) {
+                        //LIFT
+                        reply_str = std::to_string(p->getLiftPos());
+                        LOG(INFO) << "[COM] REQUEST was for LIFT, returning: " << reply_str;
                     }                    
                     break;
                 case RESET_ALL: 
@@ -104,7 +112,7 @@ void readLoop() {
                     break;
                 case LIFT: 
                     LOG(INFO) << "[COM]  Received LIFT";
-                    //TODO
+                    enqAction(num_args, args);
                     reply_str = "ok";
                     break;
                 case GRAB: 
@@ -134,7 +142,7 @@ void readLoop() {
         socket.send (reply);
     }
     com_running = false;
-}	
+}
 
 
 //attempts twice to lock mutex, write values, and unlock mutex
@@ -142,21 +150,21 @@ void readLoop() {
 //         false if not
 bool enqRotation(int num_args, int *args) {
     if(num_args != 3) {
-        LOG(WARNING) << "[COM] Rotation: wrong number of arguments: " << num_args;
+        LOG(WARNING) << "[COM] Rotation: wrong number of arguments: " << num_args << "!=3";
     }
     else if(args[0] != SET_ROTATION) {
         LOG(WARNING) << "[COM] Rotation: incorrect arguments: " << args[1];  //should never happen      
     }
     else {
         if(read_mutex.try_lock()) {
-            p->enqueue(args[1], 0, 0, args[2], ROTATION);
+            p->enqueue(args[1], 0, 0, args[2], 0, ROTATION);
             read_mutex.unlock();
             return true;
         } 
         else {
             usleep(1000);
             if(read_mutex.try_lock()) {
-                p->enqueue(args[1], 0, 0, args[2], ROTATION);
+                p->enqueue(args[1], 0, 0, args[2], 0, ROTATION);
                 read_mutex.unlock();
                 return true;
             }
@@ -165,25 +173,26 @@ bool enqRotation(int num_args, int *args) {
     }
     return false;
 }
+
 
 //see enqRotation
 bool enqPosition(int num_args, int *args) {
     if(num_args != 4) {
-        LOG(WARNING) << "[COM] Position: wrong number of arguments: " << num_args;
+        LOG(WARNING) << "[COM] Position: wrong number of arguments: " << num_args << "!=4";
     }
     else if(args[0] != SET_POSITION) {
-        LOG(WARNING) << "[COM] Position: incorrect arguments: " << args[1];  //should never happen      
+        LOG(WARNING) << "[COM] Position: invalid argument: " << args[0];  //should never happen      
     }
     else {
         if(read_mutex.try_lock()) {
-            p->enqueue(args[1], args[2], args[3], 0, POSITION);
+            p->enqueue(args[1], args[2], args[3], 0, 0, POSITION);
             read_mutex.unlock();
             return true;
         } 
         else {
             usleep(1000);
             if(read_mutex.try_lock()) {
-                p->enqueue(args[1], args[2], args[3], 0, POSITION);
+                p->enqueue(args[1], args[2], args[3], 0, 0, POSITION);
                 read_mutex.unlock();
                 return true;
             }
@@ -191,13 +200,36 @@ bool enqPosition(int num_args, int *args) {
         LOG(WARNING) << "[COM] try_lock read_mutex unsuccessful";
     }
     return false;
-
 }
 
-//could be written simpler/more efficient
-//i=1 invalid    
-//i=2 rotation+id
-//i=3 position+id
+
+bool enqAction(int num_args, int *args) {
+    if (num_args != 3) {
+        LOG(WARNING) << "[COM] Action: wrong number of arguments: " << num_args << "!=3";        
+    }
+    else if(args[0] != 4 && args[0] != 5 && args[0] != 6) {
+        LOG(WARNING) << "[COM] Action: invalid argument: " << args[0];  //should never happen      
+    }
+    else {
+        if(read_mutex.try_lock()) {
+            p->enqueue(args[1], 0, 0, 0, args[2], args[0]); //args[0] = ACTIONTYPE
+            read_mutex.unlock();
+            return true;
+        } 
+        else {
+            usleep(1000);
+            if(read_mutex.try_lock()) {
+                p->enqueue(args[1], 0, 0, 0, args[2], args[0]);
+                read_mutex.unlock();
+                return true;
+            }
+        }
+        LOG(WARNING) << "[COM] try_lock read_mutex unsuccessful";
+    }
+    return false;
+}
+
+
 int getArguments(std::string input, int *pos) {
     int i = 0;
     std::istringstream f(input);
@@ -209,8 +241,6 @@ int getArguments(std::string input, int *pos) {
     }
     return i;
 }
-
-bool testing = false;
 
 
 /* Checks cmd-line arguments 
@@ -278,6 +308,10 @@ bool checkArguments(int argc, char *argv[]) {
 void configureLogger() {
     el::Configurations defaultConf;
     defaultConf.setToDefault();
+    //el::Loggers::addFlag( el::LoggingFlag::DisableApplicationAbortOnFatalLog );
+
+
+
     defaultConf.setGlobally( el::ConfigurationType::Format, "%datetime{%H:%m:%s,%g} %level %msg" );
     defaultConf.set(el::Level::Global, 
         el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/NoGui/newlogs/std.log"
@@ -322,13 +356,17 @@ int main(int argc, char *argv[]) {
     LOG(INFO) << "[SETUP] creating MotorCom";
     m = new MotorCom;
 
+    LOG(INFO) << "[SETUP] creating LiftCom";
+    l = new LiftCom();
+
     LOG(INFO) << "[SETUP] checking cmdline-arguments";
     if(!checkArguments(argc, argv)) {
         return -1;
     }
 
-    LOG(INFO) << "[SETUP] starting and flushing serial";
+    LOG(INFO) << "[SETUP] starting and flushing serials";
     m->startSerial();
+    l->startSerial();
     usleep(100000);
     m->flush();
 
@@ -338,7 +376,7 @@ int main(int argc, char *argv[]) {
 
 
     LOG(INFO) << "[SETUP] initializing PosControl";
-    p = new PosControl(m, testing);
+    p = new PosControl(m, l, testing);
 
     LOG(INFO) << "[SETUP] initializing readLoop thread";
     std::thread read_thread(readLoop);
@@ -387,13 +425,19 @@ void testSystem() {
     LOG(INFO) << "[SETUP] Complete, testing components:\n";
 
     //test LOGging
-    printResult("[TEST] LOGging: ", true); //pointless, if LOGging isnt active nothing will be written
+    printResult("[TEST] Logging: ", true); //pointless, if LOGging isnt active nothing will be written
 
     if(m->test()) {
         printResult("[TEST] MotorCom active", true);
         if(m->isSimulating()) printResult("[TEST] Serial open", true);
         else           printResult("[TEST] Serial open (sim)", true);
     } 
+
+    if(l->test()) {
+        printResult("[TEST] MotorCom active", true);
+        printResult("[TEST]     Serial open", true);
+    }
+
     printResult("[TEST] PosControl active", p->test()); //poscontrol test
     printResult("[TEST] Read_thread running", com_running);
     printResult("[TEST] Pos_thread running", p->running());
@@ -428,5 +472,9 @@ void crashHandler(int sig) {
         LOG(ERROR) << "Unintended program crash!";
         el::Helpers::logCrashReason(sig, true);
     }
+    bool stackTraceIfAvailable = false;
+    const el::Level& level = el::Level::Fatal;
+    const char* logger = "default";
+    el::Helpers::logCrashReason(sig, stackTraceIfAvailable, level, logger);
     el::Helpers::crashAbort(sig);
 }

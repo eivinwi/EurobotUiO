@@ -1,463 +1,280 @@
-13:10:12,789 INFO  [SETUP] Attaching crashHandler
-13:10:12,789 INFO  [SETUP] creating MotorCom
-13:10:12,789 INFO  [SETUP] checking cmdline-arguments
-13:10:12,789 INFO  [SETUP] Reading arguments:   
-13:10:12,789 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
-13:10:12,789 INFO  [SETUP] starting and flushing serial
-13:10:12,789 INFO      [MOTOR] Starting serial at: ttyUSB0
-13:10:12,789 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
-13:10:12,790 INFO  [SERIAL]     Serial port open.
-13:10:12,891 INFO  [SETUP] resetting encoders
-13:10:12,896 INFO  [SETUP] initializing PosControl
-13:10:12,896 INFO  [SETUP] initializing readLoop thread
-13:10:12,896 INFO  [COM] starting
-13:10:12,901 INFO  [SETUP] initializing controlLoop thread
-13:10:12,915 INFO  [SETUP] Mode is: 0x1e1e660, setting new mode: 0
-13:10:12,936 INFO  [SETUP] Complete, testing components:
+15:19:33,150 INFO  [SETUP] Attaching crashHandler
+15:19:33,150 INFO  [SETUP] creating MotorCom
+15:19:33,150 INFO  [SETUP] creating LiftCom
+15:19:33,150 INFO  [SETUP] checking cmdline-arguments
+15:19:33,150 INFO  [SETUP] Reading arguments:   
+15:19:33,150 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
+15:19:33,150 INFO  [SETUP] starting and flushing serials
+15:19:33,151 INFO      [MOTOR] Starting serial at: ttyUSB0
+15:19:33,151 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
+15:19:33,152 INFO  [SERIAL]     Serial port open.
+15:19:33,152 INFO  [LIFT] 	Starting serial at: ttyUSB1
+15:19:33,152 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB1
+15:19:33,153 INFO  [SERIAL]     Serial port open.
+15:19:33,253 INFO  [SETUP] resetting encoders
+15:19:33,259 INFO  [SETUP] initializing PosControl
+15:19:33,259 INFO  [SETUP] initializing readLoop thread
+15:19:33,259 INFO  [COM] starting
+15:19:33,264 INFO  [SETUP] initializing controlLoop thread
+15:19:33,276 INFO  [SETUP] Mode is: 0xd22660, setting new mode: 0
+15:19:33,297 INFO  [SETUP] Complete, testing components:
 
-13:10:12,936 INFO  [TEST] LOGging:                              [0;32m[ok][0m
-13:10:12,942 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
-13:10:12,943 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
-13:10:12,943 INFO  [TEST] PosControl active                     [0;32m[ok][0m
-13:10:12,943 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
-13:10:12,943 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
-13:10:12,946 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
-13:10:12,951 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
-13:10:12,954 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
-13:10:12,957 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
-13:10:12,957 INFO  [SETUP] Testing completed, waiting for client input
-13:10:14,444 INFO  [COM] recv_str: 2,0,500,500
-13:10:14,444 INFO  [COM]  Received SET_POSITION(id=0, x=500, y=500)
-13:10:14,445 INFO  [COM] sending reply: ok.
-13:10:14,483 INFO  (0, 0, 0)
-13:10:14,527 INFO  (0, 0, 0)
-13:10:14,598 INFO  (0, 0, 0.322581)
-13:10:14,640 INFO  (0, 0, 1.77419)
-13:10:14,685 INFO  (0, 0, 3.06452)
-13:10:14,730 INFO  (0, 0, 4.51613)
-13:10:14,774 INFO  (0, 0, 6.6129)
-13:10:14,817 INFO  (0, 0, 8.54839)
-13:10:14,863 INFO  (0, 0, 11.4516)
-13:10:14,907 INFO  (0, 0, 14.0323)
-13:10:14,951 INFO  (0, 0, 17.2581)
-13:10:14,996 INFO  (0, 0, 20.8064)
-13:10:15,042 INFO  (0, 0, 24.5161)
-13:10:15,087 INFO  (0, 0, 28.871)
-13:10:15,133 INFO  (0, 0, 33.2258)
-13:10:15,190 INFO  (0, 0, 39.5161)
-13:10:15,232 INFO  (0, 0, 44.1935)
-13:10:15,277 INFO  (7.07107, 7.07107, 45)
-13:10:15,322 INFO  (14.1421, 14.1421, 45)
-13:10:15,368 INFO  (21.2132, 21.2132, 45)
-13:10:15,417 INFO  (27.5772, 27.5772, 45)
-13:10:15,463 INFO  (32.5269, 32.5269, 45)
-13:10:15,509 INFO  (38.8909, 38.8909, 45)
-13:10:15,552 INFO  (43.8406, 43.8406, 45)
-13:10:15,598 INFO  (49.4975, 49.4975, 45)
-13:10:15,642 INFO  (54.4472, 54.4472, 45)
-13:10:15,687 INFO  (59.397, 59.397, 45)
-13:10:15,732 INFO  (65.761, 65.761, 45)
-13:10:15,777 INFO  (72.1249, 72.1249, 45)
-13:10:15,823 INFO  (79.196, 79.196, 45)
-13:10:15,867 INFO  (86.2671, 86.2671, 45)
-13:10:15,912 INFO  (93.3382, 93.3382, 45)
-13:10:15,956 INFO  (100.409, 100.409, 45)
-13:10:16,002 INFO  (107.48, 107.48, 45)
-13:10:16,048 INFO  (114.551, 114.551, 45)
-13:10:16,091 INFO  (121.622, 121.622, 45)
-13:10:16,138 INFO  (128.694, 128.694, 45)
-13:10:16,184 INFO  (137.886, 137.886, 45)
-13:10:16,231 INFO  (147.785, 147.785, 45)
-13:10:16,275 INFO  (157.685, 157.685, 45)
-13:10:16,321 INFO  (168.292, 168.292, 45)
-13:10:16,367 INFO  (178.898, 178.898, 45)
-13:10:16,410 INFO  (190.919, 190.919, 45)
-13:10:16,453 INFO  (202.233, 202.233, 45)
-13:10:16,500 INFO  (214.961, 214.961, 45)
-13:10:16,543 INFO  (226.981, 226.981, 45)
-13:10:16,589 INFO  (239.709, 239.709, 45)
-13:10:16,634 INFO  (252.437, 252.437, 45)
-13:10:16,680 INFO  (266.579, 266.579, 45)
-13:10:16,726 INFO  (280.722, 280.722, 45)
-13:10:16,772 INFO  (294.864, 294.864, 45)
-13:10:16,817 INFO  (309.006, 309.006, 45)
-13:10:16,861 INFO  (323.148, 323.148, 45)
-13:10:16,907 INFO  (337.997, 337.997, 45)
-13:10:16,951 INFO  (352.139, 352.139, 45)
-13:10:16,997 INFO  (368.403, 368.403, 45)
-13:10:17,044 INFO  (385.373, 385.373, 45)
-13:10:17,089 INFO  (400.93, 400.93, 45)
-13:10:17,136 INFO  (417.9, 417.9, 45)
-13:10:17,182 INFO  (434.871, 434.871, 45)
-13:10:17,226 INFO  (449.72, 449.72, 45)
-13:10:17,271 INFO  (465.276, 465.276, 45)
-13:10:17,316 INFO  (479.419, 479.419, 45)
-13:10:17,362 INFO  (493.561, 493.561, 45)
-13:10:17,382 INFO  [POS] action 0 completed.
-13:10:17,382 INFO  [POS] IN GOAL!  (500.632 , 500.632) ~= (500 , 500)
-13:10:18,495 ERROR Program interrupted by user
-13:11:27,208 INFO  [SETUP] Attaching crashHandler
-13:11:27,208 INFO  [SETUP] creating MotorCom
-13:11:27,208 INFO  [SETUP] checking cmdline-arguments
-13:11:27,208 INFO  [SETUP] Reading arguments:   
-13:11:27,208 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
-13:11:27,208 INFO  [SETUP] starting and flushing serial
-13:11:27,208 INFO      [MOTOR] Starting serial at: ttyUSB0
-13:11:27,208 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
-13:11:27,210 INFO  [SERIAL]     Serial port open.
-13:11:27,310 INFO  [SETUP] resetting encoders
-13:11:27,315 INFO  [SETUP] initializing PosControl
-13:11:27,315 INFO  [SETUP] initializing readLoop thread
-13:11:27,315 INFO  [COM] starting
-13:11:27,320 INFO  [SETUP] initializing controlLoop thread
-13:11:27,331 INFO  [SETUP] Mode is: 0x246c660, setting new mode: 0
-13:11:27,354 INFO  [SETUP] Complete, testing components:
+15:19:33,297 INFO  [TEST] Logging:                              [0;32m[ok][0m
+15:19:33,300 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
+15:19:33,300 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
+15:19:33,301 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+15:19:33,301 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+15:19:33,301 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+15:19:33,304 INFO  [TEST] Voltage = 23v                         [0;32m[ok][0m
+15:19:33,307 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
+15:19:33,309 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
+15:19:33,311 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
+15:19:33,311 INFO  [SETUP] Testing completed, waiting for client input
+15:19:34,486 INFO  [COM] recv_str: 4,5,0
+15:19:34,487 INFO  [COM]  Received LIFT
+15:19:34,487 INFO  [LIFT] goToBottom, previous is: 0
+15:19:34,487 INFO  [LIFT] goToBottom, previous is: 0[COM] sending reply: ok.
+15:19:34,487 INFO  [POS] action 5 completed.
+15:19:34,999 INFO  [COM] recv_str: 4,5,0
+15:19:34,999 INFO  [COM]  Received LIFT
+15:19:34,999 INFO  [LIFT] goToBottom, previous is: 0
+15:19:34,999 INFO  [LIFT] goToBottom, previous is: 0
+15:19:34,999 INFO  [LIFT] goToBottom, previous is: 0[COM] sending reply: ok.
+15:19:34,999 INFO  [POS] action 5 was already finished.
+15:19:35,418 INFO  [COM] recv_str: 4,5,0
+15:19:35,418 INFO  [COM]  Received LIFT
+15:19:35,418 INFO  [LIFT] goToBottom, previous is: 0
+15:19:35,418 INFO  [LIFT] goToBottom, previous is: 0
+15:19:35,418 INFO  [LIFT] goToBottom, previous is: 0[COM] sending reply: ok.
+15:19:35,418 INFO  [POS] action 5 was already finished.
+15:19:35,789 INFO  [COM] recv_str: 4,5,0
+15:19:35,790 INFO  [COM]  Received LIFT
+15:19:35,790 INFO  [LIFT] goToBottom, previous is: 0
+15:19:35,790 INFO  [LIFT] goToBottom, previous is: 0
+15:19:35,790 INFO  [LIFT] goToBottom, previous is: 0[COM] sending reply: ok.
+15:19:35,790 INFO  [POS] action 5 was already finished.
+15:19:36,129 INFO  [COM] recv_str: 4,5,0
+15:19:36,129 INFO  [COM]  Received LIFT
+15:19:36,129 INFO  [LIFT] goToBottom, previous is: 0
+15:19:36,129 INFO  [LIFT] goToBottom, previous is: 0
+15:19:36,129 INFO  [LIFT] goToBottom, previous is: 0[COM] sending reply: ok.
+15:19:36,129 ERROR Unintended program crash!
+15:19:36,129 FATAL CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+15:59:36,355 INFO  [SETUP] Attaching crashHandler
+15:59:36,355 INFO  [SETUP] creating MotorCom
+15:59:36,355 INFO  [SETUP] creating LiftCom
+15:59:36,356 INFO  [SETUP] checking cmdline-arguments
+15:59:36,356 INFO  [SETUP] Reading arguments:   
+15:59:36,356 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
+15:59:36,356 INFO  [SETUP] starting and flushing serials
+15:59:36,356 INFO      [MOTOR] Starting serial at: ttyUSB0
+15:59:36,356 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
+15:59:36,357 INFO  [SERIAL]     Serial port open.
+15:59:36,357 INFO  [LIFT] 	Starting serial at: ttyUSB1
+15:59:36,357 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB1
+15:59:36,358 INFO  [SERIAL]     Serial port open.
+15:59:36,459 INFO  [SETUP] resetting encoders
+15:59:36,464 INFO  [SETUP] initializing PosControl
+15:59:36,464 INFO  [SETUP] initializing readLoop thread
+15:59:36,464 INFO  [COM] starting
+15:59:36,469 INFO  [SETUP] initializing controlLoop thread
+15:59:37,474 INFO  [SETUP] Acceleration is: 0, setting new acceleration: 1
+15:59:38,497 INFO  [SETUP] Complete, testing components:
 
-13:11:27,354 INFO  [TEST] LOGging:                              [0;32m[ok][0m
-13:11:27,361 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
-13:11:27,361 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
-13:11:27,361 INFO  [TEST] PosControl active                     [0;32m[ok][0m
-13:11:27,361 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
-13:11:27,361 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
-13:11:27,364 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
-13:11:27,366 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
-13:11:27,369 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
-13:11:27,372 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
-13:11:27,373 INFO  [SETUP] Testing completed, waiting for client input
-13:11:31,341 INFO  [COM] recv_str: 2,0,500,500
-13:11:31,341 INFO  [COM]  Received SET_POSITION(id=0, x=500, y=500)
-13:11:31,342 INFO  [COM] sending reply: ok.
-13:11:31,378 INFO  (0, 0, 0)
-13:11:31,424 INFO  (0, 0, 0)
-13:11:31,470 INFO  (0, 0, 0.322581)
-13:11:31,515 INFO  (0, 0, 1.29032)
-13:11:31,559 INFO  (0, 0, 2.25806)
-13:11:31,603 INFO  (0, 0, 3.70968)
-13:11:31,651 INFO  (0, 0, 5.48387)
-13:11:31,697 INFO  (0, 0, 7.58065)
-13:11:31,743 INFO  (0, 0, 10.1613)
-13:11:31,787 INFO  (0, 0, 12.9032)
-13:11:31,832 INFO  (0, 0, 15.8065)
-13:11:31,877 INFO  (0, 0, 19.0323)
-13:11:31,923 INFO  (0, 0, 22.7419)
-13:11:31,969 INFO  (0, 0, 26.7742)
-13:11:32,021 INFO  (0, 0, 31.6129)
-13:11:32,070 INFO  (0, 0, 36.7742)
-13:11:32,117 INFO  (0, 0, 41.7742)
-13:11:32,162 INFO  (2.82843, 2.82843, 45)
-13:11:32,216 INFO  (11.3137, 11.3137, 45)
-13:11:32,260 INFO  (16.2635, 16.2635, 45)
-13:11:32,305 INFO  (21.2132, 21.2132, 45)
-13:11:32,350 INFO  (26.163, 26.163, 45)
-13:11:32,392 INFO  (29.6985, 29.6985, 45)
-13:11:32,439 INFO  (34.6482, 34.6482, 45)
-13:11:32,484 INFO  (40.3051, 40.3051, 45)
-13:11:32,532 INFO  (46.6691, 46.6691, 45)
-13:11:32,575 INFO  (50.9117, 50.9117, 45)
-13:11:32,621 INFO  (55.8615, 55.8615, 45)
-13:11:32,667 INFO  (62.2254, 62.2254, 45)
-13:11:32,711 INFO  (68.5894, 68.5894, 45)
-13:11:32,757 INFO  (74.9534, 74.9534, 45)
-13:11:32,805 INFO  (82.0244, 82.0244, 45)
-13:11:32,851 INFO  (89.0955, 89.0955, 45)
-13:11:32,893 INFO  (96.1666, 96.1666, 45)
-13:11:32,937 INFO  (103.238, 103.238, 45)
-13:11:32,982 INFO  (110.309, 110.309, 45)
-13:11:33,026 INFO  (117.38, 117.38, 45)
-13:11:33,072 INFO  (125.158, 125.158, 45)
-13:11:33,117 INFO  (135.058, 135.058, 45)
-13:11:33,162 INFO  (144.957, 144.957, 45)
-13:11:33,207 INFO  (154.857, 154.857, 45)
-13:11:33,251 INFO  (165.463, 165.463, 45)
-13:11:33,296 INFO  (176.07, 176.07, 45)
-13:11:33,342 INFO  (188.091, 188.091, 45)
-13:11:33,386 INFO  (200.819, 200.819, 45)
-13:11:33,433 INFO  (212.839, 212.839, 45)
-13:11:33,478 INFO  (226.274, 226.274, 45)
-13:11:33,529 INFO  (242.538, 242.538, 45)
-13:11:33,577 INFO  (255.973, 255.973, 45)
-13:11:33,621 INFO  (269.408, 269.408, 45)
-13:11:33,665 INFO  (282.843, 282.843, 45)
-13:11:33,711 INFO  (295.571, 295.571, 45)
-13:11:33,756 INFO  (309.713, 309.713, 45)
-13:11:33,800 INFO  (323.855, 323.855, 45)
-13:11:33,847 INFO  (339.411, 339.411, 45)
-13:11:33,891 INFO  (353.554, 353.554, 45)
-13:11:33,937 INFO  (369.817, 369.817, 45)
-13:11:33,981 INFO  (385.373, 385.373, 45)
-13:11:34,027 INFO  (403.051, 403.051, 45)
-13:11:34,075 INFO  (420.729, 420.729, 45)
-13:11:34,120 INFO  (436.285, 436.285, 45)
-13:11:34,163 INFO  (453.256, 453.256, 45)
-13:11:34,209 INFO  (468.812, 468.812, 45)
-13:11:34,252 INFO  (482.954, 482.954, 45)
-13:11:34,299 INFO  (497.803, 497.803, 45)
-13:11:34,307 INFO  [POS] action 0 completed.
-13:11:34,307 INFO  [POS] IN GOAL!  (500.632 , 500.632) ~= (500 , 500)
-13:11:37,225 ERROR Program interrupted by user
-13:12:29,068 INFO  [SETUP] Attaching crashHandler
-13:12:29,068 INFO  [SETUP] creating MotorCom
-13:12:29,068 INFO  [SETUP] checking cmdline-arguments
-13:12:29,068 INFO  [SETUP] Reading arguments:   
-13:12:29,068 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
-13:12:29,068 INFO  [SETUP] starting and flushing serial
-13:12:29,068 INFO      [MOTOR] Starting serial at: ttyUSB0
-13:12:29,068 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
-13:12:29,070 INFO  [SERIAL]     Serial port open.
-13:12:29,170 INFO  [SETUP] resetting encoders
-13:12:29,175 INFO  [SETUP] initializing PosControl
-13:12:29,175 INFO  [SETUP] initializing readLoop thread
-13:12:29,175 INFO  [COM] starting
-13:12:29,180 INFO  [SETUP] initializing controlLoop thread
-13:12:29,191 INFO  [SETUP] Mode is: 0x2167660, setting new mode: 0
-13:12:29,212 INFO  [SETUP] Complete, testing components:
+15:59:38,497 INFO  [TEST] Logging:                              [0;32m[ok][0m
+15:59:39,497 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
+15:59:39,497 INFO  [TEST]     Serial open                       [0;32m[ok][0m
+15:59:39,497 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+15:59:39,497 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+15:59:39,497 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+15:59:39,703 ERROR Program interrupted by user
+15:59:39,703 FATAL CRASH HANDLED; Application has crashed due to [SIGINT] signal
+15:59:39,703 WARN  Aborting application. Reason: Fatal log at [/usr/local/include/easylogging++.h:5583]
+16:00:22,091 INFO  [SETUP] Attaching crashHandler
+16:00:22,091 INFO  [SETUP] creating MotorCom
+16:00:22,092 INFO  [SETUP] creating LiftCom
+16:00:22,092 INFO  [SETUP] checking cmdline-arguments
+16:00:22,092 INFO  [SETUP] Reading arguments:   
+16:00:22,092 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
+16:00:22,092 INFO  [SETUP] starting and flushing serials
+16:00:22,092 INFO      [MOTOR] Starting serial at: ttyUSB0
+16:00:22,092 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
+16:00:22,093 INFO  [SERIAL]     Serial port open.
+16:00:22,093 INFO  [LIFT] 	Starting serial at: ttyUSB1
+16:00:22,093 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB1
+16:00:22,094 INFO  [SERIAL]     Serial port open.
+16:00:22,195 INFO  [SETUP] resetting encoders
+16:00:22,200 INFO  [SETUP] initializing PosControl
+16:00:22,200 INFO  [SETUP] initializing readLoop thread
+16:00:22,200 INFO  [COM] starting
+16:00:22,205 INFO  [SETUP] initializing controlLoop thread
+16:00:23,210 INFO  [SETUP] Acceleration is: 0, setting new acceleration: 1
+16:00:24,233 INFO  [SETUP] Complete, testing components:
 
-13:12:29,212 INFO  [TEST] LOGging:                              [0;32m[ok][0m
-13:12:29,219 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
-13:12:29,219 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
-13:12:29,219 INFO  [TEST] PosControl active                     [0;32m[ok][0m
-13:12:29,220 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
-13:12:29,220 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
-13:12:29,223 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
-13:12:29,226 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
-13:12:29,229 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
-13:12:29,233 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
-13:12:29,233 INFO  [SETUP] Testing completed, waiting for client input
-13:12:32,909 INFO  [COM] recv_str: 2,0,100,100
-13:12:32,909 INFO  [COM]  Received SET_POSITION(id=0, x=100, y=100)
-13:12:32,909 INFO  [COM] sending reply: ok.
-13:12:32,958 INFO  (0, 0, 0)
-13:12:33,006 INFO  (0, 0, 0)
-13:12:33,049 INFO  (0, 0, 0.645161)
-13:12:33,102 INFO  (0, 0, 1.93548)
-13:12:33,148 INFO  (0, 0, 3.3871)
-13:12:33,193 INFO  (0, 0, 5)
-13:12:33,238 INFO  (0, 0, 6.93548)
-13:12:33,281 INFO  (0, 0, 9.03226)
-13:12:33,325 INFO  (0, 0, 11.6129)
-13:12:33,371 INFO  (0, 0, 14.5161)
-13:12:33,416 INFO  (0, 0, 17.7419)
-13:12:33,463 INFO  (0, 0, 21.2903)
-13:12:33,510 INFO  (0, 0, 25.3226)
-13:12:33,554 INFO  (0, 0, 29.6774)
-13:12:33,599 INFO  (0, 0, 34.0322)
-13:12:33,646 INFO  (0, 0, 38.7097)
-13:12:33,693 INFO  (0, 0, 43.5484)
-13:12:33,737 INFO  (4.24264, 4.24264, 45)
-13:12:33,783 INFO  (10.6066, 10.6066, 45)
-13:12:33,828 INFO  (16.2635, 16.2635, 45)
-13:12:33,875 INFO  (21.2132, 21.2132, 45)
-13:12:33,921 INFO  (25.4558, 25.4558, 45)
-13:12:33,966 INFO  (29.6985, 29.6985, 45)
-13:12:34,010 INFO  (34.6482, 34.6482, 45)
-13:12:34,055 INFO  (38.8909, 38.8909, 45)
-13:12:34,098 INFO  (43.1335, 43.1335, 45)
-13:12:34,144 INFO  (46.6691, 46.6691, 45)
-13:12:34,190 INFO  (51.6188, 51.6188, 45)
-13:12:34,234 INFO  (55.8615, 55.8615, 45)
-13:12:34,280 INFO  (60.8112, 60.8112, 45)
-13:12:34,324 INFO  (64.3468, 64.3468, 45)
-13:12:34,368 INFO  (67.8823, 67.8823, 45)
-13:12:34,431 INFO  (73.5392, 73.5392, 45)
-13:12:34,475 INFO  (77.7818, 77.7818, 45)
-13:12:34,518 INFO  (81.3173, 81.3173, 45)
-13:12:34,562 INFO  (84.8529, 84.8529, 45)
-13:12:34,607 INFO  (88.3884, 88.3884, 45)
-13:12:34,653 INFO  (91.924, 91.924, 45)
-13:12:34,699 INFO  (95.4595, 95.4595, 45)
-13:12:34,738 INFO  [POS] action 0 completed.
-13:12:34,739 INFO  [POS] IN GOAL!  (98.2879 , 98.2879) ~= (100 , 100)
-13:12:35,688 ERROR Program interrupted by user
-13:15:54,462 INFO  [SETUP] Attaching crashHandler
-13:15:54,462 INFO  [SETUP] creating MotorCom
-13:15:54,462 INFO  [SETUP] checking cmdline-arguments
-13:15:54,462 INFO  [SETUP] Reading arguments:   
-13:15:54,462 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
-13:15:54,462 INFO  [SETUP] starting and flushing serial
-13:15:54,462 INFO      [MOTOR] Starting serial at: ttyUSB0
-13:15:54,462 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
-13:15:54,464 INFO  [SERIAL]     Serial port open.
-13:15:54,565 INFO  [SETUP] resetting encoders
-13:15:54,570 INFO  [SETUP] initializing PosControl
-13:15:54,570 INFO  [SETUP] initializing readLoop thread
-13:15:54,570 INFO  [COM] starting
-13:15:54,575 INFO  [SETUP] initializing controlLoop thread
-13:15:54,586 INFO  [SETUP] Mode is: 0x1973660, setting new mode: 0
-13:15:54,607 INFO  [SETUP] Complete, testing components:
+16:00:24,233 INFO  [TEST] Logging:                              [0;32m[ok][0m
+16:00:25,234 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+16:00:25,234 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+16:00:25,234 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+16:00:26,234 ERROR [TEST] Voltage = 0v                        [0;31m[fail][0m
+16:00:26,653 ERROR Program interrupted by user
+16:00:26,654 FATAL CRASH HANDLED; Application has crashed due to [SIGINT] signal
+16:00:26,654 WARN  Aborting application. Reason: Fatal log at [/usr/local/include/easylogging++.h:5583]
+16:00:54,248 INFO  [SETUP] Attaching crashHandler
+16:00:54,248 INFO  [SETUP] creating MotorCom
+16:00:54,248 INFO  [SETUP] creating LiftCom
+16:00:54,248 INFO  [SETUP] checking cmdline-arguments
+16:00:54,248 INFO  [SETUP] Reading arguments:   
+16:00:54,248 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
+16:00:54,248 INFO  [SETUP] starting and flushing serials
+16:00:54,248 INFO      [MOTOR] Starting serial at: ttyUSB0
+16:00:54,248 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
+16:00:54,249 INFO  [SERIAL]     Serial port open.
+16:00:54,249 INFO  [LIFT] 	Starting serial at: ttyUSB1
+16:00:54,249 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB1
+16:00:54,250 INFO  [SERIAL]     Serial port open.
+16:00:54,350 INFO  [SETUP] resetting encoders
+16:00:54,355 INFO  [SETUP] initializing PosControl
+16:00:54,356 INFO  [SETUP] initializing readLoop thread
+16:00:54,356 INFO  [COM] starting
+16:00:54,361 INFO  [SETUP] initializing controlLoop thread
+16:00:54,371 INFO  [SETUP] Acceleration is: 5, setting new acceleration: 1
+16:00:54,376 INFO  [SETUP] Mode is: 0x1dac660, setting new mode: 0
+16:00:54,397 INFO  [SETUP] Complete, testing components:
 
-13:15:54,607 INFO  [TEST] LOGging:                              [0;32m[ok][0m
-13:15:54,614 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
-13:15:54,615 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
-13:15:54,615 INFO  [TEST] PosControl active                     [0;32m[ok][0m
-13:15:54,615 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
-13:15:54,615 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
-13:15:54,617 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
-13:15:54,619 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
-13:15:54,622 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
-13:15:54,625 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
-13:15:54,625 INFO  [SETUP] Testing completed, waiting for client input
-13:16:02,364 ERROR Program interrupted by user
-13:16:57,007 INFO  [SETUP] Attaching crashHandler
-13:16:57,007 INFO  [SETUP] creating MotorCom
-13:16:57,007 INFO  [SETUP] checking cmdline-arguments
-13:16:57,007 INFO  [SETUP] Reading arguments:   
-13:16:57,007 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
-13:16:57,007 INFO  [SETUP] starting and flushing serial
-13:16:57,007 INFO      [MOTOR] Starting serial at: ttyUSB0
-13:16:57,007 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
-13:16:57,009 INFO  [SERIAL]     Serial port open.
-13:16:57,109 INFO  [SETUP] resetting encoders
-13:16:57,114 INFO  [SETUP] initializing PosControl
-13:16:57,114 INFO  [SETUP] initializing readLoop thread
-13:16:57,114 INFO  [COM] starting
-13:16:57,119 INFO  [SETUP] initializing controlLoop thread
-13:16:57,131 INFO  [SETUP] Mode is: 0xc97660, setting new mode: 0
-13:16:57,153 INFO  [SETUP] Complete, testing components:
+16:00:54,397 INFO  [TEST] Logging:                              [0;32m[ok][0m
+16:00:54,400 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
+16:00:54,400 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
+16:00:54,401 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+16:00:54,401 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+16:00:54,401 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+16:00:54,404 INFO  [TEST] Voltage = 23v                         [0;32m[ok][0m
+16:00:54,406 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
+16:00:54,408 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
+16:00:54,410 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
+16:00:54,410 INFO  [SETUP] Testing completed, waiting for client input
+16:00:59,985 INFO  [COM] recv_str: 4,0,0
+16:00:59,985 INFO  [COM]  Received LIFT
+16:00:59,985 INFO  [LIFT] goToBottom, previous is: 0
+16:00:59,985 INFO  [LIFT] goToBottom, previous is: 0
+16:00:59,985 INFO  [LIFT] goToBottom, previous is: 0[COM] sending reply: ok.
+16:00:59,985 INFO  0 completed.
+16:01:05,152 INFO  [COM] recv_str: 4,0,0
+16:01:05,152 INFO  [COM]  Received LIFT
+16:01:05,152 INFO  [LIFT] goToBottom, previous is: 0
+16:01:05,152 INFO  [LIFT] goToBottom, previous is: 0
+16:01:05,152 INFO  [LIFT] goToBottom, previous is: 0[COM] sending reply: ok.
+16:01:05,152 INFO  [POS] action 0 was already finished.
+16:01:05,517 INFO  [COM] recv_str: 4,0,0
+16:01:05,517 INFO  [COM]  Received LIFT
+16:01:05,517 INFO  [LIFT] goToBottom, previous is: 0
+16:01:05,517 INFO  [LIFT] goToBottom, previous is: 0
+16:01:05,517 INFO  [LIFT] goToBottom, previous is: 0[COM] sending reply: ok.
+16:01:05,517 INFO  [POS] action 0 was already finished.
+16:01:05,829 INFO  [COM] recv_str: 4,0,0
+16:01:05,829 INFO  [COM]  Received LIFT
+16:01:05,829 INFO  [LIFT] goToBottom, previous is: 0
+16:01:05,829 INFO  [COM] sending reply: ok.
+16:01:06,154 INFO  [COM] recv_str: 4,0,0
+16:01:06,154 INFO  [COM]  Received LIFT
+16:01:06,154 INFO  [LIFT] goToBottom, previous is: 0
+16:01:06,154 INFO  [LIFT] goToBottom, previous is: 0
+16:01:06,154 INFO  [LIFT] goToBottom, previous is: 0[COM] sending reply: ok.
+16:01:06,154 INFO  [POS] action 0 was already finished.
+16:01:06,471 INFO  [COM] recv_str: 4,0,0
+16:01:06,471 INFO  [COM]  Received LIFT
+16:01:06,471 INFO  [LIFT] goToBottom, previous is: 0
+16:01:06,471 INFO  [LIFT] goToBottom, previous is: 0
+16:01:06,471 INFO  [LIFT] goToBottom, previous is: 0[COM] sending reply: ok.
+16:01:06,471 INFO  [POS] action 0 was already finished.
+16:01:06,791 INFO  [COM] recv_str: 4,0,0
+16:01:06,791 INFO  [COM]  Received LIFT
+16:01:06,792 INFO  [LIFT] goToBottom, previous is: 0
+16:01:06,792 INFO  [LIFT] goToBottom, previous is: 0
+16:01:06,792 INFO  [LIFT] goToBottom, previous is: 0[COM] sending reply: ok.
+16:01:06,792 INFO  [POS] action 0 was already finished.
+16:01:07,178 INFO  [COM] recv_str: 4,0,0
+16:01:07,178 INFO  [COM]  Received LIFT
+16:01:07,178 INFO  [LIFT] goToBottom, previous is: 0
+16:01:07,178 INFO  [LIFT] goToBottom, previous is: 0
+16:01:07,178 INFO  [LIFT] goToBottom, previous is: 0[COM] sending reply: ok.
+16:01:07,179 INFO  [POS] action 0 was already finished.
+16:01:07,506 INFO  [COM] recv_str: 4,0,0
+16:01:07,506 INFO  [COM]  Received LIFT
+16:01:07,506 INFO  [LIFT] goToBottom, previous is: 0
+16:01:07,506 INFO  [LIFT] goToBottom, previous is: 0
+16:01:07,506 INFO  [LIFT] goToBottom, previous is: 0[COM] sending reply: ok.
+16:01:07,506 INFO  [POS] action 0 was already finished.
+16:01:10,959 ERROR Program interrupted by user
+16:01:10,959 FATAL CRASH HANDLED; Application has crashed due to [SIGINT] signal
+16:01:10,959 WARN  Aborting application. Reason: Fatal log at [/usr/local/include/easylogging++.h:5583]
+16:01:12,267 INFO  [SETUP] Attaching crashHandler
+16:01:12,267 INFO  [SETUP] creating MotorCom
+16:01:12,267 INFO  [SETUP] creating LiftCom
+16:01:12,267 INFO  [SETUP] checking cmdline-arguments
+16:01:12,267 INFO  [SETUP] Reading arguments:   
+16:01:12,267 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
+16:01:12,267 INFO  [SETUP] starting and flushing serials
+16:01:12,267 INFO      [MOTOR] Starting serial at: ttyUSB0
+16:01:12,267 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
+16:01:12,268 INFO  [SERIAL]     Serial port open.
+16:01:12,269 INFO  [LIFT] 	Starting serial at: ttyUSB1
+16:01:12,269 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB1
+16:01:12,270 INFO  [SERIAL]     Serial port open.
+16:01:12,370 INFO  [SETUP] resetting encoders
+16:01:12,375 INFO  [SETUP] initializing PosControl
+16:01:12,375 INFO  [SETUP] initializing readLoop thread
+16:01:12,375 INFO  [COM] starting
+16:01:12,380 INFO  [SETUP] initializing controlLoop thread
+16:01:12,392 INFO  [SETUP] Mode is: 0xaa9660, setting new mode: 0
+16:01:12,413 INFO  [SETUP] Complete, testing components:
 
-13:16:57,153 INFO  [TEST] LOGging:                              [0;32m[ok][0m
-13:16:57,159 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
-13:16:57,159 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
-13:16:57,159 INFO  [TEST] PosControl active                     [0;32m[ok][0m
-13:16:57,159 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
-13:16:57,159 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
-13:16:57,162 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
-13:16:57,164 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
-13:16:57,167 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
-13:16:57,170 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
-13:16:57,170 INFO  [SETUP] Testing completed, waiting for client input
-13:17:02,733 ERROR Program interrupted by user
-13:17:06,516 INFO  [SETUP] Attaching crashHandler
-13:17:06,542 INFO  [SETUP] creating MotorCom
-13:17:06,542 INFO  [SETUP] checking cmdline-arguments
-13:17:06,542 INFO  [SETUP] Reading arguments:   
-13:17:06,542 INFO  [SETUP] Arguments: ./exec debug 
-13:17:06,542 INFO  [SETUP]     Enabling debug-logging
-13:17:06,542 INFO  [SETUP] starting and flushing serial
-13:17:06,542 INFO      [MOTOR] Starting serial at: r**)
-13:17:06,542 INFO  [SERIAL]     Opening serial port: /dev/r**)
-13:17:06,542 INFO  [SERIAL]     Serial port open.
-13:17:24,412 ERROR Program interrupted by user
-13:17:33,271 INFO  [SETUP] Attaching crashHandler
-13:17:33,271 INFO  [SETUP] creating MotorCom
-13:17:33,271 INFO  [SETUP] checking cmdline-arguments
-13:17:33,271 INFO  [SETUP] Reading arguments:   
-13:17:33,271 INFO  [SETUP]    No arguments - expecting serial at: /dev/ttyUSB0
-13:17:33,271 INFO  [SETUP] starting and flushing serial
-13:17:33,271 INFO      [MOTOR] Starting serial at: ttyUSB0
-13:17:33,271 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
-13:17:33,272 INFO  [SERIAL]     Serial port open.
-13:17:33,373 INFO  [SETUP] resetting encoders
-13:17:33,378 INFO  [SETUP] initializing PosControl
-13:17:33,378 INFO  [SETUP] initializing readLoop thread
-13:17:33,378 INFO  [COM] starting
-13:17:33,383 INFO  [SETUP] initializing controlLoop thread
-13:17:33,394 INFO  [SETUP] Mode is: 0x2399660, setting new mode: 0
-13:17:33,416 INFO  [SETUP] Complete, testing components:
-
-13:17:33,416 INFO  [TEST] LOGging:                              [0;32m[ok][0m
-13:17:33,422 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
-13:17:33,422 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
-13:17:33,422 INFO  [TEST] PosControl active                     [0;32m[ok][0m
-13:17:33,422 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
-13:17:33,422 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
-13:17:33,424 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
-13:17:33,426 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
-13:17:33,430 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
-13:17:33,433 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
-13:17:33,433 INFO  [SETUP] Testing completed, waiting for client input
-13:17:34,250 ERROR Program interrupted by user
-13:17:37,145 INFO  [SETUP] Attaching crashHandler
-13:17:37,145 INFO  [SETUP] creating MotorCom
-13:17:37,145 INFO  [SETUP] checking cmdline-arguments
-13:17:37,145 INFO  [SETUP] Reading arguments:   
-13:17:37,145 INFO  [SETUP] Arguments: ./exec debug 
-13:17:37,145 INFO  [SETUP]     Enabling debug-logging
-13:17:37,145 INFO  [SETUP] starting and flushing serial
-13:17:37,145 INFO      [MOTOR] Starting serial at: r**)
-13:17:37,145 INFO  [SERIAL]     Opening serial port: /dev/r**)
-13:17:37,145 INFO  [SERIAL]     Serial port open.
-13:17:37,888 ERROR Program interrupted by user
-13:18:50,073 INFO  [SETUP] Attaching crashHandler
-13:18:50,073 INFO  [SETUP] creating MotorCom
-13:18:50,073 INFO  [SETUP] checking cmdline-arguments
-13:18:50,073 INFO  [SETUP] Reading arguments:   
-13:18:50,073 INFO  [SETUP] Arguments: ./exec debug 
-13:18:50,073 INFO  [SETUP]     Enabling debug-logging
-13:18:50,073 INFO  [SETUP] starting and flushing serial
-13:18:50,073 INFO      [MOTOR] Starting serial at: r**)
-13:18:50,073 INFO  [SERIAL]     Opening serial port: /dev/r**)
-13:18:50,074 INFO  [SERIAL]     Serial port open.
-13:18:51,008 ERROR Program interrupted by user
-13:20:46,427 INFO  [SETUP] Attaching crashHandler
-13:20:46,427 INFO  [SETUP] creating MotorCom
-13:20:46,427 INFO  [SETUP] checking cmdline-arguments
-13:20:46,427 INFO  [SETUP] Reading arguments:   
-13:20:46,427 INFO  [SETUP] Arguments: ./exec debug 
-13:20:46,428 INFO  [SETUP]     Enabling debug-logging
-13:20:46,428 INFO  [SETUP] starting and flushing serial
-13:20:46,428 INFO      [MOTOR] Starting serial at: ttyUSB0
-13:20:46,428 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
-13:20:46,430 INFO  [SERIAL]     Serial port open.
-13:20:46,530 INFO  [SETUP] resetting encoders
-13:20:46,535 INFO  [SETUP] initializing PosControl
-13:20:46,535 INFO  [SETUP] initializing readLoop thread
-13:20:46,536 INFO  [COM] starting
-13:20:46,541 INFO  [SETUP] initializing controlLoop thread
-13:20:46,551 INFO  [SETUP] Mode is: 0x1687660, setting new mode: 0
-13:20:46,572 INFO  [SETUP] Complete, testing components:
-
-13:20:46,573 INFO  [TEST] LOGging:                              [0;32m[ok][0m
-13:20:46,580 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
-13:20:46,580 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
-13:20:46,580 INFO  [TEST] PosControl active                     [0;32m[ok][0m
-13:20:46,580 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
-13:20:46,580 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
-13:20:46,582 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
-13:20:46,584 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
-13:20:46,586 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
-13:20:46,588 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
-13:20:46,588 INFO  [SETUP] Testing completed, waiting for client input
-13:20:50,881 INFO  [COM] recv_str: 2,0,100,100
-13:20:50,881 INFO  [COM]  Received SET_POSITION(id=0, x=100, y=100)
-13:20:50,881 INFO  [COM] sending reply: ok.
-13:20:50,919 INFO  (0, 0, 0)
-13:20:50,964 INFO  (0, 0, 0)
-13:20:51,008 INFO  (0, 0, 0.322581)
-13:20:51,053 INFO  (0, 0, 1.29032)
-13:20:51,099 INFO  (0, 0, 2.25806)
-13:20:51,143 INFO  (0, 0, 3.70968)
-13:20:51,185 INFO  (0, 0, 5.32258)
-13:20:51,240 INFO  (0, 0, 7.90323)
-13:20:51,282 INFO  (0, 0, 10.4839)
-13:20:51,331 INFO  (0, 0, 13.3871)
-13:20:51,376 INFO  (0, 0, 16.6129)
-13:20:51,421 INFO  (0, 0, 20)
-13:20:51,466 INFO  (0, 0, 23.5484)
-13:20:51,510 INFO  (0, 0, 27.5806)
-13:20:51,555 INFO  (0, 0, 32.0968)
-13:20:51,603 INFO  (0, 0, 37.0968)
-13:20:51,647 INFO  (0, 0, 41.9355)
-13:20:51,696 INFO  (2.82843, 2.82843, 45)
-13:20:51,741 INFO  (9.89949, 9.89949, 45)
-13:20:51,789 INFO  (16.9706, 16.9706, 45)
-13:20:51,832 INFO  (21.9203, 21.9203, 45)
-13:20:51,878 INFO  (26.163, 26.163, 45)
-13:20:51,923 INFO  (31.1127, 31.1127, 45)
-13:20:51,969 INFO  (36.0625, 36.0625, 45)
-13:20:52,015 INFO  (42.4264, 42.4264, 45)
-13:20:52,061 INFO  (47.3762, 47.3762, 45)
-13:20:52,106 INFO  (53.033, 53.033, 45)
-13:20:52,151 INFO  (56.5686, 56.5686, 45)
-13:20:52,199 INFO  (61.5183, 61.5183, 45)
-13:20:52,245 INFO  (65.761, 65.761, 45)
-13:20:52,291 INFO  (69.2965, 69.2965, 45)
-13:20:52,340 INFO  (73.5392, 73.5392, 45)
-13:20:52,386 INFO  (77.0747, 77.0747, 45)
-13:20:52,428 INFO  (80.6102, 80.6102, 45)
-13:20:52,473 INFO  (84.1458, 84.1458, 45)
-13:20:52,517 INFO  (87.6813, 87.6813, 45)
-13:20:52,563 INFO  (91.2168, 91.2168, 45)
-13:20:52,609 INFO  (94.7524, 94.7524, 45)
-13:20:52,655 INFO  [POS] action 0 completed.
-13:20:52,655 INFO  [POS] IN GOAL!  (98.2879 , 98.2879) ~= (100 , 100)
-13:20:54,007 ERROR Program interrupted by user
+16:01:12,413 INFO  [TEST] Logging:                              [0;32m[ok][0m
+16:01:12,416 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
+16:01:12,416 INFO  [TEST] Serial open (sim)                     [0;32m[ok][0m
+16:01:12,417 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+16:01:12,417 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+16:01:12,417 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+16:01:12,420 INFO  [TEST] Voltage = 23v                         [0;32m[ok][0m
+16:01:12,422 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
+16:01:12,424 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
+16:01:12,426 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
+16:01:12,426 INFO  [SETUP] Testing completed, waiting for client input
+16:01:13,447 INFO  [COM] recv_str: 4,0,0
+16:01:13,447 INFO  [COM]  Received LIFT
+16:01:13,448 INFO  [COM] sending reply: ok.
+16:01:13,448 INFO  [COM] sending reply: ok.[LIFT] goToBottom, previous is: 0
+16:01:13,448 INFO  [POS] action 0 completed.
+16:01:14,061 INFO  [COM] recv_str: 4,0,0
+16:01:14,061 INFO  [COM]  Received LIFT
+16:01:14,061 INFO  [LIFT] goToBottom, previous is: 0
+16:01:14,061 INFO  [LIFT] goToBottom, previous is: 0[COM] sending reply: ok.
+16:01:14,061 INFO  [POS] action 0 was already finished.
+16:01:14,381 INFO  [COM] recv_str: 4,0,0
+16:01:14,381 INFO  [COM]  Received LIFT
+16:01:14,381 INFO  [LIFT] goToBottom, previous is: 0
+16:01:14,381 INFO  [LIFT] goToBottom, previous is: 0[COM] sending reply: ok.
+16:01:14,381 INFO  [POS] action 0 was already finished.
+16:01:14,680 INFO  [COM] recv_str: 4,0,0
+16:01:14,680 INFO  [COM]  Received LIFT
+16:01:14,680 INFO  [LIFT] goToBottom, previous is: 0
+16:01:14,680 INFO  [LIFT] goToBottom, previous is: 0[COM] sending reply: ok.
+16:01:14,680 INFO  [POS] action 0 was already finished.
+16:01:14,992 INFO  [COM] recv_str: 4,0,0
+16:01:14,992 INFO  [COM]  Received LIFT
+16:01:14,992 INFO  [LIFT] goToBottom, previous is: 0
+16:01:14,992 INFO  [LIFT] goToBottom, previous is: 0
+16:01:14,992 INFO  [LIFT16:01:14,992 INFO  [POS] action 0 was already finished.
+16:01:15,294 INFO  [COM] recv_str: 4,0,0
+16:01:15,294 INFO  [COM]  Received LIFT
+16:01:15,296 INFO  [LIFT] goToBottom, previous is: 0
+16:01:15,296 INFO  [LIFT] goToBottom, previous is: 0
+16:01:15,296 INFO  [LIFT] goToBottom, previous is: 0[COM] sending reply: ok.
+16:01:15,296 INFO  [POS] action 0 was already finished.
+16:01:15,672 INFO  [COM] recv_str: 4,0,0
+16:01:15,672 INFO  [COM]  Received LIFT
+16:01:15,672 INFO  [LIFT] goToBottom, previous is: 0
+16:01:15,672 INFO  [LIFT] goToBottom, previous is: 0
+16:01:15,672 INFO  [LIFT] goToBottom, previous is: 0[COM] sending reply: ok.
+16:01:15,672 ERROR Unintended program crash!
+16:01:15,672 FATAL CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+16:01:15,672 WARN  Aborting application. Reason: Fatal log at [/usr/local/include/easylogging++.h:5583]
