@@ -14,7 +14,7 @@
 #include "serial.h"
 #include "protocol.h"
 #include "printing.h"
-
+#include <atomic>
 
 #define BOTTOM 0
 #define MIDDLE 1
@@ -25,9 +25,11 @@
 #define ARD_MIDDLE 2
 #define GET 3
 
+#define SUCCESS 53
+
 class LiftCom {
 public:
-    LiftCom();
+    LiftCom(std::string serial);
     ~LiftCom();
 
     void setSerialPort(const char *s);
@@ -42,6 +44,7 @@ public:
     void setCurrentPos(int p);
     uint8_t getPosition();
     bool test();
+    bool waitForResponse();
 
 private:
     void writeToSerial(uint8_t a);
@@ -49,8 +52,8 @@ private:
     uint8_t readFromSerial();
 
     Serial *port;
-    char serial_port[10];
-    int current_pos;
+    std::string serial_port;
+    std::atomic<int> current_pos;
 };
 
 #endif /* LIFTCOM_H */

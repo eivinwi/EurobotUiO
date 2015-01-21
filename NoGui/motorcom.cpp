@@ -1,10 +1,10 @@
 #include "motorcom.h"
 
-MotorCom::MotorCom() {
+MotorCom::MotorCom(std::string serial, bool sim_enabled) {
+    simulating = sim_enabled;
     prev_encL = 0;
     prev_encR = 0;
-    simulating = false;
-    strcpy(serial_port, "ttyUSB0");
+    serial_port = serial;
 }
 
 
@@ -29,31 +29,16 @@ bool MotorCom::test() {
 
 void MotorCom::startSerial() {
 	if(simulating) {
+        LOG(INFO) << "[MOTOR]     Starting serial simulator";
 		simport = new SerialSim;
 	} else {
-        if(strcmp(serial_port, "") == 0) {
-            LOG(WARNING) << "[MOTOR] Error, empty serial_port. Setting to /dev/ttyUSB0";
-            strcpy(serial_port, "ttyUSB0");
+        if(serial_port == "") { //should never happen
+            LOG(WARNING) << "[MOTOR]    Error, empty serial_port. Setting to /dev/ttyUSB0";
+            serial_port = "ttyUSB0";
         }     
-        LOG(INFO) << "    [MOTOR] Starting serial at: " << serial_port;
+        LOG(INFO) << "[MOTOR]    Starting serial at: " << serial_port;
 		port = new Serial(serial_port);
 	}
-}
-
-
-void MotorCom::serialSimEnable() {
-	simulating = true;
-}
-
-
-void MotorCom::serialSimDisable() {
-    simulating = false;
-}
-
-
-void MotorCom::setSerialPort(const char *s) {
-    LOG(DEBUG) << "[MOTOR] serial_port=" << s;
-	strcpy(serial_port, s);
 }
 
 

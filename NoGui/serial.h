@@ -32,7 +32,7 @@ using namespace LibSerial ;
 
 class Serial {
 public:
-    Serial(char *s);
+    Serial(std::string serial_port);
     ~Serial();
     void write(uint8_t arg);
     void write(char arg);

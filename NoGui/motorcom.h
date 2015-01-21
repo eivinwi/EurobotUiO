@@ -24,14 +24,11 @@
 
 class MotorCom {
 public:
-    MotorCom();
+    MotorCom(std::string serial, bool sim_enabled);
     ~MotorCom();
 
     bool test();
     void startSerial();
-	void serialSimEnable();
-	void serialSimDisable();
-	void setSerialPort(const char *s);
     void setAcceleration(int acc);
     void setSpeedL(uint8_t speed);
     void setSpeedR(uint8_t speed);
@@ -75,7 +72,8 @@ private:
     long prev_encR;
 
     bool simulating;
-	char serial_port[10];
+//	char serial_port[10];
+    std::string serial_port;
 };
 
 #endif /* MOTORCOM_H */

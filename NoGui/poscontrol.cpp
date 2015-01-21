@@ -92,6 +92,7 @@ qPos PosControl::dequeue() {
 
 	qPos qp = q.front();
 	q.pop();
+	usleep(100);
 	return qp;
 }
 
@@ -122,16 +123,15 @@ void PosControl::controlLoop() {
 
 		//create goalPos from qp
 		goalPos = new GoalPosition(qp.id, qp.x, qp.y, qp.rot);
+		LOG(INFO) << "[POS] [" << std::this_thread::get_id() << "]dequeued qPos {" << qp.id << "," << qp.x << "," << qp.y << "," << qp.rot << "," << qp.type << "}";
+		
 		if(!testing) {
-			LOG(DEBUG) << "[POS] dequeued qPos {" << qp.id << "," << qp.x << "," << qp.y << "," << qp.rot << "," << qp.type << "}";
-
 			if(qp.type == ROTATION) {
 				goToRotation();
 			} else if(qp.type == POSITION) {
 				goToPosition();
 			} else if(qp.type == LIFT) {
-				lcom->goTo(qp.argument);
-				completeCurrent();
+				goToLift(qp.argument);	
 			}
 		} 
 		else {
@@ -167,15 +167,14 @@ void PosControl::goToRotation() {
 			logTrace();
 			usleep(1000);
 		} while(!closeEnoughAngle());
-		completeCurrent();
 		fullStop();		
 		LOG(DEBUG) << "[POS] rotation finished: " << curPos->getAngle() << "=" << goalPos->getAngle();
+		completeCurrent();
 	} 
 	else {
 		fullStop();
-		completeCurrent();
 		LOG(DEBUG) << "[POS] already at specified rotation(" << goalPos->getId() << "): " << curPos->getAngle() << "=" << goalPos->getAngle();
-		usleep(3000);
+		completeCurrent();
 	}
 }
 
@@ -227,9 +226,20 @@ void PosControl::goToPosition() {
 	}
 
 	fullStop();
-	completeCurrent();
 	LOG(INFO) << "[POS] IN GOAL!  (" << curPos->getX() << " , " <<  curPos->getY() << ") ~= (" << goalPos->getX() << " , " << goalPos->getY() << ")";
-	usleep(3000);
+	completeCurrent();
+}
+
+
+void PosControl::goToLift(int arg) {
+	lcom->goTo(arg);
+	bool success = lcom->waitForResponse();
+	if(success) {
+		LOG(INFO) << "[LIFT] Successful movement";
+	} else {
+		LOG(WARNING) << "[LIFT] UNSUCCESSFULL movement";
+	}
+	completeCurrent();
 }
 
 
@@ -314,7 +324,9 @@ void PosControl::completeCurrent() {
 		LOG(INFO) << "[POS] action " << goalPos->getId() << " completed.";	
 		completed_actions[goalPos->getId()] = true;
 	}
-	usleep(2000);
+	LOG(DEBUG) << "THREAD [" << std::this_thread::get_id() << "] is sleeping";
+	usleep(100000);
+	LOG(DEBUG) << "THREAD [" << std::this_thread::get_id() << "] is awake";
 }
 
 
@@ -349,7 +361,7 @@ bool PosControl::running() {
 /*** PRIVATE FUNCTIONS: ***/
 
 void PosControl::logTrace() {
-	LOG(TRACE) << goalPos->getId() << "," << curPos->getX() << "," << curPos->getY() << "," << curPos->getAngle();
+	LOG(TRACE) << goalPos->getId() << "," << curPos->getPosString();;
 }
 
 

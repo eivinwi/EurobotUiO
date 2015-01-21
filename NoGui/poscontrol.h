@@ -80,6 +80,7 @@ private:
 	void completeCurrent();
 	void goToRotation();
     void goToPosition();
+    void goToLift(int arg);
 
     void rotate(float distR);
     void drive(float dist);

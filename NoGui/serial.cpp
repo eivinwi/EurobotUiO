@@ -1,10 +1,10 @@
 #include "serial.h"
 
 //TODO: try catch
-Serial::Serial(char *serial_port) {
+Serial::Serial(std::string serial_port) {
 	char s[20]; 
 	strcpy(s, "/dev/");
-	strcat(s, serial_port);
+	strcat(s, serial_port.c_str());
     LOG(INFO) << "[SERIAL]     Opening serial port: " << s;
     serial.Open(s);
 

@@ -16,6 +16,10 @@
 #include "printing.h"
 //include "sound.h"
 #include "protocol.h"
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <string>
 #include <cstring>
 #include <thread>
@@ -24,6 +28,9 @@
 #include <iostream>
 INITIALIZE_EASYLOGGINGPP
 
+#ifndef ELPP_THREAD_SAFE
+#define ELPP_THREAD_SAFE
+#endif
 
 bool checkArguments(int argc, char *argv[]);
 void drive();
@@ -45,11 +52,15 @@ std::mutex read_mutex;
 
 int ACCELERATION = 1;
 int MODE = 0;
+bool sim_enabled = false;
 bool sound_enabled = false;
 bool com_running = false;
-bool debug_printing = false;
-bool testing = false;
+bool debug_file_enabled = false;
+bool testing_enabled = false;
+bool log_to_file = true;
 
+std::string motor_serial = "ttyUSB0";
+std::string lift_serial = "ttyUSB1";
 
 /* Waits for input on socket, mainly position. */
 void readLoop() {
@@ -65,7 +76,7 @@ void readLoop() {
         // Wait for next request from client
         socket.recv (&request);
         std::string recv_str = std::string(static_cast<char*>(request.data()), request.size());
-        LOG(INFO) << "[COM] recv_str: " << recv_str;
+//        LOG(INFO) << "[COM] recv_str: " << recv_str;
 
 
         std::string reply_str;
@@ -140,6 +151,7 @@ void readLoop() {
         usleep(20); //CHECK: necessary?
         LOG(INFO) << "[COM] sending reply: " << std::string(static_cast<char*>(reply.data()), reply.size()) << ".";
         socket.send (reply);
+        usleep(100);
     }
     com_running = false;
 }
@@ -251,56 +263,65 @@ int getArguments(std::string input, int *pos) {
 */
 bool checkArguments(int argc, char *argv[]) {
     LOG(INFO) << "[SETUP] Reading arguments:   ";
-    m->serialSimDisable(); //just because
-    if(argc < 2) {
-        LOG(INFO) << "[SETUP]    No arguments - expecting serial at: /dev/ttyUSB0";
-        m->setSerialPort("ttyUSB0");
-    } else {
-        std::stringstream str;
-        for(int i = 0; i < argc; i++) {
-            str << argv[i] << " ";
-        }
-        LOG(INFO) << "[SETUP] Arguments: " << str.str();
+    //m->serialSimDisable(); //just because
 
-        for(int i = 1; i < argc; i++) {
-            if(strcmp(argv[i], "sim") == 0) {
-                LOG(INFO) << "[SETUP]     Simulating serial.";
-                m->serialSimEnable();
-            } 
-            else if(strcmp(argv[i], "testing") == 0) {
-                LOG(INFO) << "[SETUP]     Testing enabled.";
-                testing = true;
-            }
-            else if(strcmp(argv[i], "sound") == 0) {
-                LOG(INFO) << "[SETUP]     Sound enabled.";
-                sound_enabled = true;
-            }
-            else if(strcmp(argv[i], "debug") == 0) {
-                LOG(INFO) << "[SETUP]     Enabling debug-logging";
-                debug_printing = true;
-            }
-            else if(strcmp(argv[i], "ttyACM0") == 0) {
-                LOG(INFO) << "[SETUP]     Opening serial on: /dev/" << argv[i];
-                m->setSerialPort(argv[1]);
-            }
-            else if(strcmp(argv[i], "ttyS0") == 0) {
-                LOG(INFO) << "[SETUP]     Opening serial on: /dev/" << argv[i];
-                m->setSerialPort(argv[1]);
-            }
-            else if(strcmp(argv[i], "ttyACM1") == 0) {
-                LOG(INFO) << "[SETUP]     Opening serial on: /dev/" << argv[i];
-                m->setSerialPort(argv[1]);
-            }
-            else if(strcmp(argv[i], "ttyUSB1") == 0) {
-                LOG(INFO) << "[SETUP]     Opening serial on: /dev/" << argv[i];
-                m->setSerialPort(argv[1]);
-            } 
-            else {
-                LOG(INFO) << "[SETUP]     Invalid argument: " << argv[i];
-                return false;
-            }
+    opterr = 0;
+    char *cval = nullptr;
+    int opt;
+    while( (opt = getopt(argc, argv, "hstdnm:l:")) != -1 ) {
+        switch(opt) {
+            case 'h':
+                //print help
+                PRINTLINE("---------- CMD-LINE OPTIONS ----------");
+                PRINTLINE("-s: enable simulation of serial");
+                PRINTLINE("-t: enable test-mode");
+                PRINTLINE("-d: enable debug-file");
+                PRINTLINE("-n: disable logging to file");
+                PRINTLINE("-m <port>: set motor serial port (ex: ttyUSB0)");
+                PRINTLINE("-m <port>: set lift serial port (ex: ttyUSB1)");
+                PRINTLINE("--------------------------------------");
+                break;
+            case 's':
+                PRINTLINE("[SETUP]     SerialSim enabled. <<");
+                sim_enabled = true;
+                break;
+            case 't':
+                PRINTLINE("[SETUP]     Testmode enabled. <<");   
+                testing_enabled = true;
+                break;
+            case 'd':
+                PRINTLINE("[SETUP]     Debug file enabled. <<");
+                debug_file_enabled = true;
+                break;
+            case 'n':
+                PRINTLINE("[SETUP]     Log to file disabled. <<");
+                log_to_file = false;
+                break;
+            case 'm':
+                //motor_serial = std::to_string(optarg);
+                cval = optarg;
+                PRINTLINE("[SETUP]    motor arg=" << cval);
+
+                break;
+            case 'l':
+                //lift_serial = std::to_string(optarg);
+                PRINTLINE("[SETUP]    lift arg=" << optarg);
+                break;
+            case '?':
+                if(optopt == 'm') {
+                    PRINTLINE("Option -m requires an argument.");
+                } else if(optopt == 'l') {
+                    PRINTLINE("Option -l requires an argument.");                    
+                } else {
+                    LOG(WARNING) << "Unknown cmd-option. (-h for help).";
+                }
+                break;                
+            default:
+                LOG(WARNING) << "Invalid cmd-option. (-h for help).";
+                break;
         }
     }
+
     return true;
 }
 
@@ -317,7 +338,14 @@ void configureLogger() {
         el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/NoGui/newlogs/std.log"
     );
 
-    if(debug_printing) {
+    if(log_to_file) {
+        defaultConf.setGlobally( el::ConfigurationType::ToFile, "TRUE"); 
+    } else {
+        defaultConf.setGlobally( el::ConfigurationType::ToFile, "FALSE"); 
+    }
+
+
+    if(debug_file_enabled) {
         defaultConf.set(el::Level::Debug, 
             el::ConfigurationType::Enabled, "TRUE"
         );
@@ -353,16 +381,17 @@ int main(int argc, char *argv[]) {
     LOG(INFO) << "[SETUP] Attaching crashHandler";
     el::Helpers::setCrashHandler(crashHandler);
 
-    LOG(INFO) << "[SETUP] creating MotorCom";
-    m = new MotorCom;
-
-    LOG(INFO) << "[SETUP] creating LiftCom";
-    l = new LiftCom();
-
     LOG(INFO) << "[SETUP] checking cmdline-arguments";
     if(!checkArguments(argc, argv)) {
         return -1;
     }
+
+    LOG(INFO) << "[SETUP] creating MotorCom";
+    m = new MotorCom(motor_serial, sim_enabled);
+
+    LOG(INFO) << "[SETUP] creating LiftCom";
+    l = new LiftCom(lift_serial);
+
 
     LOG(INFO) << "[SETUP] starting and flushing serials";
     m->startSerial();
@@ -376,7 +405,7 @@ int main(int argc, char *argv[]) {
 
 
     LOG(INFO) << "[SETUP] initializing PosControl";
-    p = new PosControl(m, l, testing);
+    p = new PosControl(m, l, testing_enabled);
 
     LOG(INFO) << "[SETUP] initializing readLoop thread";
     std::thread read_thread(readLoop);
@@ -409,7 +438,7 @@ int main(int argc, char *argv[]) {
 
     testSystem();
 
-    LOG(INFO) << "[SETUP] Testing completed, waiting for client input";
+    LOG(INFO) << "[SETUP] testing_enabled completed, waiting for client input";
     if(read_thread.joinable()) {
         read_thread.join();
     }
@@ -422,19 +451,19 @@ int main(int argc, char *argv[]) {
 void testSystem() {
     usleep(20000);
     m->flush();
-    LOG(INFO) << "[SETUP] Complete, testing components:\n";
+    LOG(INFO) << "[SETUP] Complete, testing_enabled components:\n";
 
     //test LOGging
     printResult("[TEST] Logging: ", true); //pointless, if LOGging isnt active nothing will be written
 
     if(m->test()) {
         printResult("[TEST] MotorCom active", true);
-        if(m->isSimulating()) printResult("[TEST] Serial open", true);
-        else           printResult("[TEST] Serial open (sim)", true);
+        if(m->isSimulating()) printResult("[TEST]     sSerial open", true);
+        else           printResult("[TEST]      Serial open (sim)", true);
     } 
 
     if(l->test()) {
-        printResult("[TEST] MotorCom active", true);
+        printResult("[TEST] LiftCom active", true);
         printResult("[TEST]     Serial open", true);
     }
 
@@ -470,11 +499,11 @@ void crashHandler(int sig) {
         LOG(ERROR) << "Program interrupted by user";
     } else {
         LOG(ERROR) << "Unintended program crash!";
-        el::Helpers::logCrashReason(sig, true);
+        bool stackTraceIfAvailable = false;
+        const el::Level& level = el::Level::Fatal;
+        const char* logger = "default";
+        el::Helpers::logCrashReason(sig, stackTraceIfAvailable, level, logger);
+//        el::Helpers::logCrashReason(sig, true);
     }
-    bool stackTraceIfAvailable = false;
-    const el::Level& level = el::Level::Fatal;
-    const char* logger = "default";
-    el::Helpers::logCrashReason(sig, stackTraceIfAvailable, level, logger);
     el::Helpers::crashAbort(sig);
 }

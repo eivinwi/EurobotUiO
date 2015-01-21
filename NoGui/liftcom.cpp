@@ -1,7 +1,8 @@
 #include "liftcom.h"
 
-LiftCom::LiftCom() {
-    strcpy(serial_port, "ttyUSB1");
+LiftCom::LiftCom(std::string serial) {
+    serial_port = serial;
+    current_pos = BOTTOM;
 }
 
 
@@ -9,18 +10,12 @@ LiftCom::~LiftCom() {
 }
 
 
-void LiftCom::setSerialPort(const char *s) {
-    LOG(DEBUG) << "[LIFT] serial_port set to: " << s;
-	strcpy(serial_port, s);
-}
-
-
 void LiftCom::startSerial() {        
-	if(strcmp(serial_port, "") == 0) {
+    if(serial_port == "") { //should never happen
         LOG(WARNING) << "[LIFT] 	Error, empty serial_port. Setting to /dev/ttyUSB1";
-        strcpy(serial_port, "ttyUSB1");
+        serial_port = "ttyUSB1";
     }     
-    LOG(INFO) << "[LIFT] 	Starting serial at: " << serial_port;
+    LOG(INFO) << "[LIFT] 	 Starting serial at: " << serial_port;
 	port = new Serial(serial_port);
 }
 
@@ -84,6 +79,28 @@ bool LiftCom::test() {
 void LiftCom::setCurrentPos(int p) {
 	current_pos = p;
 }
+
+
+bool LiftCom::waitForResponse() {
+	auto t_start = std::chrono::high_resolution_clock::now();
+    auto t_end = std::chrono::high_resolution_clock::now();    
+
+	do {
+		if(port->available()) {
+			uint8_t resp = readFromSerial();
+			LOG(INFO) << "[LIFT resp after: "  << (std::chrono::duration<double, std::milli>(t_end-t_start).count());
+
+			if(resp == SUCCESS) {
+				return true;
+			} 	
+			else {
+				return false;
+			}
+		}
+    } while ((std::chrono::duration<double, std::milli>(t_end-t_start).count()) < 10); //time needs testing
+    return false;
+}
+
 
 
 /*** Private Functions ***/
