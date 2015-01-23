@@ -19,24 +19,23 @@
 
 #define _USE_MATH_DEFINES
 
-#include "motorcom.h"
-#include "liftcom.h"
-#include "printing.h"
-#include "position.h"
 #include "goalposition.h"
+#include "liftcom.h"
+#include "motorcom.h"
+#include "position.h"
+#include "printing.h"
 #include "rotation.h"
-
+#include <cassert>
+#include <condition_variable>
+#include <math.h>
+#include <mutex>
+#include <queue>
 #include <string>
 #include <sstream>
-#include <vector>
-#include <cassert>
-#include <unistd.h>
-#include <time.h>
-#include <math.h>
 #include <thread>
-#include <queue>
-#include <mutex>
-#include <condition_variable>
+#include <time.h>
+#include <unistd.h>
+#include <vector>
 
 //#define PI 3.14159265
 

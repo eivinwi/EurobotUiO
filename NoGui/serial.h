@@ -12,20 +12,18 @@
 
 #include "md49.h"
 #include "printing.h"
-
-#include <SerialStream.h>
-#include <iostream>
-#include <unistd.h>
-#include <cstdlib>
-#include <string>
-#include <stdint.h>
 #include <bitset>
-#include <sstream>
-#include <cstring>
-#include <iomanip>
 #include <chrono>
+#include <cstdlib>
+#include <cstring>
 #include <ctime>
-//#include <thread>
+#include <iomanip>
+#include <iostream>
+#include <SerialStream.h>
+#include <sstream>
+#include <stdint.h>
+#include <string>
+#include <unistd.h>
  
 using namespace LibSerial ;
 

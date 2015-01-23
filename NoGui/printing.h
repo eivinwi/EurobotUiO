@@ -9,8 +9,8 @@
 
 #include <chrono>
 #include <ctime>
-#include <iostream>
 #include <easylogging++.h>
+#include <iostream>
 
 #ifndef ELPP_THREAD_SAFE
 #define ELPP_THREAD_SAFE

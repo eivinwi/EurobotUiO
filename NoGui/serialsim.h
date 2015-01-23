@@ -17,11 +17,11 @@
 #ifndef SERIALSIM_H
 #define	SERIALSIM_H
 
+#include "md49.h"
 #include "printing.h"
 #include <iostream>
 #include <stdint.h>
 #include <time.h>
-#include "md49.h"
 
 /*
  * Encoder counts: 980 per output shaft turn

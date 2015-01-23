@@ -9,10 +9,10 @@
 #ifndef ROTATION_H
 #define	ROTATION_H
 
-#include "printing.h"
 #include "md49.h"
-#include <iostream>
+#include "printing.h"
 #include <atomic>
+#include <iostream>
 
 #define ENC_PER_DEGREE 6.2 //7.5
 

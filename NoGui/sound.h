@@ -10,18 +10,18 @@
 #define	SOUND_H
 
 //#include "printing.h"
-#include <string>
-#include <iostream>
-#include <thread>
-#include <pthread.h>
-#include <unistd.h>
 #include <cassert>
-#include <sys/types.h>
+#include <iostream>
+#include <pthread.h>
 #include <pwd.h>
 #include <stdio.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
+#include <string>
+#include <sys/types.h>
 #include <thread>
+#include <unistd.h>
+
 
 #define MARIO_PLZ 1
 #define MARIO_PLZ_EXT 1

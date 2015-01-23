@@ -2,7 +2,7 @@
 
 LiftCom::LiftCom(std::string serial) {
     serial_port = serial;
-    current_pos = BOTTOM;
+    lift_pos = BOTTOM;
 }
 
 
@@ -21,34 +21,65 @@ void LiftCom::startSerial() {
 
 
 void LiftCom::goTo(int p) {
-	if(p == TOP) {
-		goToTop();
-	} else if(p == MIDDLE) {
-		goToMiddle();
-	} else if(p == BOTTOM) {
-		goToBottom();
+	switch(p) {
+		case TOP: 
+			goToTop();
+			break;
+		case MIDDLE:
+			goToMiddle();
+			break;
+		case BOTTOM:
+			goToBottom();
+			break;
+		case OPEN:
+			openGrabber();
+			break;
+		case CLOSE:
+			closeGrabber();
+			break;
+		case GET:
+			getPosition();
+			break;
+		default:
+			LOG(INFO) << "[LIFT] invalid goto-command.";
+			break;
+
 	}
 }
 
 
 void LiftCom::goToTop() {
-	LOG(INFO) << "[LIFT] goToTop, previous is: " << current_pos;
+	LOG(INFO) << "[LIFT] goToTop, previous is: " << lift_pos;
 	writeToSerial(ARD_TOP);
-	current_pos = TOP;
+	lift_pos = TOP;
 }
 
 
 void LiftCom::goToMiddle() {
-	LOG(INFO) << "[LIFT] goToMiddle, previous is: " << current_pos;
+	LOG(INFO) << "[LIFT] goToMiddle, previous is: " << lift_pos;
 	writeToSerial(ARD_MIDDLE);
-	current_pos = MIDDLE;
+	lift_pos = MIDDLE;
 }
 
 
 void LiftCom::goToBottom() {
-	LOG(INFO) << "[LIFT] goToBottom, previous is: " << current_pos;
+	LOG(INFO) << "[LIFT] goToBottom, previous is: " << lift_pos;
 	writeToSerial(ARD_BOTTOM);
-	current_pos = BOTTOM;
+	lift_pos = BOTTOM;
+}
+
+
+void LiftCom::openGrabber() {
+	LOG(INFO) << "[LIFT] openGrabber, previous is: " << grabber_pos;
+	writeToSerial(OPEN);
+	grabber_pos = OPEN;
+}
+
+
+void LiftCom::closeGrabber() {
+	LOG(INFO) << "[LIFT] closeGrabber, previous is: " << grabber_pos;	
+	writeToSerial(OPEN);
+	grabber_pos = CLOSE;
 }
 
 
@@ -58,7 +89,7 @@ uint8_t LiftCom::getPosition() {
 	uint8_t pos = readFromSerial();
 	LOG(INFO) << "Lift is at: " << pos;
 	return pos;*/
-	return current_pos;
+	return lift_pos;
 }
 
 
@@ -77,7 +108,7 @@ bool LiftCom::test() {
 
 //used to simulate lift while testing
 void LiftCom::setCurrentPos(int p) {
-	current_pos = p;
+	lift_pos = p;
 }
 
 

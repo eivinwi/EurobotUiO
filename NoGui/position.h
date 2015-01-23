@@ -9,15 +9,15 @@
 #ifndef POSITION_H
 #define POSITION_H
 
-#include "rotation.h"
 #include "md49.h"
 #include "printing.h"
-#include <unistd.h>
-#include <time.h>
-#include <string>
-#include <sstream>
+#include "rotation.h"
 #include <math.h>
 #include <mutex>
+#include <string>
+#include <sstream>
+#include <time.h>
+#include <unistd.h>
 
 
 class Position {

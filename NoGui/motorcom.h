@@ -11,11 +11,11 @@
 #ifndef MOTORCOM_H
 #define	MOTORCOM_H
 
-#include "serialsim.h"
-#include "serial.h"
 #include "printing.h"
-#include <stdint.h>
+#include "serial.h"
+#include "serialsim.h"
 #include <cstring>
+#include <stdint.h>
 
 #define LEFT 1
 #define RIGHT 2

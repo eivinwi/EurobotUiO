@@ -1,14 +1,14 @@
-main.o: main.cpp motorcom.h serialsim.h printing.h md49.h serial.h \
- liftcom.h protocol.h poscontrol.h position.h rotation.h goalposition.h
-motorcom.o: motorcom.cpp motorcom.h serialsim.h printing.h md49.h \
- serial.h
-liftcom.o: liftcom.cpp liftcom.h serial.h md49.h printing.h protocol.h
+main.o: main.cpp motorcom.h printing.h serial.h md49.h serialsim.h \
+ liftcom.h protocol.h poscontrol.h goalposition.h rotation.h position.h
+motorcom.o: motorcom.cpp motorcom.h printing.h serial.h md49.h \
+ serialsim.h
+liftcom.o: liftcom.cpp liftcom.h protocol.h printing.h serial.h md49.h
 serial.o: serial.cpp serial.h md49.h printing.h
-serialsim.o: serialsim.cpp serialsim.h printing.h md49.h
-poscontrol.o: poscontrol.cpp poscontrol.h motorcom.h serialsim.h \
- printing.h md49.h serial.h liftcom.h protocol.h position.h rotation.h \
- goalposition.h
-position.o: position.cpp position.h rotation.h printing.h md49.h
-goalposition.o: goalposition.cpp goalposition.h rotation.h printing.h \
- md49.h
-rotation.o: rotation.cpp rotation.h printing.h md49.h
+serialsim.o: serialsim.cpp serialsim.h md49.h printing.h
+poscontrol.o: poscontrol.cpp poscontrol.h goalposition.h rotation.h \
+ md49.h printing.h liftcom.h protocol.h serial.h motorcom.h serialsim.h \
+ position.h
+position.o: position.cpp position.h md49.h printing.h rotation.h
+goalposition.o: goalposition.cpp goalposition.h rotation.h md49.h \
+ printing.h
+rotation.o: rotation.cpp rotation.h md49.h printing.h
