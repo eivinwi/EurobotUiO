@@ -12,12 +12,10 @@
 #include "md49.h"
 #include "printing.h"
 #include "rotation.h"
-#include <math.h>
 #include <mutex>
 #include <string>
 #include <sstream>
 #include <time.h>
-#include <unistd.h>
 
 
 class Position {

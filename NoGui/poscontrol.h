@@ -34,10 +34,7 @@
 #include <sstream>
 #include <thread>
 #include <time.h>
-#include <unistd.h>
 #include <vector>
-
-//#define PI 3.14159265
 
 // Game area resolution in mm:
 #define XRES 30000

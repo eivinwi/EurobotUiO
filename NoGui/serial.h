@@ -14,16 +14,9 @@
 #include "printing.h"
 #include <bitset>
 #include <chrono>
-#include <cstdlib>
-#include <cstring>
-#include <ctime>
-#include <iomanip>
-#include <iostream>
 #include <SerialStream.h>
-#include <sstream>
-#include <stdint.h>
 #include <string>
-#include <unistd.h>
+
  
 using namespace LibSerial ;
 
@@ -43,8 +36,7 @@ public:
 
 private:
     SerialStream serial;
-//    SerialPort serial;
-
+    
 };
 
 #endif	/* SERIAL_H */

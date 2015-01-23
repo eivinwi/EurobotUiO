@@ -18,11 +18,11 @@
 #include "md49.h"
 #include "printing.h"
 
-#include <unistd.h>
+#include <atomic>
+#include <math.h>
 #include <string>
 #include <sstream>
-#include <math.h>
-#include <atomic>
+#include <unistd.h>
 
 class GoalPosition {
 public:

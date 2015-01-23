@@ -12,7 +12,6 @@
 #include "md49.h"
 #include "printing.h"
 #include <atomic>
-#include <iostream>
 
 #define ENC_PER_DEGREE 6.2 //7.5
 

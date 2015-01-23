@@ -26,6 +26,7 @@
 #include <mutex>
 #include <zmq.hpp>
 #include <iostream>
+#include <iomanip>
 INITIALIZE_EASYLOGGINGPP
 
 #ifndef ELPP_THREAD_SAFE

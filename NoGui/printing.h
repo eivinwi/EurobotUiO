@@ -8,7 +8,6 @@
 #define	PRINTING_H
 
 #include <chrono>
-#include <ctime>
 #include <easylogging++.h>
 #include <iostream>
 
