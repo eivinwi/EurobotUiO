@@ -306,6 +306,7 @@ bool checkArguments(int argc, char *argv[]) {
                 break;
             case 'l':
                 //lift_serial = std::to_string(optarg);
+                lift_serial = optarg;
                 PRINTLINE("[SETUP]    lift arg=" << optarg);
                 break;
             case '?':
@@ -314,11 +315,11 @@ bool checkArguments(int argc, char *argv[]) {
                 } else if(optopt == 'l') {
                     PRINTLINE("Option -l requires an argument.");                    
                 } else {
-                    LOG(WARNING) << "Unknown cmd-option. (-h for help).";
+                    PRINTLINE("Unknown cmd-option. (-h for help).");
                 }
                 break;                
             default:
-                LOG(WARNING) << "Invalid cmd-option. (-h for help).";
+                PRINTLINE("Invalid cmd-option. (-h for help).");
                 break;
         }
     }

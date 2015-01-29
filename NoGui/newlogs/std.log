@@ -1212,3 +1212,129 @@
 17:34:54,599 INFO  [LIFT] Successful movement
 17:34:54,599 INFO  [POS] action 8 completed.
 17:37:05,615 ERROR Program interrupted by user
+13:34:54,812 INFO  [SETUP] Attaching crashHandler
+13:34:54,812 INFO  [SETUP] creating MotorCom
+13:34:54,812 INFO  [SETUP] creating LiftCom
+13:34:54,812 INFO  [SETUP] starting and flushing serials
+13:34:54,812 INFO  [MOTOR]    Starting serial at: ttyUSB0
+13:34:54,812 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
+13:34:54,812 INFO  [SERIAL]     Serial port open.
+13:34:54,813 INFO  [LIFT] 	 Starting serial at: ttyUSB1
+13:34:54,813 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB1
+13:34:54,813 INFO  [SERIAL]     Serial port open.
+13:34:57,159 ERROR Program interrupted by user
+13:36:26,141 INFO  [SETUP] Attaching crashHandler
+13:36:26,141 INFO  [SETUP] creating MotorCom
+13:36:26,141 INFO  [SETUP] creating LiftCom
+13:36:26,141 INFO  [SETUP] starting and flushing serials
+13:36:26,141 INFO  [MOTOR]    Starting serial at: ttyUSB0
+13:36:26,141 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
+13:36:26,141 INFO  [SERIAL]     Serial port open.
+13:36:26,141 INFO  [LIFT] 	 Starting serial at: ttyUSB1
+13:36:26,141 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB1
+13:36:26,141 INFO  [SERIAL]     Serial port open.
+13:36:29,069 ERROR Program interrupted by user
+13:36:31,706 INFO  [SETUP] Attaching crashHandler
+13:36:31,706 INFO  [SETUP] creating MotorCom
+13:36:31,706 INFO  [SETUP] creating LiftCom
+13:36:31,706 INFO  [SETUP] starting and flushing serials
+13:36:31,706 INFO  [MOTOR]    Starting serial at: ttyUSB0
+13:36:31,706 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB0
+13:36:31,706 INFO  [SERIAL]     Serial port open.
+13:36:31,706 INFO  [LIFT] 	 Starting serial at: ttyUSB1
+13:36:31,706 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB1
+13:36:31,706 INFO  [SERIAL]     Serial port open.
+13:36:34,714 ERROR Program interrupted by user
+12:44:39,926 INFO  [SETUP] Attaching crashHandler
+12:44:39,927 INFO  [SETUP] creating MotorCom
+12:44:39,927 INFO  [SETUP] creating LiftCom
+12:44:39,927 INFO  [SETUP] starting and flushing serials
+12:44:39,927 INFO  [MOTOR]     Starting serial simulator
+12:44:39,927 INFO  [LIFT] 	 Starting serial at: ttyUSB1
+12:44:39,928 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB1
+12:44:39,928 INFO  [SERIAL]     Serial port open.
+12:44:40,028 INFO  [SETUP] resetting encoders
+12:44:40,033 INFO  [SETUP] initializing PosControl
+12:44:40,033 INFO  [SETUP] initializing readLoop thread
+12:44:40,034 INFO  [COM] starting
+12:44:40,039 INFO  [SETUP] initializing controlLoop thread
+12:44:40,044 INFO  [SETUP] Acceleration is: 5, setting new acceleration: 1
+12:44:40,046 INFO  [SETUP] Mode is: 0x228d670, setting new mode: 0
+12:44:40,068 INFO  [SETUP] Complete, testing_enabled components:
+
+12:44:40,068 INFO  [TEST] Logging:                              [0;32m[ok][0m
+12:44:40,068 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
+12:44:40,068 INFO  [TEST]     sSerial open                      [0;32m[ok][0m
+12:44:40,068 INFO  [TEST] LiftCom active                        [0;32m[ok][0m
+12:44:40,068 INFO  [TEST]     Serial open                       [0;32m[ok][0m
+12:44:40,068 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+12:44:40,068 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+12:44:40,068 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+12:44:40,068 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
+12:44:40,068 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
+12:44:40,068 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
+12:44:40,069 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
+12:44:40,069 INFO  [SETUP] testing_enabled completed, waiting for client input
+12:44:42,575 ERROR Program interrupted by user
+12:44:45,374 INFO  [SETUP] Attaching crashHandler
+12:44:45,374 INFO  [SETUP] creating MotorCom
+12:44:45,374 INFO  [SETUP] creating LiftCom
+12:44:45,374 INFO  [SETUP] starting and flushing serials
+12:44:45,374 INFO  [MOTOR]     Starting serial simulator
+12:44:45,374 INFO  [LIFT] 	 Starting serial at: ttyUSB1
+12:44:45,374 INFO  [SERIAL]     Opening serial port: /dev/ttyUSB1
+12:44:45,374 INFO  [SERIAL]     Serial port open.
+12:44:45,474 INFO  [SETUP] resetting encoders
+12:44:45,480 INFO  [SETUP] initializing PosControl
+12:44:45,480 INFO  [SETUP] initializing readLoop thread
+12:44:45,480 INFO  [COM] starting
+12:44:45,485 INFO  [SETUP] initializing controlLoop thread
+12:44:45,491 INFO  [SETUP] Acceleration is: 5, setting new acceleration: 1
+12:44:45,493 INFO  [SETUP] Mode is: 0xb51670, setting new mode: 0
+12:44:45,514 INFO  [SETUP] Complete, testing_enabled components:
+
+12:44:45,514 INFO  [TEST] Logging:                              [0;32m[ok][0m
+12:44:45,515 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
+12:44:45,515 INFO  [TEST]     sSerial open                      [0;32m[ok][0m
+12:44:45,515 INFO  [TEST] LiftCom active                        [0;32m[ok][0m
+12:44:45,515 INFO  [TEST]     Serial open                       [0;32m[ok][0m
+12:44:45,515 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+12:44:45,515 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+12:44:45,515 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+12:44:45,515 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
+12:44:45,515 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
+12:44:45,515 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
+12:44:45,516 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
+12:44:45,516 INFO  [SETUP] testing_enabled completed, waiting for client input
+12:44:47,575 ERROR Program interrupted by user
+12:45:50,855 INFO  [SETUP] Attaching crashHandler
+12:45:50,855 INFO  [SETUP] creating MotorCom
+12:45:50,855 INFO  [SETUP] creating LiftCom
+12:45:50,855 INFO  [SETUP] starting and flushing serials
+12:45:50,855 INFO  [MOTOR]     Starting serial simulator
+12:45:50,855 INFO  [LIFT] 	 Starting serial at: =ttyACM0
+12:45:50,855 INFO  [SERIAL]     Opening serial port: /dev/=ttyACM0
+12:45:50,855 INFO  [SERIAL]     Serial port open.
+12:45:50,955 INFO  [SETUP] resetting encoders
+12:45:50,960 INFO  [SETUP] initializing PosControl
+12:45:50,961 INFO  [SETUP] initializing readLoop thread
+12:45:50,961 INFO  [COM] starting
+12:45:50,966 INFO  [SETUP] initializing controlLoop thread
+12:45:50,971 INFO  [SETUP] Acceleration is: 5, setting new acceleration: 1
+12:45:50,974 INFO  [SETUP] Mode is: 0x2393670, setting new mode: 0
+12:45:50,995 INFO  [SETUP] Complete, testing_enabled components:
+
+12:45:50,995 INFO  [TEST] Logging:                              [0;32m[ok][0m
+12:45:50,995 INFO  [TEST] MotorCom active                       [0;32m[ok][0m
+12:45:50,995 INFO  [TEST]     sSerial open                      [0;32m[ok][0m
+12:45:50,995 INFO  [TEST] LiftCom active                        [0;32m[ok][0m
+12:45:50,995 INFO  [TEST]     Serial open                       [0;32m[ok][0m
+12:45:50,996 INFO  [TEST] PosControl active                     [0;32m[ok][0m
+12:45:50,996 INFO  [TEST] Read_thread running                   [0;32m[ok][0m
+12:45:50,996 INFO  [TEST] Pos_thread running                    [0;32m[ok][0m
+12:45:50,996 INFO  [TEST] Voltage = 24v                         [0;32m[ok][0m
+12:45:50,996 INFO  [TEST] MD49_Error = 0                        [0;32m[ok][0m
+12:45:50,996 INFO  [TEST] Acceleration = 1                      [0;32m[ok][0m
+12:45:50,996 INFO  [TEST] Mode = 0                              [0;32m[ok][0m
+12:45:50,996 INFO  [SETUP] testing_enabled completed, waiting for client input
+12:45:53,989 ERROR Program interrupted by user
