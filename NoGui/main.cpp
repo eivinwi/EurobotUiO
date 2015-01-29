@@ -51,7 +51,7 @@ LiftCom *l;
 PosControl *p;
 std::mutex read_mutex;
 
-int ACCELERATION = 1;
+int ACCELERATION = 10;
 int MODE = 0;
 bool sim_enabled = false;
 bool sound_enabled = false;
@@ -337,6 +337,10 @@ void configureLogger() {
     defaultConf.set(el::Level::Global, 
         el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/NoGui/newlogs/std.log"
     );
+    defaultConf.set(el::Level::Global,
+        el::ConfigurationType::ToStandardOutput, "TRUE"
+    );
+
 
     if(log_to_file) {
         defaultConf.setGlobally( el::ConfigurationType::ToFile, "TRUE"); 

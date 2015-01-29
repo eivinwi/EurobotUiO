@@ -173,7 +173,7 @@ void MotorCom::getEncoders() {
     result2 += readFromSerialNoWait() << 16ul;
     result2 += readFromSerialNoWait() << 8ul;
     result2 += readFromSerialNoWait();
-    LOG(DEBUG) << "[MOTOR] EncL: " << result1 << "\nEncR" << result2;
+    LOG(INFO) << "[MOTOR] EncL: " << result1 << "\nEncR" << result2;
 }
 
 
@@ -181,8 +181,8 @@ long MotorCom::getEncL() {
     sync();
     writeToSerial(GET_ENCODERL);
     long result = readLongFromSerial();
- //   LOG(DEBUG) << "[MOTOR] EncL: " << result << " (diff: " << (result - prev_encL) << ")\nWheel rotations: " <<  ((result-prev_encL)/980.0) << 
-   //             "\nDistance: " << (result - prev_encL)*0.385;
+   // LOG(INFO) << "[MOTOR] EncL: " << result << " (diff: " << (result - prev_encL) << ")\nWheel rotations: " <<  ((result-prev_encL)/980.0) << 
+     //           "\nDistance: " << (result - prev_encL)*0.385;
     prev_encL = result;
     return result;
 }
@@ -192,8 +192,8 @@ long MotorCom::getEncR() {
     sync();
     writeToSerial(GET_ENCODERR);
     long result = readLongFromSerial();
-   // LOG(DEBUG) << "[MOTOR] EncR: " << result << " (diff: " << (result - prev_encR) << ")\nWheel rotations: " 
-     //   << ((result - prev_encR)/980.0) << "\nDistance: " << ((result - prev_encR)*0.385);
+    //LOG(INFO) << "[MOTOR] EncR: " << result << " (diff: " << (result - prev_encR) << ")\nWheel rotations: " 
+    //    << ((result - prev_encR)/980.0) << "\nDistance: " << ((result - prev_encR)*0.385);
     prev_encR = result;
     return result;
 }

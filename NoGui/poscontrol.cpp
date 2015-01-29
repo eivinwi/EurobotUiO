@@ -152,7 +152,6 @@ void PosControl::controlLoop() {
 
 void PosControl::goToRotation() {
 	LOG(DEBUG) << "[POS] goToRotation " << curPos->getAngle() << "->" << goalPos->getAngle();
-	resetEncoders(); //here??	 
 	float distR = 0.0;
 //	bool rotated = false;
 //	if(closeEnoughX() && closeEnoughY() && !closeEnoughAngle()) {
@@ -181,7 +180,6 @@ void PosControl::goToRotation() {
 void PosControl::goToPosition() {
 	LOG(DEBUG) << "[POS] goToPosition (" << curPos->getX() << "," << curPos->getY() << ") -> (" << goalPos->getX() << "," << goalPos->getY() << ")";
 
-	resetEncoders(); //CHECK: here??
 	float distX = distanceX(); 
 	float distY = distanceY();
 	float distR = 0.0;
@@ -219,7 +217,7 @@ void PosControl::goToPosition() {
 				updatePosition();
 			} 
 			logTrace();
-			usleep(2000);
+			usleep(3000);
 		} while(!inGoal());
 	}
 
@@ -315,6 +313,10 @@ void PosControl::drive(float dist) {
 
 
 void PosControl::completeCurrent() {
+	fullStop();
+	LOG(DEBUG) << "THREAD [" << std::this_thread::get_id() << "] is sleeping";
+	usleep(1000000);
+	LOG(DEBUG) << "THREAD [" << std::this_thread::get_id() << "] is awake";
 	working = false;
 	if(completed_actions[goalPos->getId()]) {
 		LOG(INFO) << "[POS] action " << goalPos->getId() << " was already finished.";
@@ -322,10 +324,6 @@ void PosControl::completeCurrent() {
 		LOG(INFO) << "[POS] action " << goalPos->getId() << " completed.";	
 		completed_actions[goalPos->getId()] = true;
 	}
-	fullStop();
-	LOG(INFO) << "THREAD [" << std::this_thread::get_id() << "] is sleeping";
-	usleep(1000000);
-	LOG(INFO) << "THREAD [" << std::this_thread::get_id() << "] is awake";
 }
 
 
@@ -387,7 +385,8 @@ void PosControl::updatePosition() {
 		return;
 	}
 
-	LOG(DEBUG) << "L: " << leftEncoder.diffDist << "  R: " << rightEncoder.diffDist;
+	LOG(INFO) << "L: " << leftEncoder.diffDist << "  R: " << rightEncoder.diffDist;
+	LOG(INFO) << "Lt: " << leftEncoder.total << " Rt: " << rightEncoder.total;
 	float avg_dist = (abs(leftEncoder.diffDist) + abs(rightEncoder.diffDist)) / 2;
 	
 	float x_distance = cos_d(angle)*avg_dist; //45 = +
@@ -402,6 +401,10 @@ void PosControl::updatePosition() {
 void PosControl::updateRotation() {
 	updateLeftEncoder();
 	updateRightEncoder();
+
+
+	LOG(INFO) << "L: " << leftEncoder.diffDist << "  R: " << rightEncoder.diffDist;
+	LOG(INFO) << "Lt: " << leftEncoder.total << " Rt: " << rightEncoder.total;
 
 	//curX and curY should not really be updated
 	// update angle
@@ -446,10 +449,34 @@ void PosControl::resetEncoders() {
 	leftEncoder.prev = 0;
 	leftEncoder.diff = 0;
 	leftEncoder.diffDist = 0;
+	leftEncoder.total = 0;
+	leftEncoder.totalDist = 0;
 	rightEncoder.prev = 0;
 	rightEncoder.diff = 0;
 	rightEncoder.diffDist = 0;	
+	rightEncoder.total = 0;
+	rightEncoder.totalDist = 0;
 	mcom->resetEncoders();
+	PRINTLINE("ENCODERS WAS RESET");
+	usleep(100000);
+/*	PRINTLINE("ENCODERS ARE NOW: ");
+	printEncoder(&leftEncoder);
+	printEncoder(&rightEncoder);
+	updateLeftEncoder();
+	updateRightEncoder();
+	PRINTLINE("Update1 - ENCODERS ARE NOW: ");
+	printEncoder(&leftEncoder);
+	printEncoder(&rightEncoder);
+	updateLeftEncoder();
+	updateRightEncoder();
+	PRINTLINE("Update2 - ENCODERS ARE NOW: ");
+	printEncoder(&leftEncoder);
+	printEncoder(&rightEncoder);
+	updateLeftEncoder();
+	updateRightEncoder();
+	PRINTLINE("Update3 - ENCODERS ARE NOW: ");
+	printEncoder(&leftEncoder);
+	printEncoder(&rightEncoder); */
 }
 
 
@@ -564,4 +591,20 @@ float PosControl::sin_d(float angle) {
 
 float PosControl::cos_d(float angle) {
 	return cos(angle*M_PI/180);
+}
+
+void PosControl::printEncoder(struct encoder *e) {
+	PRINTLINE("prev: " << e->prev);
+	PRINTLINE("diff: " << e->diff);
+	PRINTLINE("diffDist: " << e->diffDist);
+	PRINTLINE("total: " << e->total);
+	PRINTLINE("totalDist: " << e->totalDist);
+
+	/*
+	long prev;
+	long diff;
+	float diffDist;
+	long total;
+	float totalDist;
+	*/
 }

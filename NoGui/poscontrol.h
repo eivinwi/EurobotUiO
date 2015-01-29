@@ -111,6 +111,8 @@ private:
 	float sin_d(float angle);
 	float cos_d(float angle);
 
+	void printEncoder(struct encoder *e);
+
 	std::queue <qPos>q;
 	std::mutex qMutex;
 	std::condition_variable notifier;
