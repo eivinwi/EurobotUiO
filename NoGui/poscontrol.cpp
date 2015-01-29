@@ -137,14 +137,12 @@ void PosControl::controlLoop() {
 		else {
 			if(qp.type == ROTATION) {
 				curPos->setAngle(goalPos->getAngle());
-				completeCurrent();
 			} else if(qp.type == POSITION) {
 				curPos->set(goalPos->getX(), goalPos->getY(), curPos->getAngle());
-				completeCurrent();
 			} else if(qp.type == LIFT) {
 				lcom->setCurrentPos(qp.argument);
-				completeCurrent();
 			}
+			completeCurrent();
 		}
 		logTrace();
 	}
@@ -324,9 +322,10 @@ void PosControl::completeCurrent() {
 		LOG(INFO) << "[POS] action " << goalPos->getId() << " completed.";	
 		completed_actions[goalPos->getId()] = true;
 	}
-	LOG(DEBUG) << "THREAD [" << std::this_thread::get_id() << "] is sleeping";
-	usleep(100000);
-	LOG(DEBUG) << "THREAD [" << std::this_thread::get_id() << "] is awake";
+	fullStop();
+	LOG(INFO) << "THREAD [" << std::this_thread::get_id() << "] is sleeping";
+	usleep(1000000);
+	LOG(INFO) << "THREAD [" << std::this_thread::get_id() << "] is awake";
 }
 
 
