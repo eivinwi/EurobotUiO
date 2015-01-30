@@ -2,7 +2,6 @@
 /*TODO: 	
  	- use IMU for angle untill beacon system is workinh
  	- should continually check angle instead of once!! (impossible with only encoders)
-	- pooling wait has poor performance (?)
 
 	- Overshoot protection
 */
@@ -16,7 +15,7 @@ struct encoder {
 } leftEncoder, rightEncoder;
 
 
-struct qPos {
+struct Cmd {
 	int id;
 	int x;
 	int y;
@@ -60,7 +59,6 @@ void PosControl::reset() {
 	curSpeedRight = 0;
 	curSpeedLeft = 0;
 	curPos->updatePosString();
-	itr = 0;
 
 	std::fill(std::begin(completed_actions), std::end(completed_actions), false);
 	while(!q.empty()) {
@@ -71,29 +69,29 @@ void PosControl::reset() {
 
 bool PosControl::test() {
 	enqueue(0, 1, 2, 3, 4, NONE);
-	qPos test = dequeue();
+	Cmd test = dequeue();
 	return (test.id == 0 && test.x == 1 && test.y == 2 && test.rot == 3 && test.argument == 4 && test.type == NONE);
 }
 
 
 void PosControl::enqueue(int id, int x, int y, float rot, int arg, int type) {
-	qPos qp = {id, x, y, rot, arg, type};
+	Cmd  cmd= {id, x, y, rot, arg, type};
 	std::lock_guard<std::mutex> lock(qMutex);	
-	q.push(qp);
+	q.push(cmd);
 	notifier.notify_one();
 }
 
 
-qPos PosControl::dequeue() {
+Cmd PosControl::dequeue() {
 	std::unique_lock<std::mutex> lock(qMutex);
 	while(q.empty()) {
 		notifier.wait(lock); //alternative implementation try_unlock with crono ms-timeout
 	}
 
-	qPos qp = q.front();
+	Cmd cmd = q.front();
 	q.pop();
 	usleep(100);
-	return qp;
+	return cmd;
 }
 
 
@@ -106,7 +104,6 @@ void PosControl::setGoalRotation(int rot) {
 
 
 //CHECK: should check rotation? (probably not)
-// sets the new goal pos. 360* == 0*
 void PosControl::setGoalPosition(int x, int y) {
 	LOG(DEBUG) << "[POS] setGoalPos(" << x << "," << y << ")";
 	goalPos->setPosition(x, y);
@@ -114,33 +111,31 @@ void PosControl::setGoalPosition(int x, int y) {
 }
 
 
-//runs in its own thread, initialized in main.cpp
 void PosControl::controlLoop() {
 	pos_running = true;
 	while(true) {
-		qPos qp = dequeue();
+		Cmd cmd = dequeue();
 		working = true;
 
-		//create goalPos from qp
-		goalPos = new GoalPosition(qp.id, qp.x, qp.y, qp.rot);
-		LOG(INFO) << "[POS] [" << std::this_thread::get_id() << "]dequeued qPos {" << qp.id << "," << qp.x << "," << qp.y << "," << qp.rot << "," << qp.type << "}";
+		goalPos = new GoalPosition(cmd.id, cmd.x, cmd.y, cmd.rot);
+		LOG(INFO) << "[POS] [" << std::this_thread::get_id() << "]dequeued Cmd {" << cmd.id << "," << cmd.x << "," << cmd.y << "," << cmd.rot << "," << cmd.type << "}";
 		
 		if(!testing) {
-			if(qp.type == ROTATION) {
+			if(cmd.type == ROTATION) {
 				goToRotation();
-			} else if(qp.type == POSITION) {
+			} else if(cmd.type == POSITION) {
 				goToPosition();
-			} else if(qp.type == LIFT) {
-				goToLift(qp.argument);	
+			} else if(cmd.type == LIFT) {
+				goToLift(cmd.argument);	
 			}
 		} 
 		else {
-			if(qp.type == ROTATION) {
+			if(cmd.type == ROTATION) {
 				curPos->setAngle(goalPos->getAngle());
-			} else if(qp.type == POSITION) {
+			} else if(cmd.type == POSITION) {
 				curPos->set(goalPos->getX(), goalPos->getY(), curPos->getAngle());
-			} else if(qp.type == LIFT) {
-				lcom->setCurrentPos(qp.argument);
+			} else if(cmd.type == LIFT) {
+				lcom->setCurrentPos(cmd.argument);
 			}
 			completeCurrent();
 		}
@@ -153,8 +148,6 @@ void PosControl::controlLoop() {
 void PosControl::goToRotation() {
 	LOG(DEBUG) << "[POS] goToRotation " << curPos->getAngle() << "->" << goalPos->getAngle();
 	float distR = 0.0;
-//	bool rotated = false;
-//	if(closeEnoughX() && closeEnoughY() && !closeEnoughAngle()) {
 	if(!closeEnoughAngle()) {
 		do {
 
@@ -250,7 +243,6 @@ float PosControl::updateDist(float angle, float distX, float distY) {
 
 //TODO: get input from IMU
 //need exact rotation to do small angle adjustments
-//CHECK: could make turning more accurate
 void PosControl::rotate(float distR) {
 	LOG(DEBUG) << "[POS] turning: ";
 	if(distR == 0) {
@@ -281,8 +273,7 @@ void PosControl::drive(float dist) {
 	if(closeEnoughAngle()) {
 		LOG(DEBUG) << "[POS] driving with rotation:" << rotation << " dist:" << dist;
 
-		//reset encoders??
-		//unneccsary test?
+		//CHECK: unneccsary test?
 		if(!inGoal()) {
 			if(dist < 0) {
 				if(dist < -SLOWDOWN_MAX_DIST) {
@@ -402,12 +393,9 @@ void PosControl::updateRotation() {
 	updateLeftEncoder();
 	updateRightEncoder();
 
-
 	LOG(INFO) << "L: " << leftEncoder.diffDist << "  R: " << rightEncoder.diffDist;
 	LOG(INFO) << "Lt: " << leftEncoder.total << " Rt: " << rightEncoder.total;
 
-	//curX and curY should not really be updated
-	// update angle
 	curPos->updateAngle(leftEncoder.diff, rightEncoder.diff);
 }
 
@@ -457,26 +445,7 @@ void PosControl::resetEncoders() {
 	rightEncoder.total = 0;
 	rightEncoder.totalDist = 0;
 	mcom->resetEncoders();
-	PRINTLINE("ENCODERS WAS RESET");
-	usleep(100000);
-/*	PRINTLINE("ENCODERS ARE NOW: ");
-	printEncoder(&leftEncoder);
-	printEncoder(&rightEncoder);
-	updateLeftEncoder();
-	updateRightEncoder();
-	PRINTLINE("Update1 - ENCODERS ARE NOW: ");
-	printEncoder(&leftEncoder);
-	printEncoder(&rightEncoder);
-	updateLeftEncoder();
-	updateRightEncoder();
-	PRINTLINE("Update2 - ENCODERS ARE NOW: ");
-	printEncoder(&leftEncoder);
-	printEncoder(&rightEncoder);
-	updateLeftEncoder();
-	updateRightEncoder();
-	PRINTLINE("Update3 - ENCODERS ARE NOW: ");
-	printEncoder(&leftEncoder);
-	printEncoder(&rightEncoder); */
+	usleep(10000);
 }
 
 
@@ -511,17 +480,6 @@ float PosControl::distanceY() {
 float PosControl::distanceAngle() {
 	float dist = curPos->distanceRot(goalPos->getAngle());
 	return dist;
-}
-
-//CHECK: unused?
-float PosControl::average(long a, long b) {
-	//TODO: negative values!!!
-	return (a - b)/2; 
-}
-
-
-bool PosControl::closeEnoughEnc(long a, long b) {
-	return ((abs(a) - abs(b)) < 20);
 }
 
 
@@ -566,7 +524,6 @@ void PosControl::printGoal() {
 }
 
 
-//CHECK: unused?
 void PosControl::printDist() {
 	PRINTLINE("[POS] dist: " << distanceX() << "," << distanceY() << "," << distanceAngle());
 }
