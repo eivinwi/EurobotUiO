@@ -36,19 +36,13 @@
 #include <time.h>
 #include <vector>
 
-// Game area resolution in mm:
-#define XRES 30000
-#define YRES 20000
-
-#define REASONABLE_ENC_DIFF 980 // == one rotation. Sould possibly be smaller
-#define TOO_LONG 20             //timeout in ms. Currently not in use (?)
 
 //type definitions
 #define NONE 0
 #define ROTATION 1
 #define POSITION 2
 
-#define ACTION_STORAGE 200
+#define ACTION_STORAGE 500
 
 class PosControl {
 public:

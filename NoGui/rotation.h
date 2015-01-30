@@ -13,8 +13,6 @@
 #include "printing.h"
 #include <atomic>
 
-#define ENC_PER_DEGREE 6.2 //7.5
-
 class Rotation {
 public:
     Rotation();
