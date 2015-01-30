@@ -156,6 +156,10 @@ private:
 	void updateRightEncoder();
 
 	// Zeros out the encoder structs and sends reset-command to motor controller
+	// Should only be called at program startup and if something is wrong.
+	// Fun facts:
+	// 32bit: Robot can drive 859km before encoder values overflow ~= 0.13*(earth radius)
+	// 64bit: Robot can drive 3.7*10^12 km before overflow ~= 0.39 light years
 	void resetEncoders();
 
 	// DEBUGING: Prints goal position to terminal
