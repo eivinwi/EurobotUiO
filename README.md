@@ -31,14 +31,14 @@ While standing in Program directory:
 -l <port>: set lift serial port (default: ttyUSB1)
 ```
 
-| arg  | Description |
-|------|--------------------------------------------------------|
-|  -s  | enable simulation of serial-ports.
-|  -t  | enable testing mode (commands finish instantly).
-|  -d  | enables extra debug-logging to separate debug.log.
-|  -n  | disable the default info-logging to file.
-|-m <p>| sets argument p as motor serial port (default: ttyUSB0)
-|-n <p>| sets argument p as lift serial port (default: ttyUSB1)
+| Argument | Description |
+|----------|---------------------------------------------------------------|
+|    -s    | enable simulation of serial-ports.
+|    -t    | enable testing mode (commands finish instantly).
+|    -d    | enables extra debug-logging to separate debug.log.
+|    -n    | disable the default info-logging to file.
+| -m 'port'| sets argument port as motor serial port (default: ttyUSB0)
+| -n 'port'| sets argument port as lift serial port (default: ttyUSB1)
 
 ### Examples
 
