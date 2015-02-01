@@ -1,18 +1,33 @@
-/* 
- * File: poscontrol.h
- * Author: Eivind Wikheim
+/*
+ *  File: poscontrol.h
+ *  Author: Eivind Wikheim
  *
- * Controls the motors by sending commands to MotorCom. commandLoop() runs 
- * continuosly in an own thread, and moves the robot while curPos is not close
- * enough to goalPos. 
+ *	PosControl controls navigation and tool movement via MotorCom and LiftCom objects respectively. 
+ *  commandLoop() runs continuosly in its own thread, initialized in main.cpp.
  *
+ *  Copyright (c) 2015 Eivind Wikheim <eivinwi@ifi.uio.no>. All Rights Reserved.
  *
- * TODO:
- * - tune algorithms for accuracy
- * - encoders in own class?
+ *  This file is part of EurobotUiO.
  *
- * The resolution of the positioning system is 3000x2000, where 1 = 1cm
+ *  EurobotUiO is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  EurobotUiO is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with EurobotUiO.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+// TODO:
+// - tune algorithms for accuracy (wait for new wheels)
+// - encoders in own class?
+//
+//  The resolution of the positioning system is 3000x2000, where 1 = 1cm
 
 #ifndef POSCONTROL_H
 #define POSCONTROL_H

@@ -1,13 +1,31 @@
-/* 
- * File: motorcom.h
- * Author: Eivind Wikheim
+/*
+ *  File: liftcom.h
+ *  Author: Eivind Wikheim
  *
- * Implements a interface for working with the MD49 motor controller, either via serial
- * or serialsim (decided in main.cpp based on program arguments). 
+ *  LiftCom implements a interface controlling lift/gripper parts via an arduino, 
+ *  either via serial or serialsim (decided in main.cpp based on program arguments).
  *
- * TODO: some of the methods should be private
+ *  Copyright (c) 2015 Eivind Wikheim <eivinwi@ifi.uio.no>. All Rights Reserved.
+ *
+ *  This file is part of EurobotUiO.
+ *
+ *  EurobotUiO is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  EurobotUiO is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with EurobotUiO.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+
+// TODO: some of the methods should be private
 #ifndef LIFTCOM_H
 #define	LIFTCOM_H
 

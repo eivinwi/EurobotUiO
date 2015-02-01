@@ -1,15 +1,34 @@
 /*
- * File:   main.cpp
- * Author: Eivind
+ *  File: main.cpp
+ *  Author: Eivind Wikheim
  *
- * Created on 26. september 2014, 14:15
+ *  Main implements a ZMQ server for communication with AI, reads commandline-arguments, 
+ *  creates necessary class objects, starts threads and performs testing.
  *
- * TODO: 
- *      - com should perhaps return more verbose error-messages to clients
- *      - noCom for program startup without read/write threads (probably not)
- *      - sound
+ *  Copyright (c) 2015 Eivind Wikheim <eivinwi@ifi.uio.no>. All Rights Reserved.
+ *
+ *  This file is part of EurobotUiO.
+ *
+ *  EurobotUiO is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  EurobotUiO is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with EurobotUiO.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+ // TODO: 
+ //      - com should perhaps return more verbose error-messages to clients
+ //     - noCom for program startup without read/write threads (probably not)
+ //     - sound
+ 
 #include "motorcom.h"
 #include "liftcom.h"
 #include "poscontrol.h"

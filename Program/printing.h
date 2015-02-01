@@ -1,9 +1,27 @@
-/*  
- * File: printing.h
- * Author: Eivind Wikheim
+/*
+ *  File: printing.h
+ *  Author: Eivind Wikheim
  *
- * Debug print macros
+ *	Printing contains various debug printing macros.
+ *
+ *  Copyright (c) 2015 Eivind Wikheim <eivinwi@ifi.uio.no>. All Rights Reserved.
+ *
+ *  This file is part of EurobotUiO.
+ *
+ *  EurobotUiO is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  EurobotUiO is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with EurobotUiO.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #ifndef PRINTING_H
 #define	PRINTING_H
 
@@ -11,22 +29,10 @@
 #include <easylogging++.h>
 #include <iostream>
 
+// Definition to make Easylogging++ thread-safe
 #ifndef ELPP_THREAD_SAFE
 #define ELPP_THREAD_SAFE
 #endif
-
-/* Logging print levels:
-Global 		Generic level that represents all levels. Useful when setting global configuration for all levels.
-Trace 		Information that can be useful to back-trace certain events - mostly useful than debug logs.
-Debug 		Informational events most useful for developers to debug application. Only applicable if NDEBUG is not defined (for non-VC++) or _DEBUG is defined (for VC++).
-Fatal 		Very severe error event that will presumably lead the application to abort.
-Error 		Error information but will continue application to keep running.
-Warning 	Information representing errors in application but application will keep running.
-Info 		Mainly useful to represent current progress of application.
-Verbose 	Information that can be highly useful and vary with verbose logging level. Verbose logging is not applicable to hierarchical logging.
-Unknown 	Only applicable to hierarchical logging and is used to turn off logging completely.
-*/
-
 
 #ifdef DEBUG
 #define DBP(x) std::cerr << x;
