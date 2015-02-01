@@ -6,11 +6,11 @@ This part of the project contains the navigation and position control.
 
 ## Compilation
 While in Program directory:
-```
-make      :  compiles default program   
-make debug:  compiles program with extra debug printing
-make clean:  removes compiled files
-```
+| Argument | Description |
+|----------|---------------------------------------------------------------|
+| make     | compiles default program
+|make debug| compiles program with extra debug printing	
+|make clean| removes compiled files
 
 
 ## Running
