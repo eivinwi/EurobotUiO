@@ -6,6 +6,7 @@ This part of the project contains the navigation and position control.
 
 ## Compilation
 While in Program directory:
+
 | Argument | Description |
 |----------|---------------------------------------------------------------|
 | make     | compiles default program
