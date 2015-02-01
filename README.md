@@ -34,10 +34,10 @@ While standing in directory Program:
 ### Examples
 
 ##### Run program 
-./exec
+```./exec```
 
 ##### Run program with testing+simulation functionality
-./exec -s -t 
+```./exec -s -t```
 
 ##### Run program on different motor serial-port
-./exec -m ttyACM0 
+```./exec -m ttyACM0```
