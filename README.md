@@ -53,7 +53,7 @@ While in Program directory:
 
 ## Library installation details
 
-###### Ubuntu packages
+##### Ubuntu packages
 ```
 sudo apt-get install libserial-dev libroot-core-dev libroot-graf2d-postscript-dev libroot-math-physics-dev libroot-graf3d-eve-dev libtool pkg-config build-essential autoconf automake pip python-dev
 ```
