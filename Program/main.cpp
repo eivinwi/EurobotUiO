@@ -33,35 +33,62 @@ INITIALIZE_EASYLOGGINGPP
 #define ELPP_THREAD_SAFE
 #endif
 
-bool checkArguments(int argc, char *argv[]);
-void drive();
-void testDrive();
-int getArguments(std::string input, int *pos);
-bool enqRotation(int num_args, int *args);
-bool enqPosition (int num_args, int *args);
-bool enqAction (int num_args, int *args);
+// Implements a ZMQ server that waits for input from clients. 
+// Used for communication with AI.
 void readLoop();
+
+// Reads command-line arguments. Uses GNU C++ GetOpt standard.
+// Returns true if no invalid arguments
+bool checkArguments(int argc, char *argv[]);
+
+// Used by the readLoop ZMQ-server thread.
+// Splits input from Client on delimiter, fills pos 2d-array with arguments.
+// Returns number of arguments
+int getArguments(std::string input, int *pos);
+
+// Sends rotation-change to PosControl to be added to command-queue
+bool enqRotation(int num_args, int *args);
+
+// Sends position-change to PosControl to be added to command-queue
+bool enqPosition (int num_args, int *args);
+
+// Sends action to PosControl to be added to command-queue
+bool enqAction (int num_args, int *args);
+
+// Test each part of the system after setup is completed, logs and print results.
 void testSystem();
+
+// Custom print to show ok/fail results from testSystem
 void printResult(std::string text, bool success);
+
+// Implemented trough easylogging++. 
+// Catches SIGINT to avoid annoying CTRL-C being handled as a program crash.
+// Prints additional crash information if legitimate program crash.
 void crashHandler(int sig);
 
 
+// Objects 
 MotorCom *m;
 LiftCom *l;
 PosControl *p;
+
+// locking objects while readLoop is writing to them.
 std::mutex read_mutex;
 
-int ACCELERATION = 10;
-int MODE = 0;
+// MD49 constants
+const int ACCELERATION = 10;
+const int MODE = 0;
+
+// Default values, to be changed with command-line arguments
 bool sim_enabled = false;
 bool sound_enabled = false;
 bool com_running = false;
 bool debug_file_enabled = false;
 bool testing_enabled = false;
 bool log_to_file = true;
-
 std::string motor_serial = "ttyUSB0";
 std::string lift_serial = "ttyUSB1";
+
 
 /* Waits for input on socket, mainly position. */
 void readLoop() {
@@ -256,12 +283,6 @@ int getArguments(std::string input, int *pos) {
 }
 
 
-/* Checks cmd-line arguments 
- * return:
- *      true - if good/no arguments
- *      false - if invalid argument exists
- *
-*/
 bool checkArguments(int argc, char *argv[]) {
     LOG(INFO) << "[SETUP] Reading arguments:   ";
     //m->serialSimDisable(); //just because
@@ -279,7 +300,7 @@ bool checkArguments(int argc, char *argv[]) {
                 PRINTLINE("-d: enable debug-file");
                 PRINTLINE("-n: disable logging to file");
                 PRINTLINE("-m <port>: set motor serial port (ex: ttyUSB0)");
-                PRINTLINE("-m <port>: set lift serial port (ex: ttyUSB1)");
+                PRINTLINE("-l <port>: set lift serial port (ex: ttyUSB1)");
                 PRINTLINE("--------------------------------------");
                 break;
             case 's':
