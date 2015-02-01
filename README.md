@@ -33,11 +33,11 @@ While standing in directory Program:
 
 ### Examples
 
-Run program: 
+#### Run program 
 ./exec
 
-Run program with testing+simulation functionality:
+#### Run program with testing+simulation functionality
 ./exec -s -t 
 
-Run program on different motor serial-port:
+#### Run program on different motor serial-port
 ./exec -m ttyACM0 
