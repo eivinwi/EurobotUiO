@@ -2,11 +2,8 @@
 set -x  # Output executed commands
 set -e  # Make script fail as soon as one command fails
 
-#./testclient 2 0 100 100
-#./testclient 2 1 250 150
-#./testclient 3 2 150
-#./testclient 2 3 500 -500
-#./testclient 2 4 0 0
+# Testing Action-part of main program by sending a bunch of lift-commands via testclient.
+# If working correctly the commands should be queued up and performed chronologically.
 
 
 ./testclient 4 0 0
