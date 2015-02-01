@@ -18,7 +18,7 @@ While standing in directory Program:
 ### Running
 While standing in directory Program:
 
-* ./exec
+```./exec```
 
 
 ### Execution parameters
