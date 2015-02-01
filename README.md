@@ -1,4 +1,4 @@
-# Introduction
+## Introduction
 Part of the Eurobot project at UiO. 
 
 This part of the project contains the navigation and position control.
@@ -7,7 +7,7 @@ This part of the project contains the navigation and position control.
 To compile/run the main program, go to directory Program. 
 
 
-## Compilation
+### Compilation
 While standing in directory Program:
 
 * make        - compiles default program   
@@ -15,7 +15,7 @@ While standing in directory Program:
 * make clean  - removes compiled files
 
 
-## Running
+### Running
 While standing in directory Program:
 
 * ./exec
@@ -30,7 +30,7 @@ While standing in directory Program:
 * -l <port>: set lift serial port (ex: ttyUSB1)
 
 
-## Examples
+### Examples
 
 Run program: 
 ./exec
