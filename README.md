@@ -1,10 +1,10 @@
-## Introduction
+# Introduction
 Part of the Eurobot project at UiO. 
 
 This part of the project contains the navigation and position control.
 
 
-### Compilation
+# Compilation
 While in Program directory:
 ```
 make      :  compiles default program   
@@ -12,7 +12,7 @@ make debug:  compiles program with extra debug printing
 make clean:  removes compiled files
 ```
 
-### Running
+# Running
 While in Program directory:
 
 ```
@@ -20,7 +20,7 @@ While in Program directory:
 ```
 
 
-### Execution parameters
+## Execution parameters
 
 | Argument | Description |
 |----------|---------------------------------------------------------------|
@@ -31,7 +31,7 @@ While in Program directory:
 | -m 'port'| sets argument port as motor serial port (default: ttyUSB0)
 | -n 'port'| sets argument port as lift serial port (default: ttyUSB1)
 
-### Examples
+## Examples
 
 ##### Run program 
 ```
@@ -49,7 +49,7 @@ While in Program directory:
 ```
 
 
-### Library installation details
+# Library installation details
 
 ###### Ubuntu packages
 ```
@@ -71,8 +71,7 @@ wget https://github.com/zeromq/cppzmq/blob/master/zmq.hpp
 sudo mv zmq.hpp /usr/local/include
 ```
 
-##### pyzmq
-(for testing with Eurobot-AI)
+##### Pyzmq (for testing with Eurobot-AI)
 http://zeromq.org/bindings:python
 ```
 sudo pip install pyzmq
