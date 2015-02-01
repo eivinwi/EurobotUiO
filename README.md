@@ -9,16 +9,18 @@ To compile/run the main program, go to directory Program.
 
 ### Compilation
 While standing in directory Program:
-
-* make        - compiles default program   
-* make debug  - compiles program with extra debug printing
-* make clean  - removes compiled files
-
+```
+make      :  compiles default program   
+make debug:  compiles program with extra debug printing
+make clean:  removes compiled files
+```
 
 ### Running
 While standing in directory Program:
 
-```./exec```
+```
+./exec
+```
 
 
 ### Execution parameters
@@ -34,10 +36,16 @@ While standing in directory Program:
 ### Examples
 
 ##### Run program 
-```./exec```
+```
+./exec
+```
 
 ##### Run program with testing+simulation functionality
-```./exec -s -t```
+```
+./exec -s -t
+```
 
 ##### Run program on different motor serial-port
-```./exec -m ttyACM0```
+```
+./exec -m ttyACM0
+```
