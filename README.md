@@ -31,8 +31,7 @@ While standing in Program directory:
 -l <port>: set lift serial port (default: ttyUSB1)
 ```
 
-| arg  | 
-Description
+| arg  | Description |
 |------|--------------------------------------------------------|
 |  -s  | enable simulation of serial-ports.
 |  -t  | enable testing mode (commands finish instantly).
