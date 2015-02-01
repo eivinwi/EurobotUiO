@@ -4,11 +4,9 @@ Part of the Eurobot project at UiO.
 This part of the project contains the navigation and position control.
 
 
-To compile/run the main program, go to directory Program. 
-
 
 ### Compilation
-While standing in directory Program:
+While standing in Program directory:
 ```
 make      :  compiles default program   
 make debug:  compiles program with extra debug printing
@@ -16,7 +14,7 @@ make clean:  removes compiled files
 ```
 
 ### Running
-While standing in directory Program:
+While standing in Program directory:
 
 ```
 ./exec
