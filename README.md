@@ -22,14 +22,6 @@ While standing in Program directory:
 
 
 ### Execution parameters
-```
--s: enable simulation of serial
--t: enable test-mode
--d: enable debug-file
--n: disable logging to file
--m <port>: set motor serial port (default: ttyUSB0)
--l <port>: set lift serial port (default: ttyUSB1)
-```
 
 | Argument | Description |
 |----------|---------------------------------------------------------------|
