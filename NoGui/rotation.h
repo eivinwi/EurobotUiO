@@ -18,18 +18,23 @@ public:
     Rotation();
     ~Rotation();
     void reset();
+    void set(double a);
+    double get();
     
     //calculate new angle based on encoders
     void updateAngle(long diffL, long diffR);
+    
+    // Returns distance to goal in positive direction
+    double distanceLeft(double goal);
 
-    void set(float a);
-    float distanceTo(float goal);
-    float distanceLeft(float goal);
-	float distanceRight(float goal);
-    float get();
+    // Returns distance to goal in negative direction
+    double distanceRight(double goal);
+
+    // Returns shortest distance to goal rotation
+    double distanceTo(double goal);
 
 private:
-	float angle;
+	double angle;
     
 };
 

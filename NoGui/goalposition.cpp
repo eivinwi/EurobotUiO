@@ -4,7 +4,7 @@ GoalPosition::GoalPosition() {
 	reset();
 }
 
-GoalPosition::GoalPosition(int n_id, float n_x, float n_y, float r) {
+GoalPosition::GoalPosition(int n_id, double n_x, double n_y, double r) {
 	id = n_id;
 	x = n_x; 
 	y = n_y;
@@ -23,12 +23,13 @@ void GoalPosition::reset() {
 	rotation = 0.0;
 }
 
+
 void GoalPosition::setId(int i) {
 	id = i;
 }
 
 
-void GoalPosition::setAngle(float angle) {
+void GoalPosition::setAngle(double angle) {
 	if(angle > 0.0 && angle < 360.0) {
 		rotation = angle;
 	} else if(angle == 360) {
@@ -36,14 +37,16 @@ void GoalPosition::setAngle(float angle) {
 	}
 }
 
+
 //should perhaps check for reasonable values
-void GoalPosition::setPosition(float n_x, float n_y){
+void GoalPosition::setPosition(double n_x, double n_y){
 	x = n_x;
 	y = n_y;
 }
 
+
 //should not be used!
-void GoalPosition::set(float n_x, float n_y, float n_rotation) {	
+void GoalPosition::set(double n_x, double n_y, double n_rotation) {	
 	PRINTLINE("[GOALPOS] Warning; using deprecated function set(x,y,r)");
 	setPosition(n_x, n_y);
 	setAngle(n_rotation);
@@ -55,17 +58,17 @@ int GoalPosition::getId() {
 }
 
 
-float GoalPosition::getX() {
+double GoalPosition::getX() {
 	return x;
 }
 
 
-float GoalPosition::getAngle() {
+double GoalPosition::getAngle() {
 	return rotation;
 }
 
 
-float GoalPosition::getY() {
+double GoalPosition::getY() {
 	return y;
 }
 

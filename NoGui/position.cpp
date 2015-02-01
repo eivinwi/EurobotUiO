@@ -13,12 +13,12 @@ void Position::reset() {
 	x = 0.0;
 	y = 0.0;
 	rotation = new Rotation;
-	changed = time(0);
+//	changed = time(0);
 }
 
 
 //should perhaps check x/y, but checking is also performed in PosControl
-void Position::set(float n_x, float n_y, float n_rotation) {	
+void Position::set(double n_x, double n_y, double n_rotation) {	
 	pos_mutex.lock();
 	x = n_x;
 	y = n_y;
@@ -27,45 +27,66 @@ void Position::set(float n_x, float n_y, float n_rotation) {
 }
 
 
-void Position::setAngle(float angle) {
+void Position::setAngle(double angle) {
 	if(angle > 0 && angle <= 360) {
 		rotation->set(angle);
 	}	
 }
 
 
-float Position::distanceX(float to) {
-	return (x - to);
-}
-
-
-float Position::distanceY(float to) {
-	return (y - to);
-}
-
-
-float Position::distanceRot(float to) {
-	return rotation->distanceTo(to);
-}
-
-
-double Position::timeSinceUpdate() {
-	return (time(0) - changed);
-}
-
-
-float Position::getAngle() {
+double Position::getAngle() {
 	return rotation->get();
 }
 
 
-float Position::getX() {
+double Position::getX() {
 	return x;
 }
 
 
-float Position::getY() {
+double Position::getY() {
 	return y;
+}
+
+
+double Position::distanceX(double to) {
+	return (x - to);
+}
+
+
+double Position::distanceY(double to) {
+	return (y - to);
+}
+
+
+double Position::distanceRot(double to) {
+	return rotation->distanceTo(to);
+}
+
+
+//Deprecated
+//double Position::timeSinceUpdate() {
+//	return (time(0) - changed);
+//}
+
+
+void Position::print() {
+	PRINTLINE("x:" << x << " y:" << y << " r:" << getAngle());
+}
+
+
+void Position::updateAngle(double leftDiff, double rightDiff) {
+	rotation->updateAngle(leftDiff, rightDiff);
+}
+
+
+void Position::updateX(double dist) {
+	x += dist;//*POS_DIR;
+}
+
+
+void Position::updateY(double dist) {
+	y += dist;//*POS_DIR;
 }
 
 
@@ -77,30 +98,8 @@ std::string Position::getPosString() {
 }
 
 
-void Position::print() {
-	PRINTLINE("x:" << x << " y:" << y << " r:" << getAngle());
-}
-
-
-void Position::updateAngle(float leftDiff, float rightDiff) {
-	rotation->updateAngle(leftDiff, rightDiff);
-}
-
-
-void Position::updateX(float dist) {
-	x += dist;//*POS_DIR;
-}
-
-
-void Position::updateY(float dist) {
-	y += dist;//*POS_DIR;
-}
-
-
 void Position::updatePosString() {
 	if(pos_mutex.try_lock()) {
-		//update string
-		//PRINTLINE("UPDATING POS");
 		std::stringstream ss;
 		ss << (int) floor(x) << ",";
 		ss << (int) floor(y) << ",";

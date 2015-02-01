@@ -6,7 +6,6 @@
 #define GRAB 5
 #define SHUTTER 6
 
-
 //Requests
 #define REQUEST 0
 #define ACTION 1

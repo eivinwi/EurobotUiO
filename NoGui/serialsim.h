@@ -37,44 +37,44 @@ class SerialSim {
 public:
 	SerialSim();
 	~SerialSim();
+
+	// Simulates writing to serial. Uses arg to decide what to make ready for reads
 	void write(char arg);
 	void write(uint8_t arg);
 	void write(int arg);
+
+	// Simulates reading from serial. What to read needs to be be prepared after each write. 
 	uint8_t readNoWait();
 	uint8_t read();
+
+	//TODO: incomplete
 	long readLong();
+
+	// Dummy method that dimulates clearing serial. 
 	void printAll();
 
 private:
+	// Read methods that simulates reading from serial
 	uint8_t readVi();
 	uint8_t readEncL();
 	uint8_t readEncR();
 	uint8_t readEncs();	
+
+	// Calculate appromiately correct encoder values based on time since speed was changed.
 	void calculateEncL();
 	void calculateEncR();
 
-
-	int speedL;
-	int speedR;
+	int speedL, speedR;
 	int acceleration;
-	long encoderL;
-	long encoderR;
-	int volt;
-	int currentL;
-	int currentR;
-	int version;
-	int mode;
-	int error;
+	long encoderL, encoderR;
+	int currentL, currentR;
 
-	int regulator;
-	int timeout;
+	int volt, version, mode, error;
+	int regulator, timeout;
 
-	time_t timeL;
-	time_t timeR;
-	//long encoderL;
-	//long encoderR;
+	time_t timeL, timeR;
+
 	int readCounter;
-
 	bool synced;
 	uint8_t prev_cmd;
 	uint8_t encL[4];

@@ -66,7 +66,7 @@ public:
     // dequeues an action and starts executing it.
     void controlLoop();
 
-	void enqueue(int id, int x, int y, float rot, int arg, int type);
+	void enqueue(int id, int x, int y, double rot, int arg, int type);
 	struct Cmd dequeue();
 	void setGoalRotation(int r);
 	void setGoalPosition(int x, int y);
@@ -103,25 +103,25 @@ private:
     void goToLift(int arg);
 
  	// Sets motor speeds to advance towards goal rotation
-    void rotate(float distR);
+    void rotate(double distR);
 
  	// Sets motor speeds to advance towards goal position    
-    void drive(float dist);
+    void drive(double dist);
 
     // Sends stop commands to the motors.
     void fullStop();
 
    	// Returns distance from cur x to goal x
-	float distanceX();
+	double distanceX();
 
    	// Returns distance from cur y to goal y
-	float distanceY();
+	double distanceY();
 
 	// Returns distance, in degrees, from current orientaton to goal orientation
-	float distanceAngle();
+	double distanceAngle();
 
 	// Calculates straight distance from current position to goal position by trigonometry.
-	float updateDist(float angle, float distX, float distY);
+	double updateDist(double angle, double distX, double distY);
 	
 	// Updates current position based on encoder-readings
 	void updatePosition();
@@ -175,8 +175,8 @@ private:
 	void setSpeed(int l, int r);
 
 	// returns sin/cos of angle in radians, in the correct quadrant
-	float sin_d(float angle);
-	float cos_d(float angle);
+	double sin_d(double angle);
+	double cos_d(double angle);
 
 	// DEBUGING: prints current values in encoder struct
 	void printEncoder(struct encoder *e);

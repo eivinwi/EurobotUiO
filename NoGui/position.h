@@ -23,28 +23,41 @@ public:
 	Position();
 	~Position();
 	void reset();
-	void set(float n_x, float n_y, float n_rotation);
-	void setAngle(float angle);
-	float distanceX(float to);
-	float distanceY(float to);
-	float distanceRot(float to);
-	double timeSinceUpdate();
-	float getAngle();
-	float getX();
-	float getY();
-	void updateAngle(float leftDiff, float rightDiff);
-	std::string getPosString();
+	void set(double n_x, double n_y, double n_rotation);
+	void setAngle(double angle);
+	double getAngle();
+	double getX();
+	double getY();
+
+	// Distance in x-dir to input goal
+	double distanceX(double to);
+	// Distance in y-dir to input goal
+	double distanceY(double to);
+	// Distance in rotation to input goal
+	double distanceRot(double to);
+
+	// Deprecated: returns time since position was last updated
+	//double timeSinceUpdate();
+
+	// Calls on updateAngle in Rotation to calculate curren angle based on encoder readings
+	void updateAngle(double leftDiff, double rightDiff);
+
 	
-	//update x/y based on encoder readings
-	void updateX(float dist);
-	void updateY(float dist);
+	// Adds positional updates to x
+	void updateX(double dist);
+	// Adds positional updates to y
+	void updateY(double dist);
 
 	void print();
+
+	// Returns position as comma-delimited string. Thread-safe
+	std::string getPosString();
+	
 	void updatePosString();
 
 private:
-	float x;
-	float y;
+	double x;
+	double y;
 	Rotation *rotation;
 	time_t changed;
 

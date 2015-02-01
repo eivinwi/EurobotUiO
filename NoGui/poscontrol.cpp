@@ -9,9 +9,9 @@
 struct encoder {
 	long prev;
 	long diff;
-	float diffDist;
+	double diffDist;
 	long total;
-	float totalDist;
+	double totalDist;
 } leftEncoder, rightEncoder;
 
 
@@ -19,7 +19,7 @@ struct Cmd {
 	int id;
 	int x;
 	int y;
-	float rot;
+	double rot;
 	int argument;
 	int type;
 };
@@ -74,7 +74,7 @@ bool PosControl::test() {
 }
 
 
-void PosControl::enqueue(int id, int x, int y, float rot, int arg, int type) {
+void PosControl::enqueue(int id, int x, int y, double rot, int arg, int type) {
 	Cmd  cmd= {id, x, y, rot, arg, type};
 	std::lock_guard<std::mutex> lock(qMutex);	
 	q.push(cmd);
@@ -147,7 +147,7 @@ void PosControl::controlLoop() {
 
 void PosControl::goToRotation() {
 	LOG(DEBUG) << "[POS] goToRotation " << curPos->getAngle() << "->" << goalPos->getAngle();
-	float distR = 0.0;
+	double distR = 0.0;
 	if(!closeEnoughAngle()) {
 		do {
 
@@ -173,11 +173,11 @@ void PosControl::goToRotation() {
 void PosControl::goToPosition() {
 	LOG(DEBUG) << "[POS] goToPosition (" << curPos->getX() << "," << curPos->getY() << ") -> (" << goalPos->getX() << "," << goalPos->getY() << ")";
 
-	float distX = distanceX(); 
-	float distY = distanceY();
-	float distR = 0.0;
-	float angle = 0.0;
-	float dist = 0.0;
+	double distX = distanceX(); 
+	double distY = distanceY();
+	double distR = 0.0;
+	double angle = 0.0;
+	double dist = 0.0;
 
 	if(!inGoalPosition()) {
 		//get angle we need to rotate to before driving
@@ -232,7 +232,7 @@ void PosControl::goToLift(int arg) {
 }
 
 
-float PosControl::updateDist(float angle, float distX, float distY) {
+double PosControl::updateDist(double angle, double distX, double distY) {
 	if(sin_d(angle) == 0) {
 		return distX;
 	} else {
@@ -243,7 +243,7 @@ float PosControl::updateDist(float angle, float distX, float distY) {
 
 //TODO: get input from IMU
 //need exact rotation to do small angle adjustments
-void PosControl::rotate(float distR) {
+void PosControl::rotate(double distR) {
 	LOG(DEBUG) << "[POS] turning: ";
 	if(distR == 0) {
 		LOG(DEBUG) << "Error, turn is 0.";
@@ -267,9 +267,9 @@ void PosControl::rotate(float distR) {
 
 
 //CHECK: stuff
-void PosControl::drive(float dist) {	
+void PosControl::drive(double dist) {	
 	LOG(DEBUG) << "DISTR: " << dist;
-	float rotation = goalPos->getAngle();
+	double rotation = goalPos->getAngle();
 	if(closeEnoughAngle()) {
 		LOG(DEBUG) << "[POS] driving with rotation:" << rotation << " dist:" << dist;
 
@@ -368,7 +368,7 @@ void PosControl::updatePosition() {
 	updateRightEncoder();	
 	LOG(DEBUG) << "[POS] encoders updated";
 	
-	float angle = goalPos->getAngle();
+	double angle = goalPos->getAngle();
 
 	int ediff = encoderDifference();
 	if(ediff > 50) {
@@ -378,10 +378,10 @@ void PosControl::updatePosition() {
 
 	LOG(INFO) << "L: " << leftEncoder.diffDist << "  R: " << rightEncoder.diffDist;
 	LOG(INFO) << "Lt: " << leftEncoder.total << " Rt: " << rightEncoder.total;
-	float avg_dist = (abs(leftEncoder.diffDist) + abs(rightEncoder.diffDist)) / 2;
+	double avg_dist = (abs(leftEncoder.diffDist) + abs(rightEncoder.diffDist)) / 2;
 	
-	float x_distance = cos_d(angle)*avg_dist; //45 = +
-	float y_distance = sin_d(angle)*avg_dist; //45 = +
+	double x_distance = cos_d(angle)*avg_dist; //45 = +
+	double y_distance = sin_d(angle)*avg_dist; //45 = +
 
 
 	curPos->updateX( x_distance );
@@ -403,7 +403,7 @@ void PosControl::updateRotation() {
 void PosControl::updateEncoder(long e, struct encoder *enc) {
 	long diff = e - enc->prev;
 	long absDiff = abs(diff);
-	float distance = diff*ENCODER_CONSTANT;
+	double distance = diff*ENCODER_CONSTANT;
 
 	if(absDiff > REASONABLE_ENC_DIFF) {
 		//TODO: reset encoders while taking care of values in a controlled manner
@@ -459,7 +459,7 @@ void PosControl::fullStop() {
  * =0 : in exact x-coordinate
  * <0 : goal is in negative x-direction
  */
-float PosControl::distanceX() {
+double PosControl::distanceX() {
 	return (goalPos->getX() - curPos->getX());
 }
 
@@ -468,7 +468,7 @@ float PosControl::distanceX() {
  * =0 : in exact x-coordinate
  * <0 : goal is in negative x-direction
  */
-float PosControl::distanceY() {
+double PosControl::distanceY() {
 	return (goalPos->getY() - curPos->getY());	
 }
 
@@ -477,8 +477,8 @@ float PosControl::distanceY() {
  * =0 : at exact angle
  * <0 : goal angle in negative direction
  */
-float PosControl::distanceAngle() {
-	float dist = curPos->distanceRot(goalPos->getAngle());
+double PosControl::distanceAngle() {
+	double dist = curPos->distanceRot(goalPos->getAngle());
 	return dist;
 }
 
@@ -541,12 +541,12 @@ void PosControl::setSpeed(int l, int r) {
 }
 
 
-float PosControl::sin_d(float angle) {
+double PosControl::sin_d(double angle) {
 	return sin(angle*M_PI/180);
 }
 
 
-float PosControl::cos_d(float angle) {
+double PosControl::cos_d(double angle) {
 	return cos(angle*M_PI/180);
 }
 
@@ -560,8 +560,8 @@ void PosControl::printEncoder(struct encoder *e) {
 	/*
 	long prev;
 	long diff;
-	float diffDist;
+	double diffDist;
 	long total;
-	float totalDist;
+	double totalDist;
 	*/
 }

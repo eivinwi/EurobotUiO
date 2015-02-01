@@ -56,18 +56,6 @@ uint8_t Serial::readNoWait(){
 
 
 uint8_t Serial::read() {
-   // usleep(SERIAL_DELAY);
-   // return readNoWait();
-
-  /*  long waited = 0;
-    while(!available() && waited < MAX_WAIT) {
-        usleep(1);
-        waited++;
-    }
-    return readNoWait();*/
-
-
-
     auto t_start = std::chrono::high_resolution_clock::now();
     auto t_end = std::chrono::high_resolution_clock::now();    
     uint8_t byte = 0;
@@ -86,13 +74,11 @@ uint8_t Serial::read() {
 
 
 long Serial::readLong() {
-    DBPL("[SERIAL] readLong")
     auto t_start = std::chrono::high_resolution_clock::now();
     auto t_end = std::chrono::high_resolution_clock::now();    
     uint8_t bytes[4];
     std::fill(std::begin(bytes), std::end(bytes), 0);
-    
-    DBPL("[SERIAL] readLong starting loop")    
+
     for(int i = 0; i < 4; i++) {
         double timepassed = std::chrono::duration<double, std::milli>(t_end-t_start).count();
         while(timepassed < 100) {
