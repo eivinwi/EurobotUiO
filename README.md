@@ -105,7 +105,7 @@ http://www.robot-electronics.co.uk/htm/md49tech.htm<br>
 
 
 ##### SpringRC SM-S4303R (gripper servo)
-<img src="https://cdn.sparkfun.com//assets/parts/2/9/1/1/09347-1.jpg" style="width: 150px;"/><br>
+<img src="https://cdn.sparkfun.com//assets/parts/2/9/1/1/09347-1.jpg" style="width: 150px; height: 150px;"/><br>
 https://www.sparkfun.com/products/9347<br>
 https://www.sparkfun.com/datasheets/Robotics/servo-360_e.pdf<br>
 
