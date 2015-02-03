@@ -89,3 +89,24 @@ tar xvzf easyloggingpp_v9.80.tar.gz && sudo mv easylogging++.h /usr/local/includ
 ```
 
 
+## Mechanical/electronical parts
+
+##### Devantech RB-Dev-38 Motors
+http://www.robotshop.com/en/devantech-24v-49-1-gear-motor-encoder.html
+http://www.robotshop.com/media/files/pdf/datasheet-emg49.pdf
+
+
+##### Devantech MD49 Motor controller
+http://www.robotshop.com/en/devantech-md49-24v-5a-dual-h-bridge-motor-driver.html
+http://www.robot-electronics.co.uk/htm/md49tech.htm
+
+
+##### SpringRC SM-S4303R (gripper servo)
+https://www.sparkfun.com/products/9347
+https://www.sparkfun.com/datasheets/Robotics/servo-360_e.pdf
+
+
+##### Stepper
+https://www.sparkfun.com/products/9238
+https://www.sparkfun.com/datasheets/Robotics/SM-42BYG011-25.pdf
+
