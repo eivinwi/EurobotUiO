@@ -92,7 +92,7 @@ tar xvzf easyloggingpp_v9.80.tar.gz && sudo mv easylogging++.h /usr/local/includ
 ## Mechanical/Electronical parts
 
 ##### Devantech RB-Dev-38 Motors
-<img src="http://www.robotshop.com/media/catalog/product/cache/1/image/515x515/9df78eab33525d08d6e5fb8d27136e95/d/e/devantech-24v-49-1-gear-motor-encoder.jpg" style="width: 100px;height:100px"/><br>
+<img src="http://www.robotshop.com/media/catalog/product/cache/1/image/515x515/9df78eab33525d08d6e5fb8d27136e95/d/e/devantech-24v-49-1-gear-motor-encoder.jpg" width="100px"/><br>
 
 http://www.robotshop.com/en/devantech-24v-49-1-gear-motor-encoder.html<br>
 http://www.robotshop.com/media/files/pdf/datasheet-emg49.pdf<br>
