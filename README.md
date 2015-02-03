@@ -99,7 +99,7 @@ http://www.robotshop.com/media/files/pdf/datasheet-emg49.pdf<br>
 
 
 ##### Devantech MD49 Motor controller
-<img src="http://www.robotshop.com/en/devantech-md49-24v-5a-dual-h-bridge-motor-driver.html" style="width: 150px;"/><br>
+<img src="http://www.robotshop.com/media/catalog/product/cache/1/image/515x515/9df78eab33525d08d6e5fb8d27136e95/d/e/devantech-md49-24v-5a-dual-h-bridge-motor-driver.jpg" style="width: 150px;"/><br>
 http://www.robotshop.com/en/devantech-md49-24v-5a-dual-h-bridge-motor-driver.html<br>
 http://www.robot-electronics.co.uk/htm/md49tech.htm<br>
 
