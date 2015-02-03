@@ -129,7 +129,7 @@ https://www.sparkfun.com/products/10617<br>
 http://dlnmh9ip6v2uc.cloudfront.net/datasheets/Prototyping/MAX17043-MAX17044.pdf<br>
 
 ##### DC-DC converters
-<img src="http://img-europe.electrocomponents.com/largeimages/R0183679-01.jpg" width="150px"/><br>
+<img src="http://img-europe.electrocomponents.com/largeimages/R0183679-01.jpg" width="150px"/>
 <img src="http://img-europe.electrocomponents.com/largeimages/F4414037-01.jpg" width="150px"/><br><br>
 http://no.rs-online.com/web/p/isolated-dc-dc-converters/0183679/<br>
 http://no.rs-online.com/web/p/isolated-dc-dc-converters/4414037/<br>
