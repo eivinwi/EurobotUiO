@@ -92,7 +92,7 @@ tar xvzf easyloggingpp_v9.80.tar.gz && sudo mv easylogging++.h /usr/local/includ
 ## Mechanical/Electronical parts
 
 ##### Devantech RB-Dev-38 Motors
-<img src="http://www.robotshop.com/media/catalog/product/cache/1/image/515x515/9df78eab33525d08d6e5fb8d27136e95/d/e/devantech-24v-49-1-gear-motor-encoder.jpg" style="width: 150px;"/><br>
+<img src="http://www.robotshop.com/media/catalog/product/cache/1/image/515x515/9df78eab33525d08d6e5fb8d27136e95/d/e/devantech-24v-49-1-gear-motor-encoder.jpg" style="width: 100px;"/><br>
 
 http://www.robotshop.com/en/devantech-24v-49-1-gear-motor-encoder.html<br>
 http://www.robotshop.com/media/files/pdf/datasheet-emg49.pdf<br>
@@ -105,14 +105,13 @@ http://www.robot-electronics.co.uk/htm/md49tech.htm<br>
 
 
 ##### SpringRC SM-S4303R (gripper servo)
-<img src="https://cdn.sparkfun.com//assets/parts/2/7/1/5/09238-01.jpg" style="width: 150px;"/><br>
-
+<img src="https://cdn.sparkfun.com//assets/parts/2/9/1/1/09347-1.jpg" style="width: 150px;"/><br>
 https://www.sparkfun.com/products/9347<br>
 https://www.sparkfun.com/datasheets/Robotics/servo-360_e.pdf<br>
 
 
 ##### Stepper Motor (lift)
-<img src="https://cdn.sparkfun.com//assets/parts/2/9/1/1/09347-1.jpg" style="width: 150px;"/>
+<img src="https://cdn.sparkfun.com//assets/parts/2/7/1/5/09238-01.jpg" style="width: 150px;"/><br>
 <img src="https://cdn.sparkfun.com//assets/parts/1/0/3/8/0/13226-01b.jpg" style="width: 150px;"/><br>
 https://www.sparkfun.com/products/9238<br>
 https://www.sparkfun.com/datasheets/Robotics/SM-42BYG011-25.pdf<br>
