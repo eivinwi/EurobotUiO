@@ -121,7 +121,7 @@ http://www.sparkfun.com/datasheets/Robotics/A3967.pdf<br>
 ##### 14.8V LiPo Batteries
 <img src="http://img-europe.electrocomponents.com/largeimages/R7760869-01.jpg" width="150px"/><br>
 http://no.rs-online.com/web/p/lithium-rechargeable-battery-packs/7760869/<br>
-http://no.rs-online.com/web/p/lithium-rechargeable-battery-packs/7760869/<br>s
+http://no.rs-online.com/web/p/lithium-rechargeable-battery-packs/7760869/<br>
 
 ##### LiPo Fuel Gauges
 <img src="https://cdn.sparkfun.com//assets/parts/5/2/7/9/10617-01c.jpg" width="150px"/><br><br>
@@ -129,7 +129,7 @@ https://www.sparkfun.com/products/10617<br>
 http://dlnmh9ip6v2uc.cloudfront.net/datasheets/Prototyping/MAX17043-MAX17044.pdf<br>
 
 ##### DC-DC converters
-<img src="http://img-europe.electrocomponents.com/largeimages/R0183679-01.jpg" width="150px"/><br><br>
+<img src="http://img-europe.electrocomponents.com/largeimages/R0183679-01.jpg" width="150px"/><br>
 <img src="http://img-europe.electrocomponents.com/largeimages/F4414037-01.jpg" width="150px"/><br><br>
 http://no.rs-online.com/web/p/isolated-dc-dc-converters/0183679/<br>
 http://no.rs-online.com/web/p/isolated-dc-dc-converters/4414037/<br>
