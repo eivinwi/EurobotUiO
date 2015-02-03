@@ -106,7 +106,13 @@ https://www.sparkfun.com/products/9347<br>
 https://www.sparkfun.com/datasheets/Robotics/servo-360_e.pdf<br>
 
 
-##### Stepper
+##### Stepper Motor (lift)
 https://www.sparkfun.com/products/9238<br>
 https://www.sparkfun.com/datasheets/Robotics/SM-42BYG011-25.pdf<br>
 
+##### Batteries
+http://no.rs-online.com/web/p/lithium-rechargeable-battery-packs/7760869/<br>
+
+###### DC-DC converters
+http://no.rs-online.com/web/p/isolated-dc-dc-converters/0183679/<br>
+http://no.rs-online.com/web/p/isolated-dc-dc-converters/4414037/<br>
