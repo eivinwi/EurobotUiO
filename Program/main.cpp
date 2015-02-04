@@ -375,7 +375,7 @@ void configureLogger() {
 
     defaultConf.setGlobally( el::ConfigurationType::Format, "%datetime{%H:%m:%s,%g} %level %msg" );
     defaultConf.set(el::Level::Global, 
-        el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/NoGui/newlogs/std.log"
+        el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/Logs/std.log"
     );
     defaultConf.set(el::Level::Global,
         el::ConfigurationType::ToStandardOutput, "TRUE"
@@ -401,7 +401,7 @@ void configureLogger() {
     }    
 
     defaultConf.set(el::Level::Debug, 
-        el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/NoGui/newlogs/debug.log"
+        el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/Logs/debug.log"
     );
     defaultConf.set(el::Level::Debug, 
         el::ConfigurationType::ToStandardOutput, "FALSE"
@@ -410,7 +410,7 @@ void configureLogger() {
         el::ConfigurationType::Format, "%datetime{%m:%s:%g} %msg"
     );
     defaultConf.set(el::Level::Trace, 
-        el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/NoGui/newlogs/position.log"
+        el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/Logs/position.log"
     );
     defaultConf.set(el::Level::Trace, 
         el::ConfigurationType::ToStandardOutput, "FALSE"

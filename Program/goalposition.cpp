@@ -1,5 +1,5 @@
 /*
- *	File: goalPosition.cpp
+ *	File: goalposition.cpp
  *	Author: Eivind Wikheim
  *
  *	GoalPosition contains the current (exact) goal position, and functions for 

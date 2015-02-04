@@ -96,6 +96,7 @@ void LiftCom::goToBottom() {
 
 void LiftCom::openGrabber() {
 	LOG(INFO) << "[LIFT] openGrabber, previous is: " << grabber_pos;
+	PRINTLINE("[LIFT] openGrabber, previous is: " << grabber_pos);
 	writeToSerial(OPEN);
 	grabber_pos = OPEN;
 }
@@ -103,7 +104,9 @@ void LiftCom::openGrabber() {
 
 void LiftCom::closeGrabber() {
 	LOG(INFO) << "[LIFT] closeGrabber, previous is: " << grabber_pos;	
-	writeToSerial(OPEN);
+	PRINTLINE("[LIFT] closeGrabber, previous is: " << grabber_pos);
+
+	writeToSerial(CLOSE);
 	grabber_pos = CLOSE;
 }
 
@@ -153,7 +156,8 @@ bool LiftCom::waitForResponse() {
 				return false;
 			}
 		}
-    } while ((std::chrono::duration<double, std::milli>(t_end-t_start).count()) < 10); //time needs testing
+		t_end = std::chrono::high_resolution_clock::now();
+    } while ((std::chrono::duration<double, std::milli>(t_end-t_start).count()) < 100); //time needs testing
     return false;
 }
 

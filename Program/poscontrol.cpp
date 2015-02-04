@@ -245,8 +245,10 @@ void PosControl::goToPosition() {
 
 
 void PosControl::goToLift(int arg) {
+	PRINTLINE("[POS] goToLift");
 	lcom->goTo(arg);
 	bool success = lcom->waitForResponse();
+	PRINTLINE("[POS] goToLift done waiting");
 	if(success) {
 		LOG(INFO) << "[LIFT] Successful movement";
 	} else {
