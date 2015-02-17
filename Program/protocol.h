@@ -5,6 +5,7 @@
 #define LIFT 4
 #define GRAB 5
 #define SHUTTER 6
+#define SOUND 11
 
 //Requests
 #define REQUEST 0

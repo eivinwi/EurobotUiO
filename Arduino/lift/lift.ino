@@ -169,7 +169,7 @@ void setDir(int d) {
 void openGripper() {
 	if(gripper_state == CLOSED_STATE) {
 		gripper.write(OUTWARD);
-		delay(DELAY_FULL);
+		delay(DELAY_FULL+15);
 		gripper.write(STOP);
 		delay(2000);
 	} else {

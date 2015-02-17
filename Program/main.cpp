@@ -33,7 +33,7 @@
 #include "liftcom.h"
 #include "poscontrol.h"
 #include "printing.h"
-//include "sound.h"
+//#include "sound.h"
 #include "protocol.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -56,6 +56,10 @@ INITIALIZE_EASYLOGGINGPP
 // Used for communication with AI.
 void readLoop();
 
+
+// Implements a ZMQ subscriber that reads current real position from a publisher
+void subscriptionLoop();
+
 // Reads command-line arguments. Uses GNU C++ GetOpt standard.
 // Returns true if no invalid arguments
 bool checkArguments(int argc, char *argv[]);
@@ -74,6 +78,9 @@ bool enqPosition (int num_args, int *args);
 // Sends action to PosControl to be added to command-queue
 bool enqAction (int num_args, int *args);
 
+//TODO
+void playSound(int num_args, int *args);
+
 // Test each part of the system after setup is completed, logs and print results.
 void testSystem();
 
@@ -90,6 +97,7 @@ void crashHandler(int sig);
 MotorCom *m;
 LiftCom *l;
 PosControl *p;
+//Sound *s;
 
 // locking objects while readLoop is writing to them.
 std::mutex read_mutex;
@@ -117,6 +125,7 @@ void readLoop() {
     zmq::context_t context (1);
     zmq::socket_t socket (context, ZMQ_REP);
     socket.bind ("tcp://*:5555");
+    //socket.bind ("ipc://ai.ipc");
 
     while (true) {
         zmq::message_t request;
@@ -173,14 +182,13 @@ void readLoop() {
                     enqAction(num_args, args);
                     reply_str = "ok";
                     break;
-                case GRAB: 
-                    LOG(INFO) << "[COM]  Received GRAB";
-                    //TODO
-                    reply_str = "ok";
-                    break;
                 case SHUTTER: 
                     LOG(INFO) << "[COM]  Received SHUTTER";
                     //TODO
+                    reply_str = "ok";
+                    break;
+                case SOUND:
+                    playSound(num_args, args);
                     reply_str = "ok";
                     break;
                 default:
@@ -201,6 +209,36 @@ void readLoop() {
         usleep(100);
     }
     com_running = false;
+}
+
+
+void subscriptionLoop() {
+    zmq::context_t context (1);
+    LOG(INFO) << "[COM2] starting";
+    zmq::socket_t subscriber (context, ZMQ_SUB);
+    //subscriber.connect("ipc://pos.ipc");
+    subscriber.connect("tcp://localhost:5556");
+
+    subscriber.setsockopt(ZMQ_SUBSCRIBE, NULL, 0); //, filter, strlen (filter));
+
+    int args[3]; // (x, y, r)    
+    std::string str;
+    while(1) {
+        zmq::message_t update;
+        subscriber.recv(&update);
+        std::istringstream iss(static_cast<char*>(update.data()));
+        iss >> str;
+        
+        int num_args = getArguments(str, args);
+        if(num_args != 3) {
+            LOG(WARNING) << "[COM2] Invalid position-string!!" << str.c_str();
+        } else {
+            //args is [x | y | r]
+            PRINTLINE( "YEAH" );
+            LOG(INFO) << "[COM2] recv: [" << args[0] << ", " << args[1] << ", " << args[2] << "]";
+        }
+        usleep(100);
+    }
 }
 
 
@@ -289,6 +327,13 @@ bool enqAction(int num_args, int *args) {
 }
 
 
+void playSound(int num_args, int *args) {
+    if(num_args > 1) {
+
+    }
+}
+
+
 int getArguments(std::string input, int *pos) {
     int i = 0;
     std::istringstream f(input);
@@ -296,7 +341,7 @@ int getArguments(std::string input, int *pos) {
     while(getline(f, s, ',')) {
         pos[i] = atoi(s.c_str());
         i++;
-        if(i > 4) break; //hack!! probably incorrect
+//        if(i > 4) break; //hack!! probably incorrect
     }
     return i;
 }
@@ -455,8 +500,8 @@ int main(int argc, char *argv[]) {
     std::thread read_thread(readLoop);
     usleep(5000);
 
- //   LOG(INFO) << "[SETUP] initializing writeLoop thread");
- //  std::thread write_thread(writeLoop);
+    LOG(INFO) << "[SETUP] initializing sunscription thread";
+    std::thread write_thread(subscriptionLoop);
 
 
     LOG(INFO) << "[SETUP] initializing controlLoop thread";
@@ -480,9 +525,13 @@ int main(int argc, char *argv[]) {
         m->setMode(MODE);
     }
 
+   // s = new Sound();
+
     testSystem();
 
     LOG(INFO) << "[SETUP] testing_enabled completed, waiting for client input";
+ 
+
     if(read_thread.joinable()) {
         read_thread.join();
     }
