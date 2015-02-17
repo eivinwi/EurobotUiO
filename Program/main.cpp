@@ -390,7 +390,7 @@ bool checkArguments(int argc, char *argv[]) {
                 break;
             case 'm':
                 //motor_serial = std::to_string(optarg);
-                cval = optarg;
+                motor_serial = optarg;
                 PRINTLINE("[SETUP]    motor arg=" << cval);
 
                 break;
