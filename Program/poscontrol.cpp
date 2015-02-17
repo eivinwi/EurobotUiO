@@ -290,8 +290,8 @@ void PosControl::goToReverse() {
 
 			curPos->setAngle(goalPos->getAngle()); 
 			LOG(INFO) << "[LOOP] DRIVE: " << distX << "," << distY;
-			//drive_reverse(-dist); // <- reverse
-			drive(dist);
+			drive_reverse(dist); // <- reverse
+			//drive(dist);
 			updatePositionReverse();
 			PRINTLINE("distR: " << distR << " distX:" << distX << " distY:" << distY);
 
@@ -398,34 +398,19 @@ void PosControl::drive(float dist) {
 
 //CHECK: stuff
 void PosControl::drive_reverse(float dist) {	
-	LOG(INFO) << "DISTR: " << dist;
+	LOG(DEBUG) << "DISTR: " << dist;
 	float rotation = goalPos->getAngle();
 	if(closeEnoughAngle()) {
-		LOG(INFO) << "[POS] driving reverse with rotation:" << rotation << " dist:" << dist;
+		LOG(DEBUG) << "[POS] driving reverse with rotation:" << rotation << " dist:" << dist;
 
 		//CHECK: unneccsary test?
 		if(!inGoal()) {
-
-			if(dist > 0) {
-				if(dist > SLOWDOWN_MAX_DIST) {
-					setSpeed(SPEED_MAX_NEG, SPEED_MAX_NEG);
-				} else if(dist > SLOWDOWN_MED_DIST) {
-					setSpeed(SPEED_MED_NEG, SPEED_MED_NEG);					
-				} else {
-					setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
-				}
+			if(dist < 0) {
+				setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
 			}
-
 			else {
-				if(dist < -SLOWDOWN_MAX_DIST) {
-					setSpeed(SPEED_MAX_POS, SPEED_MAX_POS);
-				} else if(dist < -SLOWDOWN_MED_DIST) {
-					setSpeed(SPEED_MED_POS, SPEED_MED_POS);
-				} else {
-					setSpeed(SPEED_SLOW_POS, SPEED_SLOW_POS);
-				}
+				setSpeed(SPEED_SLOW_POS, SPEED_SLOW_POS);
 			}
-
 		} else {
 			LOG(DEBUG) << "[POS] ERROR; already in goal";
 		}
