@@ -41,14 +41,14 @@ void Rotation::reset() {
 }
 
 
-void Rotation::set(double a) {
+void Rotation::set(float a) {
 	if(a > 0.0 && a < 360.0) {
     	angle = a;
 	}
 }
 
 
-double Rotation::get() {
+float Rotation::get() {
 	return angle;
 }
 
@@ -61,7 +61,7 @@ void Rotation::updateAngle(long diffL, long diffR) {
 
   	//TODO: needs to know that encoders read the same
 	long encAvg = (abs(diffL) + abs(diffR))/2;
-	double turned = 0.0;
+	float turned = 0.0;
 
 	if(diffL > 0) {
 		turned = -(encAvg/ENC_PER_DEGREE);// * POS_DIR;//*ROTATION_DIR; 
@@ -80,7 +80,7 @@ void Rotation::updateAngle(long diffL, long diffR) {
 }
 
 
-double Rotation::distanceLeft(double goal) {
+float Rotation::distanceLeft(float goal) {
 	if(goal >= angle) {
 		return (goal - angle);
 	} else {
@@ -90,7 +90,7 @@ double Rotation::distanceLeft(double goal) {
 
 
 //result will be negative, to show rotation towards the right
-double Rotation::distanceRight(double goal) {
+float Rotation::distanceRight(float goal) {
 	if(goal >= angle) {
 		return ( (-angle) - (360-goal) );  //(goal - 360 - angle);
 	} else {
@@ -99,9 +99,9 @@ double Rotation::distanceRight(double goal) {
 }
 
 
-double Rotation::distanceTo(double goalRot) {
-	double l = distanceLeft(goalRot);
-	double r = distanceRight(goalRot);
+float Rotation::distanceTo(float goalRot) {
+	float l = distanceLeft(goalRot);
+	float r = distanceRight(goalRot);
 	DBPL("[ROT] distanceTo: l=" << l << " r=" << r);
 	if(abs(l) < abs(r)) {
 		return l;

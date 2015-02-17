@@ -40,30 +40,30 @@ public:
 	Position();
 	~Position();
 	void reset();
-	void set(double n_x, double n_y, double n_rotation);
-	void setAngle(double angle);
-	double getAngle();
-	double getX();
-	double getY();
+	void set(float n_x, float n_y, float n_rotation);
+	void setAngle(float angle);
+	float getAngle();
+	float getX();
+	float getY();
 
 	// Distance in x-dir to input goal
-	double distanceX(double to);
+	float distanceX(float to);
 	// Distance in y-dir to input goal
-	double distanceY(double to);
+	float distanceY(float to);
 	// Distance in rotation to input goal
-	double distanceRot(double to);
+	float distanceRot(float to);
 
 	// Deprecated: returns time since position was last updated
-	//double timeSinceUpdate();
+	//float timeSinceUpdate();
 
 	// Calls on updateAngle in Rotation to calculate curren angle based on encoder readings
-	void updateAngle(double leftDiff, double rightDiff);
+	void updateAngle(float leftDiff, float rightDiff);
 
 	
 	// Adds positional updates to x
-	void updateX(double dist);
+	void updateX(float dist);
 	// Adds positional updates to y
-	void updateY(double dist);
+	void updateY(float dist);
 
 	void print();
 
@@ -73,8 +73,8 @@ public:
 	void updatePosString();
 
 private:
-	double x;
-	double y;
+	float x;
+	float y;
 	Rotation *rotation;
 	time_t changed;
 

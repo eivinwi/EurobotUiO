@@ -72,8 +72,8 @@ int getArguments(std::string input, int *pos);
 // Sends rotation-change to PosControl to be added to command-queue
 bool enqRotation(int num_args, int *args);
 
-// Sends position-change to PosControl to be added to command-queue
-bool enqPosition (int num_args, int *args);
+// Sends position-change to PosControl to be added to command-queue. Dir is FORWARD or REVERSE
+bool enqPosition (int num_args, int *args, int dir);
 
 // Sends action to PosControl to be added to command-queue
 bool enqAction (int num_args, int *args);
@@ -162,19 +162,19 @@ void readLoop() {
                         LOG(INFO) << "[COM] REQUEST was for LIFT, returning: " << reply_str;
                     }                    
                     break;
-                case RESET_ALL: 
-                    LOG(INFO) << "[COM]  Received RESET_ALL";
-                    p->reset();
+                case SET_REVERSE: 
+                    LOG(INFO) << "[COM]  Received SET_REVERSE(id=" << args[1] << ", x=" << args[2] << ", y=" << args[3] << ")";
+                    enqPosition(num_args, args, REVERSE);
+                    reply_str = "ok";
+                    break;             
+                case SET_FORWARD: 
+                    LOG(INFO) << "[COM]  Received SET_FORWARD(id=" << args[1] << ", x=" << args[2] << ", y=" << args[3] << ")";
+                    enqPosition(num_args, args, FORWARD);
                     reply_str = "ok";
                     break;
                 case SET_ROTATION: 
                     LOG(INFO) << "[COM]  Received SET_ROTATION(id=" << args[1] << ", r=" << args[2] << ")";
                     enqRotation(num_args, args);
-                    reply_str = "ok";
-                    break;
-                case SET_POSITION: 
-                    LOG(INFO) << "[COM]  Received SET_POSITION(id=" << args[1] << ", x=" << args[2] << ", y=" << args[3] << ")";
-                    enqPosition(num_args, args);
                     reply_str = "ok";
                     break;
                 case LIFT: 
@@ -185,6 +185,11 @@ void readLoop() {
                 case SHUTTER: 
                     LOG(INFO) << "[COM]  Received SHUTTER";
                     //TODO
+                    reply_str = "ok";
+                    break;
+                case RESET_ALL: 
+                    LOG(INFO) << "[COM]  Received RESET_ALL";
+                    p->reset();
                     reply_str = "ok";
                     break;
                 case SOUND:
@@ -273,23 +278,23 @@ bool enqRotation(int num_args, int *args) {
 
 
 //see enqRotation
-bool enqPosition(int num_args, int *args) {
+bool enqPosition(int num_args, int *args, int dir) {
     if(num_args != 4) {
         LOG(WARNING) << "[COM] Position: wrong number of arguments: " << num_args << "!=4";
     }
-    else if(args[0] != SET_POSITION) {
+    else if(args[0] != SET_FORWARD && args[0] != SET_REVERSE) {
         LOG(WARNING) << "[COM] Position: invalid argument: " << args[0];  //should never happen      
     }
     else {
         if(read_mutex.try_lock()) {
-            p->enqueue(args[1], args[2], args[3], 0, 0, POSITION);
+            p->enqueue(args[1], args[2], args[3], 0, 0, dir);
             read_mutex.unlock();
             return true;
         } 
         else {
             usleep(1000);
             if(read_mutex.try_lock()) {
-                p->enqueue(args[1], args[2], args[3], 0, 0, POSITION);
+                p->enqueue(args[1], args[2], args[3], 0, 0, dir);
                 read_mutex.unlock();
                 return true;
             }
@@ -551,8 +556,8 @@ void testSystem() {
 
     if(m->test()) {
         printResult("[TEST] MotorCom active", true);
-        if(m->isSimulating()) printResult("[TEST]     sSerial open", true);
-        else           printResult("[TEST]      Serial open (sim)", true);
+        if(m->isSimulating()) printResult("[TEST]     sSerial open (sim)", true);
+        else           printResult("[TEST]      Serial open", true);
     } 
 
     if(l->test()) {

@@ -54,7 +54,8 @@
 //state definitions for robot movement
 #define NONE 0
 #define ROTATION 1
-#define POSITION 2
+#define FORWARD 2
+#define REVERSE 3
 
 //number of action IDs to store
 #define ACTION_STORAGE 1024
@@ -81,7 +82,7 @@ public:
     // dequeues an action and starts executing it.
     void controlLoop();
 
-	void enqueue(int id, int x, int y, double rot, int arg, int type);
+	void enqueue(int id, int x, int y, float rot, int arg, int type);
 	struct Cmd dequeue();
 	void setGoalRotation(int r);
 	void setGoalPosition(int x, int y);
@@ -114,32 +115,42 @@ private:
 	// rotates there, and then loops untill goal position is reached. 
 	void goToPosition();
 
+	// Similar to goToPosition(), but reverses the robot instead.
+	void goToReverse();
+
     //Sends command to lift-arduino, and waits for ACK before returning
     void goToLift(int arg);
 
  	// Sets motor speeds to advance towards goal rotation
-    void rotate(double distR);
+    void rotate(float distR);
 
  	// Sets motor speeds to advance towards goal position    
-    void drive(double dist);
+    void drive(float dist);
+
+    // Similar to drive(), but sends opposite directions to MotorCom
+    void drive_reverse(float dist);
 
     // Sends stop commands to the motors.
     void fullStop();
 
    	// Returns distance from cur x to goal x
-	double distanceX();
+	float distanceX();
 
    	// Returns distance from cur y to goal y
-	double distanceY();
+	float distanceY();
 
 	// Returns distance, in degrees, from current orientaton to goal orientation
-	double distanceAngle();
+	float distanceAngle();
 
 	// Calculates straight distance from current position to goal position by trigonometry.
-	double updateDist(double angle, double distX, double distY);
+	float updateDist(float angle, float distX, float distY);
+	float updateDistReverse(float angle, float distX, float distY);
 	
+
 	// Updates current position based on encoder-readings
 	void updatePosition();
+	void updatePositionReverse();
+
 
 	// Updates current rotation based on encoder-readings
 	void updateRotation();
@@ -190,8 +201,8 @@ private:
 	void setSpeed(int l, int r);
 
 	// returns sin/cos of angle in radians, in the correct quadrant
-	double sin_d(double angle);
-	double cos_d(double angle);
+	float sin_d(float angle);
+	float cos_d(float angle);
 
 	// DEBUGING: prints current values in encoder struct
 	void printEncoder(struct encoder *e);

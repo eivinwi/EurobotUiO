@@ -49,21 +49,21 @@
 class GoalPosition {
 public:
 	//Only the constructor with arguments should probably be used.
-	GoalPosition(int id, double x, double y, double r);
+	GoalPosition(int id, float x, float y, float r);
 	GoalPosition();
 	~GoalPosition();
 	void reset();
 
 	//set functions should probably not be used, as goal should be created using constructors
 	void setId(int id);
-	void setAngle(double angle);
-	void setPosition(double n_x, double n_y);
-	void set(double n_x, double n_y, double n_rotation);
+	void setAngle(float angle);
+	void setPosition(float n_x, float n_y);
+	void set(float n_x, float n_y, float n_rotation);
 
 	int getId();
-	double getX();
-	double getY();
-	double getAngle();
+	float getX();
+	float getY();
+	float getAngle();
 
 	// Returns goal position as a comma-delimited string
 	std::string getPosString();
@@ -75,9 +75,9 @@ private:
 	//no idea why this is atomic
 	std::atomic<int> id;
 	
-	double x;
-	double y;
-	double rotation;
+	float x;
+	float y;
+	float rotation;
 };
 
 #endif /* GOALPOSITION_H */

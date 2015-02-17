@@ -44,7 +44,7 @@ void Position::reset() {
 
 
 //should perhaps check x/y, but checking is also performed in PosControl
-void Position::set(double n_x, double n_y, double n_rotation) {	
+void Position::set(float n_x, float n_y, float n_rotation) {	
 	pos_mutex.lock();
 	x = n_x;
 	y = n_y;
@@ -53,45 +53,45 @@ void Position::set(double n_x, double n_y, double n_rotation) {
 }
 
 
-void Position::setAngle(double angle) {
+void Position::setAngle(float angle) {
 	if(angle > 0 && angle <= 360) {
 		rotation->set(angle);
 	}	
 }
 
 
-double Position::getAngle() {
+float Position::getAngle() {
 	return rotation->get();
 }
 
 
-double Position::getX() {
+float Position::getX() {
 	return x;
 }
 
 
-double Position::getY() {
+float Position::getY() {
 	return y;
 }
 
 
-double Position::distanceX(double to) {
+float Position::distanceX(float to) {
 	return (x - to);
 }
 
 
-double Position::distanceY(double to) {
+float Position::distanceY(float to) {
 	return (y - to);
 }
 
 
-double Position::distanceRot(double to) {
+float Position::distanceRot(float to) {
 	return rotation->distanceTo(to);
 }
 
 
 //Deprecated
-//double Position::timeSinceUpdate() {
+//float Position::timeSinceUpdate() {
 //	return (time(0) - changed);
 //}
 
@@ -101,17 +101,17 @@ void Position::print() {
 }
 
 
-void Position::updateAngle(double leftDiff, double rightDiff) {
+void Position::updateAngle(float leftDiff, float rightDiff) {
 	rotation->updateAngle(leftDiff, rightDiff);
 }
 
 
-void Position::updateX(double dist) {
+void Position::updateX(float dist) {
 	x += dist;//*POS_DIR;
 }
 
 
-void Position::updateY(double dist) {
+void Position::updateY(float dist) {
 	y += dist;//*POS_DIR;
 }
 

@@ -33,9 +33,9 @@
 struct encoder {
 	long prev;
 	long diff;
-	double diffDist;
+	float diffDist;
 	long total;
-	double totalDist;
+	float totalDist;
 } leftEncoder, rightEncoder;
 
 
@@ -43,7 +43,7 @@ struct Cmd {
 	int id;
 	int x;
 	int y;
-	double rot;
+	float rot;
 	int argument;
 	int type;
 };
@@ -98,7 +98,7 @@ bool PosControl::test() {
 }
 
 
-void PosControl::enqueue(int id, int x, int y, double rot, int arg, int type) {
+void PosControl::enqueue(int id, int x, int y, float rot, int arg, int type) {
 	Cmd  cmd= {id, x, y, rot, arg, type};
 	std::lock_guard<std::mutex> lock(qMutex);	
 	q.push(cmd);
@@ -122,12 +122,16 @@ Cmd PosControl::dequeue() {
 //CHECK: should check if position is in goal?
 void PosControl::setGoalRotation(int rot) {
 	if(rot == 360) rot = 0;
+	else if(rot < 0) rot += 360;
+
+
+
 	goalPos->setAngle(rot);
 	goToRotation();
 }
 
 
-//CHECK: should check rotation? (probably not)
+//CHECK: should check rotation? (probably not) 
 void PosControl::setGoalPosition(int x, int y) {
 	LOG(DEBUG) << "[POS] setGoalPos(" << x << "," << y << ")";
 	goalPos->setPosition(x, y);
@@ -147,8 +151,12 @@ void PosControl::controlLoop() {
 		if(!testing) {
 			if(cmd.type == ROTATION) {
 				goToRotation();
-			} else if(cmd.type == POSITION) {
+			} else if(cmd.type == FORWARD) {
 				goToPosition();
+			} else if(cmd.type == REVERSE) {
+				LOG(INFO) << "reversing";
+				goToReverse();
+				LOG(INFO) << "goToReverse complete";
 			} else if(cmd.type == LIFT) {
 				goToLift(cmd.argument);	
 			}
@@ -156,7 +164,7 @@ void PosControl::controlLoop() {
 		else {
 			if(cmd.type == ROTATION) {
 				curPos->setAngle(goalPos->getAngle());
-			} else if(cmd.type == POSITION) {
+			} else if(cmd.type == FORWARD || cmd.type == REVERSE) {
 				curPos->set(goalPos->getX(), goalPos->getY(), curPos->getAngle());
 			} else if(cmd.type == LIFT) {
 				lcom->setCurrentPos(cmd.argument);
@@ -170,8 +178,8 @@ void PosControl::controlLoop() {
 
 
 void PosControl::goToRotation() {
-	LOG(DEBUG) << "[POS] goToRotation " << curPos->getAngle() << "->" << goalPos->getAngle();
-	double distR = 0.0;
+	LOG(INFO) << "[POS] goToRotation " << curPos->getAngle() << "->" << goalPos->getAngle();
+	float distR = 0.0;
 	if(!closeEnoughAngle()) {
 		do {
 
@@ -182,31 +190,31 @@ void PosControl::goToRotation() {
 			usleep(1000);
 		} while(!closeEnoughAngle());
 		fullStop();		
-		LOG(DEBUG) << "[POS] rotation finished: " << curPos->getAngle() << "=" << goalPos->getAngle();
+		LOG(INFO) << "[POS] rotation finished: " << curPos->getAngle() << "=" << goalPos->getAngle();
 		completeCurrent();
 	} 
 	else {
 		fullStop();
-		LOG(DEBUG) << "[POS] already at specified rotation(" << goalPos->getId() << "): " << curPos->getAngle() << "=" << goalPos->getAngle();
+		LOG(INFO) << "[POS] already at specified rotation(" << goalPos->getId() << "): " << curPos->getAngle() << "=" << goalPos->getAngle();
 		completeCurrent();
 	}
+	curPos->setAngle(goalPos->getAngle());
 }
 
 
 //CHECK: delays or not?
 void PosControl::goToPosition() {
 	LOG(DEBUG) << "[POS] goToPosition (" << curPos->getX() << "," << curPos->getY() << ") -> (" << goalPos->getX() << "," << goalPos->getY() << ")";
-
-	double distX = distanceX(); 
-	double distY = distanceY();
-	double distR = 0.0;
-	double angle = 0.0;
-	double dist = 0.0;
+	float distX = distanceX(); 
+	float distY = distanceY();
+	float distR = 0.0;
+	float angle = 0.0;
+	float dist = 0.0;
 
 	if(!inGoalPosition()) {
 		//get angle we need to rotate to before driving
 		angle = atan2(distY, distX) *(180/M_PI);
-		if(angle < 0) angle = angle+360;
+		if(angle < 0) angle += 360;
 		goalPos->setAngle(angle);
 		LOG(DEBUG) << "[POS] CALCULATED ANGLE=" << angle;
 		
@@ -244,6 +252,58 @@ void PosControl::goToPosition() {
 }
 
 
+void PosControl::goToReverse() {
+	LOG(INFO) << "[POS] goToReverse (" << curPos->getX() << "," << curPos->getY() << ") -> (" << goalPos->getX() << "," << goalPos->getY() << ")";
+	float distX = distanceX(); 
+	float distY = distanceY();
+	float distR = 0.0;
+	float angle = 0.0;
+	float dist = 0.0;
+
+	if(!inGoalPosition()) {
+		angle = atan2(distY, distX) *(180/M_PI);
+		if(angle < 0) angle += 360;
+
+
+		//could be more efficient..
+		angle += 180;
+		if(angle > 360) angle -= 360;
+		if(angle == 360) angle = 0;
+	
+
+		goalPos->setAngle(angle);
+		LOG(INFO) << "[POS] CALCULATED ANGLE (reverse)=" << angle;
+
+		distR = distanceAngle();
+		
+		while(!closeEnoughAngle()) {
+			LOG(INFO) << "[LOOP] ROTATION: " << distR;
+			rotate(distR);
+			updateRotation();
+		}
+
+		do {
+			distX = distanceX(); 
+			distY = distanceY();
+			distR = distanceAngle();
+			dist = updateDistReverse(angle, distX, distY);
+
+			curPos->setAngle(goalPos->getAngle()); 
+			LOG(INFO) << "[LOOP] DRIVE: " << distX << "," << distY;
+			//drive_reverse(-dist); // <- reverse
+			drive(dist);
+			updatePositionReverse();
+			PRINTLINE("distR: " << distR << " distX:" << distX << " distY:" << distY);
+
+		} while(!inGoal());
+	}
+
+	fullStop();
+	LOG(INFO) << "[POS] IN GOAL (reverse)!  (" << curPos->getX() << " , " <<  curPos->getY() << ") ~= (" << goalPos->getX() << " , " << goalPos->getY() << ")";
+	completeCurrent();
+}
+
+
 void PosControl::goToLift(int arg) {
 	PRINTLINE("[POS] goToLift");
 	lcom->goTo(arg);
@@ -258,7 +318,15 @@ void PosControl::goToLift(int arg) {
 }
 
 
-double PosControl::updateDist(double angle, double distX, double distY) {
+float PosControl::updateDist(float angle, float distX, float distY) {
+	if(sin_d(angle) == 0) {
+		return distX;
+	} else {
+		return distY/sin_d(angle);
+	}
+}
+
+float PosControl::updateDistReverse(float angle, float distX, float distY) {
 	if(sin_d(angle) == 0) {
 		return distX;
 	} else {
@@ -269,7 +337,7 @@ double PosControl::updateDist(double angle, double distX, double distY) {
 
 //TODO: get input from IMU
 //need exact rotation to do small angle adjustments
-void PosControl::rotate(double distR) {
+void PosControl::rotate(float distR) {
 	LOG(DEBUG) << "[POS] turning: ";
 	if(distR == 0) {
 		LOG(DEBUG) << "Error, turn is 0.";
@@ -291,11 +359,10 @@ void PosControl::rotate(double distR) {
 }
 
 
-
 //CHECK: stuff
-void PosControl::drive(double dist) {	
+void PosControl::drive(float dist) {	
 	LOG(DEBUG) << "DISTR: " << dist;
-	double rotation = goalPos->getAngle();
+	float rotation = goalPos->getAngle();
 	if(closeEnoughAngle()) {
 		LOG(DEBUG) << "[POS] driving with rotation:" << rotation << " dist:" << dist;
 
@@ -319,6 +386,46 @@ void PosControl::drive(double dist) {
 					setSpeed(SPEED_SLOW_POS, SPEED_SLOW_POS);
 				}
 			}
+		} else {
+			LOG(DEBUG) << "[POS] ERROR; already in goal";
+		}
+	} 
+	else {
+		LOG(ERROR) << "[POS] ERROR; cur->angle is" << rotation << " should be " << goalPos->getAngle();
+	}
+}
+
+
+//CHECK: stuff
+void PosControl::drive_reverse(float dist) {	
+	LOG(INFO) << "DISTR: " << dist;
+	float rotation = goalPos->getAngle();
+	if(closeEnoughAngle()) {
+		LOG(INFO) << "[POS] driving reverse with rotation:" << rotation << " dist:" << dist;
+
+		//CHECK: unneccsary test?
+		if(!inGoal()) {
+
+			if(dist > 0) {
+				if(dist > SLOWDOWN_MAX_DIST) {
+					setSpeed(SPEED_MAX_NEG, SPEED_MAX_NEG);
+				} else if(dist > SLOWDOWN_MED_DIST) {
+					setSpeed(SPEED_MED_NEG, SPEED_MED_NEG);					
+				} else {
+					setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
+				}
+			}
+
+			else {
+				if(dist < -SLOWDOWN_MAX_DIST) {
+					setSpeed(SPEED_MAX_POS, SPEED_MAX_POS);
+				} else if(dist < -SLOWDOWN_MED_DIST) {
+					setSpeed(SPEED_MED_POS, SPEED_MED_POS);
+				} else {
+					setSpeed(SPEED_SLOW_POS, SPEED_SLOW_POS);
+				}
+			}
+
 		} else {
 			LOG(DEBUG) << "[POS] ERROR; already in goal";
 		}
@@ -394,7 +501,7 @@ void PosControl::updatePosition() {
 	updateRightEncoder();	
 	LOG(DEBUG) << "[POS] encoders updated";
 	
-	double angle = goalPos->getAngle();
+	float angle = goalPos->getAngle();
 
 	int ediff = encoderDifference();
 	if(ediff > 50) {
@@ -402,12 +509,12 @@ void PosControl::updatePosition() {
 		return;
 	}
 
-	LOG(INFO) << "L: " << leftEncoder.diffDist << "  R: " << rightEncoder.diffDist;
-	LOG(INFO) << "Lt: " << leftEncoder.total << " Rt: " << rightEncoder.total;
-	double avg_dist = (abs(leftEncoder.diffDist) + abs(rightEncoder.diffDist)) / 2;
+//	LOG(INFO) << "L: " << leftEncoder.diffDist << "  R: " << rightEncoder.diffDist;
+//	LOG(INFO) << "Lt: " << leftEncoder.total << " Rt: " << rightEncoder.total;
+	float avg_dist = (abs(leftEncoder.diffDist) + abs(rightEncoder.diffDist)) / 2;
 	
-	double x_distance = cos_d(angle)*avg_dist; //45 = +
-	double y_distance = sin_d(angle)*avg_dist; //45 = +
+	float x_distance = cos_d(angle)*avg_dist; //45 = +
+	float y_distance = sin_d(angle)*avg_dist; //45 = +
 
 
 	curPos->updateX( x_distance );
@@ -415,12 +522,40 @@ void PosControl::updatePosition() {
 }
 
 
+void PosControl::updatePositionReverse() {
+	LOG(DEBUG) << "[POS] updatePos ";
+	
+	updateLeftEncoder();
+	updateRightEncoder();	
+	LOG(DEBUG) << "[POS] encoders updated";
+	
+	float angle = goalPos->getAngle();
+
+	int ediff = encoderDifference();
+	if(ediff > 50) {
+		LOG(WARNING) << "[POS] Warning, large encoder difference(drive): " << ediff;
+		return;
+	}
+
+//	LOG(INFO) << "L: " << leftEncoder.diffDist << "  R: " << rightEncoder.diffDist;
+//	LOG(INFO) << "Lt: " << leftEncoder.total << " Rt: " << rightEncoder.total;
+	float avg_dist = (abs(leftEncoder.diffDist) + abs(rightEncoder.diffDist)) / 2;
+	
+	float x_distance = cos_d(angle)*avg_dist; //45 = +
+	float y_distance = sin_d(angle)*avg_dist; //45 = +
+
+
+	curPos->updateX( -x_distance );
+	curPos->updateY( -y_distance );
+}
+
+
 void PosControl::updateRotation() {
 	updateLeftEncoder();
 	updateRightEncoder();
 
-	LOG(INFO) << "L: " << leftEncoder.diffDist << "  R: " << rightEncoder.diffDist;
-	LOG(INFO) << "Lt: " << leftEncoder.total << " Rt: " << rightEncoder.total;
+//	LOG(INFO) << "L: " << leftEncoder.diffDist << "  R: " << rightEncoder.diffDist;
+//	LOG(INFO) << "Lt: " << leftEncoder.total << " Rt: " << rightEncoder.total;
 
 	curPos->updateAngle(leftEncoder.diff, rightEncoder.diff);
 }
@@ -429,7 +564,7 @@ void PosControl::updateRotation() {
 void PosControl::updateEncoder(long e, struct encoder *enc) {
 	long diff = e - enc->prev;
 	long absDiff = abs(diff);
-	double distance = diff*ENCODER_CONSTANT;
+	float distance = diff*ENCODER_CONSTANT;
 
 	if(absDiff > REASONABLE_ENC_DIFF) {
 		//TODO: reset encoders while taking care of values in a controlled manner
@@ -485,7 +620,7 @@ void PosControl::fullStop() {
  * =0 : in exact x-coordinate
  * <0 : goal is in negative x-direction
  */
-double PosControl::distanceX() {
+float PosControl::distanceX() {
 	return (goalPos->getX() - curPos->getX());
 }
 
@@ -494,7 +629,7 @@ double PosControl::distanceX() {
  * =0 : in exact x-coordinate
  * <0 : goal is in negative x-direction
  */
-double PosControl::distanceY() {
+float PosControl::distanceY() {
 	return (goalPos->getY() - curPos->getY());	
 }
 
@@ -503,8 +638,9 @@ double PosControl::distanceY() {
  * =0 : at exact angle
  * <0 : goal angle in negative direction
  */
-double PosControl::distanceAngle() {
-	double dist = curPos->distanceRot(goalPos->getAngle());
+float PosControl::distanceAngle() {
+	float dist = curPos->distanceRot(goalPos->getAngle());
+	//PRINTLINE("distA calc:  " << curPos->getAngle() << "-" << goalPos->getAngle() << " = " << dist);
 	return dist;
 }
 
@@ -567,12 +703,12 @@ void PosControl::setSpeed(int l, int r) {
 }
 
 
-double PosControl::sin_d(double angle) {
+float PosControl::sin_d(float angle) {
 	return sin(angle*M_PI/180);
 }
 
 
-double PosControl::cos_d(double angle) {
+float PosControl::cos_d(float angle) {
 	return cos(angle*M_PI/180);
 }
 
@@ -586,8 +722,8 @@ void PosControl::printEncoder(struct encoder *e) {
 	/*
 	long prev;
 	long diff;
-	double diffDist;
+	float diffDist;
 	long total;
-	double totalDist;
+	float totalDist;
 	*/
 }
