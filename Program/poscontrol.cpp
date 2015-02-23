@@ -25,6 +25,7 @@
 
 #include "poscontrol.h"
 //TODO: 	
+//  - CODE CLEANUP. Program is extremely confusing atm
 // 	- use IMU for angle untill beacon system is workinh
 // 	- should continually check angle instead of once!! (impossible with only encoders)
 //
@@ -49,9 +50,10 @@ struct Cmd {
 };
 
 
-PosControl::PosControl(MotorCom *m, LiftCom *l, bool test) {
+PosControl::PosControl(MotorCom *m, LiftCom *l, DynaCom *d, bool test) {
 	mcom = m;
 	lcom = l;
+	dcom = d;
 	testing = test;
 	goalPos = new GoalPosition;
 	curPos = new Position;
@@ -124,8 +126,6 @@ void PosControl::setGoalRotation(int rot) {
 	if(rot == 360) rot = 0;
 	else if(rot < 0) rot += 360;
 
-
-
 	goalPos->setAngle(rot);
 	goToRotation();
 }
@@ -139,6 +139,10 @@ void PosControl::setGoalPosition(int x, int y) {
 }
 
 
+
+// Main program, loops once every time a command is dequeued.
+// If the testing-variable is set to true, automatically sets action to completed,
+// and sets current position (and other vars) to the goal
 void PosControl::controlLoop() {
 	pos_running = true;
 	while(true) {
@@ -146,7 +150,7 @@ void PosControl::controlLoop() {
 		working = true;
 
 		goalPos = new GoalPosition(cmd.id, cmd.x, cmd.y, cmd.rot);
-		LOG(INFO) << "[POS] [" << std::this_thread::get_id() << "]dequeued Cmd {" << cmd.id << "," << cmd.x << "," << cmd.y << "," << cmd.rot << "," << cmd.type << "}";
+		LOG(DEBUG) << "[POS] [" << std::this_thread::get_id() << "]dequeued Cmd {" << cmd.id << "," << cmd.x << "," << cmd.y << "," << cmd.rot << "," << cmd.type << "}";
 		
 		if(!testing) {
 			if(cmd.type == ROTATION) {
@@ -154,9 +158,7 @@ void PosControl::controlLoop() {
 			} else if(cmd.type == FORWARD) {
 				goToPosition();
 			} else if(cmd.type == REVERSE) {
-				LOG(INFO) << "reversing";
 				goToReverse();
-				LOG(INFO) << "goToReverse complete";
 			} else if(cmd.type == LIFT) {
 				goToLift(cmd.argument);	
 			}
@@ -189,15 +191,13 @@ void PosControl::goToRotation() {
 			logTrace();
 			usleep(1000);
 		} while(!closeEnoughAngle());
-		fullStop();		
 		LOG(INFO) << "[POS] rotation finished: " << curPos->getAngle() << "=" << goalPos->getAngle();
-		completeCurrent();
 	} 
 	else {
-		fullStop();
 		LOG(INFO) << "[POS] already at specified rotation(" << goalPos->getId() << "): " << curPos->getAngle() << "=" << goalPos->getAngle();
-		completeCurrent();
 	}
+	completeCurrent();
+	fullStop();
 	curPos->setAngle(goalPos->getAngle());
 }
 
@@ -228,7 +228,6 @@ void PosControl::goToPosition() {
 			dist = updateDist(angle, distX, distY);
 
 			LOG(DEBUG) << "CURRENT: " << curPos->getX() << " | " << curPos->getY() << " | " << curPos->getAngle();
-			//printCurrent();
 			LOG_EVERY_N(5, INFO) << "(" << curPos->getX() << ", " << curPos->getY() << ", " << curPos->getAngle() << ")";
 
 			if(!closeEnoughAngle()) {				
@@ -264,24 +263,21 @@ void PosControl::goToReverse() {
 		angle = atan2(distY, distX) *(180/M_PI);
 		if(angle < 0) angle += 360;
 
-
 		//could be more efficient..
 		angle += 180;
 		if(angle > 360) angle -= 360;
-		if(angle == 360) angle = 0;
-	
+		if(angle == 360) angle = 0;	
 
 		goalPos->setAngle(angle);
-		LOG(INFO) << "[POS] CALCULATED ANGLE (reverse)=" << angle;
+		LOG(DEBUG) << "[POS] CALCULATED ANGLE (reverse)=" << angle;
 
 		distR = distanceAngle();
 		
 		while(!closeEnoughAngle()) {
-			LOG(INFO) << "[LOOP] ROTATION: " << distR;
+			LOG(DEBUG) << "[LOOP] ROTATION: " << distR;
 			rotate(distR);
 			updateRotation();
 		}
-
 		do {
 			distX = distanceX(); 
 			distY = distanceY();
@@ -293,8 +289,7 @@ void PosControl::goToReverse() {
 			drive_reverse(dist); // <- reverse
 			//drive(dist);
 			updatePositionReverse();
-			PRINTLINE("distR: " << distR << " distX:" << distX << " distY:" << distY);
-
+			LOG(INFO) << "distR: " << distR << " distX:" << distX << " distY:" << distY;
 		} while(!inGoal());
 	}
 
@@ -325,6 +320,7 @@ float PosControl::updateDist(float angle, float distX, float distY) {
 		return distY/sin_d(angle);
 	}
 }
+
 
 float PosControl::updateDistReverse(float angle, float distX, float distY) {
 	if(sin_d(angle) == 0) {
@@ -396,7 +392,7 @@ void PosControl::drive(float dist) {
 }
 
 
-//CHECK: stuff
+// must reverse slowly because of poor weight distribution on the robot
 void PosControl::drive_reverse(float dist) {	
 	LOG(DEBUG) << "DISTR: " << dist;
 	float rotation = goalPos->getAngle();
@@ -439,6 +435,7 @@ void PosControl::completeCurrent() {
 int PosControl::getCurrentId() {
 	return goalPos->getId();
 }
+
 
 std::string PosControl::getCurrentPos() {
 	curPos->updatePosString();

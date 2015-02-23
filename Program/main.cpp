@@ -29,6 +29,7 @@
  //     - noCom for program startup without read/write threads (probably not)
  //     - sound
  
+#include "dynacom.h"
 #include "motorcom.h"
 #include "liftcom.h"
 #include "poscontrol.h"
@@ -55,7 +56,6 @@ INITIALIZE_EASYLOGGINGPP
 // Implements a ZMQ server that waits for input from clients. 
 // Used for communication with AI.
 void readLoop();
-
 
 // Implements a ZMQ subscriber that reads current real position from a publisher
 void subscriptionLoop();
@@ -97,6 +97,7 @@ void crashHandler(int sig);
 MotorCom *m;
 LiftCom *l;
 PosControl *p;
+DynaCom *d;
 //Sound *s;
 
 // locking objects while readLoop is writing to them.
@@ -113,8 +114,9 @@ bool com_running = false;
 bool debug_file_enabled = false;
 bool testing_enabled = false;
 bool log_to_file = true;
+std::string lift_serial = "ttyACM0";
 std::string motor_serial = "ttyUSB0";
-std::string lift_serial = "ttyUSB1";
+std::string gripper_serial = "ttyUSB1";
 
 
 /* Waits for input on socket, mainly position. */
@@ -357,9 +359,9 @@ bool checkArguments(int argc, char *argv[]) {
     //m->serialSimDisable(); //just because
 
     opterr = 0;
-    char *cval = nullptr;
+    //char *cval = nullptr;
     int opt;
-    while( (opt = getopt(argc, argv, "hstdnm:l:")) != -1 ) {
+    while( (opt = getopt(argc, argv, "hstdnm:l:g:")) != -1 ) {
         switch(opt) {
             case 'h':
                 //print help
@@ -398,6 +400,10 @@ bool checkArguments(int argc, char *argv[]) {
                 //lift_serial = std::to_string(optarg);
                 lift_serial = optarg;
                 PRINTLINE("[SETUP]    lift arg=" << optarg);
+                break;
+            case 'g':
+                gripper_serial = optarg;
+                PRINTLINE("[SETUP]    lift arg=" << optarg);            
                 break;
             case '?':
                 if(optopt == 'm') {
@@ -480,12 +486,14 @@ int main(int argc, char *argv[]) {
     el::Helpers::setCrashHandler(crashHandler);
 
 
-    LOG(INFO) << "[SETUP] creating MotorCom";
+    LOG(INFO) << "[SETUP] initializing MotorCom";
     m = new MotorCom(motor_serial, sim_enabled);
 
-    LOG(INFO) << "[SETUP] creating LiftCom";
+    LOG(INFO) << "[SETUP] initializing LiftCom";
     l = new LiftCom(lift_serial);
 
+    LOG(INFO) << "[SETUP] initializing DynaCom";
+    d = new DynaCom(gripper_serial);
 
     LOG(INFO) << "[SETUP] starting and flushing serials";
     m->startSerial();
@@ -499,7 +507,7 @@ int main(int argc, char *argv[]) {
 
 
     LOG(INFO) << "[SETUP] initializing PosControl";
-    p = new PosControl(m, l, testing_enabled);
+    p = new PosControl(m, l, d, testing_enabled);
 
     LOG(INFO) << "[SETUP] initializing readLoop thread";
     std::thread read_thread(readLoop);
@@ -554,16 +562,14 @@ void testSystem() {
     //test LOGging
     printResult("[TEST] Logging: ", true); //pointless, if LOGging isnt active nothing will be written
 
-    if(m->test()) {
-        printResult("[TEST] MotorCom active", true);
-        if(m->isSimulating()) printResult("[TEST]     sSerial open (sim)", true);
-        else           printResult("[TEST]      Serial open", true);
-    } 
-
-    if(l->test()) {
-        printResult("[TEST] LiftCom active", true);
-        printResult("[TEST]     Serial open", true);
+    if(m->isSimulating()) {
+        printResult("[TEST] MotorCom: serial open (sim)", true);
+    } else {
+        printResult("[TEST] MotorCom: serial open", m->test());
     }
+    printResult("[TEST] LiftCom: serial open", l->test());
+    printResult("[TEST] DynaCom: serial open", d->test());
+
 
     printResult("[TEST] PosControl active", p->test()); //poscontrol test
     printResult("[TEST] Read_thread running", com_running);

@@ -137,7 +137,7 @@ int id = 1;
 int main(int argc, char *argv[]) {
    // serial = new SerialStream;
   std::cout << "Opening serial" << std::endl;
-  serial.Open("/dev/ttyUSB0");
+  serial.Open("/dev/ttyACM0");
 
 
   std::cout << "Configurating serial" << std::endl;
@@ -156,10 +156,15 @@ int main(int argc, char *argv[]) {
   std::cout << "Toggling LED" << std::endl;
   toggleLed(id);
 
+  std::cout << "Setting Speed" << std::endl;
+  setSpeed(id, 100);
+
+
   std::cout << "Testing goToAngle:" << std::endl;
   std::cout << "0" << std::endl;
   goToAngle(id, 0);
   usleep(1000000);
+  /*
   std::cout << "100" << std::endl;
   goToAngle(id, 100);
   usleep(1000000);
@@ -174,5 +179,6 @@ int main(int argc, char *argv[]) {
   usleep(1000000);
   std::cout << "500" << std::endl;
   goToAngle(id, 500);
+  */
   return 0;
 }

@@ -18,7 +18,6 @@
 #define OPEN 3
 #define CLOSE 4
 #define GET 5
-
 //?
 #define DELAY 300
 #define SUCCESS 5

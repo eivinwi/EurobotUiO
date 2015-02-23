@@ -37,6 +37,7 @@
 #include "goalposition.h"
 #include "liftcom.h"
 #include "motorcom.h"
+#include "dynacom.h"
 #include "position.h"
 #include "printing.h"
 #include "rotation.h"
@@ -65,7 +66,7 @@ public:
 	// m = instance of MotorCom used to communicate with motors trough MD49 via serial
 	// l = instance of LiftCom used to communicate with lift/gripper-arduino via serial
 	// testing: see enableTesting()
-    PosControl(MotorCom *m, LiftCom *l, bool testing);
+    PosControl(MotorCom *m, LiftCom *l, DynaCom *d, bool testing);
     ~PosControl();
 
     void reset();
@@ -209,6 +210,7 @@ private:
 
 	MotorCom *mcom;
 	LiftCom *lcom;
+	DynaCom *dcom;
 	GoalPosition *goalPos;
 	Position *curPos;
 	Position *exactPos;
