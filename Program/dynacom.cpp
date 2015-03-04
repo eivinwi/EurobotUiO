@@ -39,7 +39,7 @@ DynaCom::~DynaCom() {
 void DynaCom::startSerial() {        
     if(serial_port == "") { //should never happen
         LOG(WARNING) << "[LIFT] 	Error, empty serial_port. Setting to /dev/ttyACM1";
-        serial_port = "/dev/ttyACM1";
+        serial_port = "ttyACM1";
     }     
     LOG(INFO) << "[LIFT] 	 Starting serial at: " << serial_port;
 	port = new Serial(serial_port);

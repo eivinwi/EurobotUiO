@@ -101,7 +101,7 @@ bool PosControl::test() {
 
 
 void PosControl::enqueue(int id, int x, int y, float rot, int arg, int type) {
-	Cmd  cmd= {id, x, y, rot, arg, type};
+	Cmd cmd= {id, x, y, rot, arg, type};
 	std::lock_guard<std::mutex> lock(qMutex);	
 	q.push(cmd);
 	notifier.notify_one();
@@ -121,23 +121,7 @@ Cmd PosControl::dequeue() {
 }
 
 
-//CHECK: should check if position is in goal?
-void PosControl::setGoalRotation(int rot) {
-	if(rot == 360) rot = 0;
-	else if(rot < 0) rot += 360;
-
-	goalPos->setAngle(rot);
-	goToRotation();
-}
-
-
-//CHECK: should check rotation? (probably not) 
-void PosControl::setGoalPosition(int x, int y) {
-	LOG(DEBUG) << "[POS] setGoalPos(" << x << "," << y << ")";
-	goalPos->setPosition(x, y);
-	goToPosition();
-}
-
+/////////////////////////////////////// CHECKLINE - code above this line is checked /////////////////////////////////////////////////
 
 
 // Main program, loops once every time a command is dequeued.
@@ -162,6 +146,8 @@ void PosControl::controlLoop() {
 			} else if(cmd.type == LIFT) {
 				goToLift(cmd.argument);	
 			}
+			fullStop();
+			completeCurrent();
 		} 
 		else {
 			if(cmd.type == ROTATION) {
@@ -191,23 +177,22 @@ void PosControl::goToRotation() {
 			logTrace();
 			usleep(1000);
 		} while(!closeEnoughAngle());
+
 		LOG(INFO) << "[POS] rotation finished: " << curPos->getAngle() << "=" << goalPos->getAngle();
 	} 
 	else {
 		LOG(INFO) << "[POS] already at specified rotation(" << goalPos->getId() << "): " << curPos->getAngle() << "=" << goalPos->getAngle();
 	}
-	completeCurrent();
-	//fullStop();
 	curPos->setAngle(goalPos->getAngle());
 }
 
+// TODO: error checking
 
 //CHECK: delays or not?
 void PosControl::goToPosition() {
 	LOG(DEBUG) << "[POS] goToPosition (" << curPos->getX() << "," << curPos->getY() << ") -> (" << goalPos->getX() << "," << goalPos->getY() << ")";
 	float distX = distanceX(); 
 	float distY = distanceY();
-	float distR = 0.0;
 	float angle = 0.0;
 	float dist = 0.0;
 
@@ -218,6 +203,9 @@ void PosControl::goToPosition() {
 		if(angle < 0) angle += 360;
 		goalPos->setAngle(angle);
 		LOG(DEBUG) << "[POS] CALCULATED ANGLE=" << angle;
+
+		//goalPos has been set to calculated angle. Safe to call goToRotation
+		goToRotation();
 		
 		//calculate straight distance
 		dist = updateDist(angle, distX, distY);
@@ -225,40 +213,25 @@ void PosControl::goToPosition() {
 		do {
 			distX = distanceX(); 
 			distY = distanceY();
-			distR = distanceAngle();
 			dist = updateDist(angle, distX, distY);
 
-			LOG(DEBUG) << "CURRENT: " << curPos->getX() << " | " << curPos->getY() << " | " << curPos->getAngle();
+			LOG(DEBUG) << "DRIVE: " << curPos->getX() << " | " << curPos->getY() << " | " << curPos->getAngle();
+			//LOG(INFO) << "DRIVE: " << curPos->getX() << " | " << curPos->getY() << " | " << curPos->getAngle();
 			LOG_EVERY_N(5, INFO) << "pos_now: (" << curPos->getX() << ", " << curPos->getY() << ", " << curPos->getAngle() << ")";
 
-			if(!closeEnoughAngle()) {				
-				LOG(INFO) << "[LOOP] ROTATION: " << distR;
-				rotate(distR);
-				updateRotation();
-			} else {
-				curPos->setAngle(goalPos->getAngle()); 
-				LOG(INFO) << "[LOOP] DRIVE: " << distX << "," << distY << " => " << dist;
-				drive(dist);
-				updatePosition();
-			} 
-			logTrace();
+			if(dist < 0) break; //overshoot. CHECK
+			drive(dist);
+			updatePosition();
 			
-			int error = (int) mcom->getError();
-			if(error != 0) {
-				LOG(INFO) << "||||||||||||||||||| ERROR: " << error << "||||||||||||||||";
-			}	
+			logTrace();
 			usleep(3000);
-
-
 		} while(!closeEnoughX() || !closeEnoughY());
 	}
 
-	completeCurrent();
-	fullStop();
 	LOG(INFO) << "[POS] IN GOAL!  (" << curPos->getX() << " , " <<  curPos->getY() << ") ~= (" << goalPos->getX() << " , " << goalPos->getY() << ")";
 }
 
-
+//should be incorporated in goToPosition
 void PosControl::goToReverse() {
 	LOG(INFO) << "[POS] goToReverse (" << curPos->getX() << "," << curPos->getY() << ") -> (" << goalPos->getX() << "," << goalPos->getY() << ")";
 	float distX = distanceX(); 
@@ -275,34 +248,25 @@ void PosControl::goToReverse() {
 		angle += 180;
 		if(angle > 360) angle -= 360;
 		if(angle == 360) angle = 0;	
-
 		goalPos->setAngle(angle);
 		LOG(DEBUG) << "[POS] CALCULATED ANGLE (reverse)=" << angle;
 
+		goToRotation();
+
 		distR = distanceAngle();
 		
-		while(!closeEnoughAngle()) {
-		//	LOG(DEBUG) << "[LOOP] ROTATION: " << distR;
-			rotate(distR);
-			updateRotation();
-		}
 		do {
 			distX = distanceX(); 
 			distY = distanceY();
 			distR = distanceAngle();
 			dist = updateDistReverse(angle, distX, distY);
 
-			curPos->setAngle(goalPos->getAngle()); 
-		//	LOG(INFO) << "[LOOP] DRIVE: " << distX << "," << distY;
+			if(dist > 0) break; //overshoot CHECK
 			drive_reverse(dist); // <- reverse
-			//drive(dist);
 			updatePositionReverse();
 			LOG(INFO) << "distR: " << distR << " distX:" << distX << " distY:" << distY;
 		} while(!inGoal());
 	}
-
-	completeCurrent();
-	fullStop();
 	LOG(INFO) << "[POS] IN GOAL (reverse)!  (" << curPos->getX() << " , " <<  curPos->getY() << ") ~= (" << goalPos->getX() << " , " << goalPos->getY() << ")";
 }
 
@@ -326,7 +290,6 @@ void PosControl::goToLift(int arg) {
 			LOG(WARNING) << "[LIFT] UNSUCCESSFULL movement";
 		}
 	}
-	completeCurrent();
 }
 
 
@@ -382,24 +345,11 @@ void PosControl::drive(float dist) {
 
 		//CHECK: unneccsary test?
 		if(!inGoal()) {
-			/*if(dist < 0) {
-				if(dist < -SLOWDOWN_MAX_DIST) {
-					LOG(INFO) << "[D] max_neg (" << dist << ")";
-					setSpeed(SPEED_MAX_NEG, SPEED_MAX_NEG);
-				} else if(dist < -SLOWDOWN_MED_DIST) {
-					LOG(INFO) << "[D] med_neg (" << dist << ")";
-					setSpeed(SPEED_MED_NEG, SPEED_MED_NEG);					
-				} else {
-					LOG(INFO) << "[D] min_neg (" << dist << ")";
-					setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
-				}
-			}
-			else {*/
-				if(abs(dist) > SLOWDOWN_MAX_DIST) {
+				if(dist > SLOWDOWN_MAX_DIST) {
 					//LOG(INFO) << "[D] max_pos (" << dist << ")";
 					setSpeed(SPEED_MAX_POS, SPEED_MAX_POS);
 				} 
-				else if(abs(dist) > SLOWDOWN_MED_DIST) {
+				else if(dist > SLOWDOWN_MED_DIST) {
 					//LOG(INFO) << "[D] med_pos (" << dist << ")";
 					setSpeed(SPEED_MED_POS, SPEED_MED_POS);
 				} 
@@ -444,10 +394,13 @@ void PosControl::drive_reverse(float dist) {
 
 
 void PosControl::completeCurrent() {
-	fullStop();
+	//fullStop();
+
+	//debugging threads
 	LOG(DEBUG) << "THREAD [" << std::this_thread::get_id() << "] is sleeping";
 	usleep(1000000);
 	LOG(DEBUG) << "THREAD [" << std::this_thread::get_id() << "] is awake";
+
 	working = false;
 	if(completed_actions[goalPos->getId()]) {
 		LOG(INFO) << "[POS] action " << goalPos->getId() << " was already finished.";
@@ -705,14 +658,14 @@ void PosControl::printDist() {
 
 
 void PosControl::setSpeed(int l, int r) {
-	LOG(INFO) << "SetSpeed( " << l << ", " << r << ")";
+//	LOG(INFO) << "SetSpeed( " << l << ", " << r << ")";
 	//if(curSpeedLeft != l) {
-		LOG(INFO) << "	speed left set=" << l; 
+//		LOG(INFO) << "	speed left set=" << l; 
 		mcom->setSpeedL(l);
 		curSpeedLeft = l;
 	//} 
 	//if(curSpeedRight != r) {
-		LOG(INFO) << "	speed right set=" << r; 
+//		LOG(INFO) << "	speed right set=" << r; 
 		mcom->setSpeedR(r);
 		curSpeedRight = r;
 	//}

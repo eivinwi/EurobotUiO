@@ -85,8 +85,6 @@ public:
 
 	void enqueue(int id, int x, int y, float rot, int arg, int type);
 	struct Cmd dequeue();
-	void setGoalRotation(int r);
-	void setGoalPosition(int x, int y);
 
 	// Returns id of the action currently being executed. 0 if none
 	int getCurrentId();
