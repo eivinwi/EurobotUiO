@@ -59,7 +59,7 @@ void MotorCom::startSerial() {
 	} else {
         if(serial_port == "") { //should never happen
             LOG(WARNING) << "[MOTOR]    Error, empty serial_port. Setting to /dev/ttyUSB0";
-            serial_port = "ttyUSB0";
+            serial_port = "/dev/ttyUSB0";
         }     
         LOG(INFO) << "[MOTOR]    Starting serial at: " << serial_port;
 		port = new Serial(serial_port);

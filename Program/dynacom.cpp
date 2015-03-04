@@ -38,8 +38,8 @@ DynaCom::~DynaCom() {
 
 void DynaCom::startSerial() {        
     if(serial_port == "") { //should never happen
-        LOG(WARNING) << "[LIFT] 	Error, empty serial_port. Setting to /dev/ttyUSB1";
-        serial_port = "ttyUSB1";
+        LOG(WARNING) << "[LIFT] 	Error, empty serial_port. Setting to /dev/ttyACM1";
+        serial_port = "/dev/ttyACM1";
     }     
     LOG(INFO) << "[LIFT] 	 Starting serial at: " << serial_port;
 	port = new Serial(serial_port);
@@ -180,6 +180,7 @@ void DynaCom::setPosition(int id, int angle) {
 
 // sets the gripper to OPEN position
 bool DynaCom::openGrip() {
+	PRINTLINE("DYNA: openGrip");
 	if(state == CLOSED_STATE) {
 		setPosition(id, 230);
 		state = OPEN_STATE;
@@ -191,6 +192,7 @@ bool DynaCom::openGrip() {
 
 // sets the gripper to CLOSED position
 bool DynaCom::closeGrip() {
+	PRINTLINE("DYNA: closeGrip");
 	if(state == OPEN_STATE) {
 		setPosition(id, 530);
 		state = CLOSED_STATE;

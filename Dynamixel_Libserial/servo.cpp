@@ -178,8 +178,7 @@ void print(std::string s) {
 
 // ====== MOVED OVER ======
 
-
-
+/*
 int getPosition() {
 	std::cout << "GetPosition: ";
 
@@ -205,7 +204,7 @@ int getPosition() {
 	std::cout << "Position is: " << val << std::endl;
 	return val;
 }
-
+*/
 
 void flush() {
 	std::cout << "Flushing serial: [";
@@ -221,8 +220,8 @@ void flush() {
 int main(int argc, char *argv[]) {
    // serial = new SerialStream;
   std::cout << "Opening serial" << std::endl;
-  serial.Open("/dev/ttyUSB0");
-
+  //serial.Open("/dev/ttyUSB0");
+  serial.Open("/dev/ttyACM0");
 
   std::cout << "Configurating serial" << std::endl;
   serial.SetBaudRate( SerialStreamBuf::BAUD_38400 );
@@ -242,14 +241,15 @@ int main(int argc, char *argv[]) {
   setPosition(id, 230);
   usleep(500000);
 
-  getPosition();
-  usleep(10000);
+//  getPosition();
+ // usleep(10000);
+
 
   setPosition(id, 530);
   usleep(500000);
 
-  getPosition();
-  usleep(10000);
+//  getPosition();
+//  usleep(10000);
 
 //  setPosition(id, 230);
 //  usleep(500000);
@@ -261,4 +261,4 @@ int main(int argc, char *argv[]) {
 }
 
 
-// 90* = 1024/4 = 256
+// 90* = 1024/4 = 2561

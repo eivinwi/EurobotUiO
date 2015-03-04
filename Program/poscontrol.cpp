@@ -197,7 +197,7 @@ void PosControl::goToRotation() {
 		LOG(INFO) << "[POS] already at specified rotation(" << goalPos->getId() << "): " << curPos->getAngle() << "=" << goalPos->getAngle();
 	}
 	completeCurrent();
-	fullStop();
+	//fullStop();
 	curPos->setAngle(goalPos->getAngle());
 }
 
@@ -228,7 +228,7 @@ void PosControl::goToPosition() {
 			dist = updateDist(angle, distX, distY);
 
 			LOG(DEBUG) << "CURRENT: " << curPos->getX() << " | " << curPos->getY() << " | " << curPos->getAngle();
-			LOG_EVERY_N(5, INFO) << "(" << curPos->getX() << ", " << curPos->getY() << ", " << curPos->getAngle() << ")";
+			LOG_EVERY_N(5, INFO) << "pos_now: (" << curPos->getX() << ", " << curPos->getY() << ", " << curPos->getAngle() << ")";
 
 			if(!closeEnoughAngle()) {				
 				LOG(DEBUG) << "[LOOP] ROTATION: " << distR;
@@ -242,12 +242,12 @@ void PosControl::goToPosition() {
 			} 
 			logTrace();
 			usleep(3000);
-		} while(!inGoal());
+		} while(!closeEnoughX() || !closeEnoughY());
 	}
 
-	fullStop();
-	LOG(INFO) << "[POS] IN GOAL!  (" << curPos->getX() << " , " <<  curPos->getY() << ") ~= (" << goalPos->getX() << " , " << goalPos->getY() << ")";
 	completeCurrent();
+	//fullStop();
+	LOG(INFO) << "[POS] IN GOAL!  (" << curPos->getX() << " , " <<  curPos->getY() << ") ~= (" << goalPos->getX() << " , " << goalPos->getY() << ")";
 }
 
 
@@ -293,21 +293,30 @@ void PosControl::goToReverse() {
 		} while(!inGoal());
 	}
 
-	fullStop();
-	LOG(INFO) << "[POS] IN GOAL (reverse)!  (" << curPos->getX() << " , " <<  curPos->getY() << ") ~= (" << goalPos->getX() << " , " << goalPos->getY() << ")";
 	completeCurrent();
+	//fullStop();
+	LOG(INFO) << "[POS] IN GOAL (reverse)!  (" << curPos->getX() << " , " <<  curPos->getY() << ") ~= (" << goalPos->getX() << " , " << goalPos->getY() << ")";
 }
 
 
+//TODO: this is an ugly way of doing lift/grabber
 void PosControl::goToLift(int arg) {
-	PRINTLINE("[POS] goToLift");
-	lcom->goTo(arg);
-	bool success = lcom->waitForResponse();
-	PRINTLINE("[POS] goToLift done waiting");
-	if(success) {
-		LOG(INFO) << "[LIFT] Successful movement";
-	} else {
-		LOG(WARNING) << "[LIFT] UNSUCCESSFULL movement";
+	PRINTLINE("[POS] goToLift");	
+	if(arg == 3) {
+		dcom->openGrip();
+	} else if(arg == 4) {
+		dcom->closeGrip();
+	}
+
+	else {
+		lcom->goTo(arg);
+		bool success = lcom->waitForResponse();
+		PRINTLINE("[POS] goToLift done waiting");
+		if(success) {
+			LOG(INFO) << "[LIFT] Successful movement";
+		} else {
+			LOG(WARNING) << "[LIFT] UNSUCCESSFULL movement";
+		}
 	}
 	completeCurrent();
 }
@@ -365,22 +374,25 @@ void PosControl::drive(float dist) {
 		//CHECK: unneccsary test?
 		if(!inGoal()) {
 			if(dist < 0) {
-				if(dist < -SLOWDOWN_MAX_DIST) {
-					setSpeed(SPEED_MAX_NEG, SPEED_MAX_NEG);
-				} else if(dist < -SLOWDOWN_MED_DIST) {
+				//if(dist < -SLOWDOWN_MAX_DIST) {
+			//		setSpeed(SPEED_MAX_NEG, SPEED_MAX_NEG);
+			//	} else if(dist < -SLOWDOWN_MED_DIST) {
 					setSpeed(SPEED_MED_NEG, SPEED_MED_NEG);					
-				} else {
-					setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
-				}
+			//	} else {
+			//		setSpeed(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
+			//	}
 			}
 			else {
-				if(dist > SLOWDOWN_MAX_DIST) {
-					setSpeed(SPEED_MAX_POS, SPEED_MAX_POS);
-				} else if(dist > SLOWDOWN_MED_DIST) {
+				//if(dist > SLOWDOWN_MAX_DIST) {
+				//	setSpeed(SPEED_MAX_POS, SPEED_MAX_POS);
+				//} 
+				//else 
+				//if(dist > SLOWDOWN_MED_DIST) {
 					setSpeed(SPEED_MED_POS, SPEED_MED_POS);
-				} else {
-					setSpeed(SPEED_SLOW_POS, SPEED_SLOW_POS);
-				}
+				//} 
+				//else {
+				//	setSpeed(SPEED_SLOW_POS, SPEED_SLOW_POS);
+				//}
 			}
 		} else {
 			LOG(DEBUG) << "[POS] ERROR; already in goal";

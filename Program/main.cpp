@@ -104,7 +104,7 @@ DynaCom *d;
 std::mutex read_mutex;
 
 // MD49 constants
-const int ACCELERATION = 10;
+const int ACCELERATION = 5;
 const int MODE = 0;
 
 // Default values, to be changed with command-line arguments
@@ -114,9 +114,9 @@ bool com_running = false;
 bool debug_file_enabled = false;
 bool testing_enabled = false;
 bool log_to_file = true;
-std::string lift_serial = "ttyACM0";
-std::string motor_serial = "ttyUSB0";
-std::string gripper_serial = "ttyUSB1";
+std::string motor_serial = "/dev/ttyUSB0";
+std::string lift_serial = "/dev/ttyACM0";
+std::string gripper_serial = "/dev/ttyACM1";
 
 
 /* Waits for input on socket, mainly position. */
@@ -403,7 +403,7 @@ bool checkArguments(int argc, char *argv[]) {
                 break;
             case 'g':
                 gripper_serial = optarg;
-                PRINTLINE("[SETUP]    lift arg=" << optarg);            
+                PRINTLINE("[SETUP]    grip arg=" << optarg);            
                 break;
             case '?':
                 if(optopt == 'm') {
@@ -497,7 +497,6 @@ int main(int argc, char *argv[]) {
 
     LOG(INFO) << "[SETUP] starting and flushing serials";
     m->startSerial();
-    l->startSerial();
     usleep(100000);
     m->flush();
 
@@ -505,6 +504,14 @@ int main(int argc, char *argv[]) {
     m->resetEncoders();
     usleep(5000);
 
+    LOG(INFO) << "[SETUP] starting lift serial";
+    l->startSerial();
+    usleep(100000);
+
+
+    LOG(INFO) << "[SETUP] starting and flushing serials";
+    d->startSerial();
+    usleep(100000);
 
     LOG(INFO) << "[SETUP] initializing PosControl";
     p = new PosControl(m, l, d, testing_enabled);
@@ -568,7 +575,14 @@ void testSystem() {
         printResult("[TEST] MotorCom: serial open", m->test());
     }
     printResult("[TEST] LiftCom: serial open", l->test());
+    printResult("[TEST] LiftCom: serial open", l->test());
+    printResult("[TEST] LiftCom: serial open", l->test());
+    printResult("[TEST] LiftCom: serial open", l->test());
+    printResult("[TEST] LiftCom: serial open", l->test());
+
+
     printResult("[TEST] DynaCom: serial open", d->test());
+
 
 
     printResult("[TEST] PosControl active", p->test()); //poscontrol test

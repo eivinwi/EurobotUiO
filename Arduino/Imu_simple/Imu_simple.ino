@@ -226,16 +226,13 @@ void printHeading(float hx, float hy)
 {
   float heading;
 
-  if (hy > 0)
-  {
+  if (hy > 0) {
     heading = 90 - (atan(hx / hy) * (180 / PI));
   }
-  else if (hy < 0)
-  {
+  else if (hy < 0) {
     heading = - (atan(hx / hy) * (180 / PI));
   }
-  else // hy = 0
-  {
+  else {
     if (hx < 0) heading = 180;
     else heading = 0;
   }

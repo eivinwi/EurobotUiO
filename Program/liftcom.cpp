@@ -38,7 +38,7 @@ LiftCom::~LiftCom() {
 void LiftCom::startSerial() {        
     if(serial_port == "") { //should never happen
         LOG(WARNING) << "[LIFT] 	Error, empty serial_port. Setting to /dev/ttyUSB1";
-        serial_port = "ttyUSB1";
+        serial_port = "/dev/ttyUSB1";
     }     
     LOG(INFO) << "[LIFT] 	 Starting serial at: " << serial_port;
 	port = new Serial(serial_port);
@@ -122,14 +122,19 @@ uint8_t LiftCom::getPosition() {
 
 
 bool LiftCom::test() {
+	PRINTLINE("TESTING AVAILABILITY");
 	if(port->available()) {
+		PRINTLINE("    AVAILABILITY=true");
 		return true;
 	} else {
 		usleep(1000);
 		if(port->available()) {
+			PRINTLINE("    AVAILABILITY=2nd true");
 			return true;
 		}
+
 	}
+	PRINTLINE("    AVAILABILITY=false");
 	return false;
 }
 

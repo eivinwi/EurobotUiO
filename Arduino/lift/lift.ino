@@ -7,8 +7,8 @@
 #include <Servo.h>
 
 // Pins
-#define DIR 8
-#define STEP 9
+#define DIR 9
+#define STEP 8
 #define GRAB 11
 
 // Communication protocol
