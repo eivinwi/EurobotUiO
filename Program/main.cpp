@@ -504,6 +504,11 @@ int main(int argc, char *argv[]) {
     m->resetEncoders();
     usleep(5000);
 
+
+
+    m->enableTimeout(false);
+    usleep(10000);
+
     LOG(INFO) << "[SETUP] starting lift serial";
     l->startSerial();
     usleep(100000);
