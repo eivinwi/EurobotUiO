@@ -63,15 +63,14 @@ sudo apt-get install libserial-dev libroot-core-dev libroot-graf2d-postscript-de
 http://zeromq.org/intro:get-the-software 
 ```
 wget http://download.zeromq.org/zeromq-4.1.0-rc1.tar.gz
-tar xvzf zeromq-4.1.0-rc1.tar.gz
-cd zeromq-4.1.0 && ./configure && make && sudo make install && sudo ldconfig
+tar xvzf zeromq-4.1.0-rc1.tar.gz && cd zeromq-4.1.0 && ./configure && make && sudo make install && sudo ldconfig
 ```
 
 ##### Cppzmq
 https://github.com/zeromq/cppzmq
 ```
-wget https://github.com/zeromq/cppzmq/blob/master/zmq.hpp
-sudo mv zmq.hpp /usr/local/include
+git clone https://github.com/zeromq/cppzmq
+sudo mv cppzmg/zmq.hpp /usr/local/include
 ```
 
 ##### Pyzmq (for testing with Eurobot-AI)
@@ -85,7 +84,9 @@ sudo pip install pyzmq
 https://github.com/easylogging/easyloggingpp/
 ```
 wget https://github.com/easylogging/easyloggingpp/releases/download/v9.80/easyloggingpp_v9.80.tar.gz
-tar xvzf easyloggingpp_v9.80.tar.gz && sudo mv easylogging++.h /usr/local/include
+
+git clone https://github.com/easylogging/easyloggingpp/
+sudo mv easyloggingpp/src/easylogging++.h /usr/local/include
 ```
 
 
