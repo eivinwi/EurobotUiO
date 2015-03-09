@@ -73,7 +73,9 @@ int getArguments(std::string input, int *pos);
 bool enqRotation(int num_args, int *args);
 
 // Sends position-change to PosControl to be added to command-queue. Dir is FORWARD or REVERSE
-bool enqPosition (int num_args, int *args, int dir);
+bool enqPosition(int num_args, int *args, int dir);
+
+bool enqStraight(int num_args, int *args);
 
 // Sends action to PosControl to be added to command-queue
 bool enqAction (int num_args, int *args);
@@ -187,6 +189,11 @@ void readLoop() {
                 case SHUTTER: 
                     LOG(INFO) << "[COM]  Received SHUTTER";
                     //TODO
+                    reply_str = "ok";
+                    break;
+                case STRAIGHT:
+                    LOG(INFO) << "[COM]  Received STRAIGHT";
+                    enqStraight(num_args, args);
                     reply_str = "ok";
                     break;
                 case RESET_ALL: 
@@ -306,13 +313,33 @@ bool enqPosition(int num_args, int *args, int dir) {
     return false;
 }
 
+//see enqRotation
+bool enqStraight(int num_args, int *args) {
+    if(num_args != 3) {
+        LOG(WARNING) << "[COM] Straight: wrong number of arguments: " << num_args << "!=4";
+    }
+    else {
+        if(read_mutex.try_lock()) {
+            p->enqueue(args[1], args[2], 0, 0, 0, STRAIGHT);
+            read_mutex.unlock();
+            return true;
+        } 
+        else {
+            usleep(1000);
+            if(read_mutex.try_lock()) {
+                p->enqueue(args[1], args[2], 0, 0, 0, STRAIGHT);
+                read_mutex.unlock();
+                return true;
+            }
+        }
+        LOG(WARNING) << "[COM] try_lock read_mutex unsuccessful";
+    }
+    return false;
+}
 
 bool enqAction(int num_args, int *args) {
     if (num_args != 3) {
         LOG(WARNING) << "[COM] Action: wrong number of arguments: " << num_args << "!=3";        
-    }
-    else if(args[0] != 4 && args[0] != 5 && args[0] != 6) {
-        LOG(WARNING) << "[COM] Action: invalid argument: " << args[0];  //should never happen      
     }
     else {
         if(read_mutex.try_lock()) {
@@ -506,7 +533,7 @@ int main(int argc, char *argv[]) {
 
 
 
-    m->enableTimeout(false);
+    m->enableTimeout(true);
     usleep(10000);
 
     LOG(INFO) << "[SETUP] starting lift serial";

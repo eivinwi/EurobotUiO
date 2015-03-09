@@ -4,7 +4,7 @@
 * 	- This is at ttyUSB1
 * 	-
 */
-#include <Servo.h>
+//#include <Servo.h>
 
 // Pins
 #define DIR 9
@@ -39,23 +39,23 @@
 #define DELAY_HALF (DELAY_FULL/2)
 
 
-Servo gripper;
+//Servo gripper;
 
 
 int lift_state; //0, 1 or 2
-int gripper_state;//0 or 1
+//int gripper_state;//0 or 1
 
 int full_steps = 1200;
 int middle_steps = 600;
 
 void setup() {
 	Serial.begin(38400);
-	gripper.attach(GRAB);
+//	gripper.attach(GRAB);
 	pinMode(DIR, OUTPUT);
 	pinMode(STEP, OUTPUT);
 	digitalWrite(DIR, DOWN);
 	lift_state = BOTTOM_STATE;
-	gripper_state = CLOSED_STATE;
+//	gripper_state = CLOSED_STATE;
 }
 
 
@@ -71,13 +71,17 @@ void loop() {
     	} else if(inByte == MIDDLE) {
     		goMiddle();
     		Serial.print(SUCCESS);
-    	} else if(inByte == OPEN) {
+    	} 
+    	/*
+    	else if(inByte == OPEN) {
     		openGripper();
     		Serial.print(SUCCESS);    		
     	} else if(inByte == CLOSE){
     		closeGripper();
     		Serial.print(SUCCESS);
-    	} else if(inByte == GET) {
+    	} 
+		*/
+    	else if(inByte == GET) {
     		Serial.write(lift_state);
     	}
     	/*if(lift_state == TOP_STATE) {
@@ -164,7 +168,7 @@ void step() {
 void setDir(int d) {
 	digitalWrite(DIR, d);
 }
-
+/*
 void openGripper() {
 	if(gripper_state == CLOSED_STATE) {
 		gripper.write(OUTWARD);
@@ -188,3 +192,4 @@ void closeGripper() {
 	}
 	gripper_state = CLOSED_STATE;
 }
+*/

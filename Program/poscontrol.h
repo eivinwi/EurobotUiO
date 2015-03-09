@@ -57,6 +57,7 @@
 #define ROTATION 1
 #define FORWARD 2
 #define REVERSE 3
+#define STRAIGHT 7
 
 //number of action IDs to store
 #define ACTION_STORAGE 1024
@@ -117,6 +118,10 @@ private:
 	// Similar to goToPosition(), but reverses the robot instead.
 	void goToReverse();
 
+	// Drive a (input) distance in the current rotation. 
+	// Calculates goalX,goalY by trigonometry based on the input and the current rotation
+	void goStraight();
+
     //Sends command to lift-arduino, and waits for ACK before returning
     void goToLift(int arg);
 
@@ -147,8 +152,9 @@ private:
 	
 
 	// Updates current position based on encoder-readings
-	void updatePosition();
-	void updatePositionReverse();
+	// returns distance traveled (straight)
+	float updatePosition();
+	float updatePositionReverse();
 
 
 	// Updates current rotation based on encoder-readings

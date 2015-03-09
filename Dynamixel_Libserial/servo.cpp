@@ -220,8 +220,8 @@ void flush() {
 int main(int argc, char *argv[]) {
    // serial = new SerialStream;
   std::cout << "Opening serial" << std::endl;
-  //serial.Open("/dev/ttyUSB0");
-  serial.Open("/dev/ttyACM0");
+  serial.Open("/dev/ttyUSB0");
+  //serial.Open("/dev/ttyACM0");
 
   std::cout << "Configurating serial" << std::endl;
   serial.SetBaudRate( SerialStreamBuf::BAUD_38400 );
@@ -235,16 +235,19 @@ int main(int argc, char *argv[]) {
   //flush();
 //  setSpeed(id, 200);
 
+  std::cout << "Setting speed/torque parameters" << std::endl;
   setMaxTorque(id, 500);
   setSpeed(id, 255	);
+  usleep(10000);
 
+  std::cout << "Setting position 1" << std::endl;
   setPosition(id, 230);
   usleep(500000);
 
 //  getPosition();
  // usleep(10000);
 
-
+  std::cout << "Setting position 2" << std::endl;
   setPosition(id, 530);
   usleep(500000);
 

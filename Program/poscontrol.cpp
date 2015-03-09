@@ -39,7 +39,7 @@ struct encoder {
 	float totalDist;
 } leftEncoder, rightEncoder;
 
-
+// TODO: should be generalized instead of x,y,rot
 struct Cmd {
 	int id;
 	int x;
@@ -134,7 +134,7 @@ void PosControl::controlLoop() {
 		working = true;
 
 		goalPos = new GoalPosition(cmd.id, cmd.x, cmd.y, cmd.rot);
-		LOG(DEBUG) << "[POS] [" << std::this_thread::get_id() << "]dequeued Cmd {" << cmd.id << "," << cmd.x << "," << cmd.y << "," << cmd.rot << "," << cmd.type << "}";
+		LOG(INFO) << "[POS] [" << std::this_thread::get_id() << "]dequeued Cmd {" << cmd.id << "," << cmd.x << "," << cmd.y << "," << cmd.rot << "," << cmd.type << "}";
 		
 		if(!testing) {
 			if(cmd.type == ROTATION) {
@@ -143,7 +143,10 @@ void PosControl::controlLoop() {
 				goToPosition();
 			} else if(cmd.type == REVERSE) {
 				goToReverse();
-			} else if(cmd.type == LIFT) {
+			} else if(cmd.type == STRAIGHT) {
+				goStraight();
+			}
+			else if(cmd.type == LIFT) {
 				goToLift(cmd.argument);	
 			}
 			fullStop();
@@ -270,6 +273,36 @@ void PosControl::goToReverse() {
 	LOG(INFO) << "[POS] IN GOAL (reverse)!  (" << curPos->getX() << " , " <<  curPos->getY() << ") ~= (" << goalPos->getX() << " , " << goalPos->getY() << ")";
 }
 
+
+
+void PosControl::goStraight() {
+	LOG(DEBUG) << "[POS] goStraight (" << curPos->getX() << "," << curPos->getY() << ") -> (" << goalPos->getX() << "," << goalPos->getY() << ")";
+	float a = curPos->getAngle();
+	float dist = goalPos->getX(); //dist is stored in X temporarily
+	float goal_x = sin_d(a) * dist;
+	float goal_y = cos_d(a) * dist;
+
+	goalPos->setPosition(goal_x, goal_y);
+	goalPos->setAngle(a);
+
+	float distanceTraveled = 0.0;
+
+	while(abs(distanceTraveled) < abs(dist)) {
+		LOG_EVERY_N(5, INFO) << "pos_now: (" << curPos->getX() << ", " << curPos->getY() << ", " << curPos->getAngle() << ")";
+		
+		if(dist > 0) {
+			drive(dist);
+		} else {
+			drive_reverse(dist);
+		}
+		distanceTraveled += updatePosition();
+
+		logTrace();
+		usleep(3000);
+	}
+
+	LOG(INFO) << "[POS] IN GOAL!  (" << curPos->getX() << " , " <<  curPos->getY() << ") ~= (" << goalPos->getX() << " , " << goalPos->getY() << ")";
+}
 
 //TODO: this is an ugly way of doing lift/grabber
 void PosControl::goToLift(int arg) {
@@ -455,7 +488,7 @@ void PosControl::logTrace() {
  * enc per grad = 2.88*2.6 = 7.5
  */
  // CHECK: is avg_dist optimal? probably not
-void PosControl::updatePosition() {
+float PosControl::updatePosition() {
 	LOG(DEBUG) << "[POS] updatePos ";
 	
 	updateLeftEncoder();
@@ -467,7 +500,7 @@ void PosControl::updatePosition() {
 	if(ediff > 50) {
 		LOG(WARNING) << "[POS] Warning, large encoder difference(drive): " << ediff;
 		resetEncoders();
-		return;
+		return 0;
 	}
 
 	float angle = goalPos->getAngle();
@@ -482,10 +515,11 @@ void PosControl::updatePosition() {
 
 	curPos->updateX( x_distance );
 	curPos->updateY( y_distance );
+	return avg_dist;
 }
 
 
-void PosControl::updatePositionReverse() {
+float PosControl::updatePositionReverse() {
 	LOG(DEBUG) << "[POS] updatePos ";
 	
 	updateLeftEncoder();
@@ -498,7 +532,7 @@ void PosControl::updatePositionReverse() {
 	if(ediff > 50) {
 		LOG(WARNING) << "[POS] Warning, large encoder difference(drive): " << ediff;
 		resetEncoders();
-		return;
+		return 0;
 	}
 
 //	LOG(INFO) << "L: " << leftEncoder.diffDist << "  R: " << rightEncoder.diffDist;
@@ -511,6 +545,7 @@ void PosControl::updatePositionReverse() {
 
 	curPos->updateX( -x_distance );
 	curPos->updateY( -y_distance );
+	return avg_dist;
 }
 
 
