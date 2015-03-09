@@ -83,8 +83,6 @@ sudo pip install pyzmq
 ##### Easylogging++
 https://github.com/easylogging/easyloggingpp/
 ```
-wget https://github.com/easylogging/easyloggingpp/releases/download/v9.80/easyloggingpp_v9.80.tar.gz
-
 git clone https://github.com/easylogging/easyloggingpp/
 sudo mv easyloggingpp/src/easylogging++.h /usr/local/include
 ```
