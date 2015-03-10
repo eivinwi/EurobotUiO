@@ -6,7 +6,7 @@
 #define GRAB 5
 #define SHUTTER 6
 #define STRAIGHT 7
-#define RESET_ALL 9
+#define RESET 9
 #define SOUND 11
 
 //Requests

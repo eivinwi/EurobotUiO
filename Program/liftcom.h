@@ -53,7 +53,7 @@
 
 class LiftCom {
 public:
-    LiftCom(std::string serial);
+    LiftCom(std::string serial, bool sim_enabled);
     ~LiftCom();
 
     // Setting serial port. Not really used as port should be sent as param to constructor
@@ -97,6 +97,8 @@ private:
     // Current positions. Atomic because client may request the current position.
     std::atomic<int> lift_pos;
     std::atomic<int> grabber_pos;
+
+    bool simulating;
 };
 
 #endif /* LIFTCOM_H */

@@ -25,9 +25,10 @@
 
 #include "dynacom.h"
 
-DynaCom::DynaCom(std::string serial) {
+DynaCom::DynaCom(std::string serial, bool sim_enabled) {
     serial_port = serial;
     state = OPEN_STATE;
+    simulating = sim_enabled;
  //   return_byte[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 }
 
@@ -36,26 +37,35 @@ DynaCom::~DynaCom() {
 }
 
 
-void DynaCom::startSerial() {        
-    if(serial_port == "") { //should never happen
-        LOG(WARNING) << "[LIFT] 	Error, empty serial_port. Setting to /dev/ttyACM1";
-        serial_port = "ttyACM1";
-    }     
-    LOG(INFO) << "[LIFT] 	 Starting serial at: " << serial_port;
-	port = new Serial(serial_port);
+void DynaCom::startSerial() {
+	if(!simulating) {        
+	    if(serial_port == "") { //should never happen
+	        LOG(WARNING) << "[LIFT] 	Error, empty serial_port. Setting to /dev/ttyACM1";
+	        serial_port = "ttyACM1";
+	    }     
+	    LOG(INFO) << "[LIFT] 	 Starting serial at: " << serial_port;
+		port = new Serial(serial_port);
+	}
+	else {
+	    LOG(INFO) << "[LIFT] 	 Simulating serial";		
+	}
 }
 
 
 void DynaCom::writeToSerial(uint8_t b[], int len) {
-	for(int i = 0; i < len; i++) {
-		port->write(b[i]);
+	if(!simulating) {
+		for(int i = 0; i < len; i++) {
+			port->write(b[i]);
+		}
 	}
 }
 
 template<std::size_t SIZE> 
 void DynaCom::writeToSerial(std::array<uint8_t, SIZE> array) {
-	for(uint8_t b : array) {
-		port->write(b);
+	if(!simulating) {
+		for(uint8_t b : array) {
+			port->write(b);
+		}
 	}
 }
 
@@ -134,7 +144,9 @@ void DynaCom::regRead(int id, int firstRegAdress, int noOfBytesToRead) {
 std::array <uint8_t, 8>  DynaCom::readByte() {
 	std::array <uint8_t, 8> arr;
 	for(int i = 0; i < 8; i++) {
-		arr[i] = port->read();
+		if(!simulating) {
+			arr[i] = port->read();
+		}
 	}
 	return arr;
 }
@@ -228,6 +240,8 @@ int DynaCom::getPosition() {
 //	std::cout << (int) return_byte[7] << "]" << std::endl;
 //	std::cout << "Position is: " << val << std::endl;
 
+	if(simulating) val = rand() % 300 + 200;
+
 	return val;
 }
 
@@ -236,5 +250,7 @@ bool DynaCom::test() {
 	regRead(id, 0, 2);
 	int model_number = returnValue(readByte());
 
+	if(simulating) model_number = 0x0C;
+	
 	return (model_number == 0x0C);
 }

@@ -75,10 +75,14 @@ bool enqRotation(int num_args, int *args);
 // Sends position-change to PosControl to be added to command-queue. Dir is FORWARD or REVERSE
 bool enqPosition(int num_args, int *args, int dir);
 
+// Sends command to the robot to drive forward in current rotation.
 bool enqStraight(int num_args, int *args);
 
 // Sends action to PosControl to be added to command-queue
-bool enqAction (int num_args, int *args);
+bool enqAction(int num_args, int *args);
+
+// Reset robot to intial configuration, then set position to the one provided
+bool resetRobot(int num_args, int *args);
 
 //TODO
 void playSound(int num_args, int *args);
@@ -196,9 +200,9 @@ void readLoop() {
                     enqStraight(num_args, args);
                     reply_str = "ok";
                     break;
-                case RESET_ALL: 
-                    LOG(INFO) << "[COM]  Received RESET_ALL";
-                    p->reset();
+                case RESET: 
+                    LOG(INFO) << "[COM]  Received RESET";
+                    resetRobot(num_args, args);
                     reply_str = "ok";
                     break;
                 case SOUND:
@@ -361,6 +365,32 @@ bool enqAction(int num_args, int *args) {
 }
 
 
+bool resetRobot(int num_args, int *args) {
+    if (num_args != 3) {
+        LOG(WARNING) << "[COM] Action: wrong number of arguments: " << num_args << "!=3";        
+    }
+    else {
+        if(read_mutex.try_lock()) {
+            p->reset(args[1], args[2], args[3]);
+            read_mutex.unlock();
+            return true;
+        } 
+        else {
+            usleep(1000);
+            if(read_mutex.try_lock()) {
+                p->reset(args[1], args[2], args[3]);
+                read_mutex.unlock();
+                return true;
+            }
+        }
+        LOG(WARNING) << "[COM] try_lock read_mutex unsuccessful";
+    }
+
+    return false;
+}
+
+
+//TODO
 void playSound(int num_args, int *args) {
     if(num_args > 1) {
 
@@ -515,12 +545,15 @@ int main(int argc, char *argv[]) {
 
     LOG(INFO) << "[SETUP] initializing MotorCom";
     m = new MotorCom(motor_serial, sim_enabled);
+    usleep(10000);
 
     LOG(INFO) << "[SETUP] initializing LiftCom";
-    l = new LiftCom(lift_serial);
+    l = new LiftCom(lift_serial, sim_enabled);
+    usleep(10000);
 
     LOG(INFO) << "[SETUP] initializing DynaCom";
-    d = new DynaCom(gripper_serial);
+    d = new DynaCom(gripper_serial, sim_enabled);
+    usleep(10000);
 
     LOG(INFO) << "[SETUP] starting and flushing serials";
     m->startSerial();
@@ -531,19 +564,17 @@ int main(int argc, char *argv[]) {
     m->resetEncoders();
     usleep(5000);
 
-
-
-    m->enableTimeout(true);
-    usleep(10000);
+//    m->enableTimeout(true);
+//    usleep(10000);
 
     LOG(INFO) << "[SETUP] starting lift serial";
     l->startSerial();
-    usleep(100000);
+    usleep(10000);
 
 
     LOG(INFO) << "[SETUP] starting and flushing serials";
     d->startSerial();
-    usleep(100000);
+    usleep(10000);
 
     LOG(INFO) << "[SETUP] initializing PosControl";
     p = new PosControl(m, l, d, testing_enabled);
@@ -607,15 +638,7 @@ void testSystem() {
         printResult("[TEST] MotorCom: serial open", m->test());
     }
     printResult("[TEST] LiftCom: serial open", l->test());
-    printResult("[TEST] LiftCom: serial open", l->test());
-    printResult("[TEST] LiftCom: serial open", l->test());
-    printResult("[TEST] LiftCom: serial open", l->test());
-    printResult("[TEST] LiftCom: serial open", l->test());
-
-
     printResult("[TEST] DynaCom: serial open", d->test());
-
-
 
     printResult("[TEST] PosControl active", p->test()); //poscontrol test
     printResult("[TEST] Read_thread running", com_running);

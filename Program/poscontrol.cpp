@@ -58,7 +58,7 @@ PosControl::PosControl(MotorCom *m, LiftCom *l, DynaCom *d, bool test) {
 	goalPos = new GoalPosition;
 	curPos = new Position;
 	exactPos = new Position;
-	reset();
+	reset(0,0,0);
 }
 
 
@@ -66,7 +66,7 @@ PosControl::~PosControl() {
 }
 
 
-void PosControl::reset() {
+void PosControl::reset(int x, int y, int rot) {
 	curPos->reset();
 	goalPos->reset();
 	
@@ -81,9 +81,12 @@ void PosControl::reset() {
 	rightEncoder.diffDist = 0.0;
 	rightEncoder.total = 0;
 	rightEncoder.totalDist = 0.0;
+	mcom->resetEncoders();
 
 	curSpeedRight = 0;
 	curSpeedLeft = 0;
+
+	curPos->set(x, y, rot);
 	curPos->updatePosString();
 
 	std::fill(std::begin(completed_actions), std::end(completed_actions), false);

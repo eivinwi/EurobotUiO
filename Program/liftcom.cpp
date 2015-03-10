@@ -25,9 +25,10 @@
 
 #include "liftcom.h"
 
-LiftCom::LiftCom(std::string serial) {
+LiftCom::LiftCom(std::string serial, bool sim_enabled) {
     serial_port = serial;
     lift_pos = BOTTOM;
+    simulating = sim_enabled;
 }
 
 
@@ -35,13 +36,18 @@ LiftCom::~LiftCom() {
 }
 
 
-void LiftCom::startSerial() {        
-    if(serial_port == "") { //should never happen
-        LOG(WARNING) << "[LIFT] 	Error, empty serial_port. Setting to /dev/ttyUSB1";
-        serial_port = "/ttyUSB1";
-    }     
-    LOG(INFO) << "[LIFT] 	 Starting serial at: " << serial_port;
-	port = new Serial(serial_port);
+void LiftCom::startSerial() {
+	if(!simulating) { 	      
+	    if(serial_port == "") { //should never happen
+	        LOG(WARNING) << "[LIFT] 	Error, empty serial_port. Setting to /dev/ttyUSB1";
+	        serial_port = "/ttyUSB1";
+	    }     
+	    LOG(INFO) << "[LIFT] 	 Starting serial at: " << serial_port;
+		port = new Serial(serial_port);
+	}
+	else {
+		LOG(INFO) << "[LIFT] 	 Simulating serial";
+	}	
 }
 
 
@@ -122,22 +128,27 @@ uint8_t LiftCom::getPosition() {
 
 
 bool LiftCom::test() {
-	PRINTLINE("TESTING AVAILABILITY");
-	uint8_t testval = 0;
-	writeToSerial((int) 9);	
-	if(port->available()) {
-		PRINTLINE("    AVAILABILITY=true");
-		testval = readFromSerial();
-	} else {
-		usleep(1000);
+	if(!simulating) {
+		PRINTLINE("TESTING AVAILABILITY");
+		uint8_t testval = 0;
+		writeToSerial((int) 9);	
 		if(port->available()) {
-			PRINTLINE("    AVAILABILITY=2nd true");
-			return true;
+			PRINTLINE("    AVAILABILITY=true");
 			testval = readFromSerial();
+		} else {
+			usleep(1000);
+			if(port->available()) {
+				PRINTLINE("    AVAILABILITY=2nd true");
+				return true;
+				testval = readFromSerial();
+			}
 		}
-	}
 
-	return (testval == 0x2C);
+		return (testval == 0x2C);
+	}
+	else {
+		return true;
+	}
 }
 
 
@@ -148,6 +159,8 @@ void LiftCom::setCurrentPos(int p) {
 
 
 bool LiftCom::waitForResponse() {
+	if(simulating) return true;
+
 	auto t_start = std::chrono::high_resolution_clock::now();
     auto t_end = std::chrono::high_resolution_clock::now();    
 
@@ -174,15 +187,24 @@ bool LiftCom::waitForResponse() {
 
 
 void LiftCom::writeToSerial(uint8_t a) {
-	port->write(a);
+	if(!simulating) {
+		port->write(a);
+	}
 }
 
 
 void LiftCom::writeToSerial(int a) {
-	port->write(a);
+	if(!simulating) {
+		port->write(a);
+	}
 }
 
 
 uint8_t LiftCom::readFromSerial() {
-	return port->read();
+	uint8_t b = 0x00;
+
+	if(!simulating) {
+		b = port->read();
+	}
+	return b;
 }

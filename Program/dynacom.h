@@ -44,7 +44,7 @@
 
 class DynaCom {
 public:
-    DynaCom(std::string serial);
+    DynaCom(std::string serial, bool sim_enabled);
     ~DynaCom();
     
     void startSerial();
@@ -82,6 +82,7 @@ private:
     int id = 1;
 //    uint8_t return_byte[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     int led = 0;
+    bool simulating;
 };
 
 #endif /* DYNACOM_H */

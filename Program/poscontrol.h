@@ -70,7 +70,8 @@ public:
     PosControl(MotorCom *m, LiftCom *l, DynaCom *d, bool testing);
     ~PosControl();
 
-    void reset();
+    //Reset all counters, encoders etc. Sets initial position (x, y, rot)
+    void reset(int x, int y, int rot);
 
     // Tests if poscontrol is working by enqeueueing and dequeueing an object
     bool test();
