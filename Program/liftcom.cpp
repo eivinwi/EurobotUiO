@@ -134,8 +134,6 @@ bool LiftCom::test() {
 		return true;
 	}
 	else {
-		LOG(INFO) << "TESTING AVAILABILITY";
-
 		for(int i = 0; i < 10; i++) {
 			writeToSerial((int) 9);	
 			usleep(1000);

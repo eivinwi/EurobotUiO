@@ -54,7 +54,7 @@ public:
     void writeToSerial( std::array<uint8_t, SIZE> array );
     
     template<std::size_t SIZE>
-    void addChecksumAndLength(std::array<uint8_t, SIZE> b);
+    uint8_t calcCheckSum(std::array<uint8_t, SIZE> b);
 
     void sendCmd(int id, int cmd);
     void setReg1(int id, int regNo, int val);
