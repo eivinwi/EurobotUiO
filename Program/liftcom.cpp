@@ -128,27 +128,27 @@ uint8_t LiftCom::getPosition() {
 
 
 bool LiftCom::test() {
-	if(!simulating) {
-		PRINTLINE("TESTING AVAILABILITY");
-		uint8_t testval = 0;
-		writeToSerial((int) 9);	
-		if(port->available()) {
-			PRINTLINE("    AVAILABILITY=true");
-			testval = readFromSerial();
-		} else {
-			usleep(1000);
-			if(port->available()) {
-				PRINTLINE("    AVAILABILITY=2nd true");
-				return true;
-				testval = readFromSerial();
-			}
-		}
-
-		return (testval == 0x2C);
-	}
-	else {
+	uint8_t testval = 0;
+	
+	if(simulating) {
 		return true;
 	}
+	else {
+		LOG(INFO) << "TESTING AVAILABILITY";
+
+		for(int i = 0; i < 10; i++) {
+			writeToSerial((int) 9);	
+			usleep(1000);
+			while(port->available()) {
+				testval = readFromSerial();
+				if(testval == 0x2C) {
+					return true;
+				}
+			}
+		}
+	} 
+
+	return false;
 }
 
 
