@@ -104,7 +104,7 @@ uint8_t DynaCom::calcCheckSum(std::array<uint8_t, SIZE> b) {
 void DynaCom::sendCmd(int id, int cmd) {
 	std::array <uint8_t, 6> arr {0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00};
 	arr[2] = (uint8_t) id;
-	arr[3] = (uint8_t) (6-4);
+	arr[3] = (uint8_t) (6 - 4);
 	arr[4] = (uint8_t) cmd;
 	arr[5] = calcCheckSum(arr);
 	writeToSerial(arr);
@@ -114,13 +114,11 @@ void DynaCom::sendCmd(int id, int cmd) {
 // Writes 0<val<255 to register "regNo" in servo "id" 
 void DynaCom::setReg1(int id, int regNo, int val) {
 	std::array <uint8_t, 8> arr {0xFF, 0xFF, 0, 0, 3, 0, 0, 0}; 
-
 	arr[2] = (uint8_t) id;
 	arr[3] = (uint8_t) (8 - 4);// adding length
 	arr[5] = (uint8_t) regNo;
 	arr[6] = (uint8_t) val;
 	arr[7] = calcCheckSum(arr);
-
 	writeToSerial(arr);
 }
 
@@ -144,14 +142,12 @@ void DynaCom::setReg2(int id, int regNoLSB, int val) {
 
 // Read from register, status packet printout is handled by readByte()
 void DynaCom::regRead(int id, int firstRegAdress, int noOfBytesToRead) {
-	// println(" "); // console newline before serialEvent() printout
 	std::array <uint8_t, 8> arr {0xFF, 0xFF, 0, 0, 2, 0X2B, 0X01, 0}; 
 	arr[2] = (uint8_t) id;
 	arr[3] = (uint8_t) (8 - 4);// adding length
 	arr[5] = (uint8_t) firstRegAdress;
 	arr[6] = (uint8_t) noOfBytesToRead;
 	arr[7] = calcCheckSum(arr);
-	
 	writeToSerial(arr);
 }
 
@@ -175,9 +171,7 @@ void DynaCom::setMaxTorque(int id, int torque) {
 
 
 void DynaCom::toggleLed(int id) {
-	if(led == 1) led = 0;
-	else led = 1;
-
+	led = !led;
 	setReg1(id, 25, led);
 	usleep(ACTION_DELAY);
 }

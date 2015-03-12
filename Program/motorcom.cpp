@@ -57,14 +57,7 @@ bool MotorCom::test() {
     if(simulating) {
         return true; 
     } 
-    else {
-        int ver = getVersion();
-        if(ver == 2) {
-            return true;    
-        } else {
-            return false;
-        }
-    }
+    return (getVersion() == 2);
 }
 
 
@@ -106,32 +99,28 @@ uint8_t MotorCom::getSpeedL() {
 uint8_t MotorCom::getSpeedR() {
     sync();
     writeToSerial(GET_SPEEDR);
-    uint8_t speed = readFromSerial();
-    return speed;
+    return (uint8_t) readFromSerial();
 }
 
 
 uint8_t MotorCom::getAcceleration() {
     sync();
     writeToSerial(GET_ACCELERATION);
-    uint8_t acc = readFromSerial(); 
-    return acc;
+    return (uint8_t) readFromSerial();
 }
 
 
 uint8_t MotorCom::getVoltage() {
     sync();
     writeToSerial(GET_VOLT);
-    int volt = readFromSerial();
-    return volt;
+    return (uint8_t) readFromSerial(); 
 }
 
 
 long MotorCom::getVi() {
     sync();
     writeToSerial(GET_VI);
-    long vi = readLongFromSerial();
-    return vi;
+    return readLongFromSerial();
 }
 
 
@@ -146,16 +135,14 @@ uint8_t MotorCom::getMode() {
 uint8_t MotorCom::getVersion() {
     sync();
     writeToSerial(GET_VERSION);
-    uint8_t version = readFromSerial();
-    return version;
+    return (uint8_t) readFromSerial(); 
 }
 
 
 uint8_t MotorCom::getError() {
     sync();
     writeToSerial(GET_ERROR);
-    uint8_t error = readFromSerial();
-    return error;
+    return (uint8_t) readFromSerial(); 
 }
 
 

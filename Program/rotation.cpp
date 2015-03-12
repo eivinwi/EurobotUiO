@@ -65,11 +65,7 @@ void Rotation::updateAngle(long diffL, long diffR) {
 	long encAvg = (abs(diffL) + abs(diffR))/2;
 	float turned = 0.0;
 
-	if(diffL > 0) {
-		turned = -(encAvg/ENC_PER_DEGREE); 
-	} else {
-		turned = (encAvg/ENC_PER_DEGREE);
-	}
+	turned = (diffL > 0)? -(encAvg/ENC_PER_DEGREE) : (encAvg/ENC_PER_DEGREE);
 
 	LOG(DEBUG) << "[ROT] changing rotation: " << angle << " + " << turned;
 	angle += turned;
@@ -90,11 +86,8 @@ float Rotation::distanceTo(float goalRot) {
 	float l = distanceLeft(goalRot);
 	float r = distanceRight(goalRot);
 	DBPL("[ROT] distanceTo: l=" << l << " r=" << r);
-	if(abs(l) < abs(r)) {
-		return l;
-	} else {
-		return r;
-	}
+
+	return (abs(l) < abs(r))? l : r;
 }
 
 
@@ -102,20 +95,12 @@ float Rotation::distanceTo(float goalRot) {
 
 // Distance to goal counter-clockwise
 float Rotation::distanceLeft(float goal) {
-	if(goal >= angle) {
-		return (goal - angle);
-	} else {
-		return ((360 - angle) + goal);
-	}
+	return (goal >= angle)? (goal - angle) : ((360 - angle) + goal);;
 }
 
 
 // Distance to goal clockwise
 //result will be negative, to show rotation towards the right
 float Rotation::distanceRight(float goal) {
-	if(goal >= angle) {
-		return ( (-angle) - (360-goal) );  //(goal - 360 - angle);
-	} else {
-		return (goal - angle);
-	}
+	return (goal >= angle)? -(angle + (360-goal)) : (goal - angle); 
 }

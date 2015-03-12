@@ -97,9 +97,7 @@ float GoalPosition::getY() {
 
 std::string GoalPosition::getPosString() {
 	std::stringstream ss;
-	ss << x << ",";
-	ss << y << ",";
-	ss << rotation;
+	ss << x << "," << y << "," << rotation;
 	return ss.str();
 }
 

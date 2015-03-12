@@ -39,7 +39,6 @@ void Position::reset() {
 	x = 0.0;
 	y = 0.0;
 	rotation = new Rotation;
-//	changed = time(0);
 }
 
 

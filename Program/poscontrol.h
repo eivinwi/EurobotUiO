@@ -152,14 +152,11 @@ private:
 
 	// Calculates straight distance from current position to goal position by trigonometry.
 	float updateDist(float angle, float distX, float distY);
-	float updateDistReverse(float angle, float distX, float distY);
-	
 
 	// Updates current position based on encoder-readings
 	// returns distance traveled (straight)
 	float updatePosition();
 	float updatePositionReverse();
-
 
 	// Updates current rotation based on encoder-readings
 	void updateRotation();
