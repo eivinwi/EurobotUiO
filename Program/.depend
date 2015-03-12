@@ -1,4 +1,4 @@
-main.o: main.cpp dynacom.h protocol.h printing.h serial.h md49.h \
+main.o: main.cpp main.h dynacom.h protocol.h printing.h serial.h md49.h \
  motorcom.h serialsim.h liftcom.h poscontrol.h goalposition.h rotation.h \
  position.h
 motorcom.o: motorcom.cpp motorcom.h printing.h serial.h md49.h \

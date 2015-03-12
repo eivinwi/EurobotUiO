@@ -29,103 +29,10 @@
  //     - noCom for program startup without read/write threads (probably not)
  //     - sound
  
-#include "dynacom.h"
-#include "motorcom.h"
-#include "liftcom.h"
-#include "poscontrol.h"
-#include "printing.h"
-//#include "sound.h"
-#include "protocol.h"
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string>
-#include <cstring>
-#include <thread>
-#include <mutex>
-#include <zmq.hpp>
-#include <iostream>
-#include <iomanip>
-INITIALIZE_EASYLOGGINGPP
-
-#ifndef ELPP_THREAD_SAFE
-#define ELPP_THREAD_SAFE
-#endif
-
-// Implements a ZMQ server that waits for input from clients. 
-// Used for communication with AI.
-void readLoop();
-
-// Implements a ZMQ subscriber that reads current real position from a publisher
-void subscriptionLoop();
-
-// Reads command-line arguments. Uses GNU C++ GetOpt standard.
-// Returns true if no invalid arguments
-bool checkArguments(int argc, char *argv[]);
-
-// Used by the readLoop ZMQ-server thread.
-// Splits input from Client on delimiter, fills pos 2d-array with arguments.
-// Returns number of arguments
-int getArguments(std::string input, int *pos);
-
-// Sends rotation-change to PosControl to be added to command-queue
-bool enqRotation(int num_args, int *args);
-
-// Sends position-change to PosControl to be added to command-queue. Dir is FORWARD or REVERSE
-bool enqPosition(int num_args, int *args, int dir);
-
-// Sends command to the robot to drive forward in current rotation.
-bool enqStraight(int num_args, int *args);
-
-// Sends action to PosControl to be added to command-queue
-bool enqAction(int num_args, int *args);
-
-// Reset robot to intial configuration, then set position to the one provided
-bool resetRobot(int num_args, int *args);
-
-//TODO
-void playSound(int num_args, int *args);
-
-// Test each part of the system after setup is completed, logs and print results.
-void testSystem();
-
-// Custom print to show ok/fail results from testSystem
-void printResult(std::string text, bool success);
-
-// Implemented trough easylogging++. 
-// Catches SIGINT to avoid annoying CTRL-C being handled as a program crash.
-// Prints additional crash information if legitimate program crash.
-void crashHandler(int sig);
+#include "main.h"
 
 
-// Objects 
-MotorCom *m;
-LiftCom *l;
-PosControl *p;
-DynaCom *d;
-//Sound *s;
-
-// locking objects while readLoop is writing to them.
-std::mutex read_mutex;
-
-// MD49 constants
-const int ACCELERATION = 5;
-const int MODE = 0;
-
-// Default values, to be changed with command-line arguments
-bool sim_enabled = false;
-bool sound_enabled = false;
-bool com_running = false;
-bool debug_file_enabled = false;
-bool testing_enabled = false;
-bool log_to_file = true;
-std::string motor_serial = "/dev/ttyUSB0";
-std::string lift_serial = "/dev/ttyACM0";
-std::string gripper_serial = "/dev/ttyACM1";
-
-
-/* Waits for input on socket, mainly position. */
+// ZMQ server waiting for input from AI.
 void readLoop() {
     LOG(INFO) << "[COM] starting";
     com_running = true;
@@ -140,14 +47,9 @@ void readLoop() {
         // Wait for next request from client
         socket.recv (&request);
         std::string recv_str = std::string(static_cast<char*>(request.data()), request.size());
-//        LOG(INFO) << "[COM] recv_str: " << recv_str;
-
-
         std::string reply_str;
-        //check arguments
         int args[4];
         int num_args = getArguments(recv_str, args);
-        //zmq::message_t reply(20);
 
         if(num_args < 1 || num_args > 4) {
             LOG(WARNING) << "[COM] invalid number arguments(" << num_args << "): " << recv_str;
@@ -215,7 +117,6 @@ void readLoop() {
                     break;
             }                
         } 
-        //sleep(1);
 
         //create reply message
         zmq::message_t reply(reply_str.length());
@@ -251,7 +152,6 @@ void subscriptionLoop() {
         if(num_args != 3) {
             LOG(WARNING) << "[COM2] Invalid position-string!!" << str.c_str();
         } else {
-            //args is [x | y | r]
             PRINTLINE( "YEAH" );
             LOG(INFO) << "[COM2] recv: [" << args[0] << ", " << args[1] << ", " << args[2] << "]";
         }
@@ -317,6 +217,7 @@ bool enqPosition(int num_args, int *args, int dir) {
     return false;
 }
 
+
 //see enqRotation
 bool enqStraight(int num_args, int *args) {
     if(num_args != 3) {
@@ -340,6 +241,7 @@ bool enqStraight(int num_args, int *args) {
     }
     return false;
 }
+
 
 bool enqAction(int num_args, int *args) {
     if (num_args != 3) {
@@ -385,7 +287,6 @@ bool resetRobot(int num_args, int *args) {
         }
         LOG(WARNING) << "[COM] try_lock read_mutex unsuccessful";
     }
-
     return false;
 }
 
@@ -413,11 +314,9 @@ int getArguments(std::string input, int *pos) {
 
 bool checkArguments(int argc, char *argv[]) {
     LOG(INFO) << "[SETUP] Reading arguments:   ";
-    //m->serialSimDisable(); //just because
-
     opterr = 0;
-    //char *cval = nullptr;
     int opt;
+
     while( (opt = getopt(argc, argv, "hstdnm:l:g:")) != -1 ) {
         switch(opt) {
             case 'h':
@@ -448,13 +347,11 @@ bool checkArguments(int argc, char *argv[]) {
                 log_to_file = false;
                 break;
             case 'm':
-                //motor_serial = std::to_string(optarg);
                 motor_serial = optarg;
                 PRINTLINE("[SETUP]    motor arg=" << optarg);
 
                 break;
             case 'l':
-                //lift_serial = std::to_string(optarg);
                 lift_serial = optarg;
                 PRINTLINE("[SETUP]    lift arg=" << optarg);
                 break;
@@ -481,11 +378,69 @@ bool checkArguments(int argc, char *argv[]) {
 }
 
 
+void testSystem() {
+    usleep(20000);
+    m->flush();
+    LOG(INFO) << "[SETUP] Complete, testing_enabled components:\n";
+
+    //test LOGging
+    printResult("[TEST] Logging: ", true); //pointless, if LOGging isnt active nothing will be written
+
+    if(m->isSimulating()) {
+        printResult("[TEST] MotorCom: serial open (sim)", true);
+    } else {
+        printResult("[TEST] MotorCom: serial open", m->test());
+    }
+    printResult("[TEST] LiftCom: serial open", l->test());
+    printResult("[TEST] DynaCom: serial open", d->test());
+
+    printResult("[TEST] PosControl active", p->test()); //poscontrol test
+    printResult("[TEST] Read_thread running", com_running);
+    printResult("[TEST] Pos_thread running", p->running());
+
+    uint8_t voltage = m->getVoltage();
+    printResult("[TEST] Voltage = " + std::to_string((int)voltage) +"v", (voltage > 20 && voltage < 25));
+    uint8_t error = m->getError();
+    printResult("[TEST] MD49_Error = " + std::to_string((int) error), (error == 0));
+    int acc = m->getAcceleration();
+    printResult("[TEST] Acceleration = " + std::to_string((int) acc), (acc == ACCELERATION));
+    
+
+    int mode = m->getMode();
+    printResult("[TEST] Mode = " + std::to_string((int) mode), (mode == MODE));
+}
+
+
+void printResult(std::string text, bool success) {
+    if(success) {
+        LOG(INFO) << std::left << std::setw(30) << text
+             << std::right << std::setw(30) << "\033[0;32m[ok]\033[0m";
+    } else {
+        LOG(ERROR) << std::left << std::setw(30) << text
+             << std::right << std::setw(30) << "\033[0;31m[fail]\033[0m";
+    }
+}
+
+
+void crashHandler(int sig) {
+    if(sig == SIGINT) {
+        LOG(ERROR) << "Program interrupted by user";
+    } else {
+        LOG(ERROR) << "Unintended program crash!";
+        bool stackTraceIfAvailable = false;
+        const el::Level& level = el::Level::Fatal;
+        const char* logger = "default";
+        el::Helpers::logCrashReason(sig, stackTraceIfAvailable, level, logger);
+//        el::Helpers::logCrashReason(sig, true);
+    }
+    el::Helpers::crashAbort(sig);
+}
+
+
 void configureLogger() {
     el::Configurations defaultConf;
     defaultConf.setToDefault();
     //el::Loggers::addFlag( el::LoggingFlag::DisableApplicationAbortOnFatalLog );
-
     defaultConf.setGlobally( el::ConfigurationType::Format, "%datetime{%H:%m:%s,%g} %level %msg" );
     defaultConf.set(el::Level::Global, 
         el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/Logs/std.log"
@@ -494,13 +449,11 @@ void configureLogger() {
         el::ConfigurationType::ToStandardOutput, "TRUE"
     );
 
-
     if(log_to_file) {
         defaultConf.setGlobally( el::ConfigurationType::ToFile, "TRUE"); 
     } else {
         defaultConf.setGlobally( el::ConfigurationType::ToFile, "FALSE"); 
     }
-
 
     if(debug_file_enabled) {
         defaultConf.set(el::Level::Debug, 
@@ -537,11 +490,12 @@ int main(int argc, char *argv[]) {
     if(!checkArguments(argc, argv)) {
         return -1;
     }
+
     PRINTLINE("[SETUP] Configuring loggers");
     configureLogger();
+
     LOG(INFO) << "[SETUP] Attaching crashHandler";
     el::Helpers::setCrashHandler(crashHandler);
-
 
     LOG(INFO) << "[SETUP] initializing MotorCom";
     m = new MotorCom(motor_serial, sim_enabled);
@@ -564,13 +518,9 @@ int main(int argc, char *argv[]) {
     m->resetEncoders();
     usleep(5000);
 
-//    m->enableTimeout(true);
-//    usleep(10000);
-
     LOG(INFO) << "[SETUP] starting lift serial";
     l->startSerial();
     usleep(10000);
-
 
     LOG(INFO) << "[SETUP] starting and flushing serials";
     d->startSerial();
@@ -586,12 +536,9 @@ int main(int argc, char *argv[]) {
     LOG(INFO) << "[SETUP] initializing sunscription thread";
     std::thread write_thread(subscriptionLoop);
 
-
     LOG(INFO) << "[SETUP] initializing controlLoop thread";
     std::thread pos_thread(&PosControl::controlLoop, p);
     usleep(5000);
-
-    //m->testSerial();
 
     int acc2 = m->getAcceleration(); 
     if(acc2 != ACCELERATION) {
@@ -612,9 +559,8 @@ int main(int argc, char *argv[]) {
 
     testSystem();
 
-    LOG(INFO) << "[SETUP] testing_enabled completed, waiting for client input";
+    LOG(INFO) << "[SETUP] System tests completed, waiting for client input...";
  
-
     if(read_thread.joinable()) {
         read_thread.join();
     }
@@ -622,61 +568,4 @@ int main(int argc, char *argv[]) {
         pos_thread.join();
     }
     return 0;
-}
-
-void testSystem() {
-    usleep(20000);
-    m->flush();
-    LOG(INFO) << "[SETUP] Complete, testing_enabled components:\n";
-
-    //test LOGging
-    printResult("[TEST] Logging: ", true); //pointless, if LOGging isnt active nothing will be written
-
-    if(m->isSimulating()) {
-        printResult("[TEST] MotorCom: serial open (sim)", true);
-    } else {
-        printResult("[TEST] MotorCom: serial open", m->test());
-    }
-    printResult("[TEST] LiftCom: serial open", l->test());
-    printResult("[TEST] DynaCom: serial open", d->test());
-
-    printResult("[TEST] PosControl active", p->test()); //poscontrol test
-    printResult("[TEST] Read_thread running", com_running);
-    printResult("[TEST] Pos_thread running", p->running());
-
-    uint8_t voltage = m->getVoltage();
-    printResult("[TEST] Voltage = " + std::to_string((int)voltage) +"v", (voltage > 20 && voltage < 25));
-    uint8_t error = m->getError();
-    printResult("[TEST] MD49_Error = " + std::to_string((int) error), (error == 0));
-    int acc = m->getAcceleration();
-    printResult("[TEST] Acceleration = " + std::to_string((int) acc), (acc == ACCELERATION));
-    
-
-    int mode = m->getMode();
-    printResult("[TEST] Mode = " + std::to_string((int) mode), (mode == MODE));
-}
-
-void printResult(std::string text, bool success) {
-    if(success) {
-        LOG(INFO) << std::left << std::setw(30) << text
-             << std::right << std::setw(30) << "\033[0;32m[ok]\033[0m";
-    } else {
-        LOG(ERROR) << std::left << std::setw(30) << text
-             << std::right << std::setw(30) << "\033[0;31m[fail]\033[0m";
-    }
-}
-
-
-void crashHandler(int sig) {
-    if(sig == SIGINT) {
-        LOG(ERROR) << "Program interrupted by user";
-    } else {
-        LOG(ERROR) << "Unintended program crash!";
-        bool stackTraceIfAvailable = false;
-        const el::Level& level = el::Level::Fatal;
-        const char* logger = "default";
-        el::Helpers::logCrashReason(sig, stackTraceIfAvailable, level, logger);
-//        el::Helpers::logCrashReason(sig, true);
-    }
-    el::Helpers::crashAbort(sig);
 }

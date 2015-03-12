@@ -30,7 +30,7 @@
 
 // TODO:
 // 	  - atomic?
-//    - remove set functions
+//    - documentation
  
 
 #ifndef GOALPOSITION_H
@@ -52,14 +52,16 @@ public:
 	GoalPosition(int id, float x, float y, float r);
 	GoalPosition();
 	~GoalPosition();
-	void reset();
 
-	//set functions should probably not be used, as goal should be created using constructors
+	// reset should probably not be used, goalpositions are not reused
+	void reset();
+	
+
+	// ---- Functions to set/get goal-position variables ----
 	void setId(int id);
 	void setAngle(float angle);
 	void setPosition(float n_x, float n_y);
 	void set(float n_x, float n_y, float n_rotation);
-
 	int getId();
 	float getX();
 	float getY();

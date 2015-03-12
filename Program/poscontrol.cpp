@@ -26,7 +26,7 @@
 #include "poscontrol.h"
 //TODO: 	
 //  - CODE CLEANUP. Program is extremely confusing atm
-// 	- use IMU for angle untill beacon system is workinh
+// 	- use IMU for angle untill beacon system is working
 // 	- should continually check angle instead of once!! (impossible with only encoders)
 //
 //	- Overshoot protection
@@ -124,9 +124,6 @@ Cmd PosControl::dequeue() {
 }
 
 
-/////////////////////////////////////// CHECKLINE - code above this line is checked /////////////////////////////////////////////////
-
-
 // Main program, loops once every time a command is dequeued.
 // If the testing-variable is set to true, automatically sets action to completed,
 // and sets current position (and other vars) to the goal
@@ -155,10 +152,13 @@ void PosControl::controlLoop() {
 			fullStop();
 			completeCurrent();
 		} 
+		//CHECK: "testing"-functionality should perhaps be implemented in each of the Com's
 		else {
 			if(cmd.type == ROTATION) {
 				curPos->setAngle(goalPos->getAngle());
 			} else if(cmd.type == FORWARD || cmd.type == REVERSE) {
+				curPos->set(goalPos->getX(), goalPos->getY(), curPos->getAngle());
+			} else if(cmd.type == STRAIGHT) {
 				curPos->set(goalPos->getX(), goalPos->getY(), curPos->getAngle());
 			} else if(cmd.type == LIFT) {
 				lcom->setCurrentPos(cmd.argument);

@@ -54,32 +54,53 @@ float Rotation::get() {
 
 
 void Rotation::updateAngle(long diffL, long diffR) {
+/*	
 	int ediff = (abs(diffL) + abs(diffR))/2;
 	if(ediff > 50) {
 		DBPL("[ROT] Warning, large encoder difference (turning): " << ediff);
+		return;
 	}
-
-  	//TODO: needs to know that encoders read the same
+*/
+  	// Average of encoders for reduced maximum-error
 	long encAvg = (abs(diffL) + abs(diffR))/2;
 	float turned = 0.0;
 
 	if(diffL > 0) {
-		turned = -(encAvg/ENC_PER_DEGREE);// * POS_DIR;//*ROTATION_DIR; 
+		turned = -(encAvg/ENC_PER_DEGREE); 
 	} else {
-		turned = (encAvg/ENC_PER_DEGREE);// * POS_DIR;//*ROTATION_DIR;
+		turned = (encAvg/ENC_PER_DEGREE);
 	}
 
-	DBP("[ROT] changing rotation: " << angle << " + " << turned);
+	LOG(DEBUG) << "[ROT] changing rotation: " << angle << " + " << turned;
 	angle += turned;
 	if(angle > 360.0) {
 		angle -= 360.0;
 	} else if(angle < 0.0) {
 		angle += 360.0;
 	}
-	DBPL(" = " << angle);
+	LOG(DEBUG) << " = " << angle;
 }
 
 
+
+
+// Returns distance in the shortest rotation-direction. 
+// returns <0 if clockwise, >0 if counter-clockwise
+float Rotation::distanceTo(float goalRot) {
+	float l = distanceLeft(goalRot);
+	float r = distanceRight(goalRot);
+	DBPL("[ROT] distanceTo: l=" << l << " r=" << r);
+	if(abs(l) < abs(r)) {
+		return l;
+	} else {
+		return r;
+	}
+}
+
+
+/*** PRIVATE FUNCTIONS ***/
+
+// Distance to goal counter-clockwise
 float Rotation::distanceLeft(float goal) {
 	if(goal >= angle) {
 		return (goal - angle);
@@ -89,23 +110,12 @@ float Rotation::distanceLeft(float goal) {
 }
 
 
+// Distance to goal clockwise
 //result will be negative, to show rotation towards the right
 float Rotation::distanceRight(float goal) {
 	if(goal >= angle) {
 		return ( (-angle) - (360-goal) );  //(goal - 360 - angle);
 	} else {
 		return (goal - angle);
-	}
-}
-
-
-float Rotation::distanceTo(float goalRot) {
-	float l = distanceLeft(goalRot);
-	float r = distanceRight(goalRot);
-	DBPL("[ROT] distanceTo: l=" << l << " r=" << r);
-	if(abs(l) < abs(r)) {
-		return l;
-	} else {
-		return r;
 	}
 }

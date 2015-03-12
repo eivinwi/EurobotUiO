@@ -37,6 +37,22 @@ MotorCom::~MotorCom() {
 }
 
 
+void MotorCom::startSerial() {
+    if(simulating) {
+        LOG(INFO) << "[MOTOR]     Starting serial simulator";
+        simport = new SerialSim;
+    } 
+    else {
+        if(serial_port == "") { //should never happen
+            LOG(WARNING) << "[MOTOR]    Error, empty serial_port. Setting to /dev/ttyUSB0";
+            serial_port = "/ttyUSB0";
+        }     
+        LOG(INFO) << "[MOTOR]    Starting serial at: " << serial_port;
+        port = new Serial(serial_port);
+    }
+}
+
+
 bool MotorCom::test() {
     if(simulating) {
         return true; 
@@ -49,21 +65,6 @@ bool MotorCom::test() {
             return false;
         }
     }
-}
-
-
-void MotorCom::startSerial() {
-	if(simulating) {
-        LOG(INFO) << "[MOTOR]     Starting serial simulator";
-		simport = new SerialSim;
-	} else {
-        if(serial_port == "") { //should never happen
-            LOG(WARNING) << "[MOTOR]    Error, empty serial_port. Setting to /dev/ttyUSB0";
-            serial_port = "/ttyUSB0";
-        }     
-        LOG(INFO) << "[MOTOR]    Starting serial at: " << serial_port;
-		port = new Serial(serial_port);
-	}
 }
 
 
@@ -175,8 +176,7 @@ void MotorCom::resetEncoders() {
 }
 
 
-/* unused?
- *
+/* 
  * Encoder counts: 980 per output shaft turn
  * Wheel diameter: 120mm
  * Wheel circumference: 377mm
@@ -198,7 +198,7 @@ void MotorCom::getEncoders() {
     result2 += readFromSerialNoWait() << 16ul;
     result2 += readFromSerialNoWait() << 8ul;
     result2 += readFromSerialNoWait();
-    LOG(INFO) << "[MOTOR] EncL: " << result1 << "\nEncR" << result2;
+    LOG(DEBUG) << "[MOTOR] EncL: " << result1 << "\nEncR" << result2;
 }
 
 
@@ -252,6 +252,9 @@ void MotorCom::flush() {
         port->printAll();
     }
 }
+
+
+/***  PRIVATE FUNCTIONS ***/
 
 
 void MotorCom::sync() {

@@ -63,16 +63,13 @@ void GoalPosition::setAngle(float angle) {
 }
 
 
-//should perhaps check for reasonable values
 void GoalPosition::setPosition(float n_x, float n_y){
 	x = n_x;
 	y = n_y;
 }
 
 
-//should not be used!
 void GoalPosition::set(float n_x, float n_y, float n_rotation) {	
-	PRINTLINE("[GOALPOS] Warning; using deprecated function set(x,y,r)");
 	setPosition(n_x, n_y);
 	setAngle(n_rotation);
 }

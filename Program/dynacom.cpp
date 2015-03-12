@@ -29,7 +29,6 @@ DynaCom::DynaCom(std::string serial, bool sim_enabled) {
     serial_port = serial;
     state = OPEN_STATE;
     simulating = sim_enabled;
- //   return_byte[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 }
 
 
@@ -38,16 +37,16 @@ DynaCom::~DynaCom() {
 
 
 void DynaCom::startSerial() {
-	if(!simulating) {        
-	    if(serial_port == "") { //should never happen
+	if(simulating) {
+	    LOG(INFO) << "[DYNA] 	 Simulating serial";		
+	}
+	else {        
+	    if(serial_port == "") { //should never happen, but check just in case
 	        LOG(WARNING) << "[DYNA] 	Error, empty serial_port. Setting to /dev/ttyUSB1";
 	        serial_port = "ttyUSB1";
 	    }     
 	    LOG(INFO) << "[DYNA] 	 Starting serial at: " << serial_port;
 		port = new Serial(serial_port);
-	}
-	else {
-	    LOG(INFO) << "[DYNA] 	 Simulating serial";		
 	}
 }
 
@@ -69,8 +68,22 @@ void DynaCom::writeToSerial(std::array<uint8_t, SIZE> array) {
 	}
 }
 
-// adds checksum and length bytes to the ASCII byte packet
-// input needs to be of length 4, with the last 2 places empty
+
+// called after sending a read command, to read a 8-byte return-packet
+std::array <uint8_t, 8>  DynaCom::readByte() {
+	LOG(INFO) << "[DYNA] starting read";
+	std::array <uint8_t, 8> arr;
+	for(int i = 0; i < 8; i++) {
+		if(!simulating) {
+			arr[i] = port->read();
+		}
+	}
+	LOG(INFO) << "[DYNA] starting read";
+
+	return arr;
+}
+
+
 template<std::size_t SIZE> 
 uint8_t DynaCom::calcCheckSum(std::array<uint8_t, SIZE> b) {
 	int counter = 0;
@@ -111,6 +124,7 @@ void DynaCom::setReg1(int id, int regNo, int val) {
 	writeToSerial(arr);
 }
 
+
 // Writes 0<val<1023 to register "regNoLSB/regNoLSB+1" in servo "id"
 void DynaCom::setReg2(int id, int regNoLSB, int val) {
 	std::array <uint8_t, 9> arr {0xFF, 0xFF, 0, 0, 3, 0, 0, 0, 0}; 
@@ -139,21 +153,6 @@ void DynaCom::regRead(int id, int firstRegAdress, int noOfBytesToRead) {
 	arr[7] = calcCheckSum(arr);
 	
 	writeToSerial(arr);
-}
-
-
-// called after sending a read command, to read a 8-byte return-packet
-std::array <uint8_t, 8>  DynaCom::readByte() {
-	LOG(INFO) << "[DYNA] starting read";
-	std::array <uint8_t, 8> arr;
-	for(int i = 0; i < 8; i++) {
-		if(!simulating) {
-			arr[i] = port->read();
-		}
-	}
-	LOG(INFO) << "[DYNA] starting read";
-
-	return arr;
 }
 
 

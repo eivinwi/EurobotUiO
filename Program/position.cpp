@@ -43,7 +43,6 @@ void Position::reset() {
 }
 
 
-//should perhaps check x/y, but checking is also performed in PosControl
 void Position::set(float n_x, float n_y, float n_rotation) {	
 	pos_mutex.lock();
 	x = n_x;
@@ -90,12 +89,6 @@ float Position::distanceRot(float to) {
 }
 
 
-//Deprecated
-//float Position::timeSinceUpdate() {
-//	return (time(0) - changed);
-//}
-
-
 void Position::print() {
 	PRINTLINE("x:" << x << " y:" << y << " r:" << getAngle());
 }
@@ -107,12 +100,12 @@ void Position::updateAngle(float leftDiff, float rightDiff) {
 
 
 void Position::updateX(float dist) {
-	x += dist;//*POS_DIR;
+	x += dist;
 }
 
 
 void Position::updateY(float dist) {
-	y += dist;//*POS_DIR;
+	y += dist;
 }
 
 

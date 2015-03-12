@@ -86,7 +86,6 @@ public:
     void controlLoop();
 
 	void enqueue(int id, int x, int y, float rot, int arg, int type);
-	struct Cmd dequeue();
 
 	// Returns id of the action currently being executed. 0 if none
 	int getCurrentId();
@@ -102,6 +101,10 @@ public:
 	bool running();
 	
 private:
+	// Waits untill queue-size is >0 (using a Notifier), then returns the first action in the queue.
+	struct Cmd dequeue();
+
+
 	// Logs current position with LOG(TRACE)
 	void logTrace();
 
@@ -213,24 +216,34 @@ private:
 	// DEBUGING: prints current values in encoder struct
 	void printEncoder(struct encoder *e);
 
+	// Serial ports
 	MotorCom *mcom;
 	LiftCom *lcom;
 	DynaCom *dcom;
+
+	// Position objects
 	GoalPosition *goalPos;
 	Position *curPos;
 	Position *exactPos;
 
+	//Command queue
 	std::queue <Cmd>q;
 	std::mutex qMutex;
 	std::condition_variable notifier;
+	
 	std::string in;
 
+	// Robot-state
 	bool turning;
 	bool working;
+
+	// While testing, always set action to success, instantly, without performing it. 
 	bool testing;
+	
+	// True if main controlloop is running (initizalied in own thread in main.cpp).  
 	bool pos_running;
 
-	// Used to prevent unneccessary motor communication
+	// Used to prevent unneccessary motor communication. TODO: reinstate
 	int curSpeedLeft, curSpeedRight;
 
 	// completed_actions[n] is true if action with ID=n has been completed.

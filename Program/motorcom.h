@@ -44,13 +44,13 @@ public:
     MotorCom(std::string serial, bool sim_enabled);
     ~MotorCom();
 
+    // Starts the serial trough libSerial library
+    void startSerial();
+
     // Test the serial communication on supplied serial-port
     // TODO: should timeout the check
     // Returns true if correct reply is recieved trough serial.
     bool test();
-
-    // Starts the serial trough libSerial library
-    void startSerial();
 
     // Sends new acceleration constant to MD49
     void setAcceleration(int acc);
@@ -114,14 +114,15 @@ public:
     // Clears and prints anything left on the serial bus.
     void flush();
 
-    // Writes to Serial. Overloaded int calls uint8_t
-    void writeToSerial(uint8_t a);
-    void writeToSerial(int a);
-
     // Returns true if serial is being simulated
     bool isSimulating();
 
 private:
+    // Writes to Serial. Overloaded int calls uint8_t
+    void writeToSerial(uint8_t a);
+    void writeToSerial(int a);
+
+
     // Reads a byte from serial. Will time out if no input
     uint8_t readFromSerial();
 

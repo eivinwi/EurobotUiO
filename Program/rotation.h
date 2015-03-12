@@ -41,16 +41,17 @@ public:
     //calculate new angle based on encoders
     void updateAngle(long diffL, long diffR);
     
+
+    // Returns shortest distance to goal rotation
+    float distanceTo(float goal);
+
+private:
     // Returns distance to goal in positive direction
     float distanceLeft(float goal);
 
     // Returns distance to goal in negative direction
     float distanceRight(float goal);
 
-    // Returns shortest distance to goal rotation
-    float distanceTo(float goal);
-
-private:
 	float angle;
     
 };

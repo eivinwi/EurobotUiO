@@ -25,6 +25,7 @@
 
 
 // TODO: some of the methods should be private
+// TODO: comments/documentation
 #ifndef DYNACOM_H
 #define DYNACOM_H
 
@@ -47,41 +48,78 @@ public:
     DynaCom(std::string serial, bool sim_enabled);
     ~DynaCom();
     
+    // Initializes Dynamixel communication trough the Serial class
     void startSerial();
-    void writeToSerial(uint8_t bytes[], int len);
-    
-    template<std::size_t SIZE>
-    void writeToSerial( std::array<uint8_t, SIZE> array );
-    
-    template<std::size_t SIZE>
-    uint8_t calcCheckSum(std::array<uint8_t, SIZE> b);
 
-    void sendCmd(int id, int cmd);
-    void setReg1(int id, int regNo, int val);
-    void setReg2(int id, int regNoLSB, int val);
-    void regRead(int id, int firstRegAdress, int noOfBytesToRead);
-    std::array <uint8_t, 8>  readByte();
-    void setSpeed(int id, int speed);
-    void setMaxTorque(int id, int torque);
-
+    // Toggle LED of servo "id"
     void toggleLed(int id);
-    void setPosition(int id, int angle);
+
+
+    // Puts the grippers in open position
     bool openGrip();
+
+    // Puts the grippers in closed position
     bool closeGrip(); 
+
+    // Returns gripper position. See Dynamixel AX-12A documentation for details
     int getPosition();
+    
+    // Sends a request to the Arduino connected to serial, returns true if response is correct
     bool test();
 
 private:
+    // Sets gripper position. See Dynamixel AX-12A documentation for details.
+    // Servos have been hardware-limited to only accept legal positions to avoid breaking parts.
+    void setPosition(int id, int angle);
+
+    // DEPRECATED
+    // Writes bytes in array to serial. 
+    void writeToSerial(uint8_t bytes[], int len);
+    
+    // Writes an array of size SIZE to serial
+    template<std::size_t SIZE>
+    void writeToSerial( std::array<uint8_t, SIZE> array );
+    
+    // Returns a 8-byte response from serial, as an array
+    std::array <uint8_t, 8>  readByte();
+
+    // Returns a checksum for the input ASCII byte packet. Input must be of length > 4
+    template<std::size_t SIZE>
+    uint8_t calcCheckSum(std::array<uint8_t, SIZE> b);
+
+    // Sends short command
+    void sendCmd(int id, int cmd);
+    
+    // Writes 0<val<255 to register "regNo" in servo "id" 
+    void setReg1(int id, int regNo, int val);
+    
+   // Writes 0<val<1023 to register "regNoLSB/regNoLSB+1" in servo "id"
+    void setReg2(int id, int regNoLSB, int val);
+    
+    // Request response-byte servo "id", with specified registers
+    void regRead(int id, int firstRegAdress, int noOfBytesToRead);
+    
+    // Sets the speed register of servo "id" to speed [0-1023]
+    void setSpeed(int id, int speed);
+    
+    // Sets the torque register of servo "id" to speed [0-1023] 
+    void setMaxTorque(int id, int torque);
+    
+    // extracts registry-value from response byte arr
     int returnValue( std::array <uint8_t, 8> arr );
+
+    // Gripper servo ID
+    int id = 1;
 
     Serial *port;
     std::string serial_port;
 
     // Current positions. Atomic because client may request the current position.
     std::atomic<int> state;
-    int id = 1;
-//    uint8_t return_byte[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
     int led = 0;
+
+    // Set from main. If true, no actions are performed, but responses are always SUCCESS
     bool simulating;
 };
 

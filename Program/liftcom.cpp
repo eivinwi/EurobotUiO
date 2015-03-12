@@ -38,7 +38,7 @@ LiftCom::~LiftCom() {
 
 void LiftCom::startSerial() {
 	if(!simulating) { 	      
-	    if(serial_port == "") { //should never happen
+	    if(serial_port == "") {
 	        LOG(WARNING) << "[LIFT] 	Error, empty serial_port. Setting to /dev/ttyUSB1";
 	        serial_port = "/ttyUSB1";
 	    }     
@@ -62,12 +62,6 @@ void LiftCom::goTo(int p) {
 		case BOTTOM:
 			goToBottom();
 			break;
-		case OPEN:
-			openGrabber();
-			break;
-		case CLOSE:
-			closeGrabber();
-			break;
 		case GET:
 			getPosition();
 			break;
@@ -79,50 +73,7 @@ void LiftCom::goTo(int p) {
 }
 
 
-void LiftCom::goToTop() {
-	LOG(INFO) << "[LIFT] goToTop, previous is: " << lift_pos;
-	writeToSerial(ARD_TOP);
-	lift_pos = TOP;
-}
-
-
-void LiftCom::goToMiddle() {
-	LOG(INFO) << "[LIFT] goToMiddle, previous is: " << lift_pos;
-	writeToSerial(ARD_MIDDLE);
-	lift_pos = MIDDLE;
-}
-
-
-void LiftCom::goToBottom() {
-	LOG(INFO) << "[LIFT] goToBottom, previous is: " << lift_pos;
-	writeToSerial(ARD_BOTTOM);
-	lift_pos = BOTTOM;
-}
-
-
-void LiftCom::openGrabber() {
-	LOG(INFO) << "[LIFT] openGrabber, previous is: " << grabber_pos;
-	PRINTLINE("[LIFT] openGrabber, previous is: " << grabber_pos);
-	writeToSerial(OPEN);
-	grabber_pos = OPEN;
-}
-
-
-void LiftCom::closeGrabber() {
-	LOG(INFO) << "[LIFT] closeGrabber, previous is: " << grabber_pos;	
-	PRINTLINE("[LIFT] closeGrabber, previous is: " << grabber_pos);
-
-	writeToSerial(CLOSE);
-	grabber_pos = CLOSE;
-}
-
-
 uint8_t LiftCom::getPosition() {
-	/*writeToSerial(GET);
-	usleep(50);
-	uint8_t pos = readFromSerial();
-	LOG(INFO) << "Lift is at: " << pos;
-	return pos;*/
 	return lift_pos;
 }
 
@@ -150,12 +101,6 @@ bool LiftCom::test() {
 }
 
 
-//used to simulate lift while testing
-void LiftCom::setCurrentPos(int p) {
-	lift_pos = p;
-}
-
-
 bool LiftCom::waitForResponse() {
 	if(simulating) return true;
 
@@ -167,12 +112,7 @@ bool LiftCom::waitForResponse() {
 			uint8_t resp = readFromSerial();
 			LOG(INFO) << "[LIFT resp after: "  << (std::chrono::duration<double, std::milli>(t_end-t_start).count());
 
-			if(resp == SUCCESS) {
-				return true;
-			} 	
-			else {
-				return false;
-			}
+			return (resp == SUCCESS);
 		}
 		t_end = std::chrono::high_resolution_clock::now();
     } while ((std::chrono::duration<double, std::milli>(t_end-t_start).count()) < 100); //time needs testing
@@ -180,8 +120,34 @@ bool LiftCom::waitForResponse() {
 }
 
 
+//used to simulate lift while testing
+void LiftCom::setCurrentPos(int p) {
+	lift_pos = p;
+}
+
 
 /*** Private Functions ***/
+
+
+void LiftCom::goToTop() {
+	LOG(INFO) << "[LIFT] goToTop, previous is: " << lift_pos;
+	writeToSerial(ARD_TOP);
+	lift_pos = TOP;
+}
+
+
+void LiftCom::goToMiddle() {
+	LOG(INFO) << "[LIFT] goToMiddle, previous is: " << lift_pos;
+	writeToSerial(ARD_MIDDLE);
+	lift_pos = MIDDLE;
+}
+
+
+void LiftCom::goToBottom() {
+	LOG(INFO) << "[LIFT] goToBottom, previous is: " << lift_pos;
+	writeToSerial(ARD_BOTTOM);
+	lift_pos = BOTTOM;
+}
 
 
 void LiftCom::writeToSerial(uint8_t a) {

@@ -40,25 +40,21 @@ public:
 	Position();
 	~Position();
 	void reset();
+
+	// Functions to set/get position variables
 	void set(float n_x, float n_y, float n_rotation);
 	void setAngle(float angle);
 	float getAngle();
 	float getX();
 	float getY();
 
-	// Distance in x-dir to input goal
+	// Functions calculating distances from "this" position to input goal-position "to"
 	float distanceX(float to);
-	// Distance in y-dir to input goal
 	float distanceY(float to);
-	// Distance in rotation to input goal
 	float distanceRot(float to);
-
-	// Deprecated: returns time since position was last updated
-	//float timeSinceUpdate();
 
 	// Calls on updateAngle in Rotation to calculate curren angle based on encoder readings
 	void updateAngle(float leftDiff, float rightDiff);
-
 	
 	// Adds positional updates to x
 	void updateX(float dist);
@@ -70,6 +66,7 @@ public:
 	// Returns position as comma-delimited string. Thread-safe
 	std::string getPosString();
 	
+	// Updates the comma-delimited position string. Thread-safe
 	void updatePosString();
 
 private:
