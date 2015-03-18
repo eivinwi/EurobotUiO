@@ -12,11 +12,16 @@ using namespace LibSerial ;
 #define ACTION_DELAY 10000
 #define SERIAL_DELAY 500
 
-#define OPEN_STATE 0
-#define CLOSED_STATE 1
+#define GRIP_ID 1
+#define LIFT_ID 2
 
-int state = OPEN_STATE;
-int id = 1;
+#define TOP_POS 20
+#define MIDDLE_POS 490
+#define BOTTOM_POS 980
+
+#define OPEN_POS 230
+#define CLOSED_POS 530
+
 
 SerialStream serial;
 
@@ -114,6 +119,12 @@ void regRead(int id, int firstRegAdress, int noOfBytesToRead)
   b[6] = (uint8_t) noOfBytesToRead;
 
   addChecksumAndLength(b, 8); 
+
+std::cout << "Byte sent: {"
+  << (int) b[0] << ", " << (int) b[1] << ", " << (int) b[2]  << ", " << (int) b[3] << ", "  
+  << (int) b[4] << ", " << (int) b[5] << ", " << (int) b[6] << ", " << (int) b[7] << "]" << std::endl;
+
+
   writeToSerial(b, 8);
 }
 
@@ -151,24 +162,30 @@ void setPosition(int id, int angle) {
 }
 
 
-bool open(int id) {
-	if(state == CLOSED_STATE) {
-		setPosition(id, 230);
-		usleep(500000);
-		state = OPEN_STATE;
-		return true;
-	}
-	return false;
-} 
+void close_grip() {
+  setPosition(GRIP_ID, CLOSED_POS);
+  usleep(100000);
+}
 
-bool close_grip(int id) {
-	if(state == OPEN_STATE) {
-		setPosition(id, 530);
-		usleep(500000);
-		state = CLOSED_STATE;
-		return true;
-	}
-	return false;
+void open_grip() {
+	setPosition(GRIP_ID, OPEN_POS);
+	usleep(100000);
+}
+
+
+void lift_up() {
+  setPosition(LIFT_ID, TOP_POS);
+  usleep(100000);  
+}
+
+void lift_middle() {
+  setPosition(LIFT_ID, MIDDLE_POS);
+  usleep(100000);  
+}
+
+void lift_down() {
+  setPosition(LIFT_ID, BOTTOM_POS);
+  usleep(100000);  
 }
 
 
@@ -231,25 +248,55 @@ int main(int argc, char *argv[]) {
   serial.SetFlowControl( SerialStreamBuf::FLOW_CONTROL_NONE ); //FLOW_CONTROL_HARD
   std::cout << "Configuration complete" << std::endl;
 
-
+ // id = 1;
   //flush();
 //  setSpeed(id, 200);
 
-  std::cout << "Setting speed/torque parameters" << std::endl;
-  setMaxTorque(id, 500);
-  setSpeed(id, 255	);
+//  std::cout << "Setting speed/torque parameters" << std::endl;
+/*  setMaxTorque(2, 600);
+  setSpeed(2, 400);
   usleep(10000);
 
-  std::cout << "Setting position 1" << std::endl;
-  setPosition(id, 230);
-  usleep(500000);
+ // setReg1(254, 3, 2);
+
+  lift_up();
+  usleep(100000);
+  lift_down();
+  usleep(100000);*/
+//  lift_down();
+//  usleep(100000);
+
+//  for(int i = 0; i < 11; i++) {
+/*    int startpos = 980;
+    int sluttpos = 20;
+
+    setPosition(id, startpos);
+    usleep(450000);
+    setPosition(id, sluttpos);
+    usleep(450000);
+    setPosition(id, startpos);
+    usleep(450000);
+
+  //}
+*/
+
+
 
 //  getPosition();
  // usleep(10000);
 
-  std::cout << "Setting position 2" << std::endl;
-  setPosition(id, 530);
-  usleep(500000);
+  std::cout << "Done" << std::endl;
+  //setPosition(2, 230);
+
+
+  //std::cout << "Setting position 530" << std::endl;
+  //setPosition(id, 530);
+  //setPosition(2, 530);
+  //usleep(500000);
+
+
+
+
 
 //  getPosition();
 //  usleep(10000);
@@ -257,7 +304,7 @@ int main(int argc, char *argv[]) {
 //  setPosition(id, 230);
 //  usleep(500000);
 
-
+  regRead(2, 0, 2);
 
 
   return 0;

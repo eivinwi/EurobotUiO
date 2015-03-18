@@ -317,28 +317,33 @@ bool checkArguments(int argc, char *argv[]) {
     opterr = 0;
     int opt;
 
-    while( (opt = getopt(argc, argv, "hstdnm:l:g:")) != -1 ) {
+    while( (opt = getopt(argc, argv, "hstflnm:d:")) != -1 ) {
         switch(opt) {
             case 'h':
                 //print help
                 PRINTLINE("---------- CMD-LINE OPTIONS ----------");
-                PRINTLINE("-s: enable simulation of serial");
+                PRINTLINE("-s: enable simulation of motor-serial");
+                PRINTLINE("-l: enable simulation of lift-serial");
                 PRINTLINE("-t: enable test-mode");
-                PRINTLINE("-d: enable debug-file");
+                PRINTLINE("-f: enable debug-file");
                 PRINTLINE("-n: disable logging to file");
                 PRINTLINE("-m <port>: set motor serial port (ex: ttyUSB0)");
-                PRINTLINE("-l <port>: set lift serial port (ex: ttyUSB1)");
+                PRINTLINE("-d <port>: set dynamixel (lift) serial port (ex: ttyUSB1)");
                 PRINTLINE("--------------------------------------");
                 break;
             case 's':
-                PRINTLINE("[SETUP]     SerialSim enabled. <<");
-                sim_enabled = true;
+                PRINTLINE("[SETUP]     Simulating motor-serial <<");
+                sim_motors = true;
+                break;
+            case 'l':
+                PRINTLINE("[SETUP]     Simulating lift-serial <<");
+                sim_lift = true;                
                 break;
             case 't':
                 PRINTLINE("[SETUP]     Testmode enabled. <<");   
                 testing_enabled = true;
                 break;
-            case 'd':
+            case 'f':
                 PRINTLINE("[SETUP]     Debug file enabled. <<");
                 debug_file_enabled = true;
                 break;
@@ -351,13 +356,9 @@ bool checkArguments(int argc, char *argv[]) {
                 PRINTLINE("[SETUP]    motor arg=" << optarg);
 
                 break;
-            case 'l':
-                lift_serial = optarg;
-                PRINTLINE("[SETUP]    lift arg=" << optarg);
-                break;
-            case 'g':
-                gripper_serial = optarg;
-                PRINTLINE("[SETUP]    grip arg=" << optarg);            
+            case 'd':
+                dyna_serial = optarg;
+                PRINTLINE("[SETUP]    dyna arg=" << optarg);
                 break;
             case '?':
                 if(optopt == 'm') {
@@ -384,15 +385,16 @@ void testSystem() {
     LOG(INFO) << "[SETUP] Complete, testing_enabled components:\n";
 
     //test LOGging
-    printResult("[TEST] Logging: ", true); //pointless, if LOGging isnt active nothing will be written
+    printResult("[TEST] Logging: ", true); //pointless, if Logging isnt active nothing will be written
 
     if(m->isSimulating()) {
-        printResult("[TEST] MotorCom: serial open (sim)", true);
+        printResult("[TEST] MotorCom: serialsim", true);
     } else {
         printResult("[TEST] MotorCom: serial open", m->test());
     }
-    printResult("[TEST] LiftCom: serial open", l->test());
-    printResult("[TEST] DynaCom: serial open", d->test());
+//    printResult("[TEST] LiftCom: serial open", l->test());    
+    printResult("[TEST] DynaCom: lift online", d->testLift());
+    printResult("[TEST] DynaCom: gripper online", d->testGripper());
 
     printResult("[TEST] PosControl active", p->test()); //poscontrol test
     printResult("[TEST] Read_thread running", com_running);
@@ -498,15 +500,11 @@ int main(int argc, char *argv[]) {
     el::Helpers::setCrashHandler(crashHandler);
 
     LOG(INFO) << "[SETUP] initializing MotorCom";
-    m = new MotorCom(motor_serial, sim_enabled);
-    usleep(10000);
-
-    LOG(INFO) << "[SETUP] initializing LiftCom";
-    l = new LiftCom(lift_serial, sim_enabled);
+    m = new MotorCom(motor_serial, sim_motors);
     usleep(10000);
 
     LOG(INFO) << "[SETUP] initializing DynaCom";
-    d = new DynaCom(gripper_serial, sim_enabled);
+    d = new DynaCom(dyna_serial, sim_lift);
     usleep(10000);
 
     LOG(INFO) << "[SETUP] starting and flushing serials";
@@ -517,10 +515,6 @@ int main(int argc, char *argv[]) {
     LOG(INFO) << "[SETUP] resetting encoders";
     m->resetEncoders();
     usleep(5000);
-
-    LOG(INFO) << "[SETUP] starting lift serial";
-    l->startSerial();
-    usleep(10000);
 
     LOG(INFO) << "[SETUP] starting and flushing serials";
     d->startSerial();
@@ -559,7 +553,7 @@ int main(int argc, char *argv[]) {
 
     testSystem();
 
-    LOG(INFO) << "[SETUP] System tests completed, waiting for client input...";
+    LOG(INFO) << "\n[SETUP] System tests completed, waiting for client input...";
  
     if(read_thread.joinable()) {
         read_thread.join();

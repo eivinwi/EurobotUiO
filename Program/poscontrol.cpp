@@ -148,7 +148,8 @@ void PosControl::controlLoop() {
 				goStraight();
 			}
 			else if(cmd.type == LIFT) {
-				goToLift(cmd.argument);	
+				LOG(INFO) << "DynaCom action: " << cmd.argument;				
+				dcom->performAction(cmd.argument);
 			}
 			fullStop();
 			completeCurrent();
@@ -306,28 +307,6 @@ void PosControl::goStraight() {
 	}
 
 	LOG(INFO) << "[POS] IN GOAL!  (" << curPos->getX() << " , " <<  curPos->getY() << ") ~= (" << goalPos->getX() << " , " << goalPos->getY() << ")";
-}
-
-
-//TODO: this is an ugly way of doing lift/grabber
-void PosControl::goToLift(int arg) {
-	PRINTLINE("[POS] goToLift");	
-	if(arg == 3) {
-		dcom->openGrip();
-	} else if(arg == 4) {
-		dcom->closeGrip();
-	}
-
-	else {
-		lcom->goTo(arg);
-		bool success = lcom->waitForResponse();
-		PRINTLINE("[POS] goToLift done waiting");
-		if(success) {
-			LOG(INFO) << "[LIFT] Successful movement";
-		} else {
-			LOG(WARNING) << "[LIFT] UNSUCCESSFULL movement";
-		}
-	}
 }
 
 

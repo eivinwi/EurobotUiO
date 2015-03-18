@@ -27,19 +27,15 @@
 
 //TODO: try catch
 Serial::Serial(std::string serial_port) {
-	char s[20]; 
-	strcpy(s, "/dev/");
-	strcat(s, serial_port.c_str());
-    LOG(INFO) << "[SERIAL]     Opening serial port: " << s;
-    serial.Open(s);
+    LOG(INFO) << "[SERIAL]     Opening serial port: " << serial_port.c_str();
+    serial.Open(serial_port.c_str());
 
     serial.SetBaudRate( SerialStreamBuf::BAUD_38400 );
     serial.SetCharSize( SerialStreamBuf::CHAR_SIZE_8 );
     serial.SetNumOfStopBits( SerialStreamBuf::DEFAULT_NO_OF_STOP_BITS );
     serial.SetParity( SerialStreamBuf::PARITY_NONE );
     serial.SetFlowControl( SerialStreamBuf::FLOW_CONTROL_NONE ); //FLOW_CONTROL_HARD
-
-    LOG(INFO) << "[SERIAL]     Serial port open.";
+    LOG(INFO) << "[SERIAL]     Serial configuration complete";
 }
 
 

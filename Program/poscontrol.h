@@ -126,9 +126,6 @@ private:
 	// Calculates goalX,goalY by trigonometry based on the input and the current rotation
 	void goStraight();
 
-    //Sends command to lift-arduino, and waits for ACK before returning
-    void goToLift(int arg);
-
  	// Sets motor speeds to advance towards goal rotation
     void rotate(float distR);
 

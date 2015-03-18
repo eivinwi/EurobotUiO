@@ -18,6 +18,7 @@
 #define OPEN 3
 #define CLOSE 4
 #define GET 5
+#define TEST 9
 //?
 #define DELAY 300
 #define SUCCESS 5
@@ -60,7 +61,7 @@ void setup() {
 
 
 void loop() {
-	if(Serial.available()) { 
+/*	if(Serial.available()) { 
     	int inByte = Serial.read();
     	if(inByte == UP) {
     		goTop();
@@ -72,36 +73,40 @@ void loop() {
     		goMiddle();
     		Serial.print(SUCCESS);
     	} 
-    	/*
-    	else if(inByte == OPEN) {
-    		openGripper();
-    		Serial.print(SUCCESS);    		
-    	} else if(inByte == CLOSE){
-    		closeGripper();
-    		Serial.print(SUCCESS);
-    	} 
-		*/
+    
+    	//else if(inByte == OPEN) {
+    	//	openGripper();
+    	//	Serial.print(SUCCESS);    		
+    	//} else if(inByte == CLOSE){
+    	//	closeGripper();
+    	//	Serial.print(SUCCESS);
+    	//} 
+		
     	else if(inByte == GET) {
     		Serial.write(lift_state);
+    	} else if(inByte == TEST) {
+    		Serial.write(0x2C);
     	}
-    	/*if(lift_state == TOP_STATE) {
-    		goBottom();
-    	} else if(lift_state == BOTTOM_STATE) {
-    		goTop();
-    	}*/
-    	Serial.write(SUCCESS);
+    	//if(lift_state == TOP_STATE) {
+    	//	goBottom();
+    	//} else if(lift_state == BOTTOM_STATE) {
+    	//	goTop();
+    	//}
+    	//Serial.write(SUCCESS);
   	}
-  	//testRoutine();
+  	*/
+  	testRoutine();
+
 } 
 
 
 void testRoutine() {
 	goMiddle();
-	delay(1000);
+	delay(2000);
 	goTop();
-	delay(1000);
+	delay(2000);
 	goMiddle();
-	delay(1000);
+	delay(2000);
 	goBottom();
 	delay(3000);	
 }

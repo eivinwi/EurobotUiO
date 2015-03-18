@@ -83,12 +83,13 @@ const int ACCELERATION = 5;
 const int MODE = 0;
 
 // Default values, can be changed with command-line arguments
-bool sim_enabled = false;
+bool sim_motors = false;
+bool sim_lift = false;
+
 bool sound_enabled = false;
 bool com_running = false;
 bool debug_file_enabled = false;
 bool testing_enabled = false;
 bool log_to_file = true;
 std::string motor_serial = "/dev/ttyUSB0";
-std::string lift_serial = "/dev/ttyACM0";
-std::string gripper_serial = "/dev/ttyACM1";
+std::string dyna_serial = "/dev/ttyUSB1";
