@@ -1,0 +1,140 @@
+ivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./perf
+Connecting to hello world server...
+
+Packet size       : 4 B
+Number of packets : 10000
+Total time 	  : 2790.44 ms
+Average time      : 0.279044 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ 
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./perf
+Connecting to hello world server...
+^C
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ g++ -std=c++11 server.cpp -o servo -lzmq
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./perf
+Connecting to hello world server...
+
+Packet size       : 4 B
+Number of packets : 10000
+Total time 	  : 2730.68 ms
+Average time      : 0.273068 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./perf
+Connecting to hello world server...
+
+Packet size       : 4 B
+Number of packets : 10000
+Total time 	  : 2728.95 ms
+Average time      : 0.272895 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./perf
+Connecting to hello world server...
+
+Packet size       : 4 B
+Number of packets : 10000
+Total time 	  : 2751.76 ms
+Average time      : 0.275176 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./perf
+Connecting to hello world server...
+
+Packet size       : 4 B
+Number of packets : 10000
+Total time 	  : 2836.36 ms
+Average time      : 0.283636 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./perf
+Connecting to hello world server...
+
+Packet size       : 4 B
+Number of packets : 10000
+Total time 	  : 2776.43 ms
+Average time      : 0.277643 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./perf
+Connecting to hello world server...
+
+Packet size       : 4 B
+Number of packets : 10000
+Total time 	  : 2577.55 ms
+Average time      : 0.257755 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./perf
+Connecting to hello world server...
+
+Packet size       : 4 B
+Number of packets : 10000
+Total time 	  : 2832.66 ms
+Average time      : 0.283266 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./perf
+Connecting to hello world server...
+
+Packet size       : 4 B
+Number of packets : 10000
+Total time 	  : 2834.06 ms
+Average time      : 0.283406 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ g++ -std=c++11 server.cpp -o servo -lzmq
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./perf
+Connecting to hello world server...
+
+Packet size       : 4 B
+Number of packets : 10000
+Total time 	  : 2812.78 ms
+Average time      : 0.281278 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./perf
+Connecting to hello world server...
+
+Packet size       : 4 B
+Number of packets : 10000
+Total time 	  : 2761.23 ms
+Average time      : 0.276123 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ 
+
+
+
+
+
+
+eivinwi@eivinwi-Acer:~$ cd EurobotUiO/TestClient/
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./servo 
+^C
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ pkill guake
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./servo 
+Number of packets : 10001
+Total time 	  : 6304.88 ms
+Average time      : 0.630425 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./servo ^C
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./servo 
+Number of packets : 10001
+Total time 	  : 5440.62 ms
+Average time      : 0.544007 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./servo 
+Number of packets : 10001
+Total time 	  : 3099.87 ms
+Average time      : 0.309956 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./servo 
+Number of packets : 10001
+Total time 	  : 2977.41 ms
+Average time      : 0.297711 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./servo 
+Number of packets : 10001
+Total time 	  : 3401.1 ms
+Average time      : 0.340076 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./servo 
+Number of packets : 10001
+Total time 	  : 3248.79 ms
+Average time      : 0.324846 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./servo 
+Number of packets : 10001
+Total time 	  : 3127.68 ms
+Average time      : 0.312737 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./servo 
+Number of packets : 10001
+Total time 	  : 3474.04 ms
+Average time      : 0.347369 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./servo 
+Number of packets : 10001
+Total time 	  : 3196.36 ms
+Average time      : 0.319604 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./servo 
+Number of packets : 10001
+Total time 	  : 6468.51 ms
+Average time      : 0.646786 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ ./servo 
+Number of packets : 10001
+Total time 	  : 3584.6 ms
+Average time      : 0.358424 ms
+eivinwi@eivinwi-Acer:~/EurobotUiO/TestClient$ 

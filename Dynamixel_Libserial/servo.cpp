@@ -158,7 +158,8 @@ void setPosition(int id, int angle) {
 	if(angle >= 0 && angle < 1024) {
 		setReg2(id, 30, angle);
 	}
-  	usleep(ACTION_DELAY*100);
+  	//usleep(ACTION_DELAY*100);
+  	usleep(100);
 }
 
 
@@ -248,66 +249,56 @@ int main(int argc, char *argv[]) {
   serial.SetFlowControl( SerialStreamBuf::FLOW_CONTROL_NONE ); //FLOW_CONTROL_HARD
   std::cout << "Configuration complete" << std::endl;
 
- // id = 1;
-  //flush();
-//  setSpeed(id, 200);
-
-//  std::cout << "Setting speed/torque parameters" << std::endl;
-/*  setMaxTorque(2, 600);
-  setSpeed(2, 400);
-  usleep(10000);
-
- // setReg1(254, 3, 2);
-
-  lift_up();
-  usleep(100000);
-  lift_down();
-  usleep(100000);*/
-//  lift_down();
-//  usleep(100000);
-
-//  for(int i = 0; i < 11; i++) {
-/*    int startpos = 980;
-    int sluttpos = 20;
-
-    setPosition(id, startpos);
-    usleep(450000);
-    setPosition(id, sluttpos);
-    usleep(450000);
-    setPosition(id, startpos);
-    usleep(450000);
-
-  //}
+/*  setPosition(1, 230);
+  setPosition(2, 230);
+  setPosition(3, 230);
+  setPosition(4, 230);
+  usleep(450000);
+  setPosition(1, 530);
+  setPosition(2, 530);
+  setPosition(3, 530);
+  setPosition(4, 530);
+  usleep(450000);
+  setPosition(1, 230);
+  setPosition(2, 230);
+  setPosition(3, 230);
+  setPosition(4, 230);
+  usleep(450000);
+*/
+/*  setPosition(3, 1);
+  setPosition(4, 1);
+  usleep(500000);
+  setPosition(3, 500);
+  setPosition(4, 500);
+  usleep(500000);
 */
 
+  setPosition(254, 230);
+  usleep(500000);  
+  setPosition(254, 530);
+  usleep(500000);
+  setPosition(254, 230);
+  usleep(500000);
+  setPosition(254, 230);
+  usleep(500000);  
+  setPosition(254, 530);
+  usleep(500000);
+  setPosition(254, 230);
+  usleep(500000);
+  setPosition(254, 230);
+  usleep(500000);  
+  setPosition(254, 530);
+  usleep(500000);
+  setPosition(254, 230);
+  usleep(500000);
+  setPosition(254, 230);
+  usleep(500000);  
+  setPosition(254, 530);
+  usleep(500000);
+  setPosition(254, 230);
+  usleep(500000);
 
 
-//  getPosition();
- // usleep(10000);
-
-  std::cout << "Done" << std::endl;
-  //setPosition(2, 230);
-
-
-  //std::cout << "Setting position 530" << std::endl;
-  //setPosition(id, 530);
-  //setPosition(2, 530);
-  //usleep(500000);
-
-
-
-
-
-//  getPosition();
-//  usleep(10000);
-
-//  setPosition(id, 230);
-//  usleep(500000);
-
-  regRead(2, 0, 2);
-
-
-  return 0;
 }
 
 

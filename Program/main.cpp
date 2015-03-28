@@ -102,6 +102,11 @@ void readLoop() {
                     enqStraight(num_args, args);
                     reply_str = "ok";
                     break;
+                case HALT: 
+                    LOG(INFO) << "[COM] Recieved HALT";
+                    p->halt();
+                    reply_str = "ok";
+                    break;
                 case RESET: 
                     LOG(INFO) << "[COM]  Received RESET";
                     resetRobot(num_args, args);

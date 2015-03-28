@@ -6,6 +6,7 @@
 #define GRAB 5
 #define SHUTTER 6
 #define STRAIGHT 7
+#define HALT 8
 #define RESET 9
 #define SOUND 11
 

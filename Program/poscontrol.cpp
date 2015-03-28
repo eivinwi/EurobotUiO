@@ -90,10 +90,24 @@ void PosControl::reset(int x, int y, int rot) {
 	curPos->set(x, y, rot);
 	curPos->updatePosString();
 
+	clearQueue();
+
 	std::fill(std::begin(completed_actions), std::end(completed_actions), false);
 	while(!q.empty()) {
 		q.pop();
 	}
+}
+
+
+// should perhaps set some variable to avoid race conditions
+// too hack-ish
+void PosControl::halt() {
+	fullStop();
+	clearQueue();
+	goalPos->set(curPos->getX(), curPos->getY(), curPos->getAngle());
+	fullStop();
+
+	completeCurrent();
 }
 
 
@@ -122,6 +136,11 @@ Cmd PosControl::dequeue() {
 	q.pop();
 	usleep(100);
 	return cmd;
+}
+
+void PosControl::clearQueue() {
+	std::queue <Cmd> newQ;
+	q = newQ;
 }
 
 

@@ -73,6 +73,10 @@ public:
     //Reset all counters, encoders etc. Sets initial position (x, y, rot)
     void reset(int x, int y, int rot);
 
+
+    // Immediately stop all movement, cancel current action and await further instruction.
+    void halt();
+
     // Tests if poscontrol is working by enqeueueing and dequeueing an object
     bool test();
 
@@ -101,6 +105,8 @@ public:
 	bool running();
 	
 private:
+	void clearQueue();
+
 	// Waits untill queue-size is >0 (using a Notifier), then returns the first action in the queue.
 	struct Cmd dequeue();
 
