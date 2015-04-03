@@ -122,15 +122,20 @@ void PosControl::enqueue(int id, int x, int y, float rot, int arg, int type) {
 	Cmd cmd= {id, x, y, rot, arg, type};
 	std::lock_guard<std::mutex> lock(qMutex);	
 	q.push(cmd);
+	TIMESTAMP("------- Sending notify");
 	notifier.notify_one();
+	TIMESTAMP("------- Sent notify");
 }
 
 
 Cmd PosControl::dequeue() {
 	std::unique_lock<std::mutex> lock(qMutex);
+	TIMESTAMP("------- Waiting");
 	while(q.empty()) {
 		notifier.wait(lock); //alternative implementation try_unlock with crono ms-timeout
+		TIMESTAMP("------- Lock Open");
 	}
+	TIMESTAMP("------- outside loop");
 
 	Cmd cmd = q.front();
 	q.pop();

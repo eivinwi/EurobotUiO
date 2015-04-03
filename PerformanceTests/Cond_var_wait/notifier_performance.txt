@@ -1,0 +1,49 @@
+695.729: ------- Sending notify
+695.812: ------- Sent notify
+695.834: ------- Waiting
+695.846: ------- outside loop
+696.096: ------- Lock Open
+
+
+3373: ------- Sending notify
+3373.03: ------- Sent notify
+3373.05: ------- Lock Open
+3373.08: ------- outside loop
+
+
+4373.76: ------- Waiting
+
+
+6947.9: ------- Sending notify
+6947.94: ------- Sent notify
+6947.97: ------- Lock Open
+6947.98: ------- outside loop
+
+
+7948.78: ------- Waiting
+
+
+9835.26: ------- Sending notify
+9835.28: ------- Sent notify
+9835.3: ------- Lock Open
+9835.32: ------- outside loop
+
+
+10836: ------- Waiting
+
+12994.8: ------- Sending notify
+12994.8: ------- Sent notify
+12994.8: ------- Lock Open
+12994.8: ------- outside loop
+
+
+13995.4: ------- Waiting
+
+
+15660.5: ------- Sending notify
+15660.5: ------- Sent notify
+15660.6: ------- Lock Open
+15660.6: ------- outside loop
+
+
+16661.3: ------- Waiting
