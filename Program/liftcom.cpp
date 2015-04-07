@@ -121,7 +121,7 @@ bool LiftCom::waitForResponse() {
 
 //used to simulate lift while testing
 void LiftCom::setCurrentPos(int p) {
-	lift_pos = p;
+	lift_pos.store(p);
 }
 
 
