@@ -190,7 +190,7 @@ void DynaCom::setMaxTorque(int id, int torque) {
 
 
 void DynaCom::setPosition(int id, int angle) {
-	std::cout << "SetPosition(" << id << "): " << angle << std::endl;
+	LOG(DEBUG) << "SetPosition(" << id << "): " << angle << std::endl;
 	setReg2(id, 30, angle);
   	usleep(ACTION_DELAY*100);
 }
@@ -262,7 +262,6 @@ uint8_t DynaCom::calcCheckSum(std::array<uint8_t, SIZE> b) {
 		}
 		counter = counter + tmp;
 	}
-	//counter = ~counter; // inverting bits
 	return (uint8_t) ~counter; // inverting bits and adding checkSum
 }
 
@@ -270,7 +269,7 @@ uint8_t DynaCom::calcCheckSum(std::array<uint8_t, SIZE> b) {
 void DynaCom::sendCmd(int id, int cmd) {
 	std::array <uint8_t, 6> arr {0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00};
 	arr[2] = (uint8_t) id;
-	arr[3] = (uint8_t) (2);
+	arr[3] = (uint8_t) (2); //adding length
 	arr[4] = (uint8_t) cmd;
 	arr[5] = calcCheckSum(arr);
 	writeToSerial(arr);
@@ -280,7 +279,7 @@ void DynaCom::sendCmd(int id, int cmd) {
 void DynaCom::setReg1(int id, int regNo, int val) {
 	std::array <uint8_t, 8> arr {0xFF, 0xFF, 0, 0, 3, 0, 0, 0}; 
 	arr[2] = (uint8_t) id;
-	arr[3] = (uint8_t) (4);// adding length
+	arr[3] = (uint8_t) (4); // adding length
 	arr[5] = (uint8_t) regNo;
 	arr[6] = (uint8_t) val;
 	arr[7] = calcCheckSum(arr);

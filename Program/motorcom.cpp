@@ -155,7 +155,6 @@ void MotorCom::setMode(uint8_t mode) {
 
 
 void MotorCom::resetEncoders() {
-    LOG(DEBUG) << "[MOTOR] Resetting encoders";
     sync();
     writeToSerial(RESET_ENCODERS);
     prev_encL = 0;
@@ -213,31 +212,18 @@ long MotorCom::getEncR() {
 
 void MotorCom::enableReg(bool enable) {
     sync();
-    if(enable) {
-        writeToSerial(ENABLE_REGULATOR);
-    } else {
-        writeToSerial(DISABLE_REGULATOR);
-    }
+    ((enable) ? writeToSerial(ENABLE_REGULATOR) : writeToSerial(DISABLE_REGULATOR));
 }
 
 
 void MotorCom::enableTimeout(bool enable) {
     sync();
-    if(enable) {
-        writeToSerial(ENABLE_TIMEOUT);
-    } else {
-        writeToSerial(DISABLE_TIMEOUT);
-    }
+    ((enable) ? writeToSerial(ENABLE_TIMEOUT) : writeToSerial(DISABLE_TIMEOUT));
 }
 
 
 void MotorCom::flush() {
-    LOG(DEBUG) << "[MOTOR] Flushing serial";
-    if(simulating) {
-        simport->printAll();
-    } else {
-        port->printAll();
-    }
+   ((simulating) ? simport->printAll() : port->printAll());
 }
 
 
@@ -250,47 +236,27 @@ void MotorCom::sync() {
 
 
 void MotorCom::writeToSerial(uint8_t a) {
-	if(simulating) {
-	    simport->write(a);
-	} else {
-		port->write(a);
-	}
+    ((simulating) ? simport->write(a) : port->write(a));
 }
 
 
 void MotorCom::writeToSerial(int a) {
-    if(simulating) {
-	    simport->write(a);
-	} else {
-		port->write(a);
-	}
+    ((simulating) ? simport->write(a) : port->write(a));
 }
 
 
 uint8_t MotorCom::readFromSerial() {
-    if(simulating) {
-	    return simport->read();
-	} else {
-		return port->read();
-	}
+    return ((simulating) ? simport->read() : port->read());
 }
 
 
 uint8_t MotorCom::readFromSerialNoWait() {
-    if(simulating) {
-	    return simport->readNoWait();
-	} else {
-		return port->readNoWait();
-	}
+    return ((simulating) ? simport->readNoWait() : port->readNoWait());
 }
 
 
 long MotorCom::readLongFromSerial() {
-    if(simulating) {
-        return simport->readLong();
-    } else {
-        return port->readLong();
-    }
+    return ((simulating) ? simport->readLong() : port->readLong());
 }
 
 

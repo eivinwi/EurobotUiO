@@ -47,7 +47,6 @@ SerialSim::SerialSim() {
 	prev_cmd = 0x00;
 	encoderL = 0;
 	encoderR = 0;
-	DBP("[SIM] Started SerialSim\n");
 }
 
 
@@ -55,18 +54,20 @@ SerialSim::~SerialSim() {
 }
 
 
+// overload hack
 void SerialSim::write(char arg) {
 	write((uint8_t) arg);
 }
 
 
+// overload hack
 void SerialSim::write(int arg) {
 	write((uint8_t) arg);
 }
 
 
 void SerialSim::write(uint8_t arg) {
-	DBP("[SIM] write " << arg)
+	LOG(DEBUG) << "[SIM] write " << arg;
 	if(arg == 0x00) {
 		synced = true;
 		prev_cmd = 0x00;
@@ -178,7 +179,7 @@ void SerialSim::write(uint8_t arg) {
 
 
 uint8_t SerialSim::readNoWait() {
-	DBPL("[SIM] readNoWait " << prev_cmd);
+	LOG(DEBUG) << "[SIM] readNoWait " << prev_cmd;
 	switch(prev_cmd) {
         case GET_SPEEDL:
         	return speedL;
@@ -229,7 +230,7 @@ uint8_t SerialSim::readNoWait() {
 
 
 uint8_t SerialSim::read() {
-	DBPL("[SIM] read");
+	LOG(DEBUG) << "[SIM] read";
 	return readNoWait();
 }
 
@@ -287,21 +288,13 @@ uint8_t SerialSim::readEncs() {
 
 
 void SerialSim::calculateEncL() {
-	DBPL("[SIM] calculateEncL");
 	time_t now;
 	time(&now);
 	double timePassed = difftime(now, timeL);
 	double rotations = (timePassed)/RPS;
 	double encoderDiff = rotations*980;
-
-	DBPL("timePassed: " << timePassed);
-	DBPL("rotations: " << rotations);
-	DBPL("encoderDiff: " << encoderDiff);
-
 	encoderL = (long) encoderDiff;
-
-	DBPL("enc: " << enc);
-
+	
 	encL[3] = ((encoderL >> 24) & 0xff);
 	encL[2] = ((encoderL >> 16) & 0xff);
 	encL[1] = ((encoderL >> 8) & 0xff);
@@ -310,7 +303,6 @@ void SerialSim::calculateEncL() {
 
 
 void SerialSim::calculateEncR() {
-	DBP("[SIM] calculateEncR\n");
 	time_t now;
 	time(&now);
 	double timePassed = difftime(now, timeR);

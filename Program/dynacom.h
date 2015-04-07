@@ -72,9 +72,6 @@ public:
 
     void performAction(int arg);
 
-
-
-
     int gripperPosition();
 
     int liftPosition();

@@ -67,14 +67,12 @@ void Rotation::updateAngle(long diffL, long diffR) {
 
 	turned = (diffL > 0)? -(encAvg/ENC_PER_DEGREE) : (encAvg/ENC_PER_DEGREE);
 
-	LOG(DEBUG) << "[ROT] changing rotation: " << angle << " + " << turned;
 	angle += turned;
 	if(angle > 360.0) {
 		angle -= 360.0;
 	} else if(angle < 0.0) {
 		angle += 360.0;
 	}
-	LOG(DEBUG) << " = " << angle;
 }
 
 
@@ -85,8 +83,6 @@ void Rotation::updateAngle(long diffL, long diffR) {
 float Rotation::distanceTo(float goalRot) {
 	float l = distanceLeft(goalRot);
 	float r = distanceRight(goalRot);
-	DBPL("[ROT] distanceTo: l=" << l << " r=" << r);
-
 	return (abs(l) < abs(r))? l : r;
 }
 

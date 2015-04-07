@@ -66,7 +66,7 @@ void LiftCom::goTo(int p) {
 			getPosition();
 			break;
 		default:
-			LOG(INFO) << "[LIFT] invalid goto-command.";
+			LOG(WARNING) << "[LIFT] invalid goto-command.";
 			break;
 
 	}
@@ -110,8 +110,6 @@ bool LiftCom::waitForResponse() {
 	do {
 		if(port->available()) {
 			uint8_t resp = readFromSerial();
-			LOG(INFO) << "[LIFT resp after: "  << (std::chrono::duration<double, std::milli>(t_end-t_start).count());
-
 			return (resp == SUCCESS);
 		}
 		t_end = std::chrono::high_resolution_clock::now();
