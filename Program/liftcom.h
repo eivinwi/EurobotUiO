@@ -94,6 +94,7 @@ class LiftCom {
 
         // Current positions. Atomic because client may request the current position.
         std::atomic<int> lift_pos;
+        int lift_pos_2;
 
         bool simulating;
 };

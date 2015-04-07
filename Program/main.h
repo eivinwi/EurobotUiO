@@ -70,7 +70,7 @@ void crashHandler(int sig);
 
 // Objects 
 MotorCom *m;
-LiftCom *l;
+//LiftCom *l;
 PosControl *p;
 DynaCom *d;
 //Sound *s;

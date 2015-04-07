@@ -67,7 +67,7 @@ public:
 	// m = instance of MotorCom used to communicate with motors trough MD49 via serial
 	// l = instance of LiftCom used to communicate with lift/gripper-arduino via serial
 	// testing: see enableTesting()
-    PosControl(MotorCom *m, LiftCom *l, DynaCom *d, bool testing);
+    PosControl(MotorCom *m, DynaCom *d, bool testing);
     ~PosControl();
 
     //Reset all counters, encoders etc. Sets initial position (x, y, rot)
@@ -218,7 +218,7 @@ private:
 
 	// Serial ports
 	MotorCom *mcom;
-	LiftCom *lcom;
+	//LiftCom *lcom;
 	DynaCom *dcom;
 
 	// Position objects

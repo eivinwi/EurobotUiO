@@ -27,7 +27,8 @@
 
 LiftCom::LiftCom(std::string serial, bool sim_enabled) {
     serial_port = serial;
-    lift_pos.store(0); //BOTTOM;
+    //lift_pos.store(0); //BOTTOM;
+    lift_pos_2 = 0;
     simulating = sim_enabled;
 }
 
@@ -74,7 +75,7 @@ void LiftCom::goTo(int p) {
 
 
 uint8_t LiftCom::getPosition() {
-	return lift_pos;
+	return lift_pos_2;
 }
 
 
@@ -120,7 +121,9 @@ bool LiftCom::waitForResponse() {
 
 //used to simulate lift while testing
 void LiftCom::setCurrentPos(int p) {
-	lift_pos.store(p);
+	PRINTLINE("P VALUE IS: " << p)
+	//lift_pos.store(p);
+	lift_pos_2 = p;
 }
 
 
@@ -128,23 +131,23 @@ void LiftCom::setCurrentPos(int p) {
 
 
 void LiftCom::goToTop() {
-	LOG(INFO) << "[LIFT] goToTop, previous is: " << lift_pos;
+	LOG(INFO) << "[LIFT] goToTop, previous is: " << lift_pos_2;
 	writeToSerial(ARD_TOP);
-	lift_pos.store(TOP);
+	//lift_pos.store(TOP);
 }
 
 
 void LiftCom::goToMiddle() {
-	LOG(INFO) << "[LIFT] goToMiddle, previous is: " << lift_pos;
+	LOG(INFO) << "[LIFT] goToMiddle, previous is: " << lift_pos_2;
 	writeToSerial(ARD_MIDDLE);
-	lift_pos.store(MIDDLE);
+	//lift_pos.store(MIDDLE);
 }
 
 
 void LiftCom::goToBottom() {
-	LOG(INFO) << "[LIFT] goToBottom, previous is: " << lift_pos;
+	LOG(INFO) << "[LIFT] goToBottom, previous is: " << lift_pos_2;
 	writeToSerial(ARD_BOTTOM);
-	lift_pos.store(BOTTOM);
+	//lift_pos.store(BOTTOM);
 }
 
 

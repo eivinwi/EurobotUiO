@@ -51,15 +51,18 @@ struct Cmd {
 };
 
 
-PosControl::PosControl(MotorCom *m, LiftCom *l, DynaCom *d, bool test) {
+PosControl::PosControl(MotorCom *m, DynaCom *d, bool test) {
 	mcom = m;
-	lcom = l;
 	dcom = d;
 	testing = test;
 	goalPos = new GoalPosition;
 	curPos = new Position;
 	exactPos = new Position;
 	reset(0,0,0);
+
+
+
+	//should create lift, motor, dyna coms internally
 }
 
 
@@ -187,7 +190,7 @@ void PosControl::controlLoop() {
 			} else if(cmd.type == STRAIGHT) {
 				curPos->set(goalPos->getX(), goalPos->getY(), curPos->getAngle());
 			} else if(cmd.type == LIFT) {
-				lcom->setCurrentPos(cmd.argument);
+				dcom->performAction(cmd.argument);
 			}
 			completeCurrent();
 		}
@@ -461,7 +464,7 @@ std::string PosControl::getCurrentPos() {
 
 
 int PosControl::getLiftPos() {
-	return lcom->getPosition();
+	return dcom->liftPosition();
 }
 
 

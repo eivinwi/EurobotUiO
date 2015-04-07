@@ -509,18 +509,20 @@ int main(int argc, char *argv[]) {
     usleep(10000);
 
     LOG(INFO) << "[SETUP] initializing PosControl";
-    p = new PosControl(m, l, d, testing_enabled);
+    p = new PosControl(m, d, testing_enabled);
+    usleep(5000);
+
+    LOG(INFO) << "[SETUP] initializing controlLoop thread";
+    std::thread pos_thread(&PosControl::controlLoop, p);
+    usleep(5000);
 
     LOG(INFO) << "[SETUP] initializing readLoop thread";
     std::thread read_thread(readLoop);
     usleep(5000);
 
-    LOG(INFO) << "[SETUP] initializing subscription thread";
-    std::thread write_thread(subscriptionLoop);
+  //  LOG(INFO) << "[SETUP] initializing subscription thread";
+  //  std::thread write_thread(subscriptionLoop);
 
-    LOG(INFO) << "[SETUP] initializing controlLoop thread";
-    std::thread pos_thread(&PosControl::controlLoop, p);
-    usleep(5000);
 
     int acc = m->getAcceleration(); 
     if(acc != ACCELERATION) {
