@@ -27,7 +27,7 @@
 
 LiftCom::LiftCom(std::string serial, bool sim_enabled) {
     serial_port = serial;
-    lift_pos = BOTTOM;
+    lift_pos = 0; //BOTTOM;
     simulating = sim_enabled;
 }
 
@@ -48,6 +48,7 @@ void LiftCom::startSerial() {
 	else {
 		LOG(INFO) << "[LIFT] 	 Simulating serial";
 	}	
+   lift_pos = 0; //BOTTOM;
 }
 
 
