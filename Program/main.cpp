@@ -387,7 +387,7 @@ bool checkArguments(int argc, char *argv[]) {
 void testSystem() {
     usleep(20000);
     m->flush();
-    LOG(INFO) << "[SETUP] Complete, testing_enabled components:\n";
+    LOG(INFO) << "[SETUP] Complete, testing components:\n";
 
     //test LOGging
     printResult("[TEST] Logging: ", true); //pointless, if Logging isnt active nothing will be written
@@ -397,7 +397,7 @@ void testSystem() {
     } else {
         printResult("[TEST] MotorCom: serial open", m->test());
     }
-//    printResult("[TEST] LiftCom: serial open", l->test());    
+
     printResult("[TEST] DynaCom: lift online", d->testLift());
     printResult("[TEST] DynaCom: gripper online", d->testGripper());
 
@@ -410,11 +410,9 @@ void testSystem() {
     uint8_t error = m->getError();
     printResult("[TEST] MD49_Error = " + std::to_string((int) error), (error == 0));
     int acc = m->getAcceleration();
-    printResult("[TEST] Acceleration = " + std::to_string((int) acc), (acc == ACCELERATION));
-    
-
+    printResult("[TEST] Acceleration = " + std::to_string(acc), (acc == ACCELERATION));  
     int mode = m->getMode();
-    printResult("[TEST] Mode = " + std::to_string((int) mode), (mode == MODE));
+    printResult("[TEST] Mode = " + std::to_string(mode), (mode == MODE));
 }
 
 
@@ -449,12 +447,8 @@ void configureLogger() {
     defaultConf.setToDefault();
     //el::Loggers::addFlag( el::LoggingFlag::DisableApplicationAbortOnFatalLog );
     defaultConf.setGlobally( el::ConfigurationType::Format, "%datetime{%H:%m:%s,%g} %level %msg" );
-    defaultConf.set(el::Level::Global, 
-        el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/Logs/std.log"
-    );
-    defaultConf.set(el::Level::Global,
-        el::ConfigurationType::ToStandardOutput, "TRUE"
-    );
+    defaultConf.set(el::Level::Global, el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/Logs/std.log");
+    defaultConf.set(el::Level::Global, el::ConfigurationType::ToStandardOutput, "TRUE");
 
     if(log_to_file) {
         defaultConf.setGlobally( el::ConfigurationType::ToFile, "TRUE"); 
@@ -463,31 +457,19 @@ void configureLogger() {
     }
 
     if(debug_file_enabled) {
-        defaultConf.set(el::Level::Debug, 
-            el::ConfigurationType::Enabled, "TRUE"
-        );
+        defaultConf.set(el::Level::Debug, el::ConfigurationType::Enabled, "TRUE");
     }
     else {
-        defaultConf.set(el::Level::Debug, 
-            el::ConfigurationType::Enabled, "FALSE"
-        );
+        defaultConf.set(el::Level::Debug, el::ConfigurationType::Enabled, "FALSE");
     }    
 
-    defaultConf.set(el::Level::Debug, 
-        el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/Logs/debug.log"
-    );
-    defaultConf.set(el::Level::Debug, 
-        el::ConfigurationType::ToStandardOutput, "FALSE"
-    );
-    defaultConf.set(el::Level::Trace, 
-        el::ConfigurationType::Format, "%datetime{%m:%s:%g} %msg"
-    );
-    defaultConf.set(el::Level::Trace, 
-        el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/Logs/position.log"
-    );
-    defaultConf.set(el::Level::Trace, 
-        el::ConfigurationType::ToStandardOutput, "FALSE"
-    );
+    defaultConf.set(el::Level::Debug, el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/Logs/debug.log");
+    defaultConf.set(el::Level::Debug, el::ConfigurationType::ToStandardOutput, "FALSE");
+
+    defaultConf.set(el::Level::Trace, el::ConfigurationType::Format, "%datetime{%m:%s:%g} %msg");
+    defaultConf.set(el::Level::Trace, el::ConfigurationType::Filename, "/home/eivinwi/EurobotUiO/Logs/position.log");
+    defaultConf.set(el::Level::Trace, el::ConfigurationType::ToStandardOutput, "FALSE");
+
     el::Loggers::reconfigureAllLoggers(defaultConf);
 }
 
@@ -495,6 +477,7 @@ void configureLogger() {
 int main(int argc, char *argv[]) {  
     PRINTLINE("[SETUP] checking cmdline-arguments");
     if(!checkArguments(argc, argv)) {
+        PRINTLINE("ERROR: Invalid arguments");
         return -1;
     }
 
@@ -514,12 +497,12 @@ int main(int argc, char *argv[]) {
 
     LOG(INFO) << "[SETUP] starting and flushing serials";
     m->startSerial();
-    usleep(100000);
+    usleep(100000); // extra delay for safety, motor controller sometimes need more time
     m->flush();
 
     LOG(INFO) << "[SETUP] resetting encoders";
     m->resetEncoders();
-    usleep(5000);
+    usleep(10000);
 
     LOG(INFO) << "[SETUP] starting and flushing serials";
     d->startSerial();
@@ -532,22 +515,22 @@ int main(int argc, char *argv[]) {
     std::thread read_thread(readLoop);
     usleep(5000);
 
-    LOG(INFO) << "[SETUP] initializing sunscription thread";
+    LOG(INFO) << "[SETUP] initializing subscription thread";
     std::thread write_thread(subscriptionLoop);
 
     LOG(INFO) << "[SETUP] initializing controlLoop thread";
     std::thread pos_thread(&PosControl::controlLoop, p);
     usleep(5000);
 
-    int acc2 = m->getAcceleration(); 
-    if(acc2 != ACCELERATION) {
-        LOG(INFO) << "[SETUP] Acceleration is: " << acc2 << ", setting new acceleration: " << ACCELERATION;
+    int acc = m->getAcceleration(); 
+    if(acc != ACCELERATION) {
+        LOG(INFO) << "[SETUP] Acceleration is: " << acc << ", setting new acceleration: " << ACCELERATION;
         usleep(1000);
         m->setAcceleration(ACCELERATION);
     }
     
     usleep(1000);
-    int mode = m->getAcceleration();
+    int mode = m->getMode();
     if(mode != 0) {
         LOG(INFO) << "[SETUP] Mode is: " << m << ", setting new mode: " << MODE;
         usleep(1000);
@@ -558,7 +541,7 @@ int main(int argc, char *argv[]) {
 
     testSystem();
 
-    LOG(INFO) << "\n[SETUP] System tests completed, waiting for client input...";
+    LOG(INFO) << "\n[SETUP] System tests completed, waiting for client input...\n";
  
     if(read_thread.joinable()) {
         read_thread.join();
