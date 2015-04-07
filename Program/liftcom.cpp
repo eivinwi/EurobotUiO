@@ -130,21 +130,21 @@ void LiftCom::setCurrentPos(int p) {
 void LiftCom::goToTop() {
 	LOG(INFO) << "[LIFT] goToTop, previous is: " << lift_pos;
 	writeToSerial(ARD_TOP);
-	lift_pos = TOP;
+	lift_pos.store(TOP);
 }
 
 
 void LiftCom::goToMiddle() {
 	LOG(INFO) << "[LIFT] goToMiddle, previous is: " << lift_pos;
 	writeToSerial(ARD_MIDDLE);
-	lift_pos = MIDDLE;
+	lift_pos.store(MIDDLE);
 }
 
 
 void LiftCom::goToBottom() {
 	LOG(INFO) << "[LIFT] goToBottom, previous is: " << lift_pos;
 	writeToSerial(ARD_BOTTOM);
-	lift_pos = BOTTOM;
+	lift_pos.store(BOTTOM);
 }
 
 
