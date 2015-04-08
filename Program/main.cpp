@@ -495,16 +495,17 @@ int main(int argc, char *argv[]) {
     d = new DynaCom(dyna_serial, sim_lift);
     usleep(10000);
 
-    LOG(INFO) << "[SETUP] starting and flushing serials";
+    LOG(INFO) << "[SETUP] starting motor serial";
     m->startSerial();
     usleep(100000); // extra delay for safety, motor controller sometimes need more time
+    LOG(INFO) << "[SETUP] flushing motor serial";
     m->flush();
 
-    LOG(INFO) << "[SETUP] resetting encoders";
+    LOG(INFO) << "[SETUP] resetting motor encoders";
     m->resetEncoders();
     usleep(10000);
 
-    LOG(INFO) << "[SETUP] starting and flushing serials";
+    LOG(INFO) << "[SETUP] starting dyna-serial";
     d->startSerial();
     usleep(10000);
 

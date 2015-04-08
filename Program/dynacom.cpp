@@ -36,10 +36,6 @@ DynaCom::~DynaCom() {
 
 
 void DynaCom::startSerial() {
-	port = new Serial("/dev/ttyUSB0");
-	usleep(500000);
-	return; 
-
 	PRINTLINE("StartSerial");
 	if(simulating) {
 	    LOG(INFO) << "[DYNA] 	 Simulating serial";		
@@ -54,22 +50,36 @@ void DynaCom::startSerial() {
 	}
 }
 
+
+
 void DynaCom::performAction(int arg) {
 	switch(arg) {
-		case 0:
+		case ACTION_LIFT_DOWN:
 			liftDown();
 			break;
-		case 1:
+		case ACTION_LIFT_MIDDLE:
 			liftMiddle();
 			break;
-		case 2:
+		case ACTION_LIFT_UP:
 			liftUp();
 			break;
-		case 3:
+		case ACTION_GRIP_OPEN:
 			openGrip();
 			break;
-		case 4:
+		case ACTION_GRIP_CLOSE:
 			closeGrip();
+			break;
+		case ACTION_SHUTTER_OPEN_L:
+			shutterOpenLeft();
+			break;
+		case ACTION_SHUTTER_CLOSE_L:
+			shutterCloseLeft();
+			break;
+		case ACTION_SHUTTER_OPEN_R:
+			shutterOpenRight();
+			break;
+		case ACTION_SHUTTER_CLOSE_R:
+			shutterCloseRight();
 			break;
 		default:
 			break;
@@ -110,15 +120,18 @@ int DynaCom::gripperPosition() {
 	return INVALID_STATE;
 }
 
+
 void DynaCom::openGrip() {
 	LOG(INFO) << "[DYNA] openGrip";
 	setPosition(GRIP_ID, OPEN_POS);
 } 
 
+
 void DynaCom::closeGrip() {
 	LOG(INFO) << "[DYNA] closeGrip";
 	setPosition(GRIP_ID, CLOSED_POS);
 }
+
 
 void DynaCom::liftUp() {
 	LOG(INFO) << "[DYNA] liftUp";
@@ -139,15 +152,50 @@ void DynaCom::liftDown() {
 }
 
 
+void DynaCom::shutterOpenLeft() {
+	LOG(INFO) << "[DYNA] openShutterLeft";
+	setPosition(SHUTTER_LEFT_ID, SHUTTER_LEFT_OPEN_POS);
+}
+
+
+void DynaCom::shutterCloseLeft() {
+	LOG(INFO) << "[DYNA] closeShutterLeft";
+	setPosition(SHUTTER_LEFT_ID, SHUTTER_LEFT_CLOSED_POS);
+}
+
+
+void DynaCom::shutterOpenRight() {
+	LOG(INFO) << "[DYNA] openShutterRight";
+	setPosition(SHUTTER_RIGHT_ID, SHUTTER_RIGHT_OPEN_POS);
+}
+
+
+void DynaCom::shutterCloseRight() {
+	LOG(INFO) << "[DYNA] closeShutterRight";
+	setPosition(SHUTTER_RIGHT_ID, SHUTTER_RIGHT_CLOSED_POS);
+}
+
+
 bool DynaCom::testLift() {
 	LOG(DEBUG) << "[DYNA] Testing lift";
 	return test(LIFT_ID);
 }
 
+
 bool DynaCom::testGripper() {
 	LOG(DEBUG) << "[DYNA] Testing gripper";
 	return test(GRIP_ID);
 }
+
+
+bool DynaCom::testShutter() {
+	LOG(DEBUG) << "[DYNA] Testing shutters";
+	return test(SHUTTER_LEFT_ID) && test(SHUTTER_RIGHT_ID);
+}
+
+
+/*** PRIVATE FUNCTIONS ***/
+
 
 bool DynaCom::test(int id) {
 	uint8_t testval = 0;
@@ -166,11 +214,6 @@ bool DynaCom::test(int id) {
 	} 
 	return false;
 }
-
-
-
-
-/*** PRIVATE FUNCTIONS ***/
 
 
 void DynaCom::setSpeed(int id, int speed) {

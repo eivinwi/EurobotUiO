@@ -41,6 +41,8 @@
 
 #define GRIP_ID 1
 #define LIFT_ID 2
+#define SHUTTER_LEFT_ID 3
+#define SHUTTER_RIGHT_ID 4
 
 #define OPEN_STATE 0
 #define CLOSED_STATE 1
@@ -57,6 +59,11 @@
 
 #define OPEN_POS 230
 #define CLOSED_POS 530
+
+#define SHUTTER_LEFT_OPEN_POS 215
+#define SHUTTER_LEFT_CLOSED_POS 800
+#define SHUTTER_RIGHT_OPEN_POS 808
+#define SHUTTER_RIGHT_CLOSED_POS 223
 
 
 class DynaCom {
@@ -78,9 +85,11 @@ public:
 
     bool testLift();
     bool testGripper();
-    bool test(int id);
+    bool testShutter();
 
 private:
+    bool test(int id);
+
     // Puts the grippers in open position
     void openGrip();
 
@@ -92,6 +101,12 @@ private:
     void liftMiddle();
 
     void liftDown();
+
+    void shutterOpenLeft();
+    void shutterCloseLeft();
+    void shutterOpenRight();
+    void shutterCloseRight();
+
 
     // Sets the speed register of servo "id" to speed [0-1023]
     void setSpeed(int id, int speed);

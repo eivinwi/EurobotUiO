@@ -49,6 +49,7 @@ void MotorCom::startSerial() {
         }     
         LOG(INFO) << "[MOTOR]    Starting serial at: " << serial_port;
         port = new Serial(serial_port);
+        LOG(INFO) << "[MOTOR]    Serial opened";
     }
 }
 
@@ -223,7 +224,9 @@ void MotorCom::enableTimeout(bool enable) {
 
 
 void MotorCom::flush() {
+    PRINTLINE("flushing");
    ((simulating) ? simport->printAll() : port->printAll());
+    PRINTLINE("flush complete");
 }
 
 

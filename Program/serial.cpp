@@ -135,11 +135,19 @@ bool Serial::available() {
 
 
 void Serial::printAll() {
+    LOG(INFO) << "[SERIAL]  flushing:";
     std::stringstream ss;
+    int itr = 0;
+    uint8_t b = 0;
     while(serial.rdbuf()->in_avail()) {
-        uint8_t b = serial.get();
+        b = serial.get();
         ss << (int) b;
         (void) b;
+        itr++;
+        if(itr > 100) {
+            LOG(INFO) << "  [SERIAL] max iterations. Serial is not connected";
+            break;
+        }
     }
-    LOG(DEBUG) << "Flushed serial: [" << ss << "]";
+    LOG(INFO) << "Flushed serial: [" << ss.str() << "]";
 }
