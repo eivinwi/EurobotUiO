@@ -62,7 +62,7 @@ PosControl::PosControl(MotorCom *m, DynaCom *d, bool test) {
 
 
 
-	//should create lift, motor, dyna coms internally
+	//should create lift, motor, dyna coms internally?
 }
 
 
@@ -125,20 +125,20 @@ void PosControl::enqueue(int id, int x, int y, float rot, int arg, int type) {
 	Cmd cmd= {id, x, y, rot, arg, type};
 	std::lock_guard<std::mutex> lock(qMutex);	
 	q.push(cmd);
-	TIMESTAMP("------- Sending notify");
+	//TIMESTAMP("------- Sending notify");
 	notifier.notify_one();
-	TIMESTAMP("------- Sent notify");
+	//TIMESTAMP("------- Sent notify");
 }
 
 
 Cmd PosControl::dequeue() {
 	std::unique_lock<std::mutex> lock(qMutex);
-	TIMESTAMP("------- Waiting");
+	//TIMESTAMP("------- Waiting");
 	while(q.empty()) {
 		notifier.wait(lock); //alternative implementation try_unlock with crono ms-timeout
-		TIMESTAMP("------- Lock Open");
+		//TIMESTAMP("------- Lock Open");
 	}
-	TIMESTAMP("------- outside loop");
+	//TIMESTAMP("------- outside loop");
 
 	Cmd cmd = q.front();
 	q.pop();
@@ -162,7 +162,7 @@ void PosControl::controlLoop() {
 		working = true;
 
 		goalPos = new GoalPosition(cmd.id, cmd.x, cmd.y, cmd.rot);
-		LOG(INFO) << "[POS] [" << std::this_thread::get_id() << "]dequeued Cmd {" << cmd.id << "," << cmd.x << "," << cmd.y << "," << cmd.rot << "," << cmd.type << "}";
+		LOG(INFO) << "[POS] thread <" << std::this_thread::get_id() << "> dequeued Cmd {" << cmd.id << "," << cmd.x << "," << cmd.y << "," << cmd.rot << "," << cmd.type << "}";
 		
 		if(!testing) {
 			if(cmd.type == ROTATION) {
