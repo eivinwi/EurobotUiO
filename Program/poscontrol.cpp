@@ -162,7 +162,8 @@ void PosControl::controlLoop() {
 		working = true;
 
 		goalPos = new GoalPosition(cmd.id, cmd.x, cmd.y, cmd.rot);
-		LOG(INFO) << "[POS] thread <" << std::this_thread::get_id() << "> dequeued Cmd {" << cmd.id << "," << cmd.x << "," << cmd.y << "," << cmd.rot << "," << cmd.type << "}";
+		LOG(INFO) << "[POS] thread <" << std::this_thread::get_id() << "> dequeued Cmd {"
+					<< cmd.id << "," << cmd.x << "," << cmd.y << "," << cmd.rot << "," << cmd.type << "}";
 		
 		if(!testing) {
 			if(cmd.type == ROTATION) {
@@ -201,7 +202,7 @@ void PosControl::controlLoop() {
 
 
 void PosControl::goToRotation() {
-	LOG(INFO) << "[POS] goToRotation " << curPos->getAngle() << "->" << goalPos->getAngle();
+	LOG(INFO) << "[POS] rotation: " << curPos->getAngle() << "->" << goalPos->getAngle();
 	float distR = 0.0;
 	if(!closeEnoughAngle()) {
 		do {
@@ -225,7 +226,7 @@ void PosControl::goToRotation() {
 
 //CHECK: delays or not?
 void PosControl::goToPosition() {
-	LOG(DEBUG) << "[POS] goToPosition (" << curPos->getX() << "," << curPos->getY() << ") -> (" << goalPos->getX() << "," << goalPos->getY() << ")";
+	LOG(INFO) << "[POS] position: (" << curPos->getX() << "," << curPos->getY() << ") -> (" << goalPos->getX() << "," << goalPos->getY() << ")";
 	float distX = distanceX(); 
 	float distY = distanceY();
 	float angle = 0.0;
@@ -244,7 +245,7 @@ void PosControl::goToPosition() {
 		goToRotation();
 		
 		//calculate straight distance
-		dist = updateDist(angle, distX, distY);
+		//dist = updateDist(angle, distX, distY);
 		
 		do {
 			distX = distanceX(); 
@@ -254,7 +255,7 @@ void PosControl::goToPosition() {
 			LOG(DEBUG) << "DRIVE: " << curPos->getX() << " | " << curPos->getY() << " | " << curPos->getAngle();
 			LOG_EVERY_N(5, INFO) << "pos_now: (" << curPos->getX() << ", " << curPos->getY() << ", " << curPos->getAngle() << ")";
 
-			if(dist < 0) break; //overshoot. CHECK
+			//if(dist < 0) break; //overshoot. CHECK
 			drive(dist);
 			updatePosition();
 			
@@ -268,7 +269,7 @@ void PosControl::goToPosition() {
 
 //should be incorporated in goToPosition
 void PosControl::goToReverse() {
-	LOG(INFO) << "[POS] goToReverse (" << curPos->getX() << "," << curPos->getY() << ") -> (" << goalPos->getX() << "," << goalPos->getY() << ")";
+	LOG(INFO) << "[POS] reverse: (" << curPos->getX() << "," << curPos->getY() << ") -> (" << goalPos->getX() << "," << goalPos->getY() << ")";
 	float distX = distanceX(); 
 	float distY = distanceY();
 	float distR = 0.0;
@@ -345,11 +346,11 @@ float PosControl::updateDist(float angle, float distX, float distY) {
 //TODO: get input from IMU
 //need exact rotation to do small angle adjustments
 void PosControl::rotate(float distR) {
-	LOG(DEBUG) << "[POS] turning: ";
+	LOG(INFO) << "[POS] turning: ";
 	if(distR == 0) {
-		LOG(DEBUG) << "Error, turn is 0.";
+		LOG(INFO) << "Error, turn is 0.";
 	} else if(distR > 0) {
-		LOG(DEBUG) << "Positive dir (" << distR << ")";
+		LOG(INFO) << "Positive dir (" << distR << ")";
 		
 		if(distR > SLOWDOWN_DISTANCE_ROT) {
 			setSpeed(SPEED_MED_POS, SPEED_MED_NEG);
@@ -357,7 +358,7 @@ void PosControl::rotate(float distR) {
 			setSpeed(SPEED_SLOW_POS, SPEED_SLOW_NEG);
 		}
 	} else {
-		LOG(DEBUG) << "Negative dir (" << distR << ")";
+		LOG(INFO) << "Negative dir (" << distR << ")";
 		
 		if(distR < -SLOWDOWN_DISTANCE_ROT) {
 			setSpeed(SPEED_MED_NEG, SPEED_MED_POS);
