@@ -224,9 +224,9 @@ void MotorCom::enableTimeout(bool enable) {
 
 
 void MotorCom::flush() {
-    PRINTLINE("flushing");
+    //PRINTLINE("flushing");
    ((simulating) ? simport->printAll() : port->printAll());
-    PRINTLINE("flush complete");
+    //PRINTLINE("flush complete");
 }
 
 

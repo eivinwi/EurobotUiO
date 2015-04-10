@@ -65,7 +65,7 @@ uint8_t Serial::readNoWait(){
     if(available()) {
         r =  serial.get();
     } else {
-        DBPL("In ELSE, sleeping for 50ms");
+        DBPL("[SERIAL]      In ELSE, sleeping for 50ms");
         usleep(SERIAL_DELAY);
         if(available()) {
             r =  serial.get();
@@ -149,5 +149,5 @@ void Serial::printAll() {
             break;
         }
     }
-    LOG(INFO) << "Flushed serial: [" << ss.str() << "]";
+    LOG(INFO) << "[SERIAL] Flushed serial: [" << ss.str() << "]";
 }
