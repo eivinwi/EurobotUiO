@@ -274,7 +274,7 @@ bool enqAction(int num_args, int *args) {
 
 
 bool resetRobot(int num_args, int *args) {
-    if (num_args != 3) {
+    if (num_args != 4) {
         LOG(WARNING) << "[COM] Action: wrong number of arguments: " << num_args << "!=3";        
     }
     else {
