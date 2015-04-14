@@ -29,7 +29,7 @@
 
 #define CLEAR 0x00
 //					bytes:	//Recv Send				
-#define GET_SPEEDR 0x21		//	2	1
+/*#define GET_SPEEDR 0x21		//	2	1
 #define GET_SPEEDL 0x22		//	2 	1
 #define GET_ENCODERR 0x23	//	2	4
 #define GET_ENCODERL 0x24	//	2	4
@@ -37,8 +37,8 @@
 #define GET_CURRENTL 0x28	//	2	1
 #define SET_SPEEDR 0x31		// 	3	0	
 #define SET_SPEEDL 0x32 	//	3	0
-
-/*#define GET_SPEEDL 0x21		//	2	1
+*/
+#define GET_SPEEDL 0x21		//	2	1
 #define GET_SPEEDR 0x22		//	2 	1
 #define GET_ENCODERL 0x23	//	2	4
 #define GET_ENCODERR 0x24	//	2	4
@@ -46,7 +46,7 @@
 #define GET_CURRENTR 0x28	//	2	1
 #define SET_SPEEDL 0x31		// 	3	0	
 #define SET_SPEEDR 0x32 	//	3	0
-*/
+
 #define GET_ENCODERS 0x25	//	2	8
 #define GET_VOLT 0x26		//	2	1
 #define GET_VERSION 0x29	//	2	1

@@ -51,6 +51,7 @@ void readLoop() {
         int args[4];
         int num_args = getArguments(recv_str, args);
 
+        LOG(INFO) << "[COM] input str(" << num_args << "): " << recv_str;
         if(num_args < 1 || num_args > 4) {
             LOG(WARNING) << "[COM] invalid number arguments(" << num_args << "): " << recv_str;
             reply_str = "no";
