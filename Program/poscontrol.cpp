@@ -454,10 +454,10 @@ std::string PosControl::getCurrentPos() {
 	curPos->updatePosString();
 	std::stringstream ss;
 	if(working) {
-		ss << "w, ";
+		ss << "w,";
 	}
 	else {
-		ss << "s, ";
+		ss << "s,";
 	}
 	ss << curPos->getPosString();
 	return ss.str();
