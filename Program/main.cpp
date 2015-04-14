@@ -51,7 +51,7 @@ void readLoop() {
         int args[4];
         int num_args = getArguments(recv_str, args);
 
-        LOG(INFO) << "[COM] input str(" << num_args << "): " << recv_str;
+        LOG(DEBUG) << "[COM] input str(" << num_args << "): " << recv_str;
         if(num_args < 1 || num_args > 4) {
             LOG(WARNING) << "[COM] invalid number arguments(" << num_args << "): " << recv_str;
             reply_str = "no";
@@ -59,18 +59,18 @@ void readLoop() {
         else {
             switch(args[0]) {
                 case REQUEST: 
-                    LOG(INFO) << "[COM] Recieved REQUEST";
+                    LOG(DEBUG) << "[COM] Recieved REQUEST";
                     if(args[1] == 1) {
                         int id = p->getCurrentId();
                         reply_str = std::to_string(id);
-                        LOG(INFO) << "[COM] REQUEST was for ID, returning: " << reply_str;
+                        LOG(INFO) << "[COM] REQUEST ID, ret(" << reply_str.length() << "): " << reply_str;
                     } else if(args[1] == 2) {
                         reply_str = p->getCurrentPos();
-                        LOG(INFO) << "[COM] REQUEST was for POS, returning(length=" << reply_str.length() << "): " << reply_str;
+                        LOG(INFO) << "[COM] REQUEST POS, ret(" << reply_str.length() << "): " << reply_str;
                     } else if(args[1] == 4) {
                         //LIFT
                         reply_str = std::to_string(p->getLiftPos());
-                        LOG(INFO) << "[COM] REQUEST was for LIFT, returning: " << reply_str;
+                        LOG(INFO) << "[COM] REQUEST LIFT, ret(" << reply_str.length() << "): " << reply_str;
                     }                    
                     break;
                 case SET_REVERSE: 
@@ -129,7 +129,7 @@ void readLoop() {
         memcpy ((void *) reply.data (), reply_str.c_str(), reply_str.length());
 
         usleep(20); //CHECK: necessary?
-        LOG(INFO) << "[COM] sending reply: " << std::string(static_cast<char*>(reply.data()), reply.size()) << ".";
+        LOG(INFO) << "[COM] reply: " << std::string(static_cast<char*>(reply.data()), reply.size()) << ".";
         socket.send (reply);
         usleep(100);
     }
