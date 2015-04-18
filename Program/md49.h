@@ -95,7 +95,11 @@ See MD49 documentation for explanation
 #define ROTATION_CLOSE_ENOUGH 1.0
 #define POSITION_CLOSE_ENOUGH 2.0
 
-#define REASONABLE_ENC_DIFF 980 // == one rotation. Should possibly be smaller
+//max increase from one encoder-reply to the next.
+#define MAX_ENC_INCR 980 // = one rotation. 
+
+//max difference between L and R encoder diffs.
+#define MAX_ENC_DIFF 440 // == half rotation. Should possibly be smaller
 #define TOO_LONG 20             //timeout in ms. Currently not in use (?)
 
 // Game area resolution in mm:

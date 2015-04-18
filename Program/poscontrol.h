@@ -73,12 +73,11 @@ public:
     //Reset all counters, encoders etc. Sets initial position (x, y, rot)
     void reset(int x, int y, int rot);
 
+    // Tests if poscontrol is working by enqeueueing and dequeueing an object
+    bool test();
 
     // Immediately stop all movement, cancel current action and await further instruction.
     void halt();
-
-    // Tests if poscontrol is working by enqeueueing and dequeueing an object
-    bool test();
 
     // Testing enabled means actions will be simulated, and always seemingly finish
 	// successfully and instanteneously.
@@ -154,12 +153,11 @@ private:
 	float distanceAngle();
 
 	// Calculates straight distance from current position to goal position by trigonometry.
-	float updateDist(float angle, float distX, float distY);
+	float distStraight(float angle, float distX, float distY);
 
 	// Updates current position based on encoder-readings
 	// returns distance traveled (straight)
-	float updatePosition();
-	float updatePositionReverse();
+	float updatePosition(int dir);
 
 	// Updates current rotation based on encoder-readings
 	void updateRotation();
