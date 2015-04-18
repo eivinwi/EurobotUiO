@@ -111,7 +111,7 @@ See MD49 documentation for explanation
  */
 //#define ENCODER_CONSTANT 0.40	//0.385
 #define ENCODER_CONSTANT 0.327	//0.385
-#define ENC_PER_DEGREE 6.2 		//7.5
+#define ENC_PER_DEGREE 8.0 //8.55 		//6.2 		//7.5
 
 //Delays for serial communications
 #define MAX_WAIT 2000
