@@ -379,11 +379,11 @@ void PosControl::drive(float dist) {
 
 		//CHECK: unneccsary test?
 		if(!inGoal()) {
-			if(dist > SLOWDOWN_MAX_DIST) {
+			if(abs(dist) > SLOWDOWN_MAX_DIST) {
 				//LOG(INFO) << "[D] max_pos (" << dist << ")";
 				setSpeed(SPEED_MAX_POS, SPEED_MAX_POS);
 			} 
-			else if(dist > SLOWDOWN_MED_DIST) {
+			else if(abs(dist) > SLOWDOWN_MED_DIST) {
 				//LOG(INFO) << "[D] med_pos (" << dist << ")";
 				setSpeed(SPEED_MED_POS, SPEED_MED_POS);
 			} 

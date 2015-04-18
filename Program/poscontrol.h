@@ -62,6 +62,10 @@
 //number of action IDs to store
 #define ACTION_STORAGE 1024
 
+#define ENCODER_CONSTANT 0.327	//0.385
+#define ENC_PER_DEGREE 8.0 //8.55 		//6.2 		//7.5
+
+
 class PosControl {
 public:
 	// m = instance of MotorCom used to communicate with motors trough MD49 via serial
