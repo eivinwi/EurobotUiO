@@ -1,5 +1,5 @@
-CC=gcc
-CXX=g++ -Wall -std=c++11 -lpthread
+CC=gcc-4.8
+CXX=g++-4.8 -Wall -std=c++11 -lpthread
 RM=rm -f
 CPPFLAGS=-g $(shell root-config --cflags)
 LDFLAGS=-g $(shell root-config --ldflags)

@@ -109,7 +109,8 @@ See MD49 documentation for explanation
  * Wheel circumference: 377mm
  * Distance per count: 0.385mm  
  */
-#define ENCODER_CONSTANT 0.40	//0.385
+//#define ENCODER_CONSTANT 0.40	//0.385
+#define ENCODER_CONSTANT 0.327	//0.385
 #define ENC_PER_DEGREE 6.2 		//7.5
 
 //Delays for serial communications
@@ -122,3 +123,11 @@ See MD49 documentation for explanation
 #define DRIVE_Y 2
 
 #endif /* MD49_H */
+
+
+ /*
+ * Encoder counts: 980 per output shaft turn
+ * Wheel diameter: 102mm
+ * Wheel circumference: 320mm
+ * Distance per count: 0.327mm
+ */
