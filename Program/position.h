@@ -28,7 +28,6 @@
 
 #include "md49.h"
 #include "printing.h"
-#include "rotation.h"
 #include <mutex>
 #include <string>
 #include <sstream>
@@ -69,11 +68,15 @@ public:
 	// Updates the comma-delimited position string. Thread-safe
 	void updatePosString();
 
+	float shortestRotation(float to);
+	void updateAngle(long diffL, long diffR);
+
 private:
 	float x;
 	float y;
-	Rotation *rotation;
-	time_t changed;
+	float angle;
+
+	time_t changed; //currently unused
 
 	std::string pos_string;
 	std::mutex pos_mutex;

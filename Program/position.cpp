@@ -38,28 +38,29 @@ Position::~Position() {
 void Position::reset() {
 	x = 0.0;
 	y = 0.0;
-	rotation = new Rotation;
+	angle = 0.0;
 }
 
 
-void Position::set(float n_x, float n_y, float n_rotation) {	
+//mutex locked because it can be set from outside the poscontrol-thread
+void Position::set(float n_x, float n_y, float a) {	
 	pos_mutex.lock();
 	x = n_x;
 	y = n_y;
-	setAngle(n_rotation);
+	angle = a;
+	setAngle(a);
 	pos_mutex.unlock();
 }
 
 
-void Position::setAngle(float angle) {
-	if(angle > 0 && angle <= 360) {
-		rotation->set(angle);
-	}	
-}
-
-
-float Position::getAngle() {
-	return rotation->get();
+void Position::setAngle(float a) {
+	if(a < 360) {
+		angle = a;
+	} else if(a == 360) {
+		angle = 0;
+	} else {
+			PRINTLINE("[POS] warning, invalid angle: " << a);
+	}
 }
 
 
@@ -70,6 +71,11 @@ float Position::getX() {
 
 float Position::getY() {
 	return y;
+}
+
+
+float Position::getAngle() {
+	return angle;
 }
 
 
@@ -84,17 +90,12 @@ float Position::distanceY(float to) {
 
 
 float Position::distanceRot(float to) {
-	return rotation->distanceTo(to);
+	return shortestRotation(to);
 }
 
 
 void Position::print() {
-	PRINTLINE("x:" << x << " y:" << y << " r:" << getAngle());
-}
-
-
-void Position::updateAngle(float leftDiff, float rightDiff) {
-	rotation->updateAngle(leftDiff, rightDiff);
+	PRINTLINE("x:" << x << " y:" << y << " r:" << angle);
 }
 
 
@@ -121,8 +122,35 @@ void Position::updatePosString() {
 		std::stringstream ss;
 		ss << (int) floor(x) << ",";
 		ss << (int) floor(y) << ",";
-		ss << (int) floor(getAngle());
+		ss << (int) floor(angle);
 		pos_string = ss.str();
 		pos_mutex.unlock(); 
 	}
 }
+
+
+// ROTATION stuff
+
+float Position::shortestRotation(float goal) {
+	float dist_left = (goal >= angle)? (goal - angle) : ((360 - angle) + goal);
+	float dist_right = (goal >= angle)? -(angle + (360-goal)) : (goal - angle); 
+	return (abs(dist_left) < abs(dist_right))? dist_left : dist_right;
+}
+
+
+void Position::updateAngle(long diffL, long diffR) {
+  	// Average of encoders for reduced maximum-error
+	long encAvg = (abs(diffL) + abs(diffR))/2;
+	float turned = 0.0;
+
+	turned = (diffL > 0)? -(encAvg/ENC_PER_DEGREE) : (encAvg/ENC_PER_DEGREE);
+
+	angle += turned;
+	if(angle > 360.0) {
+		angle -= 360.0;
+	} else if(angle < 0.0) {
+		angle += 360.0;
+	}
+}
+
+

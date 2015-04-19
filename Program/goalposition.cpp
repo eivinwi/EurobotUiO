@@ -33,7 +33,7 @@ GoalPosition::GoalPosition(int n_id, float n_x, float n_y, float r) {
 	id = n_id;
 	x = n_x; 
 	y = n_y;
-	rotation = r;
+	angle = r;
 }
 
 
@@ -45,7 +45,7 @@ void GoalPosition::reset() {
 	id = 0;
 	x = 0;
 	y = 0;
-	rotation = 0.0;
+	angle = 0.0;
 }
 
 
@@ -54,11 +54,11 @@ void GoalPosition::setId(int i) {
 }
 
 
-void GoalPosition::setAngle(float angle) {
-	if(angle > 0.0 && angle < 360.0) {
-		rotation = angle;
+void GoalPosition::setAngle(float a) {
+	if(a > 0.0 && a < 360.0) {
+		angle = a;
 	} else if(angle == 360) {
-		rotation = 0.0;
+		angle = 0.0;
 	}
 }
 
@@ -69,9 +69,9 @@ void GoalPosition::setPosition(float n_x, float n_y){
 }
 
 
-void GoalPosition::set(float n_x, float n_y, float n_rotation) {	
-	setPosition(n_x, n_y);
-	setAngle(n_rotation);
+void GoalPosition::set(float x, float y, float a) {	
+	setPosition(x, y);
+	setAngle(a);
 }
 
 
@@ -86,7 +86,7 @@ float GoalPosition::getX() {
 
 
 float GoalPosition::getAngle() {
-	return rotation;
+	return angle;
 }
 
 
@@ -97,11 +97,11 @@ float GoalPosition::getY() {
 
 std::string GoalPosition::getPosString() {
 	std::stringstream ss;
-	ss << x << "," << y << "," << rotation;
+	ss << x << "," << y << "," << angle;
 	return ss.str();
 }
 
 
 void GoalPosition::print() {
-	PRINTLINE("x:" << x << " y:" << y << " r:" << rotation);
+	PRINTLINE("x:" << x << " y:" << y << " r:" << angle);
 }

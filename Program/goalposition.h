@@ -79,7 +79,7 @@ private:
 	
 	float x;
 	float y;
-	float rotation;
+	float angle;
 };
 
 #endif /* GOALPOSITION_H */
