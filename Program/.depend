@@ -10,7 +10,6 @@ serialsim.o: serialsim.cpp serialsim.h md49.h printing.h
 poscontrol.o: poscontrol.cpp poscontrol.h goalposition.h rotation.h \
  md49.h printing.h liftcom.h protocol.h serial.h motorcom.h serialsim.h \
  dynacom.h position.h
-position.o: position.cpp position.h md49.h printing.h rotation.h
+position.o: position.cpp position.h md49.h printing.h
 goalposition.o: goalposition.cpp goalposition.h rotation.h md49.h \
  printing.h
-rotation.o: rotation.cpp rotation.h md49.h printing.h

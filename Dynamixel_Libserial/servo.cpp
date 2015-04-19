@@ -249,55 +249,10 @@ int main(int argc, char *argv[]) {
   serial.SetFlowControl( SerialStreamBuf::FLOW_CONTROL_NONE ); //FLOW_CONTROL_HARD
   std::cout << "Configuration complete" << std::endl;
 
-/*  setPosition(1, 230);
-  setPosition(2, 230);
-  setPosition(3, 230);
-  setPosition(4, 230);
-  usleep(450000);
-  setPosition(1, 530);
-  setPosition(2, 530);
-  setPosition(3, 530);
-  setPosition(4, 530);
-  usleep(450000);
-  setPosition(1, 230);
-  setPosition(2, 230);
-  setPosition(3, 230);
-  setPosition(4, 230);
-  usleep(450000);
-*/
-/*  setPosition(3, 1);
-  setPosition(4, 1);
-  usleep(500000);
-  setPosition(3, 500);
-  setPosition(4, 500);
-  usleep(500000);
-*/
 
-  setPosition(254, 230);
-  usleep(500000);  
-  setPosition(254, 530);
-  usleep(500000);
-  setPosition(254, 230);
-  usleep(500000);
-  setPosition(254, 230);
-  usleep(500000);  
-  setPosition(254, 530);
-  usleep(500000);
-  setPosition(254, 230);
-  usleep(500000);
-  setPosition(254, 230);
-  usleep(500000);  
-  setPosition(254, 530);
-  usleep(500000);
-  setPosition(254, 230);
-  usleep(500000);
-  setPosition(254, 230);
-  usleep(500000);  
-  setPosition(254, 530);
-  usleep(500000);
-  setPosition(254, 230);
-  usleep(500000);
-
+  if(argc > 2) {
+    setPosition(atoi(argv[1]), atoi(argv[2]));
+  }
 
 }
 

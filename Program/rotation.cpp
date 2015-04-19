@@ -54,13 +54,6 @@ float Rotation::get() {
 
 
 void Rotation::updateAngle(long diffL, long diffR) {
-/*	
-	int ediff = (abs(diffL) + abs(diffR))/2;
-	if(ediff > 50) {
-		DBPL("[ROT] Warning, large encoder difference (turning): " << ediff);
-		return;
-	}
-*/
   	// Average of encoders for reduced maximum-error
 	long encAvg = (abs(diffL) + abs(diffR))/2;
 	float turned = 0.0;
@@ -91,7 +84,7 @@ float Rotation::distanceTo(float goalRot) {
 
 // Distance to goal counter-clockwise
 float Rotation::distanceLeft(float goal) {
-	return (goal >= angle)? (goal - angle) : ((360 - angle) + goal);;
+	return (goal >= angle)? (goal - angle) : ((360 - angle) + goal);
 }
 
 
