@@ -74,8 +74,9 @@ void readLoop() {
                     }                    
                     break;
                 case SET_REVERSE: 
-                    LOG(INFO) << "[COM]  Received SET_REVERSE(id=" << args[1] << ", x=" << args[2] << ", y=" << args[3] << ")";
-                    enqPosition(num_args, args, REVERSE);
+                    //LOG(INFO) << "[COM]  Received SET_REVERSE(id=" << args[1] << ", x=" << args[2] << ", y=" << args[3] << ")";
+                    //enqPosition(num_args, args, REVERSE);
+                    LOG(WARNING) << "[COM] Recieved SET_REVERSE, but it is not yet implemented.";
                     reply_str = "ok";
                     break;             
                 case SET_FORWARD: 
@@ -136,7 +137,7 @@ void readLoop() {
     com_running = false;
 }
 
-
+/*
 void subscriptionLoop() {
     zmq::context_t context (1);
     LOG(INFO) << "[COM2] starting";
@@ -163,7 +164,34 @@ void subscriptionLoop() {
         }
         usleep(100);
     }
+}*/
+
+void posClientLoop() {
+    zmq::context_t context(1);
+    zmq::socket_t socket(context, ZMQ_REP);
+    socket.connect("tcp://localhost:5555");
+
+    while(true) {
+        std::string s = "x,y,t";
+
+        zmq::message_t pos( s.length() );
+        memcpy((void*) pos.data(), s.c_str(), s.length());
+        
+        LOG(INFO) << "[COM2] Sending  len=" << s.length() << " to POS";
+        socket.send(pos);
+
+        zmq::message_t reply;
+        socket.recv( &reply );
+
+        std::string reply_str = std::string(static_cast<char*>(reply.data()), reply.size());
+        LOG(INFO) << "[COM2] Reply from POS: len=" << reply.size() << ": " << reply_str;
+
+        usleep(5000);
+    }
+    // Error happend, should be handeled
 }
+
+
 
 
 //attempts twice to lock mutex, write values, and unlock mutex

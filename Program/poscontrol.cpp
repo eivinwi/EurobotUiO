@@ -169,7 +169,6 @@ void PosControl::controlLoop() {
 		Cmd cmd = dequeue();
 		working = true;
 
-		//goal_pos = new goal_position(cmd.id, cmd.x, cmd.y, cmd.rot);
 		goal_pos.x = cmd.x;
 		goal_pos.y = cmd.y;
 		goal_pos.angle = cmd.rot;
@@ -182,9 +181,9 @@ void PosControl::controlLoop() {
 			} else if(cmd.type == FORWARD) {
 				positionLoop();
 			} else if(cmd.type == REVERSE) {
-				//goToReverse();
+				//straightLoop(-1);
 			} else if(cmd.type == STRAIGHT) {
-				//goStraight();
+				straightLoop();
 			}
 			else if(cmd.type == LIFT) {
 				LOG(INFO) << "DynaCom action: " << cmd.argument;				
@@ -196,12 +195,21 @@ void PosControl::controlLoop() {
 		//CHECK: "testing"-functionality should perhaps be implemented in each of the Com's
 		else {
 			if(cmd.type == ROTATION) {
+				goal_pos.angle = cmd.rot;
 				cur_pos.angle = goal_pos.angle;
-			} else if(cmd.type == FORWARD || cmd.type == REVERSE) {
+			} else if(cmd.type == FORWARD) {
+				goal_pos.x = cmd.x;
+				goal_pos.y = cmd.y;
+				goal_pos.angle = atan2Adjusted(goal_pos.x - cur_pos.x, goal_pos.y - cur_pos.y);
+				setCurrent(goal_pos.x, goal_pos.y, goal_pos.angle);
+			} else if(cmd.type == REVERSE) {
+				//setCurrent(goal_pos.x, goal_pos.y, cur_pos.angle);
+
+			}
+			else if(cmd.type == STRAIGHT) {
 				setCurrent(goal_pos.x, goal_pos.y, cur_pos.angle);
-			} else if(cmd.type == STRAIGHT) {
-				setCurrent(goal_pos.x, goal_pos.y, cur_pos.angle);
-			} else if(cmd.type == LIFT) {
+			} 
+			else if(cmd.type == LIFT) {
 				dcom->performAction(cmd.argument);
 			}
 			completeCurrent();
@@ -214,7 +222,7 @@ void PosControl::controlLoop() {
 
 
 void PosControl::rotationLoop() {
-	PRINTLINE("[POS]  rotation: " << cur_pos.angle << " -> " << goal_pos.angle);
+	LOG(INFO) << "[POS]  rotation: " << cur_pos.angle << " -> " << goal_pos.angle;
 	
 	do {
 		float angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
@@ -248,6 +256,8 @@ void PosControl::rotationLoop() {
 
 	usleep(100000);
 	LOG(INFO) << "[POS] Rotation completed. Goal=" << goal_pos.angle << " cur_pos: " << cur_pos.angle << " Compass: " << compass.angle;	
+	cur_pos.angle = goal_pos.angle;
+	LOG(INFO) << "[POS] cur_pos.angle corrected to: " << goal_pos.angle;
 }
 
 
@@ -290,8 +300,10 @@ float PosControl::updateAngle() {
 	return turned;
 }
 
+
+
 void PosControl::setRotationSpeed(float angle_err) {
-	if(angle_err > 15) {
+	if(angle_err > 30) {
 		setSpeeds(SPEED_MED_POS, SPEED_MED_NEG);
 	}
 	else if(angle_err > 0) {
@@ -307,6 +319,51 @@ void PosControl::setRotationSpeed(float angle_err) {
 		setSpeeds(SPEED_STOP, SPEED_STOP);
 	}
 }
+
+
+//dir negative means backwards. Else forwards
+void PosControl::straightLoop() {
+	float angle = cur_pos.angle;
+	float dist = goal_pos.x;
+
+	goal_pos.x = cur_pos.x + cos_d(angle) * dist;
+	goal_pos.y = cur_pos.y + sin_d(angle) * dist;
+	goal_pos.angle = angle;
+
+	do {
+		float dist_x = goal_pos.x - cur_pos.x;
+		float dist_y = goal_pos.y - cur_pos.y;
+		float straight = distStraight(angle, dist_x, dist_y);
+
+		//define angle max offset
+		if(abs(cur_pos.angle - angle) > 1) {
+			//attempt to calculate necessary speed differences
+			LOG(INFO) << "[POS] angle has drifted, attempting to compensate. (TODO)";
+
+			//find angle difference
+			//find distance left
+			//calculate speed difference to compensate angle over that distance
+		} else {
+			setDriveSpeed(straight);
+		}
+
+		usleep(5000); //needs tweaking
+		LOG_EVERY_N(5, INFO) << "[POS] driving straight:  (" << cur_pos.x << ", " << cur_pos.y << " -> (" << goal_pos.x << ", " << goal_pos.y << ").  Speed=( " << left_encoder.speed << ", " << right_encoder.speed << " )";
+
+		readEncoders();
+		
+		if(straight > 0) {
+			updatePosition();
+		} else {
+			updatePositionReverse();
+		}
+	
+	} while(!positionCloseEnough());
+
+	usleep(10000);
+	LOG(INFO) << "[POS] position reached . Goal_pos=(" << goal_pos.x << "," << goal_pos.y << "," << goal_pos.angle << ") cur_pos=(" << cur_pos.x << "," << cur_pos.y << "," << cur_pos.angle << ")";		
+}
+
 
 
 void PosControl::positionLoop() {
@@ -335,6 +392,8 @@ void PosControl::positionLoop() {
 		angle = atan2(dist_y, dist_x) *(180/M_PI);
 		if(angle < 0) angle += 360;
 
+		//TODO: check with compass
+
 		//define angle max offset
 		if(abs(cur_pos.angle - angle) > 1) {
 			//attempt to calculate necessary speed differences
@@ -350,9 +409,7 @@ void PosControl::positionLoop() {
 
 		usleep(5000); //needs tweaking
 
-		LOG(INFO) << "[POS] driving:  (" << cur_pos.x << ", " << cur_pos.y << " -> (" << goal_pos.x << ", " << goal_pos.y << ")";
-
-
+		LOG_EVERY_N(5, INFO) << "[POS] driving:  (" << cur_pos.x << ", " << cur_pos.y << " -> (" << goal_pos.x << ", " << goal_pos.y << ").  Speed=(" << left_encoder.speed << ", " << right_encoder.speed << " )";
 
 		readEncoders();
 		updatePosition();
@@ -374,16 +431,29 @@ void PosControl::updatePosition() {
 		LOG(WARNING) << "[POS] large distance difference, probably spinning or hitting something.";
 	}
 
-
 	float angle = cur_pos.angle;
-
 	float avg_dist = (abs(left_encoder.diff_dist + right_encoder.diff_dist)) / 2;
 	float x_distance = cos_d(angle) * avg_dist; 
 	float y_distance = sin_d(angle) * avg_dist; 
-
-
 	cur_pos.x += (x_distance);// dir*x_distance );
 	cur_pos.y += (y_distance);// dir*y_distance );
+}
+
+
+void PosControl::updatePositionReverse() {
+	long diff = abs(left_encoder.diff_dist - right_encoder.diff_dist);
+
+	//MAX_DIFF
+	if(diff > 100) {
+		LOG(WARNING) << "[POS] large distance difference, probably spinning or hitting something.";
+	}
+
+	float angle = cur_pos.angle;
+	float avg_dist = (abs(left_encoder.diff_dist + right_encoder.diff_dist)) / 2;
+	float x_distance = cos_d(angle) * avg_dist; 
+	float y_distance = sin_d(angle) * avg_dist; 
+	cur_pos.x -= (x_distance);// dir*x_distance );
+	cur_pos.y -= (y_distance);// dir*y_distance );
 }
 
 
@@ -426,7 +496,7 @@ float PosControl::shortestRotation(float angle, float goal) {
 }
 
 
-
+//encoders are opposite? but still okay
 void PosControl::readEncoders() {
 	long left_enc = mcom->getEncL();
 	long right_enc = mcom->getEncR();
@@ -440,24 +510,32 @@ void PosControl::readEncoders() {
 	float left_diff_dist = left_diff * DIST_PER_TICK;
 	float right_diff_dist = left_diff * DIST_PER_TICK;
 
-
 	left_encoder.prev = left_enc;
 	left_encoder.diff = left_diff;
 	left_encoder.diff_dist = left_diff_dist;
-	left_encoder.speed = left_diff_dist / timespan;
+	left_encoder.speed = -left_diff_dist / timespan;
 
 	right_encoder.prev = right_enc;
 	right_encoder.diff = right_diff;
 	right_encoder.diff_dist = right_diff_dist;
-	right_encoder.speed = right_diff_dist / timespan;
+	right_encoder.speed = -right_diff_dist / timespan;
 
 	encoder_timestamp = now;
 }
 
 
 
-float PosControl::distStraight(float angle, float distX, float distY) {
-	return (sin_d(angle) == 0)? distX : (distY/sin_d(angle));
+float PosControl::distStraight(float angle, float x, float y) {
+	float sin_a = sin_d(angle);
+	float cos_a = cos_d(angle);
+	float straight = 0.0;
+
+	if(sin_a != 0) {
+		straight = y / sin_a;
+	} else if(cos_a != 0) {
+		straight = x / cos_a;
+	}
+	return straight;
 }
 
 
