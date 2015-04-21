@@ -71,7 +71,7 @@ public:
 	void clearQueue();
 	void controlLoop();
 	void rotationLoop();
-	void updateAngle();
+	float updateAngle();
 	void setRotationSpeed(float angle_err);
 	void positionLoop();
 	void updatePosition();
@@ -95,6 +95,8 @@ public:
 	void setCurrent(float x, float y, float angle);
 	float sin_d(float angle);
 	float cos_d(float angle);
+	float atan2Adjusted(float x, float y);
+	float atan2AdjustedReverse(float x, float y);
 
 private:	
 	MotorCom *mcom;

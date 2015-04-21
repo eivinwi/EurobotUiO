@@ -100,8 +100,10 @@ void PosControl::reset(int x, int y, int rot) {
 	right_encoder.total_dist = 0.0;
 	right_encoder.speed = 0.0;
 	
-	encoder_timestamp = std::chrono::high_resolution_clock::now();
+	left_motor.speed = SPEED_STOP;
+	right_motor.speed = SPEED_STOP;
 
+	encoder_timestamp = std::chrono::high_resolution_clock::now();
 
 	compass.angle = 0.0;
 	compass_timestamp = std::chrono::high_resolution_clock::now();
@@ -235,34 +237,39 @@ void PosControl::rotationLoop() {
 //		float rightwheel_turned = right_encoder.diff / ENC_PER_DEGREE;
 
 		//
-		updateAngle();
+		float turned = updateAngle();
+		LOG(INFO) << "[POS] rotating:  " << cur_pos.angle-turned << " -> " << cur_pos.angle << " . Goal=" << goal_pos.angle;
 
 		//calculate turning speed
 
+		usleep(3000);
 	}
 	while(!angleCloseEnough());
 
-
+	usleep(100000);
 	LOG(INFO) << "[POS] Rotation completed. Goal=" << goal_pos.angle << " cur_pos: " << cur_pos.angle << " Compass: " << compass.angle;	
 }
 
 
 //should compare with compass
-void PosControl::updateAngle() {
+//should attempt to match speed to hit target exactly
+float PosControl::updateAngle() {
 	long diffL = left_encoder.diff; 
 	long diffR = right_encoder.diff;
   	// Average of encoders for reduced maximum-error
-	long enc_avg = (abs(diffL) + abs(diffR))/2;
 
-	if(abs(enc_avg) < 100) {//MAX_ENC_TURN_DIFF) {
-		LOG(INFO) << "[POS] encoder diff too large (" << enc_avg << "), checking compass";
+  	long enc_avg = (abs(diffL) + abs(diffR))/2;
+	long enc_diff = abs(diffL - diffR);
+
+	if(enc_diff > 100) {  //MAX_ENC_TURN_DIFF) {
+		LOG(INFO) << "[POS] encoder diff too large (" << enc_diff << "), checking compass";
 		//difference between encoders, scrap odometry and rely on compass
 		auto now = std::chrono::high_resolution_clock::now();
 		auto time_since_compass = std::chrono::duration<double, std::milli>(now - compass_timestamp).count();
 		if(time_since_compass < 2000) {
 			cur_pos.angle = compass.angle;
 			LOG(INFO) << "[POS] current angle set to compass angle: " << compass.angle;
-			return;
+			return 0.0;
 		} 
 		else {
 			LOG(WARNING) << "[POS] encoders too high difference (" << diffL << " , " << diffR << ") and compass outdated (" << time_since_compass << " ms!!!)";
@@ -280,33 +287,44 @@ void PosControl::updateAngle() {
 	else if(cur_pos.angle < 0.0) {
 		cur_pos.angle += 360.0;
 	}
+	return turned;
 }
 
 void PosControl::setRotationSpeed(float angle_err) {
-	if(angle_err > 30) {
-		
+	if(angle_err > 15) {
+		setSpeeds(SPEED_MED_POS, SPEED_MED_NEG);
 	}
 	else if(angle_err > 0) {
-		
+		setSpeeds(SPEED_SLOW_POS, SPEED_SLOW_NEG);
 	}
 	else if(angle_err < -30) {
-		
+		setSpeeds(SPEED_MED_NEG, SPEED_MED_POS);
 	}
 	else if(angle_err < 0) {
-		
+		setSpeeds(SPEED_SLOW_NEG, SPEED_SLOW_POS);
 	} 
-	else {
-
+	else {	
+		setSpeeds(SPEED_STOP, SPEED_STOP);
 	}
 }
 
 
 void PosControl::positionLoop() {
-	float angle = cur_pos.angle;
-//	float compass_angle = compass.angle;
+	if(inGoal()) {
+		LOG(INFO) << "[POS] already in goal: (" << cur_pos.x << ", " << cur_pos.y << ") ~= (" << goal_pos.x << ", " << goal_pos.y << ")";
+		return;
+	}
 
-	//check if matching
+	float distX = goal_pos.x - cur_pos.x; 
+	float distY = goal_pos.y - cur_pos.y;
+	float angle = atan2Adjusted(distX, distY); 
+	goal_pos.angle = angle;
 
+	if(!angleCloseEnough()) {
+		rotationLoop();
+	} 
+	// float compass_angle = compass.angle;
+	// check if matching
 
 	do {
 		float dist_x = goal_pos.x - cur_pos.x;
@@ -321,12 +339,20 @@ void PosControl::positionLoop() {
 		if(abs(cur_pos.angle - angle) > 1) {
 			//attempt to calculate necessary speed differences
 			LOG(INFO) << "[POS] angle has drifted, attempting to compensate. (TODO)";
+
+			//find angle difference
+			//find distance left
+			//calculate speed difference to compensate angle over that distance
 		} else {
 			setDriveSpeed(straight);
 		}
 
 
-		usleep(3000); //needs tweaking
+		usleep(5000); //needs tweaking
+
+		LOG(INFO) << "[POS] driving:  (" << cur_pos.x << ", " << cur_pos.y << " -> (" << goal_pos.x << ", " << goal_pos.y << ")";
+
+
 
 		readEncoders();
 		updatePosition();
@@ -334,14 +360,14 @@ void PosControl::positionLoop() {
 	} while(!positionCloseEnough());
 
 
-
-	LOG(INFO) << "[POS] position reached . Goal=(" << goal_pos.x << "," << goal_pos.y << " cur_pos: (" << cur_pos.x << "," << cur_pos.y << ")";	
+	usleep(10000);
+	LOG(INFO) << "[POS] position reached . Goal_pos=(" << goal_pos.x << "," << goal_pos.y << "," << goal_pos.angle << ") cur_pos=(" << cur_pos.x << "," << cur_pos.y << "," << cur_pos.angle << ")";	
 }
 
 
 //angle has already been checked when this is called, assume 100% correct.
 void PosControl::updatePosition() {
-	long diff = abs(left_encoder.diff_dist) - abs(right_encoder.diff_dist);
+	long diff = abs(left_encoder.diff_dist - right_encoder.diff_dist);
 
 	//MAX_DIFF
 	if(diff > 100) {
@@ -351,7 +377,7 @@ void PosControl::updatePosition() {
 
 	float angle = cur_pos.angle;
 
-	float avg_dist = (abs(left_encoder.diff_dist) + abs(right_encoder.diff_dist)) / 2;
+	float avg_dist = (abs(left_encoder.diff_dist + right_encoder.diff_dist)) / 2;
 	float x_distance = cos_d(angle) * avg_dist; 
 	float y_distance = sin_d(angle) * avg_dist; 
 
@@ -384,9 +410,11 @@ void PosControl::setDriveSpeed(float straight_dist) {
 void PosControl::setSpeeds(int l, int r) {
 	if(left_motor.speed != l) {
 		mcom->setSpeedL(l);
+		left_motor.speed = l;
 	}
 	if(right_motor.speed != r) {
-		mcom->setSpeedL(l);
+		mcom->setSpeedR(r);
+		right_motor.speed = r;
 	}	
 }
 
@@ -434,17 +462,15 @@ float PosControl::distStraight(float angle, float distX, float distY) {
 
 
 bool PosControl::angleCloseEnough() {
-	return (abs(cur_pos.angle) - abs(goal_pos.angle)) < ROTATION_CLOSE_ENOUGH;
+	return abs(cur_pos.angle - goal_pos.angle) < ROTATION_CLOSE_ENOUGH;
 }
 
 bool PosControl::xCloseEnough() {
-	LOG(INFO) << "[POS] " << cur_pos.x << " - " << goal_pos.x << "<"  << POSITION_CLOSE_ENOUGH;
-	return abs(abs(cur_pos.x) - abs(goal_pos.x)) < POSITION_CLOSE_ENOUGH;
+	return abs(cur_pos.x - goal_pos.x) < POSITION_CLOSE_ENOUGH;
 }
 
 bool PosControl::yCloseEnough() {
-	LOG(INFO) << "[POS] " << cur_pos.y << " - " << goal_pos.y << "<"  << POSITION_CLOSE_ENOUGH;
-	return abs(abs(cur_pos.y) - abs(goal_pos.y)) < POSITION_CLOSE_ENOUGH;
+	return abs(cur_pos.y - goal_pos.y) < POSITION_CLOSE_ENOUGH;
 }
 
 bool PosControl::positionCloseEnough() {
@@ -504,4 +530,17 @@ float PosControl::sin_d(float angle) {
 
 float PosControl::cos_d(float angle) {
 	return cos(angle*M_PI/180);
+}
+
+float PosControl::atan2Adjusted(float x, float y) {
+	float angle = atan2(y, x) *(180/M_PI);
+	return (angle < 0)? angle + 360 : angle;
+}
+
+float PosControl::atan2AdjustedReverse(float x, float y) {
+	float angle = atan2Adjusted(x, y);
+	angle += 180;
+	if(angle > 360) angle -= 360;
+	if(angle == 360) angle = 0;	
+	return angle;
 }
