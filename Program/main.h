@@ -24,16 +24,16 @@ INITIALIZE_EASYLOGGINGPP
 
 // Implements a ZMQ server that waits for input from clients. 
 // Used for communication with AI.
-void readLoop();
+void aiServer();
 
 // Implements a ZMQ subscriber that reads current real position from a publisher
-void subscriptionLoop();
+void posClient();
 
 // Reads command-line arguments. Uses GNU C++ GetOpt standard.
 // Returns true if no invalid arguments
 bool checkArguments(int argc, char *argv[]);
 
-// Used by the readLoop ZMQ-server thread.
+// Used by the aiServer ZMQ-server thread.
 // Splits input from Client on delimiter, fills pos 2d-array with arguments.
 // Returns number of arguments
 int getArguments(std::string input, int *pos);
@@ -75,7 +75,7 @@ PosControl *p;
 DynaCom *d;
 //Sound *s;
 
-// locking objects while readLoop is writing to them.
+// locking objects while aiServer is writing to them.
 std::mutex read_mutex;
 
 // MD49 constants

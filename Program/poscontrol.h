@@ -55,7 +55,7 @@
 
 //int curSpeedLeft, curSpeedRight;
 
-#define DIST_PER_TICK 0.3265
+#define DIST_PER_TICK 0.382 //0.3265
 
 
 class PosControl {
@@ -89,6 +89,7 @@ public:
 	bool inGoal();
 	int getCurrentId();
 	std::string getCurrentPos();
+	std::string getState();
 
 	int getLiftPos();
 	bool running();
@@ -99,6 +100,7 @@ public:
 	float cos_d(float angle);
 	float atan2Adjusted(float x, float y);
 	float atan2AdjustedReverse(float x, float y);
+	float getSpeed();
 
 private:	
 	MotorCom *mcom;

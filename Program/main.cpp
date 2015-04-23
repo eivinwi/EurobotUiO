@@ -33,7 +33,7 @@
 
 
 // ZMQ server waiting for input from AI.
-void readLoop() {
+void aiServer() {
     LOG(INFO) << "[COM] starting";
     com_running = true;
     // Prepare context and socket
@@ -166,13 +166,13 @@ void subscriptionLoop() {
     }
 }*/
 
-void posClientLoop() {
+void posClient() {
     zmq::context_t context(1);
-    zmq::socket_t socket(context, ZMQ_REP);
-    socket.connect("tcp://localhost:5555");
+    zmq::socket_t socket(context, ZMQ_REQ);
+    socket.connect("tcp://193.157.227.196:5900");
 
     while(true) {
-        std::string s = "x,y,t";
+        std::string s = p->getState();
 
         zmq::message_t pos( s.length() );
         memcpy((void*) pos.data(), s.c_str(), s.length());
@@ -186,11 +186,10 @@ void posClientLoop() {
         std::string reply_str = std::string(static_cast<char*>(reply.data()), reply.size());
         LOG(INFO) << "[COM2] Reply from POS: len=" << reply.size() << ": " << reply_str;
 
-        usleep(5000);
+        usleep(500000); //500ms
     }
     // Error happend, should be handeled
 }
-
 
 
 
@@ -351,7 +350,7 @@ bool checkArguments(int argc, char *argv[]) {
     opterr = 0;
     int opt;
 
-    while( (opt = getopt(argc, argv, "hstflnm:d:")) != -1 ) {
+    while( (opt = getopt(argc, argv, "hstflnm:d:a:")) != -1 ) {
         switch(opt) {
             case 'h':
                 //print help
@@ -363,6 +362,7 @@ bool checkArguments(int argc, char *argv[]) {
                 PRINTLINE("-n: disable logging to file");
                 PRINTLINE("-m <port>: set motor serial port (ex: ttyUSB0)");
                 PRINTLINE("-d <port>: set dynamixel (lift) serial port (ex: ttyUSB1)");
+                PRINTLINE("-a <ip>: ip of pc running the AI program");
                 PRINTLINE("--------------------------------------");
                 break;
             case 's':
@@ -394,11 +394,16 @@ bool checkArguments(int argc, char *argv[]) {
                 dyna_serial = optarg;
                 PRINTLINE("[SETUP]    dyna arg=" << optarg);
                 break;
+            case 'a':
+                PRINTLINE("TODO: change AI ip");
+                break;
             case '?':
                 if(optopt == 'm') {
                     PRINTLINE("Option -m requires an argument.");
                 } else if(optopt == 'l') {
-                    PRINTLINE("Option -l requires an argument.");                    
+                    PRINTLINE("Option -l requires an argument.");
+                } else if(optopt == 'l') {
+                    PRINTLINE("Option -a requires an argument.");                          
                 } else {
                     PRINTLINE("Unknown cmd-option. (-h for help).");
                 }
@@ -546,12 +551,12 @@ int main(int argc, char *argv[]) {
     std::thread pos_thread(&PosControl::controlLoop, p);
     usleep(5000);
 
-    LOG(INFO) << "[SETUP] initializing readLoop thread";
-    std::thread read_thread(readLoop);
+    LOG(INFO) << "[SETUP] initializing aiServer thread";
+    std::thread read_thread(aiServer);
     usleep(5000);
 
-  //  LOG(INFO) << "[SETUP] initializing subscription thread";
-  //  std::thread write_thread(subscriptionLoop);
+    LOG(INFO) << "[SETUP] initializing POS thread";
+    std::thread write_thread(posClient);
 
 
     int acc = m->getAcceleration(); 

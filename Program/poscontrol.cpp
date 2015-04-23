@@ -224,8 +224,16 @@ void PosControl::controlLoop() {
 void PosControl::rotationLoop() {
 	LOG(INFO) << "[POS]  rotation: " << cur_pos.angle << " -> " << goal_pos.angle;
 	
+	float prev_err = 0.0;
+	float angle_err = 0.0;
 	do {
+		prev_err = angle_err;
 		float angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
+		if((prev_err < 0 && angle_err > 0) || (prev_err < 0 && angle_err > 0)) {
+			PRINTLINE("overshoot");
+			break;
+		}
+
 //		float compass_err = shortestRotation(compass.angle, goal_pos.angle);
 
 		//logic to compare angle_err to compass_err
@@ -234,23 +242,13 @@ void PosControl::rotationLoop() {
 
 		//sleep(N)
 		readEncoders();
-		//calculate distance traveled
 
-//		leftwheel_x = left_encoder.diffDist * cos_d(cur_pos.angle);
-//		leftwheel_y = left_encoder.diffDist * sin_d(cur_pos.angle);
-//		rightwheel_x = right_encoder.diffDist * cos_d(cur_pos.angle);
-//		rightwheel_y = right_encoder.diffDist * sin_d(cur_pos.angle);
-
-//		float leftwheel_turned = left_encoder.diff / ENC_PER_DEGREE; //8.05
-//		float rightwheel_turned = right_encoder.diff / ENC_PER_DEGREE;
-
-		//
 		float turned = updateAngle();
-		LOG(INFO) << "[POS] rotating:  " << cur_pos.angle-turned << " -> " << cur_pos.angle << " . Goal=" << goal_pos.angle;
+		LOG(INFO) << "[POS] rotating:  " << cur_pos.angle-turned << " -> " << cur_pos.angle << " . Goal=" << goal_pos.angle << " err=" << angle_err;
 
 		//calculate turning speed
 
-		usleep(3000);
+		usleep(5000);
 	}
 	while(!angleCloseEnough());
 
@@ -298,26 +296,6 @@ float PosControl::updateAngle() {
 		cur_pos.angle += 360.0;
 	}
 	return turned;
-}
-
-
-
-void PosControl::setRotationSpeed(float angle_err) {
-	if(angle_err > 30) {
-		setSpeeds(SPEED_MED_POS, SPEED_MED_NEG);
-	}
-	else if(angle_err > 0) {
-		setSpeeds(SPEED_SLOW_POS, SPEED_SLOW_NEG);
-	}
-	else if(angle_err < -30) {
-		setSpeeds(SPEED_MED_NEG, SPEED_MED_POS);
-	}
-	else if(angle_err < 0) {
-		setSpeeds(SPEED_SLOW_NEG, SPEED_SLOW_POS);
-	} 
-	else {	
-		setSpeeds(SPEED_STOP, SPEED_STOP);
-	}
 }
 
 
@@ -383,10 +361,16 @@ void PosControl::positionLoop() {
 	// float compass_angle = compass.angle;
 	// check if matching
 
+	float prev_straight = 0.0;
+	float straight = 0.0;
+
 	do {
 		float dist_x = goal_pos.x - cur_pos.x;
 		float dist_y = goal_pos.y - cur_pos.y;
-		float straight = distStraight(angle, dist_x, dist_y);
+		
+
+		prev_straight = straight;
+		straight = distStraight(angle, dist_x, dist_y);
 
 		//find vector towards target
 		angle = atan2(dist_y, dist_x) *(180/M_PI);
@@ -414,6 +398,11 @@ void PosControl::positionLoop() {
 		readEncoders();
 		updatePosition();
 		//check absolute position
+		if((prev_straight / straight) < 0) {
+			PRINTLINE("overshoot");
+			break;
+		}
+
 	} while(!positionCloseEnough());
 
 
@@ -457,11 +446,32 @@ void PosControl::updatePositionReverse() {
 }
 
 
-void PosControl::setDriveSpeed(float straight_dist) {
-	if(straight_dist > 100) {
-		setSpeeds(SPEED_MED_POS, SPEED_MED_POS);
+//TODO: dynamically change speeds according to distance left. Start off slow
+void PosControl::setRotationSpeed(float angle_err) {
+	if(angle_err > 30) {
+		setSpeeds(SPEED_MED_POS, SPEED_MED_NEG);
+	}
+	else if(angle_err > 0) {
+		setSpeeds(SPEED_MED_POS, SPEED_MED_NEG);
+	}
+	else if(angle_err < -30) {
+		setSpeeds(SPEED_MED_NEG, SPEED_MED_POS);
+	}
+	else if(angle_err < 0) {
+		setSpeeds(SPEED_MED_NEG, SPEED_MED_POS);
 	} 
-	else if(straight_dist > 0) {
+	else {	
+		setSpeeds(SPEED_STOP, SPEED_STOP);
+	}
+}
+
+
+//TODO: dynamically change speeds according to distance left. Start off slow
+void PosControl::setDriveSpeed(float straight_dist) {
+	if(abs(straight_dist) < 10000) {
+		setSpeeds(SPEED_MAX_POS, SPEED_MAX_POS);
+	} 
+	else if(abs(straight_dist) > 0) {
 		setSpeeds(SPEED_SLOW_POS, SPEED_SLOW_POS);
 	}
 	else if(straight_dist < -100) {
@@ -471,6 +481,7 @@ void PosControl::setDriveSpeed(float straight_dist) {
 		setSpeeds(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
 	} 
 	else {
+		PRINTLINE("IN HERE");
 		setSpeeds(SPEED_STOP, SPEED_STOP);
 	}
 }
@@ -478,14 +489,14 @@ void PosControl::setDriveSpeed(float straight_dist) {
 
 // check if speed is the same, to avoid clogging communication
 void PosControl::setSpeeds(int l, int r) {
-	if(left_motor.speed != l) {
+	//if(left_motor.speed != l) {
 		mcom->setSpeedL(l);
-		left_motor.speed = l;
-	}
-	if(right_motor.speed != r) {
+	//	left_motor.speed = l;
+	//}
+	//if(right_motor.speed != r) {
 		mcom->setSpeedR(r);
-		right_motor.speed = r;
-	}	
+	//	right_motor.speed = r;
+	//}	
 }
 
 
@@ -514,6 +525,8 @@ void PosControl::readEncoders() {
 	left_encoder.diff = left_diff;
 	left_encoder.diff_dist = left_diff_dist;
 	left_encoder.speed = -left_diff_dist / timespan;
+
+//	LOG(INFO) << " prev= " << left_encoder.prev << " diff=" << left_encoder.diff << " dist=" << left_encoder.diff_dist;
 
 	right_encoder.prev = right_enc;
 	right_encoder.diff = right_diff;
@@ -563,6 +576,8 @@ int PosControl::getCurrentId() {
 	return 0;//cur_pos.id;
 }
 
+
+//TODO: test thread safety
 std::string PosControl::getCurrentPos() {
 //	cur_pos->updatePosString();
 	std::stringstream ss;
@@ -573,6 +588,15 @@ std::string PosControl::getCurrentPos() {
 		ss << "s,";
 	}
 //	ss << cur_pos->getPosString();
+	ss << cur_pos.x << "," << cur_pos.y << "," << cur_pos.angle;
+	return ss.str();
+}
+
+
+//TODO: test thread safety
+std::string PosControl::getState() {
+	std::stringstream ss;
+	ss << cur_pos.x << "," << cur_pos.y << "," << cur_pos.angle << "," << getSpeed();
 	return ss.str();
 }
 
@@ -591,7 +615,7 @@ void PosControl::halt() {
 }
 
 void PosControl::completeCurrent() {
-
+	LOG(INFO) << "[POS] current action completed. TODO: id";
 }
 
 void PosControl::setCurrent(float x, float y, float angle) {
@@ -621,4 +645,16 @@ float PosControl::atan2AdjustedReverse(float x, float y) {
 	if(angle > 360) angle -= 360;
 	if(angle == 360) angle = 0;	
 	return angle;
+}
+
+//speed in current heading in m/s
+float PosControl::getSpeed() {
+	float ls = left_encoder.speed;
+	float rs = right_encoder.speed;
+
+	if( (ls / rs) < 0 ) {
+		//negative means speed in opposite directions, i.e. rotation
+		return 0.0;
+	}
+	return (rs + ls) / 2;
 }
