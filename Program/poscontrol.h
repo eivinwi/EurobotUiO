@@ -75,8 +75,8 @@ public:
 	void setRotationSpeed(float angle_err);
 	void straightLoop();
 	void positionLoop();
-	void updatePosition();
-	void updatePositionReverse();
+	float updatePosition();
+	float updatePositionReverse();
 	void setDriveSpeed(float straight_dist);
 	void setSpeeds(int l, int r);
 	float shortestRotation(float angle, float goal);

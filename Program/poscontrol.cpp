@@ -224,33 +224,30 @@ void PosControl::controlLoop() {
 void PosControl::rotationLoop() {
 	LOG(INFO) << "[POS]  rotation: " << cur_pos.angle << " -> " << goal_pos.angle;
 	
-	float prev_err = 0.0;
-	float angle_err = 0.0;
-	do {
-		prev_err = angle_err;
-		float angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
-		if((prev_err < 0 && angle_err > 0) || (prev_err < 0 && angle_err > 0)) {
-			PRINTLINE("overshoot");
-			break;
-		}
+	float angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
+	float total_rotation = angle_err;
 
-//		float compass_err = shortestRotation(compass.angle, goal_pos.angle);
+	float turned = 0.0;
 
+	while(turned < abs(total_rotation)) {
+		//float compass_err = shortestRotation(compass.angle, goal_pos.angle);
 		//logic to compare angle_err to compass_err
 
+		angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
 		setRotationSpeed(angle_err);
 
-		//sleep(N)
 		readEncoders();
+		float turned_now = updateAngle();
+		turned += fabs(turned_now);
+		
+//		LOG(INFO) << "[POS] rotating:  " << cur_pos.angle-turned << " -> " << cur_pos.angle << " . Goal=" << goal_pos.angle << " err=" << angle_err;
 
-		float turned = updateAngle();
-		LOG(INFO) << "[POS] rotating:  " << cur_pos.angle-turned << " -> " << cur_pos.angle << " . Goal=" << goal_pos.angle << " err=" << angle_err;
+		LOG(INFO) << "[POS] rotating:  (" << turned << " / " << total_rotation << ")   angle: " 
+				<< cur_pos.angle << " goal: " << goal_pos.angle << "  error: " << angle_err << "  this: " << turned_now;
 
 		//calculate turning speed
-
 		usleep(5000);
 	}
-	while(!angleCloseEnough());
 
 	usleep(100000);
 	LOG(INFO) << "[POS] Rotation completed. Goal=" << goal_pos.angle << " cur_pos: " << cur_pos.angle << " Compass: " << compass.angle;	
@@ -350,10 +347,11 @@ void PosControl::positionLoop() {
 		return;
 	}
 
-	float distX = goal_pos.x - cur_pos.x; 
-	float distY = goal_pos.y - cur_pos.y;
-	float angle = atan2Adjusted(distX, distY); 
+	float dist_x = goal_pos.x - cur_pos.x; 
+	float dist_y = goal_pos.y - cur_pos.y;
+	float angle = atan2Adjusted(dist_x, dist_y); 
 	goal_pos.angle = angle;
+	float total_dist = distStraight(angle, dist_x, dist_y);
 
 	if(!angleCloseEnough()) {
 		rotationLoop();
@@ -361,15 +359,12 @@ void PosControl::positionLoop() {
 	// float compass_angle = compass.angle;
 	// check if matching
 
-	float prev_straight = 0.0;
 	float straight = 0.0;
+	float dist_traveled = 0.0;
 
-	do {
-		float dist_x = goal_pos.x - cur_pos.x;
-		float dist_y = goal_pos.y - cur_pos.y;
-		
-
-		prev_straight = straight;
+	while(dist_traveled < total_dist) {
+		dist_x = goal_pos.x - cur_pos.x;
+		dist_y = goal_pos.y - cur_pos.y;
 		straight = distStraight(angle, dist_x, dist_y);
 
 		//find vector towards target
@@ -377,8 +372,7 @@ void PosControl::positionLoop() {
 		if(angle < 0) angle += 360;
 
 		//TODO: check with compass
-
-		//define angle max offset
+		//		define angle max offset
 		if(abs(cur_pos.angle - angle) > 1) {
 			//attempt to calculate necessary speed differences
 			LOG(INFO) << "[POS] angle has drifted, attempting to compensate. (TODO)";
@@ -390,21 +384,23 @@ void PosControl::positionLoop() {
 			setDriveSpeed(straight);
 		}
 
-
 		usleep(5000); //needs tweaking
 
-		LOG_EVERY_N(5, INFO) << "[POS] driving:  (" << cur_pos.x << ", " << cur_pos.y << " -> (" << goal_pos.x << ", " << goal_pos.y << ").  Speed=(" << left_encoder.speed << ", " << right_encoder.speed << " )";
 
 		readEncoders();
-		updatePosition();
-		//check absolute position
-		if((prev_straight / straight) < 0) {
-			PRINTLINE("overshoot");
-			break;
+		float traveled = updatePosition();
+		if(traveled < 0) {
+			PRINTLINE("NEGATIVE!!!!");
+			traveled = abs(traveled);
 		}
+		dist_traveled += traveled;
 
-	} while(!positionCloseEnough());
-
+		LOG_EVERY_N(5, INFO) << "[POS] driving:  (" << dist_traveled << "/" << total_dist 
+			<< ")  x=" << cur_pos.x << " y=" << cur_pos.y << " -> (" << goal_pos.x << ", " 
+			<< goal_pos.y << ").  Speed=(" << left_encoder.speed << ", " 
+			<< right_encoder.speed << " )   traveled: " << traveled;
+		//TODO: check absolute position
+	} 
 
 	usleep(10000);
 	LOG(INFO) << "[POS] position reached . Goal_pos=(" << goal_pos.x << "," << goal_pos.y << "," << goal_pos.angle << ") cur_pos=(" << cur_pos.x << "," << cur_pos.y << "," << cur_pos.angle << ")";	
@@ -412,7 +408,7 @@ void PosControl::positionLoop() {
 
 
 //angle has already been checked when this is called, assume 100% correct.
-void PosControl::updatePosition() {
+float PosControl::updatePosition() {
 	long diff = abs(left_encoder.diff_dist - right_encoder.diff_dist);
 
 	//MAX_DIFF
@@ -426,10 +422,12 @@ void PosControl::updatePosition() {
 	float y_distance = sin_d(angle) * avg_dist; 
 	cur_pos.x += (x_distance);// dir*x_distance );
 	cur_pos.y += (y_distance);// dir*y_distance );
+
+	return avg_dist;
 }
 
 
-void PosControl::updatePositionReverse() {
+float PosControl::updatePositionReverse() {
 	long diff = abs(left_encoder.diff_dist - right_encoder.diff_dist);
 
 	//MAX_DIFF
@@ -443,6 +441,8 @@ void PosControl::updatePositionReverse() {
 	float y_distance = sin_d(angle) * avg_dist; 
 	cur_pos.x -= (x_distance);// dir*x_distance );
 	cur_pos.y -= (y_distance);// dir*y_distance );
+
+	return avg_dist;
 }
 
 
