@@ -305,38 +305,7 @@ void PosControl::straightLoop() {
 	goal_pos.y = cur_pos.y + sin_d(angle) * dist;
 	goal_pos.angle = angle;
 
-	do {
-		float dist_x = goal_pos.x - cur_pos.x;
-		float dist_y = goal_pos.y - cur_pos.y;
-		float straight = distStraight(angle, dist_x, dist_y);
-
-		//define angle max offset
-		if(abs(cur_pos.angle - angle) > 1) {
-			//attempt to calculate necessary speed differences
-			LOG(INFO) << "[POS] angle has drifted, attempting to compensate. (TODO)";
-
-			//find angle difference
-			//find distance left
-			//calculate speed difference to compensate angle over that distance
-		} else {
-			setDriveSpeed(straight);
-		}
-
-		usleep(5000); //needs tweaking
-		LOG_EVERY_N(5, INFO) << "[POS] driving straight:  (" << cur_pos.x << ", " << cur_pos.y << " -> (" << goal_pos.x << ", " << goal_pos.y << ").  Speed=( " << left_encoder.speed << ", " << right_encoder.speed << " )";
-
-		readEncoders();
-		
-		if(straight > 0) {
-			updatePosition();
-		} else {
-			updatePositionReverse();
-		}
-	
-	} while(!positionCloseEnough());
-
-	usleep(10000);
-	LOG(INFO) << "[POS] position reached . Goal_pos=(" << goal_pos.x << "," << goal_pos.y << "," << goal_pos.angle << ") cur_pos=(" << cur_pos.x << "," << cur_pos.y << "," << cur_pos.angle << ")";		
+	positionLoop();
 }
 
 
