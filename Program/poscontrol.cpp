@@ -31,6 +31,8 @@
 //
 //	- Overshoot protection
 
+float ENC_PER_DEGREE = 8.05;
+
 struct encoder {
 	long prev;
 	long diff;
@@ -72,21 +74,27 @@ struct Motor {
 
 
 
-PosControl::PosControl(MotorCom *m, DynaCom *d, bool test) {
+PosControl::PosControl(MotorCom *m, DynaCom *d, bool test, float e_p_d) {
 	mcom = m;
 	dcom = d;
 	testing = test;
+
+	if(e_p_d > 0.0 && e_p_d < 10.0) {
+		ENC_PER_DEGREE = e_p_d;
+	}
+
 	reset(0,0,0);
 }
 
 
 void PosControl::reset(int x, int y, int rot) {
-	cur_pos.x = 0;
-	cur_pos.y = 0;
-	cur_pos.angle = 0;
-	goal_pos.x = 0;
-	goal_pos.y = 0;
-	goal_pos.angle = 0;
+	cur_pos.x = x;
+	cur_pos.y = y;
+	cur_pos.angle = rot;
+	goal_pos.x = x;
+	goal_pos.y = y;
+	goal_pos.angle = rot;
+
 	left_encoder.prev = 0;
 	left_encoder.diff = 0;
 	left_encoder.diff_dist = 0.0;
@@ -246,7 +254,7 @@ void PosControl::rotationLoop() {
 				<< cur_pos.angle << " goal: " << goal_pos.angle << "  error: " << angle_err << "  this: " << turned_now;
 
 		//calculate turning speed
-		usleep(5000);
+		usleep(3000);
 	}
 
 	usleep(100000);
@@ -263,8 +271,8 @@ float PosControl::updateAngle() {
 	long diffR = right_encoder.diff;
   	// Average of encoders for reduced maximum-error
 
-  	long enc_avg = (abs(diffL) + abs(diffR))/2;
-	long enc_diff = abs(diffL - diffR);
+  	long enc_avg = abs(abs(diffL) + abs(diffR))/2;
+	long enc_diff = abs(abs(diffL) - abs(diffR));
 
 	if(enc_diff > 100) {  //MAX_ENC_TURN_DIFF) {
 		LOG(INFO) << "[POS] encoder diff too large (" << enc_diff << "), checking compass";
@@ -585,6 +593,11 @@ void PosControl::halt() {
 
 void PosControl::completeCurrent() {
 	LOG(INFO) << "[POS] current action completed. TODO: id";
+	halt();
+	//mcom->resetEncoders();
+	usleep(1000000);
+	readEncoders();
+	usleep(10000);
 }
 
 void PosControl::setCurrent(float x, float y, float angle) {

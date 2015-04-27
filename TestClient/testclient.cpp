@@ -57,8 +57,8 @@ int main (int argc, char *argv[])
 	zmq::context_t context (1);
 	zmq::socket_t socket (context, ZMQ_REQ);
 	std::cout << "Connecting to hello world server..." << std::endl;
-//	socket.connect ("tcp://193.157.203.166:5900");
-	socket.connect("tcp://localhost:5555");
+//	socket.connect ("tcp://localhost:5900");
+	socket.connect("tcp://localhost:5900");
 	//socket.connect("ipc://ai.ipc");
 
 	// Do 10 requests, waiting each time for a response

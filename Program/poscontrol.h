@@ -60,7 +60,7 @@
 
 class PosControl {
 public:
-	PosControl(MotorCom* m, DynaCom* d, bool test);
+	PosControl(MotorCom* m, DynaCom* d, bool test, float e_p_d);
 	~PosControl();
 
 

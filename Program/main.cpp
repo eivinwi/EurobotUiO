@@ -39,7 +39,7 @@ void aiServer() {
     // Prepare context and socket
     zmq::context_t context (1);
     zmq::socket_t socket (context, ZMQ_REP);
-    socket.bind ("tcp://*:5555");
+    socket.bind ("tcp://*:5900");
     //socket.bind ("ipc://ai.ipc");
 
     while (true) {
@@ -395,7 +395,13 @@ bool checkArguments(int argc, char *argv[]) {
                 PRINTLINE("[SETUP]    dyna arg=" << optarg);
                 break;
             case 'a':
-                PRINTLINE("TODO: change AI ip");
+  				std::string::size_type sz;
+                enc_per_degree = std::stof(optarg, &sz);
+
+                if(enc_per_degree > 10.0 || enc_per_degree < 5.0) {
+                	enc_per_degree = 0.0;
+                }
+                PRINTLINE("[SETUP] changing encoder_per_degree: " << enc_per_degree);
                 break;
             case '?':
                 if(optopt == 'm') {
@@ -544,7 +550,7 @@ int main(int argc, char *argv[]) {
     usleep(10000);
 
     LOG(INFO) << "[SETUP] initializing PosControl";
-    p = new PosControl(m, d, testing_enabled);
+    p = new PosControl(m, d, testing_enabled, enc_per_degree);
     usleep(5000);
 
     LOG(INFO) << "[SETUP] initializing controlLoop thread";

@@ -93,3 +93,5 @@ bool testing_enabled = false;
 bool log_to_file = true;
 std::string motor_serial = "/dev/ttyUSB0";
 std::string dyna_serial = "/dev/ttyUSB1";
+
+float enc_per_degree = 0.0;
