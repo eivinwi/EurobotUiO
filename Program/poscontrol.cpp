@@ -74,15 +74,11 @@ struct Motor {
 
 
 
-PosControl::PosControl(MotorCom *m, DynaCom *d, bool test, float e_p_d) {
+PosControl::PosControl(MotorCom *m, DynaCom *d, bool test, std::string config_file) {
 	mcom = m;
 	dcom = d;
 	testing = test;
-
-	if(e_p_d > 0.0 && e_p_d < 10.0) {
-		ENC_PER_DEGREE = e_p_d;
-	}
-
+	readConfig(config_file);
 	reset(0,0,0);
 }
 
@@ -108,8 +104,8 @@ void PosControl::reset(int x, int y, int rot) {
 	right_encoder.total_dist = 0.0;
 	right_encoder.speed = 0.0;
 	
-	left_motor.speed = SPEED_STOP;
-	right_motor.speed = SPEED_STOP;
+	left_motor.speed = Speed.stop;
+	right_motor.speed = Speed.stop;
 
 	encoder_timestamp = std::chrono::high_resolution_clock::now();
 
@@ -231,15 +227,16 @@ void PosControl::controlLoop() {
 
 void PosControl::rotationLoop() {
 	LOG(INFO) << "[POS]  rotation: " << cur_pos.angle << " -> " << goal_pos.angle;
-	
+	LOG(INFO) << "[POS] left_enc: " << mcom->getEncL() << " right_enc: " << mcom->getEncR();
 	float angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
 	float total_rotation = angle_err;
 
 	float turned = 0.0;
 
-	while(turned < abs(total_rotation)) {
+	while(abs(turned) < (abs(total_rotation) - 2.5)) {
 		//float compass_err = shortestRotation(compass.angle, goal_pos.angle);
 		//logic to compare angle_err to compass_err
+		usleep(5000);
 
 		angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
 		setRotationSpeed(angle_err);
@@ -252,15 +249,27 @@ void PosControl::rotationLoop() {
 
 		LOG(INFO) << "[POS] rotating:  (" << turned << " / " << total_rotation << ")   angle: " 
 				<< cur_pos.angle << " goal: " << goal_pos.angle << "  error: " << angle_err << "  this: " << turned_now;
-
 		//calculate turning speed
-		usleep(3000);
 	}
+	halt();
 
+	LOG(INFO) << "[POS] 3: left_enc: " << mcom->getEncL() << " right_enc: " << mcom->getEncR();
 	usleep(100000);
 	LOG(INFO) << "[POS] Rotation completed. Goal=" << goal_pos.angle << " cur_pos: " << cur_pos.angle << " Compass: " << compass.angle;	
-	cur_pos.angle = goal_pos.angle;
-	LOG(INFO) << "[POS] cur_pos.angle corrected to: " << goal_pos.angle;
+	//cur_pos.angle = goal_pos.angle;
+	//LOG(INFO) << "[POS] cur_pos.angle corrected to: " << goal_pos.angle;
+
+	LOG(INFO) << "[POS] 4: left_enc: " << mcom->getEncL() << " right_enc: " << mcom->getEncR();
+
+	readEncoders();
+	updateAngle();
+	LOG(INFO) << "[POS] actual rotation: Goal=" << goal_pos.angle << " cur_pos: " << cur_pos.angle << " Compass: " << compass.angle;	
+
+	usleep(100000);
+	readEncoders();
+	updateAngle();
+	LOG(INFO) << "[POS] actual rotation: Goal=" << goal_pos.angle << " cur_pos: " << cur_pos.angle << " Compass: " << compass.angle;	
+
 }
 
 
@@ -424,56 +433,84 @@ float PosControl::updatePositionReverse() {
 
 
 //TODO: dynamically change speeds according to distance left. Start off slow
-void PosControl::setRotationSpeed(float angle_err) {
-	if(angle_err > 30) {
-		setSpeeds(SPEED_MED_POS, SPEED_MED_NEG);
+void PosControl::setRotationSpeed(float a_err) {
+	int angle_err = int(a_err);
+
+	if(angle_err > 52) {
+		setSpeeds(Speed.pos_med + 13, Speed.neg_med - 13);
+	} else if(angle_err > 20) {
+		setSpeeds(Speed.pos_med + 26, Speed.neg_med - 26);		
 	}
 	else if(angle_err > 0) {
-		setSpeeds(SPEED_MED_POS, SPEED_MED_NEG);
+		setSpeeds(Speed.pos_slow, Speed.neg_slow);
 	}
-	else if(angle_err < -30) {
-		setSpeeds(SPEED_MED_NEG, SPEED_MED_POS);
+	else if(angle_err < -52) {
+		setSpeeds(Speed.neg_med -13, Speed.pos_med + 13);
+	} else if(angle_err < -26) {
+		setSpeeds(Speed.neg_med - 26, Speed.pos_med + 26);		
 	}
 	else if(angle_err < 0) {
-		setSpeeds(SPEED_MED_NEG, SPEED_MED_POS);
+		setSpeeds(Speed.neg_slow, Speed.pos_slow);
 	} 
 	else {	
-		setSpeeds(SPEED_STOP, SPEED_STOP);
+		setSpeeds(Speed.stop, Speed.stop);
 	}
+
+	/*
+	if(a_err > 0.0) {
+		setSpeeds(Speed.pos_med, Speed.neg_med);
+	}
+	else {
+		setSpeeds(Speed.neg_med, Speed.pos_med);
+	}*/
 }
 
 
 //TODO: dynamically change speeds according to distance left. Start off slow
 void PosControl::setDriveSpeed(float straight_dist) {
-	if(abs(straight_dist) < 10000) {
-		setSpeeds(SPEED_MAX_POS, SPEED_MAX_POS);
+	if(abs(straight_dist) > 200) {
+		setSpeeds(Speed.pos_fast, Speed.pos_fast);
+	} 
+	else if(abs(straight_dist) > 100) {
+		setSpeeds(Speed.pos_med, Speed.pos_med);
 	} 
 	else if(abs(straight_dist) > 0) {
-		setSpeeds(SPEED_SLOW_POS, SPEED_SLOW_POS);
+		setSpeeds(Speed.pos_slow, Speed.pos_slow);
 	}
-	else if(straight_dist < -100) {
-		setSpeeds(SPEED_MED_NEG, SPEED_MED_NEG);
+	else if(straight_dist < -200) {
+		setSpeeds(Speed.neg_med, Speed.neg_med);
 	}
 	else if(straight_dist < 0) {
-		setSpeeds(SPEED_SLOW_NEG, SPEED_SLOW_NEG);
+		setSpeeds(Speed.neg_slow, Speed.neg_slow);
 	} 
 	else {
 		PRINTLINE("IN HERE");
-		setSpeeds(SPEED_STOP, SPEED_STOP);
+		setSpeeds(Speed.stop, Speed.stop);
 	}
 }
 
-
+auto prev = std::chrono::high_resolution_clock::now();
+int timeout_guard = 1000;
 // check if speed is the same, to avoid clogging communication
 void PosControl::setSpeeds(int l, int r) {
-	//if(left_motor.speed != l) {
+	auto now = std::chrono::high_resolution_clock::now();
+	auto timespan = std::chrono::duration<double, std::milli>(now - prev).count();
+
+	if(timespan > timeout_guard) {
 		mcom->setSpeedL(l);
-	//	left_motor.speed = l;
-	//}
-	//if(right_motor.speed != r) {
 		mcom->setSpeedR(r);
-	//	right_motor.speed = r;
-	//}	
+	} else {
+		if(left_motor.speed != l) {
+			mcom->setSpeedL(l);
+			left_motor.speed = l;
+		}
+
+		if(right_motor.speed != r) {
+			mcom->setSpeedR(r);
+			right_motor.speed = r;
+		}	
+	}
+	prev = now;
 }
 
 
@@ -486,9 +523,13 @@ float PosControl::shortestRotation(float angle, float goal) {
 
 //encoders are opposite? but still okay
 void PosControl::readEncoders() {
-	long left_enc = mcom->getEncL();
-	long right_enc = mcom->getEncR();
-	
+	long left_enc = 0;//= mcom->getEncL();
+	long right_enc = 0; //= mcom->getEncR();
+	auto t =  mcom->getEncoders();
+	left_enc = std::get<0>(t);
+	right_enc = std::get<1>(t);
+
+
 	auto now = std::chrono::high_resolution_clock::now();
 	auto timespan = std::chrono::duration<double, std::milli>(now - encoder_timestamp).count(); //left and right timestamps are the same. should perhaps do 2
 
@@ -588,16 +629,13 @@ bool PosControl::running() {
 }
 
 void PosControl::halt() {
-	setSpeeds(SPEED_STOP, SPEED_STOP);
+	setSpeeds(Speed.stop, Speed.stop);
 }
 
 void PosControl::completeCurrent() {
 	LOG(INFO) << "[POS] current action completed. TODO: id";
-	halt();
 	//mcom->resetEncoders();
 	usleep(1000000);
-	readEncoders();
-	usleep(10000);
 }
 
 void PosControl::setCurrent(float x, float y, float angle) {
@@ -608,12 +646,12 @@ void PosControl::setCurrent(float x, float y, float angle) {
 
 
 float PosControl::sin_d(float angle) {
-	return sin(angle*M_PI/180);
+	return sin(angle * M_PI/180);
 }
 
 
 float PosControl::cos_d(float angle) {
-	return cos(angle*M_PI/180);
+	return cos(angle * M_PI/180);
 }
 
 float PosControl::atan2Adjusted(float x, float y) {
@@ -640,3 +678,29 @@ float PosControl::getSpeed() {
 	}
 	return (rs + ls) / 2;
 }
+
+
+void PosControl::readConfig(std::string filename) {
+	YAML::Node config;
+	if(filename == "") {
+		config = YAML::LoadFile("config.yaml");
+	}
+	else {
+		config = YAML::LoadFile("filename");		
+	}
+
+
+
+	std::cout << config["SPEED_MAX_POS"].as<int>();
+	std::cout << config["SPEED_MED_POS"].as<int>();
+	std::cout << config["SPEED_SLOW_POS"].as<int>();
+	std::cout << config["SPEED_MAX_NEG"].as<int>();
+	std::cout << config["SPEED_MED_NEG"].as<int>();
+	std::cout << config["SPEED_SLOW_NEG"].as<int>();
+	std::cout << config["SPEED_STOP"].as<int>();
+
+
+
+
+}
+

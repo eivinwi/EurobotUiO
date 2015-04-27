@@ -73,6 +73,7 @@ void MotorCom::setSpeedL(uint8_t speed) {
     sync();
     writeToSerial(SET_SPEEDL);
     writeToSerial(speed);
+    LOG(INFO) << "[MCOM] left_speed has been set to: " << int(speed);
 }
 
 
@@ -80,6 +81,7 @@ void MotorCom::setSpeedR(uint8_t speed) {
     sync();
     writeToSerial(SET_SPEEDR);
     writeToSerial(speed);
+    LOG(INFO) << "[MCOM] right_speed has been set to: " << int(speed);
 }
 
 
@@ -163,29 +165,12 @@ void MotorCom::resetEncoders() {
 }
 
 
-/* 
- * Encoder counts: 980 per output shaft turn
- * Wheel diameter: 120mm
- * Wheel circumference: 377mm
- * Distance per count: 0.385mm
- */
-void MotorCom::getEncoders() {
+std::tuple<long, long> MotorCom::getEncoders() {
     sync();
     writeToSerial(GET_ENCODERS);
-    flush();
-    long result1;// = readLongFromSerial();
-    long result2;// = readLongFromSerial();
-    result1 = readFromSerial() << 24ul;
-    result1 += readFromSerialNoWait() << 16ul;
-    result1 += readFromSerialNoWait() << 8ul;
-    result1 += readFromSerialNoWait();
-
-
-    result2 = readFromSerialNoWait() << 24ul;
-    result2 += readFromSerialNoWait() << 16ul;
-    result2 += readFromSerialNoWait() << 8ul;
-    result2 += readFromSerialNoWait();
-    LOG(DEBUG) << "[MOTOR] EncL: " << result1 << "\nEncR" << result2;
+    long l = readLongFromSerial();
+    long r = readLongFromSerial();
+    return std::make_tuple(l, r); 
 }
 
 

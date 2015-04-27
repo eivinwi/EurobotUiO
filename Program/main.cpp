@@ -395,13 +395,8 @@ bool checkArguments(int argc, char *argv[]) {
                 PRINTLINE("[SETUP]    dyna arg=" << optarg);
                 break;
             case 'a':
-  				std::string::size_type sz;
-                enc_per_degree = std::stof(optarg, &sz);
-
-                if(enc_per_degree > 10.0 || enc_per_degree < 5.0) {
-                	enc_per_degree = 0.0;
-                }
-                PRINTLINE("[SETUP] changing encoder_per_degree: " << enc_per_degree);
+                config_file = optarg;
+                PRINTLINE("[SETUP] set new config_file: " << config_file);
                 break;
             case '?':
                 if(optopt == 'm') {
@@ -453,6 +448,7 @@ void testSystem() {
     printResult("[TEST] Acceleration = " + std::to_string(acc), (acc == ACCELERATION));  
     int mode = m->getMode();
     printResult("[TEST] Mode = " + std::to_string(mode), (mode == MODE));
+    m->enableReg(true);
 }
 
 
@@ -550,7 +546,7 @@ int main(int argc, char *argv[]) {
     usleep(10000);
 
     LOG(INFO) << "[SETUP] initializing PosControl";
-    p = new PosControl(m, d, testing_enabled, enc_per_degree);
+    p = new PosControl(m, d, testing_enabled, config_file);
     usleep(5000);
 
     LOG(INFO) << "[SETUP] initializing controlLoop thread";

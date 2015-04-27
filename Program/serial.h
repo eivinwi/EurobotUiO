@@ -34,6 +34,7 @@
 #include <SerialStream.h>
 using namespace LibSerial ;
 
+#define SERIAL_DELAY 500
 
 class Serial {
 public:

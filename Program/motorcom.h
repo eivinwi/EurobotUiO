@@ -33,6 +33,7 @@
 #include "serialsim.h"
 #include <cstring>
 #include <stdint.h>
+#include <tuple>
 
 #define LEFT 1
 #define RIGHT 2
@@ -109,7 +110,7 @@ public:
     long getEncR();
 
     // Retrieves both encoder values
-    void getEncoders();
+    std::tuple<long, long> getEncoders();
     
     // Clears and prints anything left on the serial bus.
     void flush();
