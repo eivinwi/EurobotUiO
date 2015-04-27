@@ -31,8 +31,6 @@
 //
 //	- Overshoot protection
 
-float ENC_PER_DEGREE = 8.05;
-
 struct encoder {
 	long prev;
 	long diff;
@@ -300,7 +298,8 @@ float PosControl::updateAngle() {
 
 	//average out compass and odometry??
 
-	float turned = (diffL > 0)? -(enc_avg/ENC_PER_DEGREE) : (enc_avg/ENC_PER_DEGREE);
+	float turned = (diffL > 0)? -(enc_avg/Enc.per_degree) : (enc_avg/Enc.per_degree);
+
 
 	cur_pos.angle += turned;
 	if(cur_pos.angle >= 360.0) {
@@ -436,18 +435,19 @@ float PosControl::updatePositionReverse() {
 void PosControl::setRotationSpeed(float a_err) {
 	int angle_err = int(a_err);
 
-	if(angle_err > 52) {
-		setSpeeds(Speed.pos_med + 13, Speed.neg_med - 13);
-	} else if(angle_err > 20) {
-		setSpeeds(Speed.pos_med + 26, Speed.neg_med - 26);		
+	if(angle_err > Slowdown.max_dist) {
+		setSpeeds(Speed.pos_med, Speed.neg_med);
+	} else if(angle_err > Slowdown.med_dist) {
+		setSpeeds(Speed.pos_med, Speed.neg_med);		
 	}
 	else if(angle_err > 0) {
 		setSpeeds(Speed.pos_slow, Speed.neg_slow);
 	}
-	else if(angle_err < -52) {
-		setSpeeds(Speed.neg_med -13, Speed.pos_med + 13);
-	} else if(angle_err < -26) {
-		setSpeeds(Speed.neg_med - 26, Speed.pos_med + 26);		
+	else if(angle_err < -Slowdown.max_dist) {
+		setSpeeds(Speed.neg_med, Speed.pos_med);
+	} 
+	else if(angle_err < -Slowdown.med_dist) {
+		setSpeeds(Speed.neg_med, Speed.pos_med);		
 	}
 	else if(angle_err < 0) {
 		setSpeeds(Speed.neg_slow, Speed.pos_slow);
@@ -517,7 +517,8 @@ void PosControl::setSpeeds(int l, int r) {
 float PosControl::shortestRotation(float angle, float goal) {
 	float dist_left = (goal >= angle)? (goal - angle) : ((360 - angle) + goal);
 	float dist_right = (goal >= angle)? -(angle + (360-goal)) : (goal - angle); 
-	return (abs(dist_left) < abs(dist_right))? dist_left : dist_right;
+
+	return (abs(dist_left) <= abs(dist_right))? dist_left : dist_right;
 }
 
 
@@ -536,8 +537,8 @@ void PosControl::readEncoders() {
 	long left_diff = left_enc - left_encoder.prev;
 	long right_diff = right_enc - right_encoder.prev;
 
-	float left_diff_dist = left_diff * DIST_PER_TICK;
-	float right_diff_dist = left_diff * DIST_PER_TICK;
+	float left_diff_dist = left_diff * Enc.dist_per_tick;
+	float right_diff_dist = left_diff * Enc.dist_per_tick;
 
 	left_encoder.prev = left_enc;
 	left_encoder.diff = left_diff;
@@ -571,15 +572,15 @@ float PosControl::distStraight(float angle, float x, float y) {
 
 
 bool PosControl::angleCloseEnough() {
-	return abs(cur_pos.angle - goal_pos.angle) < ROTATION_CLOSE_ENOUGH;
+	return abs(cur_pos.angle - goal_pos.angle) < CloseEnough.rotation;
 }
 
 bool PosControl::xCloseEnough() {
-	return abs(cur_pos.x - goal_pos.x) < POSITION_CLOSE_ENOUGH;
+	return abs(cur_pos.x - goal_pos.x) < CloseEnough.position;
 }
 
 bool PosControl::yCloseEnough() {
-	return abs(cur_pos.y - goal_pos.y) < POSITION_CLOSE_ENOUGH;
+	return abs(cur_pos.y - goal_pos.y) < CloseEnough.position;
 }
 
 bool PosControl::positionCloseEnough() {
@@ -683,24 +684,37 @@ float PosControl::getSpeed() {
 void PosControl::readConfig(std::string filename) {
 	YAML::Node config;
 	if(filename == "") {
+		LOG(INFO) << "[POS] reading configuration file: config.yaml";
 		config = YAML::LoadFile("config.yaml");
 	}
 	else {
+		LOG(INFO) << "[POS] reading configuration file: " << filename;
 		config = YAML::LoadFile("filename");		
 	}
 
 
-
-	std::cout << config["SPEED_MAX_POS"].as<int>();
-	std::cout << config["SPEED_MED_POS"].as<int>();
-	std::cout << config["SPEED_SLOW_POS"].as<int>();
-	std::cout << config["SPEED_MAX_NEG"].as<int>();
-	std::cout << config["SPEED_MED_NEG"].as<int>();
-	std::cout << config["SPEED_SLOW_NEG"].as<int>();
-	std::cout << config["SPEED_STOP"].as<int>();
-
+	Speed.pos_slow = config["SPEED_SLOW_POS"].as<int>();
+	Speed.pos_med = config["SPEED_MED_POS"].as<int>();
+	Speed.pos_fast = config["SPEED_MAX_POS"].as<int>();
+	Speed.neg_slow = config["SPEED_SLOW_NEG"].as<int>();
+	Speed.neg_med = config["SPEED_MED_NEG"].as<int>();
+	Speed.neg_fast = config["SPEED_MAX_NEG"].as<int>();
+	Speed.stop = config["SPEED_STOP"].as<int>();
 
 
+	Slowdown.max_dist = config["SLOWDOWN_MAX_DIST"].as<int>();
+	Slowdown.med_dist = config["SLOWDOWN_MED_DIST"].as<int>();
+	Slowdown.rotation = config["SLOWDOWN_DISTANCE_ROT"].as<int>();
+
+	CloseEnough.rotation = 	config["ROTATION_CLOSE_ENOUGH"].as<float>();
+	CloseEnough.position = config["POSITION_CLOSE_ENOUGH"].as<float>();
+
+	Enc.max_incr = config["MAX_ENC_INCR"].as<int>();
+	Enc.max_diff = config["MAX_ENC_DIFF"].as<int>();
+	Enc.constant = config["ENCODER_CONSTANT"].as<float>();
+	Enc.dist_per_tick = config["DIST_PER_TICK"].as<float>();
+	Enc.per_degree = config["ENC_PER_DEGREE"].as<float>();
+
+	MAX_WAIT = config["MAX_WAIT"].as<int>();
 
 }
-

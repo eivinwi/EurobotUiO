@@ -118,45 +118,6 @@ private:
 	bool completed_actions[ACTION_STORAGE];
 
 
-	int SPEED_MAX_NEG = 225; //235, 255
-	int SPEED_MED_NEG = 192;
-	int SPEED_SLOW_NEG = 150;
-	int SPEED_STOP = 128;
-	int SPEED_SLOW_POS = 106;
-	int SPEED_MED_POS = 64;
-	int SPEED_MAX_POS = 30; //20, 0
-
-
-	int SLOWDOWN_MAX_DIST = 120;
-	int SLOWDOWN_MED_DIST = 60;
-	int SLOWDOWN_DISTANCE_ROT = 10;
-
-	float ROTATION_CLOSE_ENOUGH = 1.0;
-	float POSITION_CLOSE_ENOUGH = 2.0;
-
-	//max increase from one encoder-reply to the next.
-	int MAX_ENC_INCR = 980; // = one rotation. 
-
-	//max difference between L and R encoder diffs.
-	int MAX_ENC_DIFF = 440; // == half rotation. Should possibly be smaller
-	int TOO_LONG = 20;             //timeout in ms. Currently not in use (?)
-
-	// Game area resolution in mm:
-	int XRES = 30000;
-	int YRES = 20000;
-
-	/*
-	 * Encoder counts: 980 per output shaft turn
-	 * Wheel diameter: 120mm
-	 * Wheel circumference: 377mm
-	 * Distance per count: 0.385mm  
-	 */
-	//#define ENCODER_CONSTANT 0.40	//0.385
-	float ENCODER_CONSTANT = 0.327;	//0.385
-	float DIST_PER_TICK = 0.382; //0.3265
-	//#define ENC_PER_DEGREE 8.20 //8.55 		//6.2 		//7.5
-
-	//Delays for serial communications
 	int MAX_WAIT = 2000;
 
 
@@ -169,6 +130,29 @@ private:
 		int pos_med = 64;
 		int pos_fast = 30; //20, 0
 	} Speed;
+
+	struct slowdown{
+		int max_dist = 120;
+		int med_dist = 60;
+		int rotation = 10;
+	} Slowdown;
+
+
+	struct encoder_stuff{
+		int max_incr = 980;
+		int max_diff = 440;
+		float constant = 0.327;
+		float dist_per_tick = 0.382;
+		float per_degree = 8.05;
+	} Enc;
+
+	struct closeenough{
+		float rotation = 1.0;
+		float position = 2.0;
+	} CloseEnough;
+
+
+
 };
 
 #endif /* POSCONTROL_H */
