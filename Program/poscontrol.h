@@ -70,6 +70,7 @@ public:
 	void clearQueue();
 	void controlLoop();
 	void rotationLoop();
+	void crawlToRotation();
 	float updateAngle();
 	void setRotationSpeed(float angle_err);
 	void straightLoop();
@@ -101,6 +102,9 @@ public:
 	float atan2AdjustedReverse(float x, float y);
 	float getSpeed();
 	void readConfig(std::string filename);
+
+	float perc(float angle, float starting_angle, float goal);
+
 
 private:	
 	MotorCom *mcom;

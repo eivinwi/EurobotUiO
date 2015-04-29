@@ -265,11 +265,11 @@ void PosControl::rotationLoop() {
 
 	PRINTLINE("ROTATION completed: " << angle_start << " -> " << goal_pos.angle ".  Distance rotated: " << turned);
 	printf("                   | %5s | %6s| %5s | %5s | %s |\n", "angle", "remain", "perc ", "encL ", "encR ")
-	printf("%0*s\n", 50, -);
+	printf("%0*s\n", 50, "-");
 	printf(" rotation    start | %5f | %5f | %4f%% | %5d | %5d |\n", angle_start, shortestRotation(angle_start, goal_pos.angle) ,perc(angle_start, angle_start, goal_pos.angle()), left_enc_start, right_enc_start);
 	printf(" rotation complete | %5f | %5f | %4f%% | %5d | %5d |\n", angle_complete, shortestRotation(angle_complete, goal_pos.angle), perc(angle_start, angle_complete, goal_pos.angle()), left_enc_complete, right_enc_complete);
 	printf(" rotation    final | %5f | %5f | %4f%% | %5d | %5d |\n", angle_final, shortestRotation(angle_final, goal_pos.angle), perc(angle_start, angle_final, goal_pos.angle()), left_enc_final, right_enc_final);
-	printf("%0*s\n", 50, -);
+	printf("%0*s\n", 50, "-");
 }
 
 
