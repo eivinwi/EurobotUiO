@@ -55,10 +55,7 @@ void MotorCom::startSerial() {
 
 
 bool MotorCom::test() {
-    if(simulating) {
-        return true; 
-    } 
-    return (getVersion() == 2);
+    return ((simulating) ? true : (getVersion() == 2));
 }
 
 
@@ -94,8 +91,7 @@ void MotorCom::setSpeedBoth(uint8_t speed) {
 uint8_t MotorCom::getSpeedL() {
     sync();
     writeToSerial(GET_SPEEDL);
-    uint8_t speed = readFromSerial();
-    return speed;
+    return (uint8_t) readFromSerial();
 }
 
 
@@ -130,8 +126,7 @@ long MotorCom::getVi() {
 uint8_t MotorCom::getMode() {
     sync();
     writeToSerial(GET_MODE);
-    int mode = readFromSerial();
-    return mode;
+    return (uint8_t) readFromSerial();
 }
 
 
