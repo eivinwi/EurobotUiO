@@ -225,15 +225,19 @@ void PosControl::controlLoop() {
 
 void PosControl::rotationLoop() {
 	LOG(INFO) << "[POS]  rotation: " << cur_pos.angle << " -> " << goal_pos.angle;
-	LOG(INFO) << "[POS] left_enc: " << mcom->getEncL() << " right_enc: " << mcom->getEncR();
 	float angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
 	float total_rotation = angle_err;
 
 	float turned = 0.0;
 
+	readEncoders();
+	long left_enc_start = left_encoder.total;
+	long right_enc_start = right_encoder.total;
+	float angle_start = cur_pos.angle;
+
 	while(abs(turned) < (abs(total_rotation) - CloseEnough.rotation)) {
 		//float compass_err = shortestRotation(compass.angle, goal_pos.angle);
-		//logic to compare angle_err to compass_err
+		//TODO: logic to compare angle_err to compass_err
 		usleep(5000);
 
 		angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
@@ -242,34 +246,38 @@ void PosControl::rotationLoop() {
 		readEncoders();
 		float turned_now = updateAngle();
 		turned += fabs(turned_now);
-		
-//		LOG(INFO) << "[POS] rotating:  " << cur_pos.angle-turned << " -> " << cur_pos.angle << " . Goal=" << goal_pos.angle << " err=" << angle_err;
-
 		LOG(INFO) << "[POS] rotating:  (" << turned << " / " << total_rotation << ")   angle: " 
 				<< cur_pos.angle << " goal: " << goal_pos.angle << "  error: " << angle_err << "  this: " << turned_now;
-		//calculate turning speed
 	}
 	halt();
-
-	LOG(INFO) << "[POS] 3: left_enc: " << mcom->getEncL() << " right_enc: " << mcom->getEncR();
-	usleep(100000);
-	LOG(INFO) << "[POS] Rotation completed. Goal=" << goal_pos.angle << " cur_pos: " << cur_pos.angle << " Compass: " << compass.angle;	
-	//cur_pos.angle = goal_pos.angle;
-	//LOG(INFO) << "[POS] cur_pos.angle corrected to: " << goal_pos.angle;
-
-	LOG(INFO) << "[POS] 4: left_enc: " << mcom->getEncL() << " right_enc: " << mcom->getEncR();
-
-	readEncoders();
-	updateAngle();
-	LOG(INFO) << "[POS] actual rotation: Goal=" << goal_pos.angle << " cur_pos: " << cur_pos.angle << " Compass: " << compass.angle;	
+	long left_enc_complete = mcom->getEncL();
+	long right_enc_complete = mcom->getEncR();
+	float angle_complete = cur_pos.angle;
 
 	usleep(100000);
 	readEncoders();
-	updateAngle();
-	LOG(INFO) << "[POS] actual rotation: Goal=" << goal_pos.angle << " cur_pos: " << cur_pos.angle << " Compass: " << compass.angle;	
+	long left_enc_final = left_encoder.total;
+	long right_enc_final = right_encoder.total;
 
+	updateAngle();
+	float angle_final = cur_pos.angle;
+
+
+	PRINTLINE("ROTATION completed: " << angle_start << " -> " << goal_pos.angle ".  Distance rotated: " << turned);
+	printf("                   | %5s | %6s| %5s | %5s | %s |\n", "angle", "remain", "perc ", "encL ", "encR ")
+	printf("%0*s\n", 50, -);
+	printf(" rotation    start | %5f | %5f | %4f%% | %5d | %5d |\n", angle_start, shortestRotation(angle_start, goal_pos.angle) ,perc(angle_start, angle_start, goal_pos.angle()), left_enc_start, right_enc_start);
+	printf(" rotation complete | %5f | %5f | %4f%% | %5d | %5d |\n", angle_complete, shortestRotation(angle_complete, goal_pos.angle), perc(angle_start, angle_complete, goal_pos.angle()), left_enc_complete, right_enc_complete);
+	printf(" rotation    final | %5f | %5f | %4f%% | %5d | %5d |\n", angle_final, shortestRotation(angle_final, goal_pos.angle), perc(angle_start, angle_final, goal_pos.angle()), left_enc_final, right_enc_final);
+	printf("%0*s\n", 50, -);
 }
 
+
+float PosControl::perc(float s, a, float g) {
+	float total = shortestRotation(s, a);
+	float remaining = shortestRotation(a, g);
+	return (total/100) * remaining;
+}
 
 //should compare with compass
 //should attempt to match speed to hit target exactly
@@ -309,6 +317,10 @@ float PosControl::updateAngle() {
 		cur_pos.angle += 360.0;
 	}
 	return turned;
+}
+
+
+void PosControl::crawlToRotation() {
 }
 
 
