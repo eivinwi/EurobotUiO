@@ -246,7 +246,7 @@ void PosControl::rotationLoop() {
 		readEncoders();
 		float turned_now = updateAngle();
 		turned += fabs(turned_now);
-		LOG(INFO) << "[POS] rotating:  (" << turned << " / " << total_rotation << ")   angle: " 
+		LOG_EVERY_N(5, INFO) << "[POS] rotating:  (" << turned << " / " << total_rotation << ")   angle: " 
 				<< cur_pos.angle << " goal: " << goal_pos.angle << "  error: " << angle_err << "  this: " << turned_now;
 	}
 	halt();
@@ -262,14 +262,13 @@ void PosControl::rotationLoop() {
 	updateAngle();
 	float angle_final = cur_pos.angle;
 
-
 	PRINTLINE("ROTATION completed: " << angle_start << " -> " << goal_pos.angle << ".  Distance rotated: " << turned);
 	printf("                   | %5s | %6s| %5s | %5s | %s |\n", "angle", "remain", "perc ", "encL ", "encR ");
-	printf("%0*c\n", 50, '-');
+	PRINTLINE("-----------------------------------------------------------------------------------------------------------------");
 	printf(" rotation    start | %5f | %5f | %4f%% | %5ld | %5ld |\n", angle_start, shortestRotation(angle_start, goal_pos.angle) ,perc(angle_start, angle_start, goal_pos.angle), left_enc_start, right_enc_start);
 	printf(" rotation complete | %5f | %5f | %4f%% | %5ld | %5ld |\n", angle_complete, shortestRotation(angle_complete, goal_pos.angle), perc(angle_start, angle_complete, goal_pos.angle), left_enc_complete, right_enc_complete);
 	printf(" rotation    final | %5f | %5f | %4f%% | %5ld | %5ld |\n", angle_final, shortestRotation(angle_final, goal_pos.angle), perc(angle_start, angle_final, goal_pos.angle), left_enc_final, right_enc_final);
-	printf("%0*c\n", 50, '-');
+	PRINTLINE("-----------------------------------------------------------------------------------------------------------------");
 }
 
 
@@ -343,6 +342,11 @@ void PosControl::positionLoop() {
 		LOG(INFO) << "[POS] already in goal: (" << cur_pos.x << ", " << cur_pos.y << ") ~= (" << goal_pos.x << ", " << goal_pos.y << ")";
 		return;
 	}
+	float x_start = cur_pos.x;
+	float y_start = cur_pos.y;
+	float angle_start = cur_pos.angle;
+	long left_enc_start = left_encoder.total;
+	long right_enc_start = right_encoder.total;
 
 	float dist_x = goal_pos.x - cur_pos.x; 
 	float dist_y = goal_pos.y - cur_pos.y;
@@ -397,10 +401,38 @@ void PosControl::positionLoop() {
 			<< right_encoder.speed << " )   traveled: " << traveled;
 		//TODO: check absolute position
 	} 
+	halt();
+	readEncoders();
+	updatePosition();
+	float x_complete = cur_pos.x;
+	float y_complete = cur_pos.y;
+	float angle_complete = cur_pos.angle;
+	long left_enc_complete = left_encoder.total;
+	long right_enc_complete = right_encoder.total;
 
-	usleep(10000);
+
 	LOG(INFO) << "[POS] position reached . Goal_pos=(" << goal_pos.x << "," << goal_pos.y << "," << goal_pos.angle << ") cur_pos=(" << cur_pos.x << "," << cur_pos.y << "," << cur_pos.angle << ")";	
+	usleep(100000);
+
+	readEncoders();
+	updatePosition();
+	float x_final = cur_pos.x;
+	float y_final = cur_pos.y;
+	float angle_final = cur_pos.angle;
+	long left_enc_final = left_encoder.total;
+	long right_enc_final = right_encoder.total;
+
+
+
+	PRINTLINE("POSITION completed: (" << x_start << "," << y_start << ") -> (" << goal_pos.x << "," << goal_pos.y << ").  Distance traveled: " << dist_traveled);
+	printf("                   | %11s | %11s | %5s | %5s | %5s |\n", "x(compl)", " y(compl)", "angle", "encL ", "encR ");
+	PRINTLINE("-----------------------------------------------------------------------------------------------------------------");
+	printf("position    start | %5f (%3f%%) | %5f (%3f%%) | %4f  | %5ld | %5ld | \n", x_start, perc(x_start, x_start, goal_pos.x), y_start, perc(y_start, y_start, goal_pos.y), angle_start, left_enc_start, right_enc_start);
+	printf("position complete | %5f (%3f%%) | %5f (%3f%%) | %4f  | %5ld | %5ld | \n", x_complete, perc(x_complete, x_complete, goal_pos.x), y_complete, perc(y_complete, y_complete, goal_pos.y), angle_complete, left_enc_complete, right_enc_complete);
+	printf("position    final | %5f (%3f%%) | %5f (%3f%%) | %4f  | %5ld | %5ld | \n", x_final, perc(x_final, x_final, goal_pos.x), y_final, perc(y_final, y_final, goal_pos.y), angle_final, left_enc_final, right_enc_final);
+	PRINTLINE("-----------------------------------------------------------------------------------------------------------------");
 }
+
 
 
 //angle has already been checked when this is called, assume 100% correct.
@@ -450,7 +482,6 @@ void PosControl::setRotationSpeed(float angle_err) {
 
 
 	if(angle_err > 0) {
-		PRINTLINE("CW");
 		if(angle_err > Slowdown.max_rot) {
 			setSpeeds(Speed.pos_med, Speed.neg_med);
 		} else if(angle_err > Slowdown.med_rot) {
@@ -461,7 +492,6 @@ void PosControl::setRotationSpeed(float angle_err) {
 	}
 
 	else if(angle_err < 0) {
-		PRINTLINE("CCW");
 		if(angle_err < -Slowdown.max_rot) {
 			setSpeeds(Speed.neg_med, Speed.pos_med);
 		} else if(angle_err < -Slowdown.med_rot) {
@@ -532,9 +562,6 @@ float PosControl::shortestRotation(float angle, float goal) {
 	float dist_cw = (goal >= angle)? (goal - angle) : ((360 - angle) + goal);
 	float dist_ccw = (goal >= angle)? (-angle - (360 - goal)) : (angle - goal);
 	if(dist_ccw > 0) dist_ccw /= -1;
-
-
-	LOG(INFO) << "angle= " << angle << " goal= " << goal << " dist_cw=" << dist_cw << " dist_ccw=" << dist_ccw << "   ret: " << ((abs(dist_ccw) <= abs(dist_cw))? dist_ccw : dist_cw);
 	return (abs(dist_ccw) <= abs(dist_cw))? dist_ccw : dist_cw;
 }
 //positive = CW
