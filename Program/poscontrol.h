@@ -122,19 +122,20 @@ private:
 
 
 	struct speed{
-		int neg_fast = 225; //235, 255
-		int neg_med = 192;
-		int neg_slow = 150;
+		int pos_fast = 225; //235, 255
+		int pos_med = 192;
+		int pos_slow = 150;
 		int stop = 128;
-		int pos_slow = 106;
-		int pos_med = 64;
-		int pos_fast = 30; //20, 0
+		int neg_slow = 106;
+		int neg_med = 64;
+		int neg_fast = 30; //20, 0
 	} Speed;
 
 	struct slowdown{
 		int max_dist = 120;
 		int med_dist = 60;
-		int rotation = 10;
+		int max_rot = 30;
+		int med_rot = 15;
 	} Slowdown;
 
 
@@ -147,7 +148,7 @@ private:
 	} Enc;
 
 	struct closeenough{
-		float rotation = 1.0;
+		float rotation = 2.0;
 		float position = 2.0;
 	} CloseEnough;
 

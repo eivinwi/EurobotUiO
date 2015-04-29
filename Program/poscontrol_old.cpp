@@ -231,7 +231,7 @@ void PosControl::rotationLoop() {
 
 	float turned = 0.0;
 
-	while(abs(turned) < (abs(total_rotation) - CloseEnough.rotation)) {
+	while(abs(turned) < (abs(total_rotation) - 2.5)) {
 		//float compass_err = shortestRotation(compass.angle, goal_pos.angle);
 		//logic to compare angle_err to compass_err
 		usleep(5000);
@@ -298,8 +298,8 @@ float PosControl::updateAngle() {
 
 	//average out compass and odometry??
 
-	//diffL positive means CW 
-	float turned = (diffL > 0)? (enc_avg/Enc.per_degree) : -(enc_avg/Enc.per_degree);
+	float turned = (diffL > 0)? -(enc_avg/Enc.per_degree) : (enc_avg/Enc.per_degree);
+
 
 	cur_pos.angle += turned;
 	if(cur_pos.angle >= 360.0) {
@@ -391,6 +391,7 @@ void PosControl::positionLoop() {
 }
 
 
+//TOCHANGE
 //angle has already been checked when this is called, assume 100% correct.
 float PosControl::updatePosition() {
 	long diff = abs(left_encoder.diff_dist - right_encoder.diff_dist);
@@ -411,6 +412,7 @@ float PosControl::updatePosition() {
 }
 
 
+//TOCHANGE
 float PosControl::updatePositionReverse() {
 	long diff = abs(left_encoder.diff_dist - right_encoder.diff_dist);
 
@@ -431,38 +433,35 @@ float PosControl::updatePositionReverse() {
 
 
 //TODO: dynamically change speeds according to distance left. Start off slow
-void PosControl::setRotationSpeed(float angle_err) {
-	//positive = CW
-	// CW = left_pos + right_neg
-	// CCW = left_neg + right_pos
+void PosControl::setRotationSpeed(float a_err) {
+	int angle_err = int(a_err);
 
-
-	if(angle_err > 0) {
-		PRINTLINE("CW");
-		if(angle_err > Slowdown.max_rot) {
-			setSpeeds(Speed.pos_med, Speed.neg_med);
-		} else if(angle_err > Slowdown.med_rot) {
-			setSpeeds(Speed.pos_med, Speed.neg_med);		
-		} else {
-			setSpeeds(Speed.pos_slow, Speed.neg_slow);
-		}
+	if(angle_err > Slowdown.max_dist) {
+		setSpeeds(Speed.pos_med, Speed.neg_med);
+	} else if(angle_err > Slowdown.med_dist) {
+		setSpeeds(Speed.pos_med, Speed.neg_med);		
 	}
-
+	else if(angle_err > 0) {
+		setSpeeds(Speed.pos_slow, Speed.neg_slow);
+	}
+	else if(angle_err < -Slowdown.max_dist) {
+		setSpeeds(Speed.neg_med, Speed.pos_med);
+	} 
+	else if(angle_err < -Slowdown.med_dist) {
+		setSpeeds(Speed.neg_med, Speed.pos_med);		
+	}
 	else if(angle_err < 0) {
-		PRINTLINE("CCW");
-		if(angle_err < -Slowdown.max_rot) {
-			setSpeeds(Speed.neg_med, Speed.pos_med);
-		} else if(angle_err < -Slowdown.med_rot) {
-			setSpeeds(Speed.neg_med, Speed.pos_med);		
-		} else {
-			setSpeeds(Speed.neg_slow, Speed.pos_slow);
-		} 
-	}
-
-
+		setSpeeds(Speed.neg_slow, Speed.pos_slow);
+	} 
 	else {	
 		setSpeeds(Speed.stop, Speed.stop);
 	}
+	/*if(a_err > 0.0) {
+		setSpeeds(Speed.pos_med, Speed.neg_med);
+	}
+	else {
+		setSpeeds(Speed.neg_med, Speed.pos_med);
+	}*/
 }
 
 
@@ -514,24 +513,18 @@ void PosControl::setSpeeds(int l, int r) {
 	prev = now;
 }
 
-
 //TOCHANGE slightly
 float PosControl::shortestRotation(float angle, float goal) {
-	float dist_cw = (goal >= angle)? (goal - angle) : ((360 - angle) + goal);
-	float dist_ccw = (goal >= angle)? (-angle - (360 - goal)) : (angle - goal);
-	if(dist_ccw > 0) dist_ccw /= -1;
-
-
-	LOG(INFO) << "angle= " << angle << " goal= " << goal << " dist_cw=" << dist_cw << " dist_ccw=" << dist_ccw << "   ret: " << ((abs(dist_ccw) <= abs(dist_cw))? dist_ccw : dist_cw);
-	return (abs(dist_ccw) <= abs(dist_cw))? dist_ccw : dist_cw;
+	float dist_left = (goal >= angle)? (goal - angle) : ((360 - angle) + goal);
+	float dist_right = (goal >= angle)? -(angle + (360-goal)) : (goal - angle); 
+	return (abs(dist_left) <= abs(dist_right))? dist_left : dist_right;
 }
-//positive = CW
-//negative = CCW
+
 
 //encoders are opposite? but still okay
 void PosControl::readEncoders() {
-	long left_enc = 0;
-	long right_enc = 0;
+	long left_enc = 0;//= mcom->getEncL();
+	long right_enc = 0; //= mcom->getEncR();
 	auto t =  mcom->getEncoders();
 	left_enc = std::get<0>(t);
 	right_enc = std::get<1>(t);
@@ -713,10 +706,10 @@ void PosControl::readConfig(std::string filename) {
 	Speed.neg_fast = config["SPEED_MAX_NEG"].as<int>();
 	Speed.stop = config["SPEED_STOP"].as<int>();
 
+
 	Slowdown.max_dist = config["SLOWDOWN_MAX_DIST"].as<int>();
 	Slowdown.med_dist = config["SLOWDOWN_MED_DIST"].as<int>();
-	Slowdown.max_rot = config["SLOWDOWN_MAX_ROT"].as<int>();
-	Slowdown.med_rot = config["SLOWDOWN_MED_ROT"].as<int>();
+	Slowdown.rotation = config["SLOWDOWN_DISTANCE_ROT"].as<int>();
 
 	CloseEnough.rotation = 	config["ROTATION_CLOSE_ENOUGH"].as<float>();
 	CloseEnough.position = config["POSITION_CLOSE_ENOUGH"].as<float>();
