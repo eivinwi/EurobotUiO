@@ -235,6 +235,7 @@ void PosControl::rotationLoop() {
 	long right_enc_start = right_encoder.total;
 	float angle_start = cur_pos.angle;
 
+	int no_result = 0;
 	while(abs(turned) < (abs(total_rotation) - CloseEnough.rotation)) {
 		//float compass_err = shortestRotation(compass.angle, goal_pos.angle);
 		//TODO: logic to compare angle_err to compass_err
@@ -245,6 +246,13 @@ void PosControl::rotationLoop() {
 
 		readEncoders();
 		float turned_now = updateAngle();
+
+		no_result = (turned_now == 0)? no_result+1 : 0;
+		if(no_result > NO_ENCODER_ABORT) {
+			LOG(WARNING) << " no encoder-result for " << no_result*5000 << "ms. Completing movement at current pos: (" << cur_pos.x << ", " << cur_pos.y << ", " << cur_pos.angle << ")";
+			break;
+		}
+
 		turned += fabs(turned_now);
 		LOG_EVERY_N(5, INFO) << "[POS] rotating:  (" << turned << " / " << total_rotation << ")   angle: " 
 				<< cur_pos.angle << " goal: " << goal_pos.angle << "  error: " << angle_err << "  this: " << turned_now;
@@ -265,9 +273,9 @@ void PosControl::rotationLoop() {
 	PRINTLINE("ROTATION completed: " << angle_start << " -> " << goal_pos.angle << ".  Distance rotated: " << turned);
 	printf("                   | %5s | %6s| %5s | %5s | %s |\n", "angle", "remain", "perc ", "encL ", "encR ");
 	PRINTLINE("-----------------------------------------------------------------------------------------------------------------");
-	printf(" rotation    start | %5f | %5f | %4f%% | %5ld | %5ld |\n", angle_start, shortestRotation(angle_start, goal_pos.angle) ,perc(angle_start, angle_start, goal_pos.angle), left_enc_start, right_enc_start);
-	printf(" rotation complete | %5f | %5f | %4f%% | %5ld | %5ld |\n", angle_complete, shortestRotation(angle_complete, goal_pos.angle), perc(angle_start, angle_complete, goal_pos.angle), left_enc_complete, right_enc_complete);
-	printf(" rotation    final | %5f | %5f | %4f%% | %5ld | %5ld |\n", angle_final, shortestRotation(angle_final, goal_pos.angle), perc(angle_start, angle_final, goal_pos.angle), left_enc_final, right_enc_final);
+	printf(" rotation    start | %.3f | %.3f | %.2f%% | %5ld | %5ld |\n", angle_start, shortestRotation(angle_start, goal_pos.angle) ,perc(angle_start, angle_start, goal_pos.angle), left_enc_start, right_enc_start);
+	printf(" rotation complete | %.3f | %.3f | %.2f%% | %5ld | %5ld |\n", angle_complete, shortestRotation(angle_complete, goal_pos.angle), perc(angle_start, angle_complete, goal_pos.angle), left_enc_complete, right_enc_complete);
+	printf(" rotation    final | %.3f | %.3f | %.2f%% | %5ld | %5ld |\n", angle_final, shortestRotation(angle_final, goal_pos.angle), perc(angle_start, angle_final, goal_pos.angle), left_enc_final, right_enc_final);
 	PRINTLINE("-----------------------------------------------------------------------------------------------------------------");
 }
 
@@ -363,6 +371,7 @@ void PosControl::positionLoop() {
 	float straight = 0.0;
 	float dist_traveled = 0.0;
 
+	int no_result = 0;
 	while(dist_traveled < total_dist) {
 		dist_x = goal_pos.x - cur_pos.x;
 		dist_y = goal_pos.y - cur_pos.y;
@@ -371,6 +380,7 @@ void PosControl::positionLoop() {
 		//find vector towards target
 		angle = atan2(dist_y, dist_x) *(180/M_PI);
 		if(angle < 0) angle += 360;
+
 
 		//TODO: check with compass
 		//		define angle max offset
@@ -389,6 +399,13 @@ void PosControl::positionLoop() {
 
 		readEncoders();
 		float traveled = updatePosition();
+		no_result = (traveled == 0)? no_result+1 : 0;
+		if(no_result > NO_ENCODER_ABORT) {
+			LOG(WARNING) << " no encoder-result for " << no_result*5000 << "ms. Completing movement at current pos: (" << cur_pos.x << ", " << cur_pos.y << ", " << cur_pos.angle << ")";
+			break;
+		}
+
+
 		if(traveled < 0) {
 			PRINTLINE("NEGATIVE!!!!");
 			traveled = abs(traveled);
@@ -425,11 +442,11 @@ void PosControl::positionLoop() {
 
 
 	PRINTLINE("POSITION completed: (" << x_start << "," << y_start << ") -> (" << goal_pos.x << "," << goal_pos.y << ").  Distance traveled: " << dist_traveled);
-	printf("                   | %11s | %11s | %5s | %5s | %5s |\n", "x(compl)", " y(compl)", "angle", "encL ", "encR ");
+	printf("                  | %8s | %8s | %5s | %5s | %5s |\n", " x (complete)", " y (complete)", "angle", "encL ", "encR ");
 	PRINTLINE("-----------------------------------------------------------------------------------------------------------------");
-	printf("position    start | %5f (%3f%%) | %5f (%3f%%) | %4f  | %5ld | %5ld | \n", x_start, perc(x_start, x_start, goal_pos.x), y_start, perc(y_start, y_start, goal_pos.y), angle_start, left_enc_start, right_enc_start);
-	printf("position complete | %5f (%3f%%) | %5f (%3f%%) | %4f  | %5ld | %5ld | \n", x_complete, perc(x_complete, x_complete, goal_pos.x), y_complete, perc(y_complete, y_complete, goal_pos.y), angle_complete, left_enc_complete, right_enc_complete);
-	printf("position    final | %5f (%3f%%) | %5f (%3f%%) | %4f  | %5ld | %5ld | \n", x_final, perc(x_final, x_final, goal_pos.x), y_final, perc(y_final, y_final, goal_pos.y), angle_final, left_enc_final, right_enc_final);
+	printf("position    start | %.3f (%.2f%%) | %.3f (%.2f%%) | %.2f  | %5ld | %5ld | \n", x_start, perc(x_start, x_start, goal_pos.x), y_start, perc(y_start, y_start, goal_pos.y), angle_start, left_enc_start, right_enc_start);
+	printf("position complete | %.3f (%.2f%%) | %.3f (%.2f%%) | %.2f  | %5ld | %5ld | \n", x_complete, perc(x_complete, x_complete, goal_pos.x), y_complete, perc(y_complete, y_complete, goal_pos.y), angle_complete, left_enc_complete, right_enc_complete);
+	printf("position    final | %.3f (%.2f%%) | %.3f (%.2f%%) | %.2f  | %5ld | %5ld | \n", x_final, perc(x_final, x_final, goal_pos.x), y_final, perc(y_final, y_final, goal_pos.y), angle_final, left_enc_final, right_enc_final);
 	PRINTLINE("-----------------------------------------------------------------------------------------------------------------");
 }
 

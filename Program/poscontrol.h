@@ -157,6 +157,7 @@ private:
 	} CloseEnough;
 
 
+	int NO_ENCODER_ABORT = 500;
 
 };
 
