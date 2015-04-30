@@ -32,6 +32,7 @@
 //	- Overshoot protection
 
 struct encoder {
+	long e_0;
 	long prev;
 	long diff;
 	float diff_dist;
@@ -49,6 +50,11 @@ struct pos {
 	float y;
 	float angle;
 } cur_pos, goal_pos;
+
+float x_0, x_diff, goal_x;
+float y_0, y_diff, goal_y;
+float angle_0, angle_diff, goal_angle;
+
 
 struct comp {
 	float angle;
@@ -102,8 +108,8 @@ void PosControl::reset(int x, int y, int rot) {
 	right_encoder.total_dist = 0.0;
 	right_encoder.speed = 0.0;
 	
-	left_motor.speed = Speed.stop;
-	right_motor.speed = Speed.stop;
+	left_motor.speed = speed_stop;
+	right_motor.speed = speed_stop;
 
 	encoder_timestamp = std::chrono::high_resolution_clock::now();
 
@@ -263,28 +269,70 @@ void PosControl::rotationLoop() {
 	float angle_complete = cur_pos.angle;
 
 	usleep(100000);
-	readEncoders();
-	long left_enc_final = left_encoder.total;
-	long right_enc_final = right_encoder.total;
+	long left_enc_final = mcom->getEncL();
+	long right_enc_final = mcom->getEncR();
 
+	usleep(5000);
+	readEncoders();
 	updateAngle();
 	float angle_final = cur_pos.angle;
 
 	PRINTLINE("ROTATION completed: " << angle_start << " -> " << goal_pos.angle << ".  Distance rotated: " << turned);
-	printf("                   | %5s | %6s| %5s | %5s | %s |\n", "angle", "remain", "perc ", "encL ", "encR ");
+	printf("                   | %7s | %7s| %6s | %5s | %s |\n", "angle", "remain", "perc ", "encL ", "encR ");
 	PRINTLINE("-----------------------------------------------------------------------------------------------------------------");
-	printf(" rotation    start | %.3f | %.3f | %.2f%% | %5ld | %5ld |\n", angle_start, shortestRotation(angle_start, goal_pos.angle) ,perc(angle_start, angle_start, goal_pos.angle), left_enc_start, right_enc_start);
-	printf(" rotation complete | %.3f | %.3f | %.2f%% | %5ld | %5ld |\n", angle_complete, shortestRotation(angle_complete, goal_pos.angle), perc(angle_start, angle_complete, goal_pos.angle), left_enc_complete, right_enc_complete);
-	printf(" rotation    final | %.3f | %.3f | %.2f%% | %5ld | %5ld |\n", angle_final, shortestRotation(angle_final, goal_pos.angle), perc(angle_start, angle_final, goal_pos.angle), left_enc_final, right_enc_final);
+	printf(" rotation    start | %3.3f | %3.3f | %3.2f%% | %5ld | %5ld |\n", angle_start, shortestRotation(angle_start, goal_pos.angle) ,perc(angle_start, angle_start, goal_pos.angle), left_enc_start, right_enc_start);
+	printf(" rotation complete | %3.3f | %3.3f | %3.2f%% | %5ld | %5ld |\n", angle_complete, shortestRotation(angle_complete, goal_pos.angle), perc(angle_start, angle_complete, goal_pos.angle), left_enc_complete, right_enc_complete);
+	printf(" rotation    final | %3.3f | %3.3f | %3.2f%% | %5ld | %5ld |\n", angle_final, shortestRotation(angle_final, goal_pos.angle), perc(angle_start, angle_final, goal_pos.angle), left_enc_final, right_enc_final);
 	PRINTLINE("-----------------------------------------------------------------------------------------------------------------");
 }
 
 
 float PosControl::perc(float s, float a, float g) {
-	float total = shortestRotation(s, a);
-	float remaining = shortestRotation(a, g);
-	return (total/100) * remaining;
+	float total = fabs(shortestRotation(s, g));
+	float remaining = fabs(shortestRotation(a, g));
+	return (total == 0)? 100.0 : (total - remaining)/total * 100.0;
 }
+
+
+//should compare with compass
+//should attempt to match speed to hit target exactly
+/*float PosControl::updateAngle() {
+	long diffL = left_encoder.diff; 
+	long diffR = right_encoder.diff;
+  	// Average of encoders for reduced maximum-error
+
+  	long enc_avg = abs(abs(diffL) + abs(diffR))/2;
+	long enc_diff = abs(abs(diffL) - abs(diffR));
+
+	if(enc_diff > 100) {  //MAX_ENC_TURN_DIFF) {
+		LOG(INFO) << "[POS] encoder diff too large (" << enc_diff << "), checking compass";
+		//difference between encoders, scrap odometry and rely on compass
+		auto now = std::chrono::high_resolution_clock::now();
+		auto time_since_compass = std::chrono::duration<double, std::milli>(now - compass_timestamp).count();
+		if(time_since_compass < 2000) {
+			cur_pos.angle = compass.angle;
+			LOG(INFO) << "[POS] current angle set to compass angle: " << compass.angle;
+			return 0.0;
+		} 
+		else {
+			LOG(WARNING) << "[POS] encoders too high difference (" << diffL << " , " << diffR << ") and compass outdated (" << time_since_compass << " ms!!!)";
+		}
+	}
+
+	//average out compass and odometry??
+
+	//diffL positive means CW 
+	float turned = (diffL > 0)? (enc_avg/Enc.per_degree) : -(enc_avg/Enc.per_degree);
+
+	cur_pos.angle += turned;
+	if(cur_pos.angle >= 360.0) {
+		cur_pos.angle -= 360.0;
+	} 
+	else if(cur_pos.angle < 0.0) {
+		cur_pos.angle += 360.0;
+	}
+	return turned;
+}*/
 
 //should compare with compass
 //should attempt to match speed to hit target exactly
@@ -344,80 +392,59 @@ void PosControl::straightLoop() {
 }
 
 
-
+//TODO: check compass and/or absolute
 void PosControl::positionLoop() {
 	if(inGoal()) {
-		LOG(INFO) << "[POS] already in goal: (" << cur_pos.x << ", " << cur_pos.y << ") ~= (" << goal_pos.x << ", " << goal_pos.y << ")";
+		LOG(INFO) << "[POS] Already at specified goal position: (" << cur_pos.x << "," << cur_pos.y << ") ~= (" << goal_pos.x << "," << goal_pos.y << ")";
 		return;
 	}
-	float x_start = cur_pos.x;
-	float y_start = cur_pos.y;
-	float angle_start = cur_pos.angle;
-	long left_enc_start = left_encoder.total;
-	long right_enc_start = right_encoder.total;
+
+	x_0 = cur_pos.x;
+	y_0 = cur_pos.y;
+	angle_0 = cur_pos.angle;
+
+	x_diff = 0;
+	y_diff = 0;
+	angle_diff = 0;
+
+	readEncoders();
+	left_encoder.e_0 = left_encoder.total;
+	right_encoder.e_0 = right_encoder.total;
+
 
 	float dist_x = goal_pos.x - cur_pos.x; 
 	float dist_y = goal_pos.y - cur_pos.y;
 	float angle = atan2Adjusted(dist_x, dist_y); 
 	goal_pos.angle = angle;
 	float total_dist = distStraight(angle, dist_x, dist_y);
-
 	if(!angleCloseEnough()) {
 		rotationLoop();
 	} 
-	// float compass_angle = compass.angle;
-	// check if matching
+
 
 	float straight = 0.0;
-	float dist_traveled = 0.0;
+	float traveled = 0.0;
 
-	int no_result = 0;
-	while(dist_traveled < total_dist) {
-		dist_x = goal_pos.x - cur_pos.x;
-		dist_y = goal_pos.y - cur_pos.y;
-		straight = distStraight(angle, dist_x, dist_y);
+	//fortegn?
+	while( (total_dist - traveled) > CloseEnough.position ) {
+		cur_pos.x = x_0 + x_diff;
+		cur_pos.y = y_0 + y_diff;
+		//angle
 
-		//find vector towards target
-		angle = atan2(dist_y, dist_x) *(180/M_PI);
-		if(angle < 0) angle += 360;
+		straight = distStraight(angle, (goal_pos.x - cur_pos.x), (goal_pos.y - cur_pos.y));
+		PRINTLINE("x_0=" << x_0 << " x_diff" << x_diff << " y_0=" << y_0 << " y_diff=" << y_diff << " straight=" << straight);
+		PRINTLINE("total_dist=" << total_dist << " traveled=" << traveled);
 
+		setDriveSpeed(straight);
 
-		//TODO: check with compass
-		//		define angle max offset
-		if(abs(cur_pos.angle - angle) > 1) {
-			//attempt to calculate necessary speed differences
-			LOG(INFO) << "[POS] angle has drifted, attempting to compensate. (TODO)";
-
-			//find angle difference
-			//find distance left
-			//calculate speed difference to compensate angle over that distance
-		} else {
-			setDriveSpeed(straight);
-		}
-
-		usleep(5000); //needs tweaking
+		usleep(5000);
 
 		readEncoders();
-		float traveled = updatePosition();
-		no_result = (traveled == 0)? no_result+1 : 0;
-		if(no_result > NO_ENCODER_ABORT) {
-			LOG(WARNING) << " no encoder-result for " << no_result*5000 << "ms. Completing movement at current pos: (" << cur_pos.x << ", " << cur_pos.y << ", " << cur_pos.angle << ")";
-			break;
-		}
+		traveled = updatePosition();
 
+		LOG_EVERY_N(5, INFO) << "[POS] driving:  (" << traveled << "/" << total_dist << ") "; 
 
-		if(traveled < 0) {
-			PRINTLINE("NEGATIVE!!!!");
-			traveled = abs(traveled);
-		}
-		dist_traveled += traveled;
-
-		LOG_EVERY_N(5, INFO) << "[POS] driving:  (" << dist_traveled << "/" << total_dist 
-			<< ")  x=" << cur_pos.x << " y=" << cur_pos.y << " -> (" << goal_pos.x << ", " 
-			<< goal_pos.y << ").  Speed=(" << left_encoder.speed << ", " 
-			<< right_encoder.speed << " )   traveled: " << traveled;
-		//TODO: check absolute position
-	} 
+	}
 	halt();
 	readEncoders();
 	updatePosition();
@@ -426,28 +453,39 @@ void PosControl::positionLoop() {
 	float angle_complete = cur_pos.angle;
 	long left_enc_complete = left_encoder.total;
 	long right_enc_complete = right_encoder.total;
+	float distance_left_complete = (left_encoder.total - left_encoder.e_0) * Enc.constant;
+	float distance_right_complete = (right_encoder.total - right_encoder.e_0) * Enc.constant;
 
-
-	LOG(INFO) << "[POS] position reached . Goal_pos=(" << goal_pos.x << "," << goal_pos.y << "," << goal_pos.angle << ") cur_pos=(" << cur_pos.x << "," << cur_pos.y << "," << cur_pos.angle << ")";	
-	usleep(100000);
-
-	readEncoders();
-	updatePosition();
+	usleep(1000000);
 	float x_final = cur_pos.x;
 	float y_final = cur_pos.y;
 	float angle_final = cur_pos.angle;
 	long left_enc_final = left_encoder.total;
 	long right_enc_final = right_encoder.total;
+	float distance_left_final = (left_encoder.total - left_encoder.e_0) * Enc.constant;
+	float distance_right_final = (right_encoder.total - right_encoder.e_0) * Enc.constant;
 
 
+	PRINTLINE("POSITION completed: (" << x_0 << "," << y_0 << ") -> (" << goal_pos.x << "," << goal_pos.y << ").  Distance traveled: " << traveled);
 
-	PRINTLINE("POSITION completed: (" << x_start << "," << y_start << ") -> (" << goal_pos.x << "," << goal_pos.y << ").  Distance traveled: " << dist_traveled);
-	printf("                  | %8s | %8s | %5s | %5s | %5s |\n", " x (complete)", " y (complete)", "angle", "encL ", "encR ");
+	printf("       |   x_0  |  x_diff  |  0+d  | goal  | com(perc) | fin(perc) | \n");
 	PRINTLINE("-----------------------------------------------------------------------------------------------------------------");
-	printf("position    start | %.3f (%.2f%%) | %.3f (%.2f%%) | %.2f  | %5ld | %5ld | \n", x_start, perc(x_start, x_start, goal_pos.x), y_start, perc(y_start, y_start, goal_pos.y), angle_start, left_enc_start, right_enc_start);
-	printf("position complete | %.3f (%.2f%%) | %.3f (%.2f%%) | %.2f  | %5ld | %5ld | \n", x_complete, perc(x_complete, x_complete, goal_pos.x), y_complete, perc(y_complete, y_complete, goal_pos.y), angle_complete, left_enc_complete, right_enc_complete);
-	printf("position    final | %.3f (%.2f%%) | %.3f (%.2f%%) | %.2f  | %5ld | %5ld | \n", x_final, perc(x_final, x_final, goal_pos.x), y_final, perc(y_final, y_final, goal_pos.y), angle_final, left_enc_final, right_enc_final);
-	PRINTLINE("-----------------------------------------------------------------------------------------------------------------");
+	printf("x:     | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f(%3.3f) | %4.3f(%3.3f) \n", x_0, x_diff, x_0 + x_diff, goal_pos.x, x_complete, percPos(x_0, x_complete, goal_pos.x), x_final, percPos(x_0, x_final, goal_pos.x));
+	printf("y:     | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f(%3.3f) | %4.3f(%3.3f) \n\n", y_0, y_diff, y_0 + y_diff, goal_pos.y, y_complete, percPos(y_0, y_complete, goal_pos.y), y_final, percPos(y_0, y_final, goal_pos.y));
+
+	printf("left:  | %5ld | %5ld | %5ld | %5f \n", left_encoder.e_0, left_encoder.total, (left_encoder.total - left_encoder.e_0), (left_encoder.total - left_encoder.e_0)*Enc.constant);
+	printf("right: | %5ld | %5ld | %5ld | %5f \n", right_encoder.e_0, right_encoder.total, (right_encoder.total - right_encoder.e_0), (right_encoder.total - right_encoder.e_0)*Enc.constant);
+
+
+
+}
+
+
+
+float PosControl::percPos(float s, float c, float g) {
+	float total = (g - s);
+	float remaining = (g - c);
+	return (total == 0)? 100.0 : ((total - remaining)/total * 100.0);
 }
 
 
@@ -462,11 +500,17 @@ float PosControl::updatePosition() {
 	}
 
 	float angle = cur_pos.angle;
-	float avg_dist = (abs(left_encoder.diff_dist + right_encoder.diff_dist)) / 2;
-	float x_distance = cos_d(angle) * avg_dist; 
-	float y_distance = sin_d(angle) * avg_dist; 
-	cur_pos.x += (x_distance);// dir*x_distance );
-	cur_pos.y += (y_distance);// dir*y_distance );
+	float left_dist = (left_encoder.total - left_encoder.e_0) * Enc.constant;
+	float right_dist = (right_encoder.total - right_encoder.e_0) * Enc.constant;
+
+	float avg_dist = (fabs(left_dist) + fabs(right_dist)) / 2;
+	//negative??
+
+	x_diff = cos_d(angle) * avg_dist; 
+	y_diff = sin_d(angle) * avg_dist; 
+	
+	cur_pos.x = x_0 + x_diff;
+	cur_pos.y = y_0 + x_diff;
 
 	return avg_dist;
 }
@@ -500,51 +544,51 @@ void PosControl::setRotationSpeed(float angle_err) {
 
 	if(angle_err > 0) {
 		if(angle_err > Slowdown.max_rot) {
-			setSpeeds(Speed.pos_med, Speed.neg_med);
+			setSpeeds(speed_rot.pos_med, speed_rot.neg_med);
 		} else if(angle_err > Slowdown.med_rot) {
-			setSpeeds(Speed.pos_med, Speed.neg_med);		
+			setSpeeds(speed_rot.pos_med, speed_rot.neg_med);		
 		} else {
-			setSpeeds(Speed.pos_slow, Speed.neg_slow);
+			setSpeeds(speed_rot.pos_slow, speed_rot.neg_slow);
 		}
 	}
 
 	else if(angle_err < 0) {
 		if(angle_err < -Slowdown.max_rot) {
-			setSpeeds(Speed.neg_med, Speed.pos_med);
+			setSpeeds(speed_rot.neg_med, speed_rot.pos_med);
 		} else if(angle_err < -Slowdown.med_rot) {
-			setSpeeds(Speed.neg_med, Speed.pos_med);		
+			setSpeeds(speed_rot.neg_med, speed_rot.pos_med);		
 		} else {
-			setSpeeds(Speed.neg_slow, Speed.pos_slow);
+			setSpeeds(speed_rot.neg_slow, speed_rot.pos_slow);
 		} 
 	}
 
 
 	else {	
-		setSpeeds(Speed.stop, Speed.stop);
+		setSpeeds(speed_stop, speed_stop);
 	}
 }
 
 
 //TODO: dynamically change speeds according to distance left. Start off slow
 void PosControl::setDriveSpeed(float straight_dist) {
-	if(abs(straight_dist) > 200) {
-		setSpeeds(Speed.pos_fast, Speed.pos_fast);
+	if(straight_dist > 200) {
+		setSpeeds(speed_pos.pos_fast, speed_pos.pos_fast);
 	} 
-	else if(abs(straight_dist) > 100) {
-		setSpeeds(Speed.pos_med, Speed.pos_med);
+	else if(straight_dist > 100) {
+		setSpeeds(speed_pos.pos_med, speed_pos.pos_med);
 	} 
-	else if(abs(straight_dist) > 0) {
-		setSpeeds(Speed.pos_slow, Speed.pos_slow);
+	else if(straight_dist > 0) {
+		setSpeeds(speed_pos.pos_slow, speed_pos.pos_slow);
 	}
 	else if(straight_dist < -200) {
-		setSpeeds(Speed.neg_med, Speed.neg_med);
+		setSpeeds(speed_pos.neg_med, speed_pos.neg_med);
 	}
 	else if(straight_dist < 0) {
-		setSpeeds(Speed.neg_slow, Speed.neg_slow);
+		setSpeeds(speed_pos.neg_slow, speed_pos.neg_slow);
 	} 
 	else {
 		PRINTLINE("IN HERE");
-		setSpeeds(Speed.stop, Speed.stop);
+		setSpeeds(speed_stop, speed_stop);
 	}
 }
 
@@ -599,20 +643,22 @@ void PosControl::readEncoders() {
 	long left_diff = left_enc - left_encoder.prev;
 	long right_diff = right_enc - right_encoder.prev;
 
-	float left_diff_dist = left_diff * Enc.dist_per_tick;
-	float right_diff_dist = left_diff * Enc.dist_per_tick;
+	float left_diff_dist = left_diff * Enc.constant; //dist_per_tick;
+	float right_diff_dist = left_diff * Enc.constant; //dist_per_tick;
 
 	left_encoder.prev = left_enc;
 	left_encoder.diff = left_diff;
 	left_encoder.diff_dist = left_diff_dist;
 	left_encoder.speed = -left_diff_dist / timespan;
+	left_encoder.total += left_diff;
 
-//	LOG(INFO) << " prev= " << left_encoder.prev << " diff=" << left_encoder.diff << " dist=" << left_encoder.diff_dist;
+	//LOG(INFO) << " prev= " << left_encoder.prev << " diff=" << left_encoder.diff << " dist=" << left_encoder.diff_dist;
 
 	right_encoder.prev = right_enc;
 	right_encoder.diff = right_diff;
 	right_encoder.diff_dist = right_diff_dist;
 	right_encoder.speed = -right_diff_dist / timespan;
+	right_encoder.total += right_diff;
 
 	encoder_timestamp = now;
 }
@@ -694,7 +740,7 @@ bool PosControl::running() {
 
 
 void PosControl::halt() {
-	setSpeeds(Speed.stop, Speed.stop);
+	setSpeeds(speed_stop, speed_stop);
 }
 
 
@@ -729,11 +775,9 @@ float PosControl::atan2Adjusted(float x, float y) {
 
 
 float PosControl::atan2AdjustedReverse(float x, float y) {
-	float angle = atan2Adjusted(x, y);
-	angle += 180;
+	float angle = atan2Adjusted(x, y) + 180;
 	if(angle > 360) angle -= 360;
-	if(angle == 360) angle = 0;	
-	return angle;
+	return (angle == 360)? 0 : angle;
 }
 
 //speed in current heading in m/s
@@ -745,7 +789,7 @@ float PosControl::getSpeed() {
 		//negative means speed in opposite directions, i.e. rotation
 		return 0.0;
 	}
-	return (rs + ls) / 2;
+	return (ls + rs) / 2;
 }
 
 
@@ -760,29 +804,35 @@ void PosControl::readConfig(std::string filename) {
 		config = YAML::LoadFile("filename");		
 	}
 
+	speed_stop = config["speed_stop"].as<int>();
 
-	Speed.pos_slow = config["SPEED_SLOW_POS"].as<int>();
-	Speed.pos_med = config["SPEED_MED_POS"].as<int>();
-	Speed.pos_fast = config["SPEED_MAX_POS"].as<int>();
-	Speed.neg_slow = config["SPEED_SLOW_NEG"].as<int>();
-	Speed.neg_med = config["SPEED_MED_NEG"].as<int>();
-	Speed.neg_fast = config["SPEED_MAX_NEG"].as<int>();
-	Speed.stop = config["SPEED_STOP"].as<int>();
+	speed_rot.pos_slow = config["rot_speed_slow_pos"].as<int>();
+	speed_rot.pos_med = config["rot_speed_med_pos"].as<int>();
+	speed_rot.pos_fast = config["rot_speed_max_pos"].as<int>();
+	speed_rot.neg_slow = config["rot_speed_slow_neg"].as<int>();
+	speed_rot.neg_med = config["rot_speed_med_neg"].as<int>();
+	speed_rot.neg_fast = config["rot_speed_max_neg"].as<int>();
 
-	Slowdown.max_dist = config["SLOWDOWN_MAX_DIST"].as<int>();
-	Slowdown.med_dist = config["SLOWDOWN_MED_DIST"].as<int>();
-	Slowdown.max_rot = config["SLOWDOWN_MAX_ROT"].as<int>();
-	Slowdown.med_rot = config["SLOWDOWN_MED_ROT"].as<int>();
+	speed_pos.pos_slow = config["pos_speed_slow_pos"].as<int>();
+	speed_pos.pos_med = config["pos_speed_med_pos"].as<int>();
+	speed_pos.pos_fast = config["pos_speed_max_pos"].as<int>();
+	speed_pos.neg_slow = config["pos_speed_slow_neg"].as<int>();
+	speed_pos.neg_med = config["pos_speed_med_neg"].as<int>();
+	speed_pos.neg_fast = config["pos_speed_max_neg"].as<int>();
 
-	CloseEnough.rotation = 	config["ROTATION_CLOSE_ENOUGH"].as<float>();
-	CloseEnough.position = config["POSITION_CLOSE_ENOUGH"].as<float>();
+	Slowdown.max_dist = config["slowdown_max_dist"].as<int>();
+	Slowdown.med_dist = config["slowdown_med_dist"].as<int>();
+	Slowdown.max_rot = config["slowdown_max_rot"].as<int>();
+	Slowdown.med_rot = config["slowdown_med_rot"].as<int>();
 
-	Enc.max_incr = config["MAX_ENC_INCR"].as<int>();
-	Enc.max_diff = config["MAX_ENC_DIFF"].as<int>();
-	Enc.constant = config["ENCODER_CONSTANT"].as<float>();
-	Enc.dist_per_tick = config["DIST_PER_TICK"].as<float>();
-	Enc.per_degree = config["ENC_PER_DEGREE"].as<float>();
+	CloseEnough.rotation = 	config["rotation_close_enough"].as<float>();
+	CloseEnough.position = config["position_close_enough"].as<float>();
 
-	MAX_WAIT = config["MAX_WAIT"].as<int>();
+	Enc.max_incr = config["max_enc_incr"].as<int>();
+	Enc.max_diff = config["max_enc_diff"].as<int>();
+	Enc.constant = config["encoder_constant"].as<float>();
+	Enc.dist_per_tick = config["dist_per_tick"].as<float>();
+	Enc.per_degree = config["enc_per_degree"].as<float>();
 
+	MAX_WAIT = config["max_wait"].as<int>();
 }

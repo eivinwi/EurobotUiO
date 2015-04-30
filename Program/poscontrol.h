@@ -41,6 +41,7 @@
 #include <time.h>
 #include <vector>
 #include <fstream>
+#include <iomanip>
 #include "yaml-cpp/yaml.h"
 
 //state definitions for robot movement
@@ -104,7 +105,7 @@ public:
 	void readConfig(std::string filename);
 
 	float perc(float angle, float starting_angle, float goal);
-
+	float percPos(float s, float c, float g);
 
 private:	
 	MotorCom *mcom;
@@ -129,11 +130,12 @@ private:
 		int pos_fast = 225; //235, 255
 		int pos_med = 192;
 		int pos_slow = 150;
-		int stop = 128;
 		int neg_slow = 106;
 		int neg_med = 64;
 		int neg_fast = 30; //20, 0
-	} Speed;
+	} speed_rot, speed_pos;
+
+	int speed_stop = 128;
 
 	struct slowdown{
 		int max_dist = 120;

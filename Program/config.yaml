@@ -1,33 +1,42 @@
 ---
-SPEED_MAX_POS: 			225
-SPEED_MED_POS:			192
-SPEED_SLOW_POS:			140
-SPEED_STOP:				128
-SPEED_SLOW_NEG:			116
-SPEED_MED_NEG:			64
-SPEED_MAX_NEG:			30
+pos_speed_max_pos: 		235
+pos_speed_med_pos:		192
+pos_speed_slow_pos:		150
+pos_speed_slow_neg:		106
+pos_speed_med_neg:		64
+pos_speed_max_neg:		20
 
-SLOWDOWN_MAX_DIST:		120
-SLOWDOWN_MED_DIST:		60
-SLOWDOWN_MAX_ROT:		60
-SLOWDOWN_MED_ROT:		30
+rot_speed_max_pos: 		225
+rot_speed_med_pos:		192
+rot_speed_slow_pos:		140
+rot_speed_slow_neg:		116
+rot_speed_med_neg:		64
+rot_speed_max_neg:		30
 
-ROTATION_CLOSE_ENOUGH:	2.0
-POSITION_CLOSE_ENOUGH:	2.0
+speed_stop:				128
 
-MAX_ENC_INCR:			980
-MAX_ENC_DIFF:			440
-TOO_LONG:				20
+slowdown_max_dist:		60
+slowdown_med_dist:		30
+slowdown_max_rot:		60
+slowdown_med_rot:		30
 
-XRES:					30000
-YRES:					20000
+rotation_close_enough:	1.0
+position_close_enough:	5.0
 
-ENCODER_RESOLUTION:		980
-WHEELBASE:				300
-WHEEL_RADIUS: 			102
+max_enc_incr:			980
+max_enc_diff:			440
+too_long:				20
 
-ENCODER_CONSTANT:		0.327
-DIST_PER_TICK:			0.382
-ENC_PER_DEGREE: 		8.32
-MAX_WAIT:				2000
+xres:					30000
+yres:					20000
+
+encoder_resolution:		980
+wheelbase:				300
+wheel_radius: 			102
+
+encoder_constant:		0.327
+dist_per_tick:			0.382
+enc_per_degree: 		8.32
+slippage_constant: 		1.02
+max_wait:				2000
 ...
