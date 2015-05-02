@@ -17,10 +17,10 @@ speed_stop:				128
 
 slowdown_max_dist:		60
 slowdown_med_dist:		30
-slowdown_max_rot:		60
-slowdown_med_rot:		30
+slowdown_max_rot:		70
+slowdown_med_rot:		40
 
-rotation_close_enough:	0.5
+rotation_close_enough:	1.0
 position_close_enough:	5.0
 
 max_enc_incr:			980

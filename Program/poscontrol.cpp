@@ -228,64 +228,6 @@ void PosControl::controlLoop() {
 }
 
 
-/*
-void PosControl::rotationLoop() {
-	LOG(INFO) << "[POS]  rotation: " << cur_pos.angle << " -> " << goal_pos.angle;
-	float angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
-	float total_rotation = angle_err;
-
-	float turned = 0.0;
-
-	readEncoders();
-	long left_enc_start = left_encoder.total;
-	long right_enc_start = right_encoder.total;
-	float angle_start = cur_pos.angle;
-
-	int no_result = 0;
-	while(abs(turned) < (abs(total_rotation) - CloseEnough.rotation)) {
-		//float compass_err = shortestRotation(compass.angle, goal_pos.angle);
-		//TODO: logic to compare angle_err to compass_err
-		usleep(5000);
-
-		angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
-		setRotationSpeed(angle_err);
-
-		readEncoders();
-		float turned_now = updateAngle();
-
-		no_result = (turned_now == 0)? no_result+1 : 0;
-		if(no_result > NO_ENCODER_ABORT) {
-			LOG(WARNING) << " no encoder-result for " << no_result*5000 << "ms. Completing movement at current pos: (" << cur_pos.x << ", " << cur_pos.y << ", " << cur_pos.angle << ")";
-			break;
-		}
-
-		turned += fabs(turned_now);
-		LOG_EVERY_N(5, INFO) << "[POS] rotating:  (" << turned << " / " << total_rotation << ")   angle: " 
-				<< cur_pos.angle << " goal: " << goal_pos.angle << "  error: " << angle_err << "  this: " << turned_now;
-	}
-	halt();
-	long left_enc_complete = mcom->getEncL();
-	long right_enc_complete = mcom->getEncR();
-	float angle_complete = cur_pos.angle;
-
-	usleep(100000);
-	long left_enc_final = mcom->getEncL();
-	long right_enc_final = mcom->getEncR();
-
-	usleep(5000);
-	readEncoders();
-	updateAngle();
-	float angle_final = cur_pos.angle;
-
-	PRINTLINE("ROTATION completed: " << angle_start << " -> " << goal_pos.angle << ".  Distance rotated: " << turned);
-	printf("                   | %7s | %7s| %6s | %5s | %s |\n", "angle", "remain", "perc ", "encL ", "encR ");
-	PRINTLINE("-----------------------------------------------------------------------------------------------------------------");
-	printf(" rotation    start | %3.3f | %3.3f | %3.2f%% | %5ld | %5ld |\n", angle_start, shortestRotation(angle_start, goal_pos.angle) ,perc(angle_start, angle_start, goal_pos.angle), left_enc_start, right_enc_start);
-	printf(" rotation complete | %3.3f | %3.3f | %3.2f%% | %5ld | %5ld |\n", angle_complete, shortestRotation(angle_complete, goal_pos.angle), perc(angle_start, angle_complete, goal_pos.angle), left_enc_complete, right_enc_complete);
-	printf(" rotation    final | %3.3f | %3.3f | %3.2f%% | %5ld | %5ld |\n", angle_final, shortestRotation(angle_final, goal_pos.angle), perc(angle_start, angle_final, goal_pos.angle), left_enc_final, right_enc_final);
-	PRINTLINE("-----------------------------------------------------------------------------------------------------------------");
-}*/
-
 void PosControl::rotationLoop() {
 	LOG(INFO) << "[POS]  rotation: " << cur_pos.angle << " -> " << goal_pos.angle;
 
@@ -322,7 +264,7 @@ void PosControl::rotationLoop() {
 				<< cur_pos.angle << " goal: " << goal_pos.angle << "  error: " << angle_err;
 	}
 	halt();
-	LOG(INFO) << "Rotation completed: " << cur_pos.angle << " ~= " << goal_pos.angle << " distance turned: " << rotated;
+	LOG(INFO) << "\nRotation completed: " << cur_pos.angle << " ~= " << goal_pos.angle << " distance turned: " << rotated;
 
 	readEncoders();
 	updateAngle();
@@ -337,18 +279,21 @@ void PosControl::rotationLoop() {
 	long left_enc_final = left_encoder.total;
 	long right_enc_final = right_encoder.total;
 
-	printf("       	| angle_0 | a_diff |  0+d   | goal  |   com(perc)   |   fin(perc)   | \n");
- 	printf("angle:  | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f(%3.3f%%) | %4.3f(%3.3f%%) |\n\n", angle_0, angle_diff, (angle_0 + angle_diff), goal_pos.angle, angle_complete, percPos(angle_0, angle_complete, goal_pos.angle), angle_final, percPos(angle_0, angle_final, goal_pos.angle));
+	printf("       	| angle_0  |  a_diff  |   0+d    |   goal   |    completed    |     final     | \n");
+ 	printf("angle:  | %8.3f | %8.3f | %8.3f | %8.3f | %8.3f(%4.1f%%) | %8.3f(%4.1f%%) |\n\n", angle_0, angle_diff, (angle_0 + angle_diff), goal_pos.angle, angle_complete, percPos(angle_0, angle_complete, goal_pos.angle), angle_final, percPos(angle_0, angle_final, goal_pos.angle));
 
-	printf("       |  e_0  | compl |  final  | diff | dist | \n");
-	printf("left:  | %5ld | %5ld | %5ld | %5ld | %5f \n", left_encoder.e_0, left_enc_complete, left_enc_final, (left_encoder.total - left_encoder.e_0), (left_encoder.total - left_encoder.e_0) / Enc.per_degree);
-	printf("right: | %5ld | %5ld | %5ld | %5ld | %5f \n", right_encoder.e_0, right_enc_complete, right_enc_final, (right_encoder.total - right_encoder.e_0), (right_encoder.total - right_encoder.e_0) / Enc.per_degree);
+	printf("       |  e_0   | compl  |  final | diff | dist | \n");
+	printf("left:  | %6ld | %6ld | %6ld | %6ld | %6f \n", left_encoder.e_0, left_enc_complete, left_enc_final, (left_encoder.total - left_encoder.e_0), (left_encoder.total - left_encoder.e_0) / Enc.per_degree);
+	printf("right: | %6ld | %6ld | %6ld | %6ld | %6f \n\n", right_encoder.e_0, right_enc_complete, right_enc_final, (right_encoder.total - right_encoder.e_0), (right_encoder.total - right_encoder.e_0) / Enc.per_degree);
+
+
+
 
 //	if(shortestRotation(angle_final, goal_pos.angle)) {
 //		crawlToRotation();
 //	}
 
-	LOG(INFO) << " adjusting cur_pos from " << cur_pos.angle << " to " << goal_pos.angle;
+	LOG(INFO) << " adjusting cur_pos.angle from " << cur_pos.angle << " to " << goal_pos.angle;
 	cur_pos.angle = goal_pos.angle;
 }
 
@@ -378,12 +323,12 @@ void PosControl::crawlToRotation() {
 
 //dir negative means backwards. Else forwards
 void PosControl::straightLoop() {
-	float angle = cur_pos.angle;
 	float dist = goal_pos.x;
 
-	goal_pos.x = cur_pos.x + cos_d(angle) * dist;
-	goal_pos.y = cur_pos.y + sin_d(angle) * dist;
-	goal_pos.angle = angle;
+	goal_pos.x = cur_pos.x + ( cos_d(cur_pos.angle) * dist );
+	goal_pos.y = cur_pos.y + ( sin_d(cur_pos.angle) * dist );
+	PRINTLINE(cur_pos.y << " + (" << sin_d(cur_pos.angle) << " * " << dist << ") = " << goal_pos.y);
+	goal_pos.angle = cur_pos.angle;
 
 	positionLoop();
 }
@@ -400,37 +345,35 @@ void PosControl::positionLoop() {
 	y_0 = cur_pos.y;
 	angle_0 = cur_pos.angle;
 
-	x_diff = 0;
-	y_diff = 0;
-	angle_diff = 0;
-
-	readEncoders();
-	left_encoder.e_0 = left_encoder.total;
-	right_encoder.e_0 = right_encoder.total;
-
+	x_diff = 0.0;
+	y_diff = 0.0;
+	angle_diff = 0.0;
 
 	float dist_x = goal_pos.x - cur_pos.x; 
 	float dist_y = goal_pos.y - cur_pos.y;
 	float angle = atan2Adjusted(dist_x, dist_y); 
+
 	goal_pos.angle = angle;
-	float total_dist = distStraight(angle, dist_x, dist_y);
 	if(!angleCloseEnough()) {
 		rotationLoop();
 	} 
+	float total_dist = distStraight(angle, dist_x, dist_y);
 
 
 	float straight = 0.0;
 	float traveled = 0.0;
+	readEncoders();
+	left_encoder.e_0 = left_encoder.total;
+	right_encoder.e_0 = right_encoder.total;
 
-	//fortegn?
-	while( (total_dist - traveled) > CloseEnough.position ) {
+	while( fabs(total_dist - traveled) > CloseEnough.position ) {
 		cur_pos.x = x_0 + x_diff;
 		cur_pos.y = y_0 + y_diff;
 		//angle
 
 		straight = distStraight(angle, (goal_pos.x - cur_pos.x), (goal_pos.y - cur_pos.y));
-		PRINTLINE("x_0=" << x_0 << " x_diff" << x_diff << " y_0=" << y_0 << " y_diff=" << y_diff << " straight=" << straight);
-		PRINTLINE("total_dist=" << total_dist << " traveled=" << traveled);
+	//	PRINTLINE("x_0=" << x_0 << " x_diff" << x_diff << " y_0=" << y_0 << " y_diff=" << y_diff << " straight=" << straight);
+	//	PRINTLINE("total_dist=" << total_dist << " traveled=" << traveled);
 
 		setDriveSpeed(straight);
 
@@ -463,17 +406,17 @@ void PosControl::positionLoop() {
 //	float distance_right_final = (right_encoder.total - right_encoder.e_0) * Enc.constant;
 
 
-	PRINTLINE("POSITION completed: (" << x_0 << "," << y_0 << ") -> (" << goal_pos.x << "," << goal_pos.y << ").  Distance traveled: " << traveled);
+	PRINTLINE("\nPOSITION completed: (" << x_0 << "," << y_0 << ") -> (" << goal_pos.x << "," << goal_pos.y << ").  Distance traveled: " << traveled);
 
 	printf("       |   x_0  |  x_diff  |  0+d  | goal  | com(perc) | fin(perc) | \n");
 	PRINTLINE("-----------------------------------------------------------------------------------------------------------------");
-	printf("x:     | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f(%3.3f) | %4.3f(%3.3f) \n", x_0, x_diff, x_0 + x_diff, goal_pos.x, x_complete, percPos(x_0, x_complete, goal_pos.x), x_final, percPos(x_0, x_final, goal_pos.x));
-	printf("y:     | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f(%3.3f) | %4.3f(%3.3f) \n\n", y_0, y_diff, y_0 + y_diff, goal_pos.y, y_complete, percPos(y_0, y_complete, goal_pos.y), y_final, percPos(y_0, y_final, goal_pos.y));
+	printf("x:     | %8.3f | %8.3f | %8.3f | %8.3f | %8.3f(%3.3f) | %8.3f(%3.3f) \n", x_0, x_diff, x_0 + x_diff, goal_pos.x, x_complete, percPos(x_0, x_complete, goal_pos.x), x_final, percPos(x_0, x_final, goal_pos.x));
+	printf("y:     | %8.3f | %8.3f | %8.3f | %8.3f | %8.3f(%3.3f) | %8.3f(%3.3f) \n\n", y_0, y_diff, y_0 + y_diff, goal_pos.y, y_complete, percPos(y_0, y_complete, goal_pos.y), y_final, percPos(y_0, y_final, goal_pos.y));
 
 	printf("left:  | %5ld | %5ld | %5ld | %5f \n", left_encoder.e_0, left_encoder.total, (left_encoder.total - left_encoder.e_0), (left_encoder.total - left_encoder.e_0)*Enc.constant);
-	printf("right: | %5ld | %5ld | %5ld | %5f \n", right_encoder.e_0, right_encoder.total, (right_encoder.total - right_encoder.e_0), (right_encoder.total - right_encoder.e_0)*Enc.constant);
+	printf("right: | %5ld | %5ld | %5ld | %5f \n\n", right_encoder.e_0, right_encoder.total, (right_encoder.total - right_encoder.e_0), (right_encoder.total - right_encoder.e_0)*Enc.constant);
 
-
+	printf("avg: ");
 
 }
 
@@ -523,18 +466,16 @@ float PosControl::updatePosition() {
 		LOG(WARNING) << "[POS] large distance difference, probably spinning or hitting something.";
 	}
 
-	float angle = cur_pos.angle;
 	float left_dist = (left_encoder.total - left_encoder.e_0) * Enc.constant;
 	float right_dist = (right_encoder.total - right_encoder.e_0) * Enc.constant;
 
 	float avg_dist = (fabs(left_dist) + fabs(right_dist)) / 2;
-	//negative??
 
-	x_diff = cos_d(angle) * avg_dist; 
-	y_diff = sin_d(angle) * avg_dist; 
+	x_diff = cos_d(cur_pos.angle) * avg_dist; 
+	y_diff = sin_d(cur_pos.angle) * avg_dist; 
 	
 	cur_pos.x = x_0 + x_diff;
-	cur_pos.y = y_0 + x_diff;
+	cur_pos.y = y_0 + y_diff;
 
 	return avg_dist;
 }
@@ -695,9 +636,9 @@ float PosControl::distStraight(float angle, float x, float y) {
 	float straight = 0.0;
 
 	if(sin_a != 0) {
-		straight = y / sin_a;
+		straight = (y / sin_a);
 	} else if(cos_a != 0) {
-		straight = x / cos_a;
+		straight = (x / cos_a);
 	}
 	return straight;
 }
@@ -783,12 +724,15 @@ void PosControl::setCurrent(float x, float y, float angle) {
 
 
 float PosControl::sin_d(float angle) {
-	return sin(angle * M_PI/180);
+	float r = sin(angle * M_PI/180);
+	if(fabs(r) < 0.1) r = 0.0;
+	return (fabs(r) < 0.1)? 0.0 : r;
 }
 
 
 float PosControl::cos_d(float angle) {
-	return cos(angle * M_PI/180);
+	float r = cos(angle * M_PI/180);
+	return (fabs(r) < 0.1)? 0.0 : r;
 }
 
 

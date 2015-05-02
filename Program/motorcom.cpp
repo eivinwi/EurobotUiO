@@ -70,7 +70,7 @@ void MotorCom::setSpeedL(uint8_t speed) {
     sync();
     writeToSerial(SET_SPEEDL);
     writeToSerial(speed);
-    LOG(INFO) << "[MCOM] left_speed has been set to: " << int(speed);
+//    LOG(INFO) << "[MCOM] left_speed has been set to: " << int(speed);
 }
 
 
@@ -78,7 +78,7 @@ void MotorCom::setSpeedR(uint8_t speed) {
     sync();
     writeToSerial(SET_SPEEDR);
     writeToSerial(speed);
-    LOG(INFO) << "[MCOM] right_speed has been set to: " << int(speed);
+//    LOG(INFO) << "[MCOM] right_speed has been set to: " << int(speed);
 }
 
 
