@@ -29,7 +29,6 @@
 #include "motorcom.h"
 #include "dynacom.h"
 #include "printing.h"
-#include "config.h"
 #include <cassert>
 #include <condition_variable>
 #include <math.h>

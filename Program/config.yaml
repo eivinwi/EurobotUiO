@@ -36,7 +36,7 @@ wheel_radius: 			102
 
 encoder_constant:		0.327
 dist_per_tick:			0.382
-enc_per_degree: 		8.32
+enc_per_degree: 		8.0
 slippage_constant: 		1.02
 max_wait:				2000
 ...
