@@ -36,25 +36,31 @@ bool checkArguments(int argc, char *argv[]);
 // Used by the aiServer ZMQ-server thread.
 // Splits input from Client on delimiter, fills pos 2d-array with arguments.
 // Returns number of arguments
-int getArguments(std::string input, int *pos);
+//int getArguments(std::string input, int *pos);
+
+std::vector<int> getArguments(std::string input);
+
+
+
+bool enqueue(int num_args, std::vector<int> args);
 
 // Sends rotation-change to PosControl to be added to command-queue
-bool enqRotation(int num_args, int *args);
+//bool enqRotation(int num_args, int *args);
 
 // Sends position-change to PosControl to be added to command-queue. Dir is FORWARD or REVERSE
-bool enqPosition(int num_args, int *args, int dir);
+//bool enqPosition(int num_args, int *args, int dir);
 
 // Sends command to the robot to drive forward in current rotation.
-bool enqStraight(int num_args, int *args);
+//bool enqStraight(int num_args, int *args);
 
 // Sends action to PosControl to be added to command-queue
-bool enqAction(int num_args, int *args);
+//bool enqAction(int num_args, int *args);
 
 // Reset robot to intial configuration, then set position to the one provided
-bool resetRobot(int num_args, int *args);
+bool resetRobot(int num_args, std::vector<int> args);
 
 //TODO
-void playSound(int num_args, int *args);
+void playSound(int num_args, std::vector<int> args);
 
 // Test each part of the system after setup is completed, logs and print results.
 void testSystem();

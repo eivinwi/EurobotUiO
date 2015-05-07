@@ -3,7 +3,7 @@
 #define SET_FORWARD 2
 #define SET_ROTATION 3
 #define LIFT 4
-#define GRAB 5
+#define GRIPPER 5
 #define SHUTTER 6
 #define STRAIGHT 7
 #define HALT 8

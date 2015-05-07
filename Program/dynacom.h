@@ -36,34 +36,9 @@
 #include <atomic>
 #include <array>
 
-#define ACTION_DELAY 10000
+#define ACTION_DELAY 1000
 #define SERIAL_DELAY 500
 
-#define GRIP_ID 1
-#define LIFT_ID 2
-#define SHUTTER_LEFT_ID 4
-#define SHUTTER_RIGHT_ID 3
-
-#define OPEN_STATE 0
-#define CLOSED_STATE 1
-
-#define BOTTOM_STATE 0
-#define MIDDLE_STATE 1
-#define TOP_STATE 2
-
-#define INVALID_STATE 5
- 
-#define TOP_POS 20
-#define MIDDLE_POS 490
-#define BOTTOM_POS 980
-
-#define OPEN_POS 230
-#define CLOSED_POS 530
-
-#define SHUTTER_LEFT_OPEN_POS 500 //215
-#define SHUTTER_LEFT_CLOSED_POS 800 
-#define SHUTTER_RIGHT_OPEN_POS 523 //500 //808
-#define SHUTTER_RIGHT_CLOSED_POS 223
 
 
 class DynaCom {
@@ -77,30 +52,19 @@ public:
     // Toggle LED of servo "id"
     void toggleLed(int id);
 
-    void performAction(int arg);
+    void performAction(std::vector<int> arr);
 
-    int gripperPosition();
+    std::string getGripperPosition();
 
-    int liftPosition();
-
-    bool testLift();
     bool testGripper();
     bool testShutter();
 
 private:
     bool test(int id);
 
-    // Puts the grippers in open position
-    void openGrip();
-
-    // Puts the grippers in closed position
-    void closeGrip(); 
-
-    void liftUp();
-
-    void liftMiddle();
-
-    void liftDown();
+    void setLeftGripper(int pos);
+    void setRightGripper(int pos);
+    void setGrippers(int left_pos, int right_pos);
 
     void shutterOpenLeft();
     void shutterCloseLeft();

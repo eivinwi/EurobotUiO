@@ -48,69 +48,74 @@ void aiServer() {
         socket.recv (&request);
         std::string recv_str = std::string(static_cast<char*>(request.data()), request.size());
         std::string reply_str;
-        int args[4];
-        int num_args = getArguments(recv_str, args);
+        
+        std::vector<int> args = getArguments(recv_str);
+        int num_args = args.size();
 
-        LOG(DEBUG) << "[COM] input str(" << num_args << "): " << recv_str;
-        if(num_args < 1 || num_args > 4) {
+     //   LOG(DEBUG) << "[COM] input str(" << num_args << "): " << recv_str;
+        if(num_args < 1 || num_args > 5) {
             LOG(WARNING) << "[COM] invalid number arguments(" << num_args << "): " << recv_str;
             reply_str = "no";
         } 
         else {
             switch(args[0]) {
                 case REQUEST: 
-                    LOG(DEBUG) << "[COM] Recieved REQUEST";
+       //             LOG(DEBUG) << "[COM] Recieved REQUEST";
                     if(args[1] == 1) {
                         int id = p->getCurrentId();
                         reply_str = std::to_string(id);
-                        LOG(INFO) << "[COM] REQUEST ID, ret(" << reply_str.length() << "): " << reply_str;
+         //               LOG(INFO) << "[COM] REQUEST ID, ret(" << reply_str.length() << "): " << reply_str;
                     } else if(args[1] == 2) {
                         reply_str = p->getCurrentPos();
-                        LOG(INFO) << "[COM] REQUEST POS, ret(" << reply_str.length() << "): " << reply_str;
+          //              LOG(INFO) << "[COM] REQUEST POS, ret(" << reply_str.length() << "): " << reply_str;
                     } else if(args[1] == 4) {
                         //LIFT
                         reply_str = std::to_string(p->getLiftPos());
-                        LOG(INFO) << "[COM] REQUEST LIFT, ret(" << reply_str.length() << "): " << reply_str;
+           //             LOG(INFO) << "[COM] REQUEST LIFT, ret(" << reply_str.length() << "): " << reply_str;
                     }                    
                     break;
                 case SET_REVERSE: 
                     //LOG(INFO) << "[COM]  Received SET_REVERSE(id=" << args[1] << ", x=" << args[2] << ", y=" << args[3] << ")";
                     //enqPosition(num_args, args, REVERSE);
-                    LOG(WARNING) << "[COM] Recieved SET_REVERSE, but it is not yet implemented.";
+           //         LOG(WARNING) << "[COM] Recieved SET_REVERSE, but it is not yet implemented.";
                     reply_str = "ok";
                     break;             
                 case SET_FORWARD: 
-                    LOG(INFO) << "[COM]  Received SET_FORWARD(id=" << args[1] << ", x=" << args[2] << ", y=" << args[3] << ")";
-                    enqPosition(num_args, args, FORWARD);
+             //       LOG(INFO) << "[COM]  Received SET_FORWARD(id=" << args[1] << ", x=" << args[2] << ", y=" << args[3] << ")";
+                    enqueue(num_args, args); //, FORWARD);
                     reply_str = "ok";
                     break;
                 case SET_ROTATION: 
-                    LOG(INFO) << "[COM]  Received SET_ROTATION(id=" << args[1] << ", r=" << args[2] << ")";
-                    enqRotation(num_args, args);
+             //       LOG(INFO) << "[COM]  Received SET_ROTATION(id=" << args[1] << ", r=" << args[2] << ")";
+                    enqueue(num_args, args);
                     reply_str = "ok";
                     break;
                 case LIFT: 
-                    LOG(INFO) << "[COM]  Received LIFT";
-                    enqAction(num_args, args);
+              //      LOG(INFO) << "[COM]  Received LIFT";
+                    enqueue(num_args, args);
+                    reply_str = "ok";
+                    break;
+                case GRIPPER:
+                    enqueue(num_args, args);
                     reply_str = "ok";
                     break;
                 case SHUTTER: 
-                    LOG(INFO) << "[COM]  Received SHUTTER";
+             //       LOG(INFO) << "[COM]  Received SHUTTER";
                     //TODO
                     reply_str = "ok";
                     break;
                 case STRAIGHT:
-                    LOG(INFO) << "[COM]  Received STRAIGHT";
-                    enqStraight(num_args, args);
+              //      LOG(INFO) << "[COM]  Received STRAIGHT";
+                    enqueue(num_args, args);
                     reply_str = "ok";
                     break;
                 case HALT: 
-                    LOG(INFO) << "[COM] Recieved HALT";
+               //     LOG(INFO) << "[COM] Recieved HALT";
                     p->halt();
                     reply_str = "ok";
                     break;
                 case RESET: 
-                    LOG(INFO) << "[COM]  Received RESET";
+               //     LOG(INFO) << "[COM]  Received RESET";
                     resetRobot(num_args, args);
                     reply_str = "ok";
                     break;
@@ -119,7 +124,7 @@ void aiServer() {
                     reply_str = "ok";
                     break;
                 default:
-                    LOG(WARNING) << "[COM] invalid command: " << args[0];
+               //     LOG(WARNING) << "[COM] invalid command: " << args[0];
                     reply_str = "no";
                     break;
             }                
@@ -130,7 +135,7 @@ void aiServer() {
         memcpy ((void *) reply.data (), reply_str.c_str(), reply_str.length());
 
         usleep(20); //CHECK: necessary?
-        LOG(INFO) << "[COM] reply: " << std::string(static_cast<char*>(reply.data()), reply.size()) << ".";
+      //  LOG(INFO) << "[COM] reply: " << std::string(static_cast<char*>(reply.data()), reply.size()) << ".";
         socket.send (reply);
         usleep(100);
     }
@@ -192,11 +197,33 @@ void posClient() {
 }
 
 
+bool enqueue(int num_args, std::vector<int> args) {
+    std::vector<int> arr(num_args);
+    for(int i = 0; i < num_args; i++) {
+        arr[i] = args[i];
+    }
+
+    if(read_mutex.try_lock()) {
+        p->enqueue(arr);
+        read_mutex.unlock();
+        return true;
+    } 
+    else {
+        usleep(1000);
+        if(read_mutex.try_lock()) {
+            p->enqueue(arr);
+            read_mutex.unlock();
+            return true;
+        }
+    }
+    return false;
+}
+
 
 //attempts twice to lock mutex, write values, and unlock mutex
 //returns: true if successfully sent rotation to PosControl,
 //         false if not
-bool enqRotation(int num_args, int *args) {
+/*bool enqRotation(int num_args, int *args) {
     if(num_args != 3) {
         LOG(WARNING) << "[COM] Rotation: wrong number of arguments: " << num_args << "!=3";
     }
@@ -297,10 +324,10 @@ bool enqAction(int num_args, int *args) {
         LOG(WARNING) << "[COM] try_lock read_mutex unsuccessful";
     }
     return false;
-}
+}*/
 
 
-bool resetRobot(int num_args, int *args) {
+bool resetRobot(int num_args, std::vector<int> args) {
     if (num_args != 4) {
         LOG(WARNING) << "[COM] Action: wrong number of arguments: " << num_args << "!=3";        
     }
@@ -325,13 +352,13 @@ bool resetRobot(int num_args, int *args) {
 
 
 //TODO
-void playSound(int num_args, int *args) {
+void playSound(int num_args, std::vector<int> args) {
     if(num_args > 1) {
 
     }
 }
 
-
+/*
 int getArguments(std::string input, int *pos) {
     int i = 0;
     std::istringstream f(input);
@@ -342,7 +369,19 @@ int getArguments(std::string input, int *pos) {
 //        if(i > 4) break; //hack!! probably incorrect
     }
     return i;
+}*/
+
+
+std::vector<int> getArguments(std::string input) {
+    std::vector<int> args;
+    std::istringstream f(input);
+    std::string s;
+    while(getline(f, s, ',')) {
+        args.push_back(atoi(s.c_str()));
+    }
+    return args;    
 }
+
 
 
 bool checkArguments(int argc, char *argv[]) {
@@ -433,7 +472,6 @@ void testSystem() {
         printResult("[TEST] MotorCom: serial open", m->test());
     }
 
-    printResult("[TEST] DynaCom: lift online", d->testLift());
     printResult("[TEST] DynaCom: gripper online", d->testGripper());
 
     printResult("[TEST] PosControl active", p->test()); //poscontrol test

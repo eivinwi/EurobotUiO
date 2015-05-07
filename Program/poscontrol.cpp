@@ -88,6 +88,8 @@ PosControl::PosControl(MotorCom *m, DynaCom *d, bool test, std::string config_fi
 
 
 void PosControl::reset(int x, int y, int rot) {
+	LOG(INFO) << "[POS] RESET to: (" << x << "," << y << "," << rot << ")"; 
+
 	cur_pos.x = x;
 	cur_pos.y = y;
 	cur_pos.angle = rot;
@@ -135,7 +137,7 @@ bool PosControl::test() {
 	return true;
 }
 
-
+/*
 void PosControl::enqueue(int id, int x, int y, float rot, int arg, int type) {
 	Cmd cmd = {id, x, y, rot, arg, type};
 	std::lock_guard<std::mutex> lock(qMutex);	
@@ -143,10 +145,17 @@ void PosControl::enqueue(int id, int x, int y, float rot, int arg, int type) {
 	//TIMESTAMP("------- Sending notify");
 	notifier.notify_one();
 	//TIMESTAMP("------- Sent notify");
+}*/
+
+
+void PosControl::enqueue(std::vector<int> arr) {
+	std::lock_guard<std::mutex> lock(qMutex);
+	q.push(arr);
+	notifier.notify_one();
 }
 
 
-Cmd PosControl::dequeue() {
+std::vector<int> PosControl::dequeue() {
 	std::unique_lock<std::mutex> lock(qMutex);
 	//TIMESTAMP("------- Waiting");
 	while(q.empty()) {
@@ -155,7 +164,7 @@ Cmd PosControl::dequeue() {
 	}
 	//TIMESTAMP("------- outside loop");
 
-	Cmd cmd = q.front();
+	std::vector<int> cmd = q.front();
 	q.pop();
 	usleep(100);
 	return cmd;
@@ -163,7 +172,7 @@ Cmd PosControl::dequeue() {
 
 
 void PosControl::clearQueue() {
-	std::queue <Cmd> newQ;
+	std::queue <std::vector<int>> newQ;
 	q = newQ;
 }
 
@@ -175,55 +184,95 @@ void PosControl::clearQueue() {
 void PosControl::controlLoop() {
 	pos_running = true;
 	while(true) {
-		Cmd cmd = dequeue();
+		std::vector<int> cmd = dequeue();
 		working = true;
 
-		goal_pos.x = cmd.x;
-		goal_pos.y = cmd.y;
-		goal_pos.angle = cmd.rot;
-		LOG(INFO) << "[POS] thread <" << std::this_thread::get_id() << "> dequeued Cmd {"
-					<< cmd.id << "," << cmd.x << "," << cmd.y << "," << cmd.rot << "," << cmd.type << "}";
-		
-		if(!testing) {
-			if(cmd.type == ROTATION) {
-				rotationLoop();
-			} else if(cmd.type == FORWARD) {
-				positionLoop();
-			} else if(cmd.type == REVERSE) {
-				//straightLoop(-1);
-			} else if(cmd.type == STRAIGHT) {
-				straightLoop();
-			}
-			else if(cmd.type == LIFT) {
-				LOG(INFO) << "DynaCom action: " << cmd.argument;				
-				dcom->performAction(cmd.argument);
-			}
-			halt();
-			completeCurrent();
+		if(cmd.size() < 2) {
+			LOG(WARNING) << "[POS] dequeue invalid command";
 		} 
-		//CHECK: "testing"-functionality should perhaps be implemented in each of the Com's
-		else {
-			if(cmd.type == ROTATION) {
-				goal_pos.angle = cmd.rot;
-				cur_pos.angle = goal_pos.angle;
-			} else if(cmd.type == FORWARD) {
-				goal_pos.x = cmd.x;
-				goal_pos.y = cmd.y;
-				goal_pos.angle = atan2Adjusted(goal_pos.x - cur_pos.x, goal_pos.y - cur_pos.y);
-				setCurrent(goal_pos.x, goal_pos.y, goal_pos.angle);
-			} else if(cmd.type == REVERSE) {
-				//setCurrent(goal_pos.x, goal_pos.y, cur_pos.angle);
 
-			}
-			else if(cmd.type == STRAIGHT) {
-				setCurrent(goal_pos.x, goal_pos.y, cur_pos.angle);
+		else {
+			int args = cmd.size();
+			int type = cmd[0];
+
+			
+//			goal_pos.x = cmd.x;
+//			goal_pos.y = cmd.y;
+//			goal_pos.angle = cmd.rot;
+//			LOG(INFO) << "[POS] thread <" << std::this_thread::get_id() << "> dequeued Cmd {"
+//						<< cmd.id << "," << cmd.x << "," << cmd.y << "," << cmd.rot << "," << type << "}";
+
+			if(!testing) {
+				switch(type) {
+					case 0:
+						//reserved
+						break;
+					case 1:
+						//reverse, unused
+						//straightLoop(-cmd[2]);
+						break;
+					case 2:
+						LOG(INFO) << "[POS] starting action: forward (" << cmd[2] << "," << cmd[3] << ")";
+						goal_pos.x = cmd[2];
+						goal_pos.y = cmd[3];
+						positionLoop();
+						break;
+					case 3:
+						LOG(INFO) << "[POS] starting action: rotation (" << cmd[2];
+						goal_pos.angle = cmd[2];
+						rotationLoop();
+						break;
+					case 4:
+						//deprecated gripper,shutter,lift
+						dcom->performAction(cmd);
+						break;
+					case 5:
+						//gripper
+						dcom->performAction(cmd);
+						break;
+					case 6:
+						//reserved
+						break;					
+					case 7:
+						straightLoop(cmd[2]);
+						break;					
+					case 8:
+						halt();
+						break;
+					case 9:
+						if(args > 3) reset(cmd[1], cmd[2], cmd[3]);
+						break;
+					default:
+						LOG(WARNING) << "[POS] invalid command: " << type;
+						break;
+				}
+				halt();
+				completeCurrent();
 			} 
-			else if(cmd.type == LIFT) {
-				dcom->performAction(cmd.argument);
+			//CHECK: "testing"-functionality should perhaps be implemented in each of the Com's
+			else {
+				//TODO: switch case
+				if(type == ROTATION) {
+					goal_pos.angle = cmd[2];
+					cur_pos.angle = goal_pos.angle;
+				} else if(type == FORWARD) {
+					goal_pos.x = cmd[2];
+					goal_pos.y = cmd[3];
+					goal_pos.angle = atan2Adjusted(goal_pos.x - cur_pos.x, goal_pos.y - cur_pos.y);
+					setCurrent(goal_pos.x, goal_pos.y, goal_pos.angle);
+				} else if(type == REVERSE) {
+					//setCurrent(goal_pos.x, goal_pos.y, cur_pos.angle);
+				}
+				else if(type == STRAIGHT) {
+					setCurrent(cmd[2], cmd[3], cur_pos.angle);
+				} 
+				else if(type == LIFT) {
+					dcom->performAction(cmd);
+				}
+				completeCurrent();
 			}
-			completeCurrent();
+			//logTrace();
 		}
-		//logTrace();
 	}
 	pos_running = false;
 }
@@ -323,9 +372,7 @@ void PosControl::crawlToRotation() {
 
 
 //dir negative means backwards. Else forwards
-void PosControl::straightLoop() {
-	float dist = goal_pos.x;
-
+void PosControl::straightLoop(int dist) {
 	goal_pos.x = cur_pos.x + ( cos_d(cur_pos.angle) * dist );
 	goal_pos.y = cur_pos.y + ( sin_d(cur_pos.angle) * dist );
 	PRINTLINE(cur_pos.y << " + (" << sin_d(cur_pos.angle) << " * " << dist << ") = " << goal_pos.y);
@@ -384,7 +431,6 @@ void PosControl::positionLoop() {
 		traveled = updatePosition();
 
 		LOG_EVERY_N(5, INFO) << "[POS] driving:  (" << traveled << "/" << total_dist << ") "; 
-
 	}
 	halt();
 	readEncoders();
@@ -419,6 +465,8 @@ void PosControl::positionLoop() {
 
 	printf("avg: ");
 
+	cur_pos.x = goal_pos.x;
+	cur_pos.y = goal_pos.y;
 }
 
 float PosControl::percPos(float s, float c, float g) {
@@ -696,7 +744,7 @@ std::string PosControl::getState() {
 
 
 int PosControl::getLiftPos() {
-	return dcom->liftPosition();
+	return 0; //dcom->liftPosition();
 }
 
 

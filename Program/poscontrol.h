@@ -56,7 +56,6 @@
 //int curSpeedLeft, curSpeedRight;
 
 
-
 class PosControl {
 public:
 	PosControl(MotorCom* m, DynaCom* d, bool test, std::string config_file);
@@ -65,15 +64,18 @@ public:
 
 	void reset(int x, int y, int rot);
 	bool test();
-	void enqueue(int id, int x, int y, float rot, int arg, int type);
-	struct Cmd dequeue();
+//	void enqueue(int id, int x, int y, float rot, int arg, int type);
+//	template<std::size_t SIZE> 
+	void enqueue(std::vector<int> arr);
+
+	std::vector<int> dequeue();
 	void clearQueue();
 	void controlLoop();
 	void rotationLoop();
 	void crawlToRotation();
 	float updateAngle();
 	void setRotationSpeed(float angle_err);
-	void straightLoop();
+	void straightLoop(int dist);
 	void positionLoop();
 	float updatePosition();
 	float updatePositionReverse();
@@ -110,7 +112,8 @@ private:
 	MotorCom *mcom;
 	DynaCom *dcom;
 
-	std::queue <Cmd>q;
+	std::queue<std::vector<int>> q;
+
 	std::mutex qMutex;
 	std::condition_variable notifier;
 	std::string in;

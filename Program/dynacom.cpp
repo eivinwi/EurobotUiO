@@ -1,5 +1,5 @@
 /*
- *	File: liftcom.cpp
+ *	File: dynacom.cpp
  *	Author: Eivind Wikheim
  *
  *  DynaCom implements a interface controlling lift/gripper parts via an arduino, 
@@ -25,9 +25,31 @@
 
 #include "dynacom.h"
 
+struct shutter {
+    int ID;
+    int open;
+    int closed;
+} left_shutter, right_shutter;
+
+struct gripper {
+    int ID;
+    int speed;
+    int start;
+    int open;
+    int wide;
+    int straight;
+    int closed;
+    int goal;
+} left_gripper, right_gripper;
+
+
 DynaCom::DynaCom(std::string serial, bool sim_enabled) {
     serial_port = serial;
     simulating = sim_enabled;
+    left_gripper = {2, 145, 750, -100, -200, -300, -400, 750-100};
+	right_gripper = {1, 145, 280, 100, 200, 300, 400, 280+100};
+	left_shutter = {4, 500, 800};
+	right_shutter = {3, 523, 223};
 }
 
 
@@ -48,41 +70,74 @@ void DynaCom::startSerial() {
 	    LOG(INFO) << "[DYNA] 	 Starting serial at: " << serial_port;
 		port = new Serial(serial_port);
 	}
+	setSpeed(left_gripper.ID, left_gripper.speed);
+    setSpeed(right_gripper.ID, left_gripper.speed);
 }
 
 
 
-void DynaCom::performAction(int arg) {
-	switch(arg) {
-		case ACTION_LIFT_DOWN:
-			liftDown();
-			break;
-		case ACTION_LIFT_MIDDLE:
-			liftMiddle();
-			break;
-		case ACTION_LIFT_UP:
-			liftUp();
-			break;
-		case ACTION_GRIP_OPEN:
-			openGrip();
-			break;
-		case ACTION_GRIP_CLOSE:
-			closeGrip();
-			break;
-		case ACTION_SHUTTER_OPEN_L:
-			shutterOpenLeft();
-			break;
-		case ACTION_SHUTTER_CLOSE_L:
-			shutterCloseLeft();
-			break;
-		case ACTION_SHUTTER_OPEN_R:
-			shutterOpenRight();
-			break;
-		case ACTION_SHUTTER_CLOSE_R:
-			shutterCloseRight();
-			break;
-		default:
-			break;
+void DynaCom::performAction(std::vector<int> cmd) {
+	if(cmd.size() < 3) {
+		LOG(WARNING) << "[DYNA] invalid cmd, size=" << cmd.size();
+		return;
+	}
+	int type = cmd[0];
+	//int id = cmd[1];
+	int action = cmd[2];
+
+	LOG(INFO) << "[DYNA] performAction: " << cmd[0] << "," << cmd[1] << "," << cmd[2] << "," << cmd[3] << "," << cmd[4]; 
+
+	if( type == LIFT ) {
+		//deprecated
+		//shutter now
+		switch(action) {
+			case 0:
+				LOG(WARNING) << "[DYNA] lift_bottom, deprecated.";
+				break;
+			case 1:
+				LOG(WARNING) << "[DYNA] lift_mid, deprecated.";
+				break;
+			case 2:
+				LOG(WARNING) << "[DYNA] lift_top, deprecated.";
+				break;
+			case 3:
+				//gripper_open
+				LOG(WARNING) << "[DYNA] gripper_open, deprecated.";
+				break;
+			case 4:
+				LOG(WARNING) << "[DYNA] gripper_close, deprecated.";
+				break;
+			case 5:
+				shutterOpenLeft();
+				break;
+			case 6:
+				shutterCloseLeft();
+				break;
+			case 7:
+				shutterOpenRight();
+				break;
+			case 8:
+				shutterCloseRight();
+				break;
+			default:
+				break;
+		} 
+	} 
+	else if( type == GRIPPER ) {
+		switch(action) {
+			case 0:
+				if(cmd.size() > 3) {
+					setGrippers(cmd[3], cmd[4]);
+				}
+			case 1:
+				setLeftGripper(cmd[3]);
+				break;
+			case 2:
+				setRightGripper(cmd[3]);
+				break;
+			default:
+				break;
+		}
 	}
 }
 
@@ -94,103 +149,69 @@ void DynaCom::toggleLed(int id) {
 }
 
 
-int DynaCom::liftPosition() {
-	int pos = readPosition(LIFT_ID);
-	if((pos - TOP_POS) < 10) {
-		return TOP_STATE;
-	} 
-	else if((pos - MIDDLE_POS) < 10) {
-		return MIDDLE_STATE;
-	} 
-	else if((pos - BOTTOM_STATE) < 10) {
-		return BOTTOM_STATE;
+void DynaCom::setLeftGripper(int pos) {
+	PRINTLINE("setLeftGripper " << pos);
+	if( (pos < 400) && (pos >= 0) ) {
+		setPosition(left_gripper.ID, left_gripper.start - pos);
 	}
-	return INVALID_STATE;
 }
 
-
-int DynaCom::gripperPosition() {
-	int pos = readPosition(GRIP_ID);
-	if((pos - OPEN_POS) < 10 ) {
-		return OPEN_STATE;
-	} 
-	else if((pos - CLOSED_POS) < 10) {
-		return CLOSED_STATE;
-	} 
-	return INVALID_STATE;
+void DynaCom::setRightGripper(int pos) {
+	PRINTLINE("setRightGripper " << pos);
+	if( (pos < 400) && (pos >= 0) ) {
+		setPosition(right_gripper.ID, right_gripper.start + pos);	
+	}
 }
 
-
-void DynaCom::openGrip() {
-	LOG(INFO) << "[DYNA] openGrip";
-	setPosition(GRIP_ID, OPEN_POS);
+void DynaCom::setGrippers(int left_pos, int right_pos) {
+	setLeftGripper(left_pos);
+	setRightGripper(right_pos);
 } 
 
 
-void DynaCom::closeGrip() {
-	LOG(INFO) << "[DYNA] closeGrip";
-	setPosition(GRIP_ID, CLOSED_POS);
-}
+std::string DynaCom::getGripperPosition() {
+	int left = readPosition(left_gripper.ID);
+	int right = readPosition(right_gripper.ID);
 
+	int normalized_left = left_gripper.start - left;
+	int normalized_right = right_gripper.start + right;
 
-void DynaCom::liftUp() {
-	LOG(INFO) << "[DYNA] liftUp";
-	setPosition(LIFT_ID, TOP_POS);
-}
-
-
-void DynaCom::liftMiddle() {
-	LOG(INFO) << "[DYNA] liftMiddle";
-	setPosition(LIFT_ID, MIDDLE_POS);
-}
-
-
-//TODO: find correct position
-void DynaCom::liftDown() {
-	LOG(INFO) << "[DYNA] liftDown";
-	setPosition(LIFT_ID, BOTTOM_POS);
+	std::stringstream ss;
+	ss << normalized_left << "," << left_gripper.goal << "," << normalized_right << "," << right_gripper.goal;
+	return ss.str();
 }
 
 
 void DynaCom::shutterOpenLeft() {
-	LOG(INFO) << "[DYNA] openShutterLeft";
-	setPosition(SHUTTER_LEFT_ID, SHUTTER_LEFT_OPEN_POS);
+	setPosition(left_shutter.ID, left_shutter.open);
 }
 
 
 void DynaCom::shutterCloseLeft() {
-	LOG(INFO) << "[DYNA] closeShutterLeft";
-	setPosition(SHUTTER_LEFT_ID, SHUTTER_LEFT_CLOSED_POS);
+	setPosition(left_shutter.ID, left_shutter.closed);
 }
 
 
 void DynaCom::shutterOpenRight() {
-	LOG(INFO) << "[DYNA] openShutterRight";
-	setPosition(SHUTTER_RIGHT_ID, SHUTTER_RIGHT_OPEN_POS);
+	setPosition(right_shutter.ID, right_shutter.open);
 }
 
 
 void DynaCom::shutterCloseRight() {
-	LOG(INFO) << "[DYNA] closeShutterRight";
-	setPosition(SHUTTER_RIGHT_ID, SHUTTER_RIGHT_CLOSED_POS);
+	setPosition(right_shutter.ID, right_shutter.closed);
 }
 
-
-bool DynaCom::testLift() {
-	LOG(DEBUG) << "[DYNA] Testing lift";
-	return test(LIFT_ID);
-}
 
 
 bool DynaCom::testGripper() {
 	LOG(DEBUG) << "[DYNA] Testing gripper";
-	return test(GRIP_ID);
+	return test(left_gripper.ID);
 }
 
 
 bool DynaCom::testShutter() {
 	LOG(DEBUG) << "[DYNA] Testing shutters";
-	return test(SHUTTER_LEFT_ID) && test(SHUTTER_RIGHT_ID);
+	return test(left_shutter.ID) && test(right_shutter.ID);
 }
 
 
@@ -204,7 +225,7 @@ bool DynaCom::test(int id) {
 	}
 	else {
 		for(int i = 0; i < 5; i++) {
-			regRead(LIFT_ID, 0, 2);
+			regRead(left_gripper.ID, 0, 2);
 			usleep(1000);
 			testval = (uint8_t) returnValue(readByte());
 			if(testval == 0X0C) {
@@ -232,9 +253,9 @@ void DynaCom::setMaxTorque(int id, int torque) {
 }
 
 
-void DynaCom::setPosition(int id, int angle) {
-	LOG(DEBUG) << "SetPosition(" << id << "): " << angle << std::endl;
-	setReg2(id, 30, angle);
+void DynaCom::setPosition(int id, int pos) {
+	LOG(INFO) << "[DYNA] setPosition(" << id << "," << pos << ")";
+	setReg2(id, 30, pos);
   	usleep(ACTION_DELAY*100);
 }
 
