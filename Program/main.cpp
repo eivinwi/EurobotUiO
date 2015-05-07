@@ -72,7 +72,7 @@ void aiServer() {
                     } 
                     else if(args[1] == 4) {
                         //LIFT
-                        reply_str = std::to_string(p->getLiftPos());
+                        reply_str = d->getGripperPosition();
                         LOG(DEBUG) << "[COM] REQUEST GRIPPER POS, ret(" << reply_str.length() << "): " << reply_str;
                     }                    
                     break;

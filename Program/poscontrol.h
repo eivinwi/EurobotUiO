@@ -25,7 +25,6 @@
 #ifndef POSCONTROL_H
 #define	POSCONTROL_H
 
-#include "liftcom.h"
 #include "motorcom.h"
 #include "dynacom.h"
 #include "printing.h"
@@ -93,8 +92,7 @@ public:
 	int getCurrentId();
 	std::string getCurrentPos();
 	std::string getState();
-
-	int getGripperPos();
+	std::string getGripperPos();
 	bool running();
 	void halt();
 	void completeCurrent();

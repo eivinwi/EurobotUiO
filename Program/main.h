@@ -1,6 +1,5 @@
 #include "dynacom.h"
 #include "motorcom.h"
-#include "liftcom.h"
 #include "poscontrol.h"
 #include "printing.h"
 #include "protocol.h"

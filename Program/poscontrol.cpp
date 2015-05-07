@@ -685,8 +685,8 @@ std::string PosControl::getState() {
 }
 
 
-int PosControl::getGripperPos() {
-	return dcom->getGripperPos();
+std::string PosControl::getGripperPos() {
+	return dcom->getGripperPosition();
 }
 
 

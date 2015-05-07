@@ -7,8 +7,7 @@ LDLIBS=$(shell root-config --libs) -lserial -lzmq -pthread -lyaml-cpp
 #`sdl-config --libs` -lSDL_mixer
 
 EXEC=exec
-SRCS=main.cpp motorcom.cpp liftcom.cpp dynacom.cpp serial.cpp serialsim.cpp poscontrol.cpp
-# sound.cpp
+SRCS=main.cpp motorcom.cpp dynacom.cpp serial.cpp serialsim.cpp poscontrol.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
 
 all: $(EXEC)

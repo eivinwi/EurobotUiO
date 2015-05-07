@@ -1,10 +1,9 @@
 main.o: main.cpp main.h dynacom.h protocol.h printing.h serial.h md49.h \
- motorcom.h serialsim.h liftcom.h poscontrol.h
+ motorcom.h serialsim.h poscontrol.h
 motorcom.o: motorcom.cpp motorcom.h printing.h serial.h md49.h \
  serialsim.h
-liftcom.o: liftcom.cpp liftcom.h protocol.h printing.h serial.h md49.h
 dynacom.o: dynacom.cpp dynacom.h protocol.h printing.h serial.h md49.h
 serial.o: serial.cpp serial.h md49.h printing.h
 serialsim.o: serialsim.cpp serialsim.h md49.h printing.h
-poscontrol.o: poscontrol.cpp poscontrol.h liftcom.h protocol.h printing.h \
- serial.h md49.h motorcom.h serialsim.h dynacom.h
+poscontrol.o: poscontrol.cpp poscontrol.h motorcom.h printing.h serial.h \
+ md49.h serialsim.h dynacom.h protocol.h
