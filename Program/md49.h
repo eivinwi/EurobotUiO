@@ -29,15 +29,6 @@
 
 #define CLEAR 0x00
 //					bytes:	//Recv Send				
-/*#define GET_SPEEDR 0x21		//	2	1
-#define GET_SPEEDL 0x22		//	2 	1
-#define GET_ENCODERR 0x23	//	2	4
-#define GET_ENCODERL 0x24	//	2	4
-#define GET_CURRENTR 0x27	//	2	1
-#define GET_CURRENTL 0x28	//	2	1
-#define SET_SPEEDR 0x31		// 	3	0	
-#define SET_SPEEDL 0x32 	//	3	0
-*/
 #define GET_SPEEDL 0x21		//	2	1
 #define GET_SPEEDR 0x22		//	2 	1
 #define GET_ENCODERL 0x23	//	2	4
@@ -64,16 +55,5 @@
 #define DISABLE_TIMEOUT 0x38  //2	0
 #define ENABLE_TIMEOUT 0x39  // 2	0
 
-#define TURNING 0
-#define DRIVE_X 1
-#define DRIVE_Y 2
 
 #endif /* MD49_H */
-
-
- /*
- * Encoder counts: 980 per output shaft turn
- * Wheel diameter: 102mm
- * Wheel circumference: 320mm
- * Distance per count: 0.327mm
- */

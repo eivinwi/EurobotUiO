@@ -142,9 +142,6 @@ private:
 
     char enc_buffer[ENC_BUFF_SIZE];
 
-    //contains previous encoder values (for checking)
-    long prev_encL, prev_encR;
-
     bool simulating;
     std::string serial_port;
 };

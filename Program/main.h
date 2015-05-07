@@ -3,7 +3,6 @@
 #include "liftcom.h"
 #include "poscontrol.h"
 #include "printing.h"
-//#include "sound.h"
 #include "protocol.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -16,8 +15,8 @@
 #include <zmq.hpp>
 #include <iostream>
 #include <iomanip>
-INITIALIZE_EASYLOGGINGPP
 
+INITIALIZE_EASYLOGGINGPP
 #ifndef ELPP_THREAD_SAFE
 #define ELPP_THREAD_SAFE
 #endif
@@ -34,33 +33,14 @@ void posClient();
 bool checkArguments(int argc, char *argv[]);
 
 // Used by the aiServer ZMQ-server thread.
-// Splits input from Client on delimiter, fills pos 2d-array with arguments.
-// Returns number of arguments
-//int getArguments(std::string input, int *pos);
+// Splits input from Client on delimiter, returns array with arguments
+std::vector<int> extractArguments(std::string input);
 
-std::vector<int> getArguments(std::string input);
-
-
-
+// Adds current command to queue in PosControl
 bool enqueue(int num_args, std::vector<int> args);
-
-// Sends rotation-change to PosControl to be added to command-queue
-//bool enqRotation(int num_args, int *args);
-
-// Sends position-change to PosControl to be added to command-queue. Dir is FORWARD or REVERSE
-//bool enqPosition(int num_args, int *args, int dir);
-
-// Sends command to the robot to drive forward in current rotation.
-//bool enqStraight(int num_args, int *args);
-
-// Sends action to PosControl to be added to command-queue
-//bool enqAction(int num_args, int *args);
 
 // Reset robot to intial configuration, then set position to the one provided
 bool resetRobot(int num_args, std::vector<int> args);
-
-//TODO
-void playSound(int num_args, std::vector<int> args);
 
 // Test each part of the system after setup is completed, logs and print results.
 void testSystem();
@@ -78,7 +58,6 @@ void crashHandler(int sig);
 MotorCom *m;
 PosControl *p;
 DynaCom *d;
-//Sound *s;
 
 // locking objects while aiServer is writing to them.
 std::mutex read_mutex;
@@ -98,7 +77,4 @@ bool testing_enabled = false;
 bool log_to_file = true;
 std::string motor_serial = "/dev/ttyUSB0";
 std::string dyna_serial = "/dev/ttyUSB1";
-
-float enc_per_degree = 0.0;
-
 std::string config_file = "";

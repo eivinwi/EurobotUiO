@@ -52,13 +52,13 @@ public:
     // Reads without the wait (useful for burst-read of multi-byte variables).
     uint8_t readNoWait();
 
-    //
+    // Reads 4 bytes from serial and combines them to a long
     long readLong();
     
     // Reads and prints everything currently on the serial.
     void printAll();
 
-    // True if serial has byte ready to be red.
+    // true: a byte is ready to be read form the serial
     bool available();
 
 private:

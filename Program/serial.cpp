@@ -29,7 +29,6 @@
 Serial::Serial(std::string serial_port) {
     LOG(INFO) << "[SERIAL]     Opening serial port: " << serial_port.c_str();
     serial.Open(serial_port.c_str());
-
     serial.SetBaudRate( SerialStreamBuf::BAUD_38400 );
     serial.SetCharSize( SerialStreamBuf::CHAR_SIZE_8 );
     serial.SetNumOfStopBits( SerialStreamBuf::DEFAULT_NO_OF_STOP_BITS );
@@ -60,18 +59,15 @@ void Serial::write(int arg) {
 
 
 uint8_t Serial::readNoWait(){
-    DBPL("[SERIAL] readNW");
     int r = 0;
     if(available()) {
         r =  serial.get();
     } else {
-        DBPL("[SERIAL]      In ELSE, sleeping for 50ms");
         usleep(SERIAL_DELAY);
         if(available()) {
             r =  serial.get();
         }
     }
-    DBPL("[SERIAL] readNW returning " << r);
     return r;
 }
 
@@ -122,9 +118,8 @@ long Serial::readLong() {
     std::bitset<8> r2(bytes[1]);
     std::bitset<8> r3(bytes[2]);
     std::bitset<8> r4(bytes[3]);
-    
-    LOG(DEBUG) << "[SERIAL] read long, bits:[" 
-        << r1 << "][" << r2 << "][" << r3 << "][" << r4 << "] result: " << result;
+    LOG(DEBUG) << "[SERIAL] read long, bits:[" << r1 << "][" << r2 << "][" << r3 << "][" << r4 << "] result: " << result;
+
     return result;
 }
 
@@ -135,7 +130,7 @@ bool Serial::available() {
 
 
 void Serial::printAll() {
-    LOG(INFO) << "[SERIAL]  flushing:";
+    LOG(DEBUG) << "[SERIAL]  flushing:";
     std::stringstream ss;
     int itr = 0;
     uint8_t b = 0;
@@ -145,9 +140,9 @@ void Serial::printAll() {
         (void) b;
         itr++;
         if(itr > 100) {
-            LOG(INFO) << "  [SERIAL] max iterations. Serial is not connected";
+            LOG(WARNING) << "  [SERIAL] max iterations. Serial is not connected";
             break;
         }
     }
-    LOG(INFO) << "[SERIAL] Flushed serial: [" << ss.str() << "]";
+    LOG(DEBUG) << "[SERIAL] Flushed serial: [" << ss.str() << "]";
 }
