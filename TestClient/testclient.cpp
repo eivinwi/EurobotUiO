@@ -35,20 +35,15 @@ int main (int argc, char *argv[])
 
 	std::stringstream ss;
 
-	if(argc == 1 || argc > 5) {
-		std::cout << "Wrong number of arguments: " << argc << std::endl;
-	}
-	if(argc > 1) {
-		ss << argv[1];//argv[1];
-	} 
-	if(argc > 2) {
-		ss << "," << argv[2];
-	}
-	if(argc > 3) {
-		ss << "," << argv[3];
-	} 
-	if(argc > 4) {
+
+	ss << argv[1];//argv[1]; 
+	ss << "," << argv[2];
+	ss << "," << argv[3];
+	if(argc > 3) {		
 		ss << "," << argv[4]; 
+	}
+	if(argc > 4) {
+		ss << "," << argv[5]; 
 	}
 	position = ss.str();
 

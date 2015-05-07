@@ -238,7 +238,7 @@ void flush() {
 int main(int argc, char *argv[]) {
    // serial = new SerialStream;
   std::cout << "Opening serial" << std::endl;
-  serial.Open("/dev/ttyUSB1");
+  serial.Open("/dev/ttyUSB0");
   //serial.Open("/dev/ttyACM0");
 
   std::cout << "Configurating serial" << std::endl;
@@ -251,16 +251,9 @@ int main(int argc, char *argv[]) {
 
   //setSpeed(atoi(argv[1]), 145);
 
-
-//  int start_1 = 280;
-//  int start_2 = 750;
-//  setPosition(1, start_1 + atoi(argv[1]));
-//  setPosition(2, start_2 - atoi(argv[1]));
-
-//  setSpeed(254, 145);
-
-  setPosition(atoi(argv[1]), atoi(argv[2])); //start_1 + atoi(argv[1]));
-
+  if(argc > 2) {
+    setPosition(atoi(argv[1]), atoi(argv[2]));
+  }
 
 }
 
