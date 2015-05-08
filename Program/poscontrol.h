@@ -25,22 +25,22 @@
 #ifndef POSCONTROL_H
 #define	POSCONTROL_H
 
-#include "liftcom.h"
 #include "motorcom.h"
 #include "dynacom.h"
 #include "printing.h"
+
 #include <cassert>
 #include <condition_variable>
+#include <fstream>
 #include <math.h>
 #include <mutex>
+#include <iomanip>
 #include <queue>
 #include <string>
 #include <sstream>
 #include <thread>
 #include <time.h>
 #include <vector>
-#include <fstream>
-#include <iomanip>
 #include "yaml-cpp/yaml.h"
 
 //state definitions for robot movement
@@ -92,8 +92,7 @@ public:
 	int getCurrentId();
 	std::string getCurrentPos();
 	std::string getState();
-
-	int getLiftPos();
+	std::string getGripperPos();
 	bool running();
 	void halt();
 	void completeCurrent();
@@ -144,6 +143,8 @@ private:
 		int med_dist = 60;
 		int max_rot = 30;
 		int med_rot = 15;
+		int max_straight = 200;
+		int med_straight = 100;
 	} Slowdown;
 
 
@@ -161,7 +162,16 @@ private:
 	} CloseEnough;
 
 
+	struct timestep {
+		int rotation = 5000;
+		int position = 5000;
+		int crawling = 1000;
+		int action = 5000;
+		long move_complete = 1000000;
+	} TimeStep;
+
 	int NO_ENCODER_ABORT = 500;
+	int timeout_guard = 1000;
 
 };
 

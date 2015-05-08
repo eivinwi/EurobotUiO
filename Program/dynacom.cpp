@@ -156,12 +156,14 @@ void DynaCom::setLeftGripper(int pos) {
 	}
 }
 
+
 void DynaCom::setRightGripper(int pos) {
 	PRINTLINE("setRightGripper " << pos);
 	if( (pos < 400) && (pos >= 0) ) {
 		setPosition(right_gripper.ID, right_gripper.start + pos);	
 	}
 }
+
 
 void DynaCom::setGrippers(int left_pos, int right_pos) {
 	setLeftGripper(left_pos);
@@ -172,14 +174,27 @@ void DynaCom::setGrippers(int left_pos, int right_pos) {
 std::string DynaCom::getGripperPosition() {
 	int left = readPosition(left_gripper.ID);
 	int right = readPosition(right_gripper.ID);
-
 	int normalized_left = left_gripper.start - left;
 	int normalized_right = right_gripper.start + right;
-
 	std::stringstream ss;
 	ss << normalized_left << "," << left_gripper.goal << "," << normalized_right << "," << right_gripper.goal;
 	return ss.str();
 }
+
+
+bool DynaCom::testGripper() {
+	LOG(DEBUG) << "[DYNA] Testing gripper";
+	return test(left_gripper.ID);
+}
+
+
+bool DynaCom::testShutter() {
+	LOG(DEBUG) << "[DYNA] Testing shutters";
+	return test(left_shutter.ID) && test(right_shutter.ID);
+}
+
+
+/*** PRIVATE FUNCTIONS ***/
 
 
 void DynaCom::shutterOpenLeft() {
@@ -200,23 +215,6 @@ void DynaCom::shutterOpenRight() {
 void DynaCom::shutterCloseRight() {
 	setPosition(right_shutter.ID, right_shutter.closed);
 }
-
-
-
-bool DynaCom::testGripper() {
-	LOG(DEBUG) << "[DYNA] Testing gripper";
-	return test(left_gripper.ID);
-}
-
-
-bool DynaCom::testShutter() {
-	LOG(DEBUG) << "[DYNA] Testing shutters";
-	return test(left_shutter.ID) && test(right_shutter.ID);
-}
-
-
-/*** PRIVATE FUNCTIONS ***/
-
 
 bool DynaCom::test(int id) {
 	uint8_t testval = 0;
