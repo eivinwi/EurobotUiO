@@ -74,7 +74,7 @@ auto encoder_timestamp = std::chrono::high_resolution_clock::now();
 auto compass_timestamp = std::chrono::high_resolution_clock::now();
 auto prev = std::chrono::high_resolution_clock::now();
 
-
+int current_id = 0;
 
 PosControl::PosControl(MotorCom *m, DynaCom *d, bool test, std::string config_file) {
 	mcom = m;
@@ -176,7 +176,6 @@ void PosControl::controlLoop() {
 
 			LOG(DEBUG) << "[POS] thread <" << std::this_thread::get_id() << "> dequeued Cmd {"<< cmd[0] << "," << cmd[1] << "," << cmd[2] << "}";
 			if(!testing) {
-				
 				switch(type) {
 					case 0:
 						//reserved
@@ -187,27 +186,32 @@ void PosControl::controlLoop() {
 						break;
 					case 2:
 						LOG(INFO) << "[POS] starting action: forward (" << cmd[2] << "," << cmd[3] << ")";
+						current_id = cmd[1];
 						goal_pos.x = cmd[2];
 						goal_pos.y = cmd[3];
 						positionLoop();
 						break;
 					case 3:
 						LOG(INFO) << "[POS] starting action: rotation (" << cmd[2];
+						current_id = cmd[1];
 						goal_pos.angle = cmd[2];
 						rotationLoop();
 						break;
 					case 4:
 						//deprecated gripper,shutter,lift
+						current_id = cmd[1];
 						dcom->performAction(cmd);
 						break;
 					case 5:
 						//gripper
+						current_id = cmd[1];
 						dcom->performAction(cmd);
 						break;
 					case 6:
 						//reserved
 						break;					
 					case 7:
+						current_id = cmd[1];
 						straightLoop(cmd[2]);
 						break;					
 					case 8:
@@ -340,10 +344,14 @@ void PosControl::crawlToRotation() {
 //dir negative means backwards. Else forwards
 //check: should probably work for negative dist
 void PosControl::straightLoop(int dist) {
-	goal_pos.x = cur_pos.x + ( cos_d(cur_pos.angle) * dist );
-	goal_pos.y = cur_pos.y + ( sin_d(cur_pos.angle) * dist );
-	goal_pos.angle = cur_pos.angle;
-	positionLoop();
+	if(dist < 0) {
+		reverseLoop(dist);
+	} else {
+		goal_pos.x = cur_pos.x + ( cos_d(cur_pos.angle) * dist );
+		goal_pos.y = cur_pos.y + ( sin_d(cur_pos.angle) * dist );
+		goal_pos.angle = cur_pos.angle;
+		positionLoop();
+	}
 }
 
 
@@ -427,6 +435,58 @@ void PosControl::positionLoop() {
 }
 
 
+
+void PosControl::reverseLoop(int dist) {
+	goal_pos.x = cur_pos.x + ( cos_d(cur_pos.angle) * dist );
+	goal_pos.y = cur_pos.y + ( sin_d(cur_pos.angle) * dist );
+	goal_pos.angle = cur_pos.angle;
+
+	float angle = cur_pos.angle;
+
+	float dist_x = goal_pos.x - cur_pos.x; 
+	float dist_y = goal_pos.y - cur_pos.y;
+
+	float total_dist = distStraight(angle, dist_x, dist_y);
+	PRINTLINE("distStr(" << angle << "," << dist_x << "," << dist_y << ") = " << total_dist);
+
+	float straight = 0.0;
+	float traveled = 0.0;
+
+	readEncoders();
+	x_0 = cur_pos.x;
+	y_0 = cur_pos.y;
+	angle_0 = cur_pos.angle;
+	x_diff = 0.0;
+	y_diff = 0.0;
+	angle_diff = 0.0;
+
+	left_encoder.e_0 = left_encoder.total;
+	right_encoder.e_0 = right_encoder.total;
+
+	while( fabs(fabs(total_dist) - fabs(traveled)) > CloseEnough.position ) {
+		straight = distStraight(angle, dist_x, dist_y);
+		straight = total_dist - traveled;
+		setDriveSpeed(straight);
+
+		usleep(TimeStep.position);
+
+		readEncoders();
+		traveled = updatePositionReverse();
+
+		LOG_EVERY_N(5, INFO) << "[POS] driving:  (" << traveled << "/" << total_dist << ") "; 
+	}
+
+	halt();
+	readEncoders();
+	updatePositionReverse();
+	LOG(INFO) << "[POS] reverse move complete, cur_pos is now:  (" << cur_pos.x << "," << cur_pos.y << ")"; 
+
+	cur_pos.x = goal_pos.x;
+	cur_pos.y = goal_pos.y;
+}
+
+
+
 //TODO: incorrect if distance is longer than goal
 float PosControl::percPos(float s, float c, float g) {
 	float total = (g - s);
@@ -492,12 +552,15 @@ float PosControl::updatePositionReverse() {
 		LOG(WARNING) << "[POS] large distance difference, probably spinning or hitting something.";
 	}
 
-	float angle = cur_pos.angle;
-	float avg_dist = (abs(left_encoder.diff_dist + right_encoder.diff_dist)) / 2;
-	float x_distance = cos_d(angle) * avg_dist; 
-	float y_distance = sin_d(angle) * avg_dist; 
-	cur_pos.x -= (x_distance);// dir*x_distance );
-	cur_pos.y -= (y_distance);// dir*y_distance );
+	float left_dist = (left_encoder.total - left_encoder.e_0) * Enc.constant;
+	float right_dist = (left_encoder.total - left_encoder.e_0) * Enc.constant;
+	float avg_dist = -(abs(left_dist + right_dist)) / 2;
+
+	x_diff = cos_d(cur_pos.angle) * avg_dist;
+	y_diff = sin_d(cur_pos.angle) * avg_dist;
+	cur_pos.x = x_0 + x_diff;
+	cur_pos.y = y_0 + y_diff;
+	PRINTLINE("curx = " << x_0 << " + " << x_diff << " = " << cur_pos.x);
 
 	return avg_dist;
 }
@@ -660,22 +723,21 @@ bool PosControl::inGoal() {
 
 //TODO
 int PosControl::getCurrentId() {
-	return 0;//cur_pos.id;
+	return 0;//current_id;
 }
 
 
 std::string PosControl::getCurrentPos() {
 	std::stringstream ss;
-	if(working) {
-		ss << "w,";
-	}
-	else {
-		ss << "s,";
-	}
+	ss << current_id << "," << completed(current_id) << ",";
 	ss << cur_pos.x << "," << cur_pos.y << "," << cur_pos.angle;
 	return ss.str();
 }
 
+
+int PosControl::completed(int id) {
+	return ((completed_actions[id])? 1 : 0);
+}
 
 //TODO: test thread safety
 std::string PosControl::getState() {
@@ -702,6 +764,7 @@ void PosControl::halt() {
 
 void PosControl::completeCurrent() {
 	LOG(INFO) << "[POS] current action completed. TODO: id";
+	completed_actions[current_id] = true;
 	//mcom->resetEncoders();
 	//usleep(1000000);
 }

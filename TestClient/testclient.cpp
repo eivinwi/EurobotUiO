@@ -35,16 +35,11 @@ int main (int argc, char *argv[])
 
 	std::stringstream ss;
 
-
-	ss << argv[1];//argv[1]; 
-	ss << "," << argv[2];
-	ss << "," << argv[3];
-	if(argc > 3) {		
-		ss << "," << argv[4]; 
+	ss << argv[1];
+	for(int i = 2; i < argc; i++) {
+		ss << "," << argv[i];
 	}
-	if(argc > 4) {
-		ss << "," << argv[5]; 
-	}
+	ss << std::endl;
 	position = ss.str();
 
 
@@ -65,9 +60,10 @@ int main (int argc, char *argv[])
 		std::cout << "Sending position: [" << position << "]" << std::endl;
 		socket.send (request);
 		// Get the reply.
+		//usleep(2);
 		zmq::message_t reply;
 		socket.recv (&reply);
-		std::string recv_str = std::string(static_cast<char*>(request.data()), request.size());
+		std::string recv_str = std::string(static_cast<char*>(reply.data()), reply.size());
 		std::cout << "Received: " << recv_str << std::endl;
 	}
 	return 0;

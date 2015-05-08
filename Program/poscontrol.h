@@ -77,6 +77,7 @@ public:
 	void setRotationSpeed(float angle_err);
 	void straightLoop(int dist);
 	void positionLoop();
+	void reverseLoop(int dist);
 	float updatePosition();
 	float updatePositionReverse();
 	void setDriveSpeed(float straight_dist);
@@ -96,6 +97,7 @@ public:
 	bool running();
 	void halt();
 	void completeCurrent();
+	int completed(int id);
 	void setCurrent(float x, float y, float angle);
 	float sin_d(float angle);
 	float cos_d(float angle);

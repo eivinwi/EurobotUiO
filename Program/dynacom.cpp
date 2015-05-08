@@ -129,6 +129,7 @@ void DynaCom::performAction(std::vector<int> cmd) {
 				if(cmd.size() > 3) {
 					setGrippers(cmd[3], cmd[4]);
 				}
+				break;
 			case 1:
 				setLeftGripper(cmd[3]);
 				break;
@@ -138,6 +139,7 @@ void DynaCom::performAction(std::vector<int> cmd) {
 			default:
 				break;
 		}
+		usleep(1000000);
 	}
 }
 
@@ -150,16 +152,16 @@ void DynaCom::toggleLed(int id) {
 
 
 void DynaCom::setLeftGripper(int pos) {
-	PRINTLINE("setLeftGripper " << pos);
-	if( (pos < 400) && (pos >= 0) ) {
+	if( (pos <= 400) && (pos >= 0) ) {
+		left_gripper.goal = pos;
 		setPosition(left_gripper.ID, left_gripper.start - pos);
 	}
 }
 
 
 void DynaCom::setRightGripper(int pos) {
-	PRINTLINE("setRightGripper " << pos);
-	if( (pos < 400) && (pos >= 0) ) {
+	if( (pos <= 400) && (pos >= 0) ) {
+		right_gripper.goal = pos;
 		setPosition(right_gripper.ID, right_gripper.start + pos);	
 	}
 }
@@ -175,7 +177,15 @@ std::string DynaCom::getGripperPosition() {
 	int left = readPosition(left_gripper.ID);
 	int right = readPosition(right_gripper.ID);
 	int normalized_left = left_gripper.start - left;
-	int normalized_right = right_gripper.start + right;
+	if( (abs(normalized_left) - left_gripper.goal) < 30 ) {
+		normalized_left = left_gripper.goal;
+	}
+
+	int normalized_right = right - right_gripper.start;
+	if( (abs(normalized_right) - right_gripper.goal) < 30 ) {
+		normalized_right = right_gripper.goal;
+	}
+	
 	std::stringstream ss;
 	ss << normalized_left << "," << left_gripper.goal << "," << normalized_right << "," << right_gripper.goal;
 	return ss.str();
@@ -254,7 +264,7 @@ void DynaCom::setMaxTorque(int id, int torque) {
 void DynaCom::setPosition(int id, int pos) {
 	LOG(INFO) << "[DYNA] setPosition(" << id << "," << pos << ")";
 	setReg2(id, 30, pos);
-  	usleep(ACTION_DELAY*100);
+  	usleep(ACTION_DELAY);
 }
 
 
@@ -263,7 +273,7 @@ int DynaCom::readPosition(int id) {
 		return true;
 	}
 	regRead(id, 36, 2); //(int id, int firstRegAdress, int noOfBytesToRead)
-  	usleep(ACTION_DELAY*100);
+  	usleep(ACTION_DELAY*10);
 
 	return (int) returnValue( readByte() );
 }

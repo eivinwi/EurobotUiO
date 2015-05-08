@@ -52,7 +52,7 @@ void aiServer() {
         std::vector<int> args = extractArguments(recv_str);
         int num_args = args.size();
 
-     //   LOG(DEBUG) << "[COM] input str(" << num_args << "): " << recv_str;
+        LOG(DEBUG) << "[COM] input str(" << num_args << "): " << recv_str;
         if(num_args < 1 || num_args > 5) {
             LOG(WARNING) << "[COM] invalid number arguments(" << num_args << "): " << recv_str;
             reply_str = "no";
@@ -219,8 +219,8 @@ bool enqueue(int num_args, std::vector<int> args) {
 
 
 bool resetRobot(int num_args, std::vector<int> args) {
-    if (num_args != 4) {
-        LOG(WARNING) << "[COM] Action: wrong number of arguments: " << num_args << "!=3";        
+    if (num_args < 4) {
+        LOG(WARNING) << "[COM] Action: wrong number of arguments: " << num_args << "<4";        
     }
     else {
         if(read_mutex.try_lock()) {
@@ -483,6 +483,8 @@ int main(int argc, char *argv[]) {
     }
 
     testSystem();
+    std::vector<int> testAction{5, 0, 0, 100, 100};
+    d->performAction(testAction);
     LOG(INFO) << "\n[SETUP] System tests completed, waiting for client input...\n";
  
     if(read_thread.joinable()) {
