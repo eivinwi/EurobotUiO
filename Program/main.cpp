@@ -77,9 +77,8 @@ void aiServer() {
                     }                    
                     break;
                 case SET_REVERSE: 
-                //  LOG(DEBUG) << "[COM]  Received SET_REVERSE(id=" << args[1] << ", x=" << args[2] << ", y=" << args[3] << ")";
-                //  enqPosition(num_args, args, REVERSE);
-                //  LOG(WARNING) << "[COM] Recieved SET_REVERSE, but it is not yet implemented.";
+                    LOG(DEBUG) << "[COM]  Received SET_REVERSE(id=" << args[1] << ", x=" << args[2] << ", y=" << args[3] << ")";
+                    enqueue(num_args, args);
                     reply_str = "ok";
                     break;             
                 case SET_FORWARD: 

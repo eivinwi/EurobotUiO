@@ -78,6 +78,7 @@ public:
 	void straightLoop(int dist);
 	void positionLoop();
 	void reverseLoop(int dist);
+	void reverseLoop();
 	float updatePosition();
 	float updatePositionReverse();
 	void setDriveSpeed(float straight_dist);

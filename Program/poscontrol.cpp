@@ -181,8 +181,11 @@ void PosControl::controlLoop() {
 						//reserved
 						break;
 					case 1:
-						//reverse, unused
-						//straightLoop(-cmd[2]);
+						LOG(INFO) << "[POS] starting action: reverse (" << cmd[2] << "," << cmd[3] << ")";
+						current_id = cmd[1];
+						goal_pos.x = cmd[2];
+						goal_pos.y = cmd[3];
+						reverseLoop();
 						break;
 					case 2:
 						LOG(INFO) << "[POS] starting action: forward (" << cmd[2] << "," << cmd[3] << ")";
@@ -435,19 +438,17 @@ void PosControl::positionLoop() {
 }
 
 
-
+//TODO: rewrite to x/y
 void PosControl::reverseLoop(int dist) {
 	goal_pos.x = cur_pos.x + ( cos_d(cur_pos.angle) * dist );
 	goal_pos.y = cur_pos.y + ( sin_d(cur_pos.angle) * dist );
 	goal_pos.angle = cur_pos.angle;
 
 	float angle = cur_pos.angle;
-
 	float dist_x = goal_pos.x - cur_pos.x; 
 	float dist_y = goal_pos.y - cur_pos.y;
-
 	float total_dist = distStraight(angle, dist_x, dist_y);
-	PRINTLINE("distStr(" << angle << "," << dist_x << "," << dist_y << ") = " << total_dist);
+//	PRINTLINE("distStr(" << angle << "," << dist_x << "," << dist_y << ") = " << total_dist);
 
 	float straight = 0.0;
 	float traveled = 0.0;
@@ -467,12 +468,9 @@ void PosControl::reverseLoop(int dist) {
 		straight = distStraight(angle, dist_x, dist_y);
 		straight = total_dist - traveled;
 		setDriveSpeed(straight);
-
 		usleep(TimeStep.position);
-
 		readEncoders();
 		traveled = updatePositionReverse();
-
 		LOG_EVERY_N(5, INFO) << "[POS] driving:  (" << traveled << "/" << total_dist << ") "; 
 	}
 
@@ -485,6 +483,53 @@ void PosControl::reverseLoop(int dist) {
 	cur_pos.y = goal_pos.y;
 }
 
+
+//TODO: rewrite to x/y
+void PosControl::reverseLoop() {
+	/*goal_pos.x = cur_pos.x + ( cos_d(cur_pos.angle) * dist );
+	goal_pos.y = cur_pos.y + ( sin_d(cur_pos.angle) * dist );
+	goal_pos.angle = cur_pos.angle;
+	float angle = cur_pos.angle;
+*/
+	//get reversed angle
+	float dist_x = goal_pos.x - cur_pos.x; 
+	float dist_y = goal_pos.y - cur_pos.y;
+	float angle = atan2AdjustedReverse(dist_x, dist_y);
+	float total_dist = distStraight(angle, dist_x, dist_y);
+	
+	LOG(INFO) << "[POS] reverse, specified: " << dist_x << ", " << dist_y << ", " << angle << "  dist=" << total_dist;
+	float straight = 0.0;
+	float traveled = 0.0;
+
+	readEncoders();
+	x_0 = cur_pos.x;
+	y_0 = cur_pos.y;
+	angle_0 = cur_pos.angle;
+	x_diff = 0.0;
+	y_diff = 0.0;
+	angle_diff = 0.0;
+
+	left_encoder.e_0 = left_encoder.total;
+	right_encoder.e_0 = right_encoder.total;
+
+	while( fabs(fabs(total_dist) - fabs(traveled)) > CloseEnough.position ) {
+		straight = distStraight(angle, dist_x, dist_y);
+		straight = total_dist - traveled;
+		setDriveSpeed(straight);
+		usleep(TimeStep.position);
+		readEncoders();
+		traveled = updatePositionReverse();
+		LOG_EVERY_N(5, INFO) << "[POS] driving:  (" << traveled << "/" << total_dist << ") "; 
+	}
+
+	halt();
+	readEncoders();
+	updatePositionReverse();
+	LOG(INFO) << "[POS] reverse move complete, cur_pos is now:  (" << cur_pos.x << "," << cur_pos.y << ")"; 
+
+	cur_pos.x = goal_pos.x;
+	cur_pos.y = goal_pos.y;
+}
 
 
 //TODO: incorrect if distance is longer than goal
@@ -627,18 +672,17 @@ void PosControl::setSpeeds(int l, int r) {
 	if(timespan > timeout_guard) {
 		mcom->setSpeedL(l);
 		mcom->setSpeedR(r);
+		prev = now;
 	} else {
 		if(left_motor.speed != l) {
 			mcom->setSpeedL(l);
 			left_motor.speed = l;
 		}
-
 		if(right_motor.speed != r) {
 			mcom->setSpeedR(r);
 			right_motor.speed = r;
 		}	
 	}
-	prev = now;
 }
 
 
