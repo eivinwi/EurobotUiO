@@ -231,27 +231,39 @@ void PosControl::controlLoop() {
 				halt();
 			} 
 			else {
-				//TODO: switch case
-				if(type == ROTATION) {
-					goal_pos.angle = cmd[2];
-					cur_pos.angle = goal_pos.angle;
-				} 
-				else if(type == FORWARD) {
-					goal_pos.x = cmd[2];
-					goal_pos.y = cmd[3];
-					goal_pos.angle = atan2Adjusted(goal_pos.x - cur_pos.x, goal_pos.y - cur_pos.y);
-					setCurrent(goal_pos.x, goal_pos.y, goal_pos.angle);
-				} 
-				else if(type == REVERSE) {
-					//setCurrent(goal_pos.x, goal_pos.y, cur_pos.angle);
-				}
-				else if(type == STRAIGHT) {
-					setCurrent(cmd[2], cmd[3], cur_pos.angle);
-				} 
 				else if(type == LIFT) {
-					dcom->performAction(cmd);
+					
+				}
+
+				switch(type) {
+					case 1:
+						//reverse
+						break;
+					case 2:
+						goal_pos.x = cmd[2];
+						goal_pos.y = cmd[3];
+						goal_pos.angle = atan2Adjusted(goal_pos.x - cur_pos.x, goal_pos.y - cur_pos.y);
+						setCurrent(goal_pos.x, goal_pos.y, goal_pos.angle);
+						break;
+					case 3: 
+						goal_pos.angle = cmd[2];
+						cur_pos.angle = goal_pos.angle;
+						break;
+					case 4:
+					case 5:
+						dcom->performAction(cmd);
+						break;
+					case 7:
+						setCurrent(cmd[2], cmd[3], cur_pos.angle);
+						break;
+					case 9:
+						if(args > 3) reset(cmd[1], cmd[2], cmd[3]);					
+						break;
+					default:
+						break;
 				}
 			}
+
 			completeCurrent();
 		}
 	}
@@ -320,42 +332,7 @@ void PosControl::rotationLoop() {
 }
 
 
-//TODO: incorrect if distance is larger than goal 
-float PosControl::perc(float s, float a, float g) {
-	float total = fabs(shortestRotation(s, g));
-	float remaining = fabs(shortestRotation(a, g));
-	return (total == 0)? 100.0 : (total - remaining)/total * 100.0;
-}
 
-
-void PosControl::crawlToRotation() {
-	float angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
-	while (abs(angle_err) > 1.0) {
-		if(angle_err > 0) {
-			setSpeeds(136, 120);
-		} else {
-			setSpeeds(120, 136);
-		}
-		usleep(TimeStep.crawling);
-		readEncoders();
-		updateAngle();
-		angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
-	}
-}
-
-
-//dir negative means backwards. Else forwards
-//check: should probably work for negative dist
-void PosControl::straightLoop(int dist) {
-	if(dist < 0) {
-		reverseLoop(dist);
-	} else {
-		goal_pos.x = cur_pos.x + ( cos_d(cur_pos.angle) * dist );
-		goal_pos.y = cur_pos.y + ( sin_d(cur_pos.angle) * dist );
-		goal_pos.angle = cur_pos.angle;
-		positionLoop();
-	}
-}
 
 
 //TODO: check compass and/or absolute
@@ -439,7 +416,7 @@ void PosControl::positionLoop() {
 
 
 //TODO: rewrite to x/y
-void PosControl::reverseLoop(int dist) {
+void PosControl::reverseStraight(int dist) {
 	goal_pos.x = cur_pos.x + ( cos_d(cur_pos.angle) * dist );
 	goal_pos.y = cur_pos.y + ( sin_d(cur_pos.angle) * dist );
 	goal_pos.angle = cur_pos.angle;
@@ -448,8 +425,6 @@ void PosControl::reverseLoop(int dist) {
 	float dist_x = goal_pos.x - cur_pos.x; 
 	float dist_y = goal_pos.y - cur_pos.y;
 	float total_dist = distStraight(angle, dist_x, dist_y);
-//	PRINTLINE("distStr(" << angle << "," << dist_x << "," << dist_y << ") = " << total_dist);
-
 	float straight = 0.0;
 	float traveled = 0.0;
 
@@ -460,7 +435,6 @@ void PosControl::reverseLoop(int dist) {
 	x_diff = 0.0;
 	y_diff = 0.0;
 	angle_diff = 0.0;
-
 	left_encoder.e_0 = left_encoder.total;
 	right_encoder.e_0 = right_encoder.total;
 
@@ -478,7 +452,6 @@ void PosControl::reverseLoop(int dist) {
 	readEncoders();
 	updatePositionReverse();
 	LOG(INFO) << "[POS] reverse move complete, cur_pos is now:  (" << cur_pos.x << "," << cur_pos.y << ")"; 
-
 	cur_pos.x = goal_pos.x;
 	cur_pos.y = goal_pos.y;
 }
@@ -486,15 +459,16 @@ void PosControl::reverseLoop(int dist) {
 
 //TODO: rewrite to x/y
 void PosControl::reverseLoop() {
-	/*goal_pos.x = cur_pos.x + ( cos_d(cur_pos.angle) * dist );
-	goal_pos.y = cur_pos.y + ( sin_d(cur_pos.angle) * dist );
-	goal_pos.angle = cur_pos.angle;
-	float angle = cur_pos.angle;
-*/
+
 	//get reversed angle
 	float dist_x = goal_pos.x - cur_pos.x; 
 	float dist_y = goal_pos.y - cur_pos.y;
 	float angle = atan2AdjustedReverse(dist_x, dist_y);
+	goal_pos.angle = angle;
+	if(!angleCloseEnough()) {
+		rotationLoop();
+	} 
+
 	float total_dist = distStraight(angle, dist_x, dist_y);
 	
 	LOG(INFO) << "[POS] reverse, specified: " << dist_x << ", " << dist_y << ", " << angle << "  dist=" << total_dist;
@@ -532,6 +506,42 @@ void PosControl::reverseLoop() {
 }
 
 
+//TODO: incorrect if distance is larger than goal 
+float PosControl::perc(float s, float a, float g) {
+	float total = fabs(shortestRotation(s, g));
+	float remaining = fabs(shortestRotation(a, g));
+	return (total == 0)? 100.0 : (total - remaining)/total * 100.0;
+}
+
+
+void PosControl::crawlToRotation() {
+	float angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
+	while (abs(angle_err) > 1.0) {
+		if(angle_err > 0) {
+			setSpeeds(136, 120);
+		} else {
+			setSpeeds(120, 136);
+		}
+		usleep(TimeStep.crawling);
+		readEncoders();
+		updateAngle();
+		angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
+	}
+}
+
+
+//dir negative means backwards. Else forwards
+//check: should probably work for negative dist
+void PosControl::straightLoop(int dist) {
+	if(dist < 0) {
+		reverseStraight(dist);
+	} else {
+		goal_pos.x = cur_pos.x + ( cos_d(cur_pos.angle) * dist );
+		goal_pos.y = cur_pos.y + ( sin_d(cur_pos.angle) * dist );
+		goal_pos.angle = cur_pos.angle;
+		positionLoop();
+	}
+}
 //TODO: incorrect if distance is longer than goal
 float PosControl::percPos(float s, float c, float g) {
 	float total = (g - s);

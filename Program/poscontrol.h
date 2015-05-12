@@ -60,55 +60,60 @@ class PosControl {
 public:
 	PosControl(MotorCom* m, DynaCom* d, bool test, std::string config_file);
 	~PosControl();
-
-
 	void reset(int x, int y, int rot);
 	bool test();
-//	void enqueue(int id, int x, int y, float rot, int arg, int type);
-//	template<std::size_t SIZE> 
-	void enqueue(std::vector<int> arr);
 
+	void enqueue(std::vector<int> arr);
 	std::vector<int> dequeue();
 	void clearQueue();
+
 	void controlLoop();
 	void rotationLoop();
-	void crawlToRotation();
-	float updateAngle();
-	void setRotationSpeed(float angle_err);
-	void straightLoop(int dist);
 	void positionLoop();
-	void reverseLoop(int dist);
+	void straightLoop(int dist);
+	void reverseStraight(int dist);
 	void reverseLoop();
+	void crawlToRotation();
+
+	float updateAngle();
 	float updatePosition();
 	float updatePositionReverse();
+
+	void readEncoders();
+
+	void setRotationSpeed(float angle_err);
 	void setDriveSpeed(float straight_dist);
 	void setSpeeds(int l, int r);
+
 	float shortestRotation(float angle, float goal);
-	void readEncoders();
 	float distStraight(float angle, float distX, float distY);
+
 	bool angleCloseEnough();
 	bool xCloseEnough();
 	bool yCloseEnough();
 	bool positionCloseEnough();
 	bool inGoal();
+
 	int getCurrentId();
 	std::string getCurrentPos();
 	std::string getState();
 	std::string getGripperPos();
+	void completeCurrent();
+
+	float perc(float angle, float starting_angle, float goal);
+	float percPos(float s, float c, float g);
+	void setCurrent(float x, float y, float angle);
 	bool running();
 	void halt();
-	void completeCurrent();
 	int completed(int id);
-	void setCurrent(float x, float y, float angle);
+	float getSpeed();
+
 	float sin_d(float angle);
 	float cos_d(float angle);
 	float atan2Adjusted(float x, float y);
 	float atan2AdjustedReverse(float x, float y);
-	float getSpeed();
-	void readConfig(std::string filename);
 
-	float perc(float angle, float starting_angle, float goal);
-	float percPos(float s, float c, float g);
+	void readConfig(std::string filename);
 
 private:	
 	MotorCom *mcom;
@@ -123,12 +128,7 @@ private:
 	bool working;
 	bool testing;
 	bool pos_running;
-	//int curSpeedLeft, curSpeedRight;
 	bool completed_actions[ACTION_STORAGE];
-
-
-	int MAX_WAIT = 2000;
-
 
 	struct speed{
 		int pos_fast = 225; //235, 255
@@ -173,6 +173,7 @@ private:
 		long move_complete = 1000000;
 	} TimeStep;
 
+	int MAX_WAIT = 2000;
 	int NO_ENCODER_ABORT = 500;
 	int timeout_guard = 1000;
 
