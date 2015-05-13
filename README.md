@@ -23,15 +23,20 @@ While in Program directory:
 
 
 ### Execution parameters
+|   Argument    |         Description 											|
+|---------------|---------------------------------------------------------------|
+|  --help       |  print help message
+|  --testing    |  enable testing (instant results)
+|  --sim        |  enable simulation of motors
+|  --debug      |  enable detailed debug logging
+|  --nolog      |  disable all logging
+|  --mport arg  |  Set MD49 serial port (ex: /dev/ttyUSB0)
+|  --dport arg  |  Set Dynamixel serial port (ex: /dev/ttyUSB1
+|  --ai arg     |  Set AI ZMQ server port (ex: 5900)
+|  --pos arg    |  Set POS ZMQ client port (ex: 5555)
+|  --config arg |  Set YAML config file
 
-| Argument | Description |
-|----------|---------------------------------------------------------------|
-|    -s    | enable simulation of serial-ports.
-|    -t    | enable testing mode (commands finish instantly).
-|    -d    | enables extra debug-logging to separate debug.log.
-|    -n    | disable the default info-logging to file.
-| -m \<port\>| sets argument port as motor serial port (default: ttyUSB0)
-|  -l \<port\>| sets argument port as lift serial port (default: ttyUSB1)
+
 
 ### Examples
 
@@ -42,12 +47,12 @@ While in Program directory:
 
 ##### Run program with testing+simulation functionality
 ```
-./exec -s -t
+./exec --sim --testing
 ```
 
 ##### Run program on different motor serial-port
 ```
-./exec -m ttyACM0
+./exec -mport /dev/ttyUSB2
 ```
 
 
@@ -74,6 +79,7 @@ sudo mv cppzmg/zmq.hpp /usr/local/include
 ```
 
 ##### Pyzmq (for testing with Eurobot-AI)
+Not currently neccessary
 http://zeromq.org/bindings:python
 ```
 sudo pip install pyzmq
@@ -86,6 +92,12 @@ https://github.com/easylogging/easyloggingpp/
 git clone https://github.com/easylogging/easyloggingpp/
 sudo mv easyloggingpp/src/easylogging++.h /usr/local/include
 ```
+
+##### ZMQ
+https://github.com/jbeder/yaml-cpp.git
+```
+git clone https://github.com/jbeder/yaml-cpp.git
+cd yaml-cpp && mkdir build && cd build && cmake .. && make && sudo make install
 
 
 ## Mechanical/Electronical parts
