@@ -252,78 +252,88 @@ std::vector<int> extractArguments(std::string input) {
 }
 
 
+int cmdArgs(int ac, char *av[]) {
+    po::options_description desc("Valid options");
 
-bool checkArguments(int argc, char *argv[]) {
-    LOG(INFO) << "[SETUP] Reading arguments:   ";
-    opterr = 0;
-    int opt;
+    desc.add_options() 
+        ("help", "print help message")
+        ("testing", "enable testing")
+        ("sim", "simulate")
+        ("debug", "enable debug logging")
+        ("nolog", "disable all logging")
+        ("mport", po::value<std::string>(),"MD49 serial port (ex: /dev/ttyUSB0)")
+        ("dport", po::value<std::string>(), "Dynamixel serial port (ex: /dev/ttyUSB1")
+        ("ai", po::value<int>(), "AI ZMQ port as server (ex: 5900)")
+        ("pos", po::value<int>(), "POS ZMQ port as client (ex: 5555)")
+        ("config", po::value<std::string>(), "Set YAML config file")
+    ;
 
-    while( (opt = getopt(argc, argv, "hstflnm:d:a:")) != -1 ) {
-        switch(opt) {
-            case 'h':
-                //print help
-                PRINTLINE("---------- CMD-LINE OPTIONS ----------");
-                PRINTLINE("-s: enable simulation of motor-serial");
-                PRINTLINE("-l: enable simulation of lift-serial");
-                PRINTLINE("-t: enable test-mode");
-                PRINTLINE("-f: enable debug-file");
-                PRINTLINE("-n: disable logging to file");
-                PRINTLINE("-m <port>: set motor serial port (ex: ttyUSB0)");
-                PRINTLINE("-d <port>: set dynamixel (lift) serial port (ex: ttyUSB1)");
-                PRINTLINE("-a <ip>: ip of pc running the AI program");
-                PRINTLINE("--------------------------------------");
-                break;
-            case 's':
-                PRINTLINE("[SETUP]     Simulating motor-serial <<");
-                sim_motors = true;
-                break;
-            case 'l':
-                PRINTLINE("[SETUP]     Simulating lift-serial <<");
-                sim_lift = true;                
-                break;
-            case 't':
-                PRINTLINE("[SETUP]     Testmode enabled. <<");   
-                testing_enabled = true;
-                break;
-            case 'f':
-                PRINTLINE("[SETUP]     Debug file enabled. <<");
-                debug_file_enabled = true;
-                break;
-            case 'n':
-                PRINTLINE("[SETUP]     Log to file disabled. <<");
-                log_to_file = false;
-                break;
-            case 'm':
-                motor_serial = optarg;
-                PRINTLINE("[SETUP]    motor arg=" << optarg);
+    po::variables_map vm;
+    po::store(po::parse_command_line(ac, av, desc), vm);
+    po::notify(vm);
 
-                break;
-            case 'd':
-                dyna_serial = optarg;
-                PRINTLINE("[SETUP]    dyna arg=" << optarg);
-                break;
-            case 'a':
-                config_file = optarg;
-                PRINTLINE("[SETUP] set new config_file: " << config_file);
-                break;
-            case '?':
-                if(optopt == 'm') {
-                    PRINTLINE("Option -m requires an argument.");
-                } else if(optopt == 'l') {
-                    PRINTLINE("Option -l requires an argument.");
-                } else if(optopt == 'l') {
-                    PRINTLINE("Option -a requires an argument.");                          
-                } else {
-                    PRINTLINE("Unknown cmd-option. (-h for help).");
-                }
-                break;                
-            default:
-                PRINTLINE("Invalid cmd-option. (-h for help).");
-                break;
+
+    if(vm.count("help")) {
+        PRINTLINE(desc);
+        return 1;
+    }
+
+    if(vm.count("testing")) {
+        PRINTLINE("[CFG] Testing enabled")
+        testing_enabled = true;
+    }
+
+    if(vm.count("sim")) {
+        PRINTLINE("[CFG] Simulation enabled")
+        sim_motors = true;
+    }
+
+    if(vm.count("debug")) {
+        PRINTLINE("[CFG] Debug prints enabled")
+        debug_file_enabled = true;
+    }
+
+    if(vm.count("nolog")) {
+        PRINTLINE("[CFG] All logging disabled")
+        logging = false;
+    }
+
+    if(vm.count("mport")) {
+        motor_serial = vm["mport"].as<std::string>(); // << std::endl;
+        PRINTLINE("[CFG] Motor serial port = " << motor_serial);
+    }
+
+    if(vm.count("dport")) {
+        dyna_serial = vm["dport"].as<std::string>();// << std::endl;
+        PRINTLINE("[CFG] Dynamixel serial port = " << dyna_serial);
+    }
+
+    if(vm.count("ai")) {
+        int p = vm["ai"].as<int>();
+        if(p > 0 && p < MAX_INT) {
+            ai_port = p;
+            PRINTLINE("[CFG] AI zmq-port is: " << ai_port);
+        } else {
+            PRINTLINE("[CFG] AI: Invalid port value: " << p);
         }
     }
 
-    return true;
+    if(vm.count("pos")) {
+        int p = vm["pos"].as<int>();
+        if(p > 0 && p < MAX_INT) {
+            pos_port = p;
+            PRINTLINE("[CFG] POS zmq-port is: " << pos_port);
+        } else {
+            PRINTLINE("[CFG] Invalid zmq port value: " << ai_port);
+        } 
+    }
+
+    if(vm.count("config")) {
+        config_file = vm["config"].as<std::string>();
+        PRINTLINE("[CFG] config file is: " << config_file);
+    }
+
+    return 0;
 }
 
 
@@ -416,10 +426,11 @@ void configureLogger() {
 
 int main(int argc, char *argv[]) {  
     PRINTLINE("[SETUP] checking cmdline-arguments");
-    if(!checkArguments(argc, argv)) {
-        PRINTLINE("ERROR: Invalid arguments");
-        return -1;
-    }
+    //if(!checkArguments(argc, argv)) {
+    //    PRINTLINE("ERROR: Invalid arguments");
+    //    return -1;
+    //}
+    cmdArgs(argc, argv);
 
     PRINTLINE("[SETUP] Configuring loggers");
     configureLogger();

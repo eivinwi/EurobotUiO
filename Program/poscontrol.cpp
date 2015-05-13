@@ -873,8 +873,8 @@ void PosControl::readConfig(std::string filename) {
 		config = YAML::LoadFile("config.yaml");
 	}
 	else {
-		LOG(INFO) << "[POS] reading configuration file: " << filename;
-		config = YAML::LoadFile("filename");		
+		LOG(INFO) << "[POS] reading configuration file:" << filename << ".";
+		config = YAML::LoadFile(filename);		
 	}
 
 	speed_stop = config["speed_stop"].as<int>();

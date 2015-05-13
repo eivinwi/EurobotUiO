@@ -14,6 +14,12 @@
 #include <zmq.hpp>
 #include <iostream>
 #include <iomanip>
+#include <stdio.h>
+#include <boost/program_options.hpp>
+#include <limits>
+
+#define MAX_INT std::numeric_limits<int>::max()
+
 
 INITIALIZE_EASYLOGGINGPP
 #ifndef ELPP_THREAD_SAFE
@@ -29,7 +35,8 @@ void posClient();
 
 // Reads command-line arguments. Uses GNU C++ GetOpt standard.
 // Returns true if no invalid arguments
-bool checkArguments(int argc, char *argv[]);
+//bool checkArguments(int argc, char *argv[]);
+int cmdArgs(int ac, char *av[]);
 
 // Used by the aiServer ZMQ-server thread.
 // Splits input from Client on delimiter, returns array with arguments
@@ -74,6 +81,12 @@ bool com_running = false;
 bool debug_file_enabled = false;
 bool testing_enabled = false;
 bool log_to_file = true;
+bool logging = true;
 std::string motor_serial = "/dev/ttyUSB0";
 std::string dyna_serial = "/dev/ttyUSB1";
-std::string config_file = "";
+std::string config_file = "config.yaml";
+int ai_port = 5900;
+int pos_port = 5555;
+
+
+namespace po = boost::program_options;
