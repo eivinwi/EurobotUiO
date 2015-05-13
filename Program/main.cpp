@@ -139,34 +139,6 @@ void aiServer() {
     com_running = false;
 }
 
-/*
-void subscriptionLoop() {
-    zmq::context_t context (1);
-    LOG(INFO) << "[COM2] starting";
-    zmq::socket_t subscriber (context, ZMQ_SUB);
-    //subscriber.connect("ipc://pos.ipc");
-    subscriber.connect("tcp://localhost:5556");
-
-    subscriber.setsockopt(ZMQ_SUBSCRIBE, NULL, 0); //, filter, strlen (filter));
-
-    int args[3]; // (x, y, r)    
-    std::string str;
-    while(1) {
-        zmq::message_t update;
-        subscriber.recv(&update);
-        std::istringstream iss(static_cast<char*>(update.data()));
-        iss >> str;
-        
-        int num_args = extractArguments(str, args);
-        if(num_args != 3) {
-            LOG(WARNING) << "[COM2] Invalid position-string!!" << str.c_str();
-        } else {
-            PRINTLINE( "YEAH" );
-            LOG(INFO) << "[COM2] recv: [" << args[0] << ", " << args[1] << ", " << args[2] << "]";
-        }
-        usleep(100);
-    }
-}*/
 
 void posClient() {
     zmq::context_t context(1);
@@ -277,37 +249,30 @@ int cmdArgs(int ac, char *av[]) {
         PRINTLINE(desc);
         return 1;
     }
-
     if(vm.count("testing")) {
         PRINTLINE("[CFG] Testing enabled")
         testing_enabled = true;
     }
-
     if(vm.count("sim")) {
         PRINTLINE("[CFG] Simulation enabled")
         sim_motors = true;
     }
-
     if(vm.count("debug")) {
         PRINTLINE("[CFG] Debug prints enabled")
         debug_file_enabled = true;
     }
-
     if(vm.count("nolog")) {
         PRINTLINE("[CFG] All logging disabled")
         logging = false;
     }
-
     if(vm.count("mport")) {
         motor_serial = vm["mport"].as<std::string>(); // << std::endl;
         PRINTLINE("[CFG] Motor serial port = " << motor_serial);
     }
-
     if(vm.count("dport")) {
         dyna_serial = vm["dport"].as<std::string>();// << std::endl;
         PRINTLINE("[CFG] Dynamixel serial port = " << dyna_serial);
     }
-
     if(vm.count("ai")) {
         int p = vm["ai"].as<int>();
         if(p > 0 && p < MAX_INT) {
@@ -317,7 +282,6 @@ int cmdArgs(int ac, char *av[]) {
             PRINTLINE("[CFG] AI: Invalid port value: " << p);
         }
     }
-
     if(vm.count("pos")) {
         int p = vm["pos"].as<int>();
         if(p > 0 && p < MAX_INT) {
@@ -327,12 +291,10 @@ int cmdArgs(int ac, char *av[]) {
             PRINTLINE("[CFG] Invalid zmq port value: " << ai_port);
         } 
     }
-
     if(vm.count("config")) {
         config_file = vm["config"].as<std::string>();
         PRINTLINE("[CFG] config file is: " << config_file);
     }
-
     return 0;
 }
 
@@ -392,6 +354,7 @@ void crashHandler(int sig) {
 }
 
 
+//TODO: disable logging if --nolog
 void configureLogger() {
     el::Configurations defaultConf;
     defaultConf.setToDefault();
@@ -430,7 +393,9 @@ int main(int argc, char *argv[]) {
     //    PRINTLINE("ERROR: Invalid arguments");
     //    return -1;
     //}
-    cmdArgs(argc, argv);
+    if(cmdArgs(argc, argv) != 0) {
+        return 1;
+    };
 
     PRINTLINE("[SETUP] Configuring loggers");
     configureLogger();
@@ -493,8 +458,8 @@ int main(int argc, char *argv[]) {
     }
 
     testSystem();
-    std::vector<int> testAction{5, 0, 4};
-    d->performAction(testAction);
+    std::vector<int> initGrippers{5, 0, 4};
+    d->performAction(initGrippers);
     LOG(INFO) << "\n[SETUP] System tests completed, waiting for client input...\n";
  
     if(read_thread.joinable()) {
