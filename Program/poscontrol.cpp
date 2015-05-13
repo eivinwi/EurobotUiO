@@ -231,10 +231,6 @@ void PosControl::controlLoop() {
 				halt();
 			} 
 			else {
-				else if(type == LIFT) {
-					
-				}
-
 				switch(type) {
 					case 1:
 						//reverse
@@ -615,7 +611,7 @@ float PosControl::updatePositionReverse() {
 	y_diff = sin_d(cur_pos.angle) * avg_dist;
 	cur_pos.x = x_0 + x_diff;
 	cur_pos.y = y_0 + y_diff;
-	PRINTLINE("curx = " << x_0 << " + " << x_diff << " = " << cur_pos.x);
+//	PRINTLINE("curx = " << x_0 << " + " << x_diff << " = " << cur_pos.x);
 
 	return avg_dist;
 }
