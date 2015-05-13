@@ -25,16 +25,9 @@
 #ifndef POSCONTROL_H
 #define	POSCONTROL_H
 
-#include "motorcom.h"
-#include "dynacom.h"
-#include "printing.h"
-
-#include <cassert>
 #include <condition_variable>
-#include <fstream>
 #include <math.h>
 #include <mutex>
-#include <iomanip>
 #include <queue>
 #include <string>
 #include <sstream>
@@ -42,18 +35,15 @@
 #include <time.h>
 #include <vector>
 #include "yaml-cpp/yaml.h"
+ 
+#include "dynacom.h"
+#include "motorcom.h"
+#include "printing.h"
 
-//state definitions for robot movement
-#define NONE 0
-#define ROTATION 1
-#define FORWARD 2
-#define REVERSE 3
-#define STRAIGHT 7
 
 //number of action IDs to store
-#define ACTION_STORAGE 1024
+#define ACTION_STORAGE 2000
 
-//int curSpeedLeft, curSpeedRight;
 
 
 class PosControl {
@@ -94,7 +84,6 @@ public:
 	bool positionCloseEnough();
 	bool inGoal();
 
-	int getCurrentId();
 	std::string getCurrentPos();
 	std::string getState();
 	std::string getGripperPos();
@@ -170,7 +159,7 @@ private:
 		int position = 5000;
 		int crawling = 1000;
 		int action = 5000;
-		long move_complete = 1000000;
+		long move_complete = 800000;
 	} TimeStep;
 
 	int MAX_WAIT = 2000;

@@ -772,11 +772,6 @@ bool PosControl::inGoal() {
 	return positionCloseEnough() && angleCloseEnough();
 }
 
-//TODO
-int PosControl::getCurrentId() {
-	return 0;//current_id;
-}
-
 
 std::string PosControl::getCurrentPos() {
 	std::stringstream ss;
