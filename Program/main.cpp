@@ -493,7 +493,7 @@ int main(int argc, char *argv[]) {
     }
 
     testSystem();
-    std::vector<int> testAction{5, 0, 0, 100, 100};
+    std::vector<int> testAction{5, 0, 4};
     d->performAction(testAction);
     LOG(INFO) << "\n[SETUP] System tests completed, waiting for client input...\n";
  

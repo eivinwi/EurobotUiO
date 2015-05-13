@@ -85,7 +85,7 @@ void DynaCom::performAction(std::vector<int> cmd) {
 	//int id = cmd[1];
 	int action = cmd[2];
 
-	LOG(INFO) << "[DYNA] performAction: " << cmd[0] << "," << cmd[1] << "," << cmd[2] << "," << cmd[3] << "," << cmd[4]; 
+	//LOG(INFO) << "[DYNA] performAction: " << cmd[0] << "," << cmd[1] << "," << cmd[2] << "," << cmd[3] << "," << cmd[4]; 
 
 	if( type == LIFT ) {
 		//deprecated
@@ -136,6 +136,11 @@ void DynaCom::performAction(std::vector<int> cmd) {
 			case 2:
 				setRightGripper(cmd[3]);
 				break;
+			case 3:
+				packGrippers();
+				break;
+			case 4: 
+				unpackGrippers();
 			default:
 				break;
 		}
@@ -205,6 +210,20 @@ bool DynaCom::testShutter() {
 
 
 /*** PRIVATE FUNCTIONS ***/
+void DynaCom::packGrippers() {
+	setPosition(left_gripper.ID, left_gripper.start - 580);	
+	usleep(450000);
+	setPosition(right_gripper.ID, right_gripper.start + 500);	
+	usleep(100000);
+} 
+
+void DynaCom::unpackGrippers() {
+	setPosition(right_gripper.ID, right_gripper.start + 100);	
+	usleep(100000);
+	setPosition(left_gripper.ID, left_gripper.start - 100);	
+	usleep(100000);
+} 
+
 
 
 void DynaCom::shutterOpenLeft() {

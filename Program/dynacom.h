@@ -62,6 +62,9 @@ public:
 private:
     bool test(int id);
 
+    void packGrippers();
+    void unpackGrippers();
+
     void setLeftGripper(int pos);
     void setRightGripper(int pos);
     void setGrippers(int left_pos, int right_pos);
