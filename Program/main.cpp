@@ -49,7 +49,7 @@ void aiServer() {
         std::string recv_str = std::string(static_cast<char*>(request.data()), request.size());
         std::string reply_str;
         
-        std::vector<int> args = extractArguments(recv_str);
+        std::vector<int> args = extractInts(recv_str);
         int num_args = args.size();
 
         LOG(DEBUG) << "[COM] input str(" << num_args << "): " << recv_str;
@@ -62,12 +62,13 @@ void aiServer() {
                 case REQUEST: 
                     LOG(DEBUG) << "[COM] Recieved REQUEST";
                     if(args[1] == 1) {
-                        int id = p->getCurrentId();
+                        //int id = p->getCurrentId();
+                        int id = 0;
                         reply_str = std::to_string(id);
                         LOG(DEBUG) << "[COM] REQUEST ID, ret(" << reply_str.length() << "): " << reply_str;
                     } 
                     else if(args[1] == 2) {
-                        reply_str = p->getCurrentPos();
+                        reply_str = p->getState();
                         LOG(DEBUG) << "[COM] REQUEST POS, ret(" << reply_str.length() << "): " << reply_str;
                     } 
                     else if(args[1] == 4) {
@@ -100,9 +101,14 @@ void aiServer() {
                     enqueue(num_args, args);
                     reply_str = "ok";
                     break;
-                case SHUTTER: 
+  /*              case SHUTTER: 
                     LOG(DEBUG) << "[COM]  Received SHUTTER";
                     //TODO
+                    reply_str = "ok";
+                    break;
+    */            case 6:
+                    LOG(INFO) << "[COM] Received GOAL";
+                    enqueue(num_args, args);
                     reply_str = "ok";
                     break;
                 case STRAIGHT:
@@ -143,22 +149,28 @@ void aiServer() {
 void posClient() {
     zmq::context_t context(1);
     zmq::socket_t socket(context, ZMQ_REQ);
-    socket.connect("tcp://193.157.227.196:5900");
+    socket.connect("tcp://193.157.206.209:5900");
+  //  socket.connect(pos_ip_port.c_str());
 
     while(true) {
-        std::string s = p->getState();
+        std::stringstream ss;
+        ss << "1," << p->getPosStr();
+        std::string s = ss.str();
 
-        zmq::message_t pos( s.length() );
-        memcpy((void*) pos.data(), s.c_str(), s.length());
+        zmq::message_t req( s.length() );
+        memcpy((void*) req.data(), s.c_str(), s.length());
         
         LOG(INFO) << "[COM2] Sending  len=" << s.length() << " to POS";
-        socket.send(pos);
+        socket.send(req);
 
         zmq::message_t reply;
         socket.recv( &reply );
 
         std::string reply_str = std::string(static_cast<char*>(reply.data()), reply.size());
         LOG(INFO) << "[COM2] Reply from POS: len=" << reply.size() << ": " << reply_str;
+
+        std::vector<float> rpl = extractFloats(reply_str);
+        p->setExactPos(rpl);
 
         usleep(500000); //500ms
     }
@@ -213,8 +225,19 @@ bool resetRobot(int num_args, std::vector<int> args) {
 }
 
 
-std::vector<int> extractArguments(std::string input) {
+std::vector<int> extractInts(std::string input) {
     std::vector<int> args;
+    std::istringstream f(input);
+    std::string s;
+    while(getline(f, s, ',')) {
+        args.push_back(atoi(s.c_str()));
+    }
+    return args;    
+}
+
+
+std::vector<float> extractFloats(std::string input) {
+    std::vector<float> args;
     std::istringstream f(input);
     std::string s;
     while(getline(f, s, ',')) {
@@ -237,6 +260,7 @@ int cmdArgs(int ac, char *av[]) {
         ("dport", po::value<std::string>(), "Dynamixel serial port (ex: /dev/ttyUSB1")
         ("ai", po::value<int>(), "AI ZMQ port as server (ex: 5900)")
         ("pos", po::value<int>(), "POS ZMQ port as client (ex: 5555)")
+        ("posip", po::value<std::string>(), "POS ZMQ ip:port (ex: tcp://193.157.206.209:5432")
         ("config", po::value<std::string>(), "Set YAML config file")
     ;
 
@@ -290,6 +314,11 @@ int cmdArgs(int ac, char *av[]) {
         } else {
             PRINTLINE("[CFG] Invalid zmq port value: " << ai_port);
         } 
+    }
+
+    if(vm.count("posip")) {
+        std::string pos_ip_port = vm["posip"].as<std::string>();
+        PRINTLINE("[CFG] POS zmq address is: " << pos_ip_port);
     }
     if(vm.count("config")) {
         config_file = vm["config"].as<std::string>();
@@ -439,8 +468,8 @@ int main(int argc, char *argv[]) {
     std::thread read_thread(aiServer);
     usleep(5000);
 
- //   LOG(INFO) << "[SETUP] initializing POS thread";
- //   std::thread write_thread(posClient);
+    LOG(INFO) << "[SETUP] initializing POS thread";
+    std::thread write_thread(posClient);
 
     int acc = m->getAcceleration(); 
     if(acc != ACCELERATION) {
@@ -458,7 +487,7 @@ int main(int argc, char *argv[]) {
     }
 
     testSystem();
-    std::vector<int> initGrippers{5, 0, 4};
+    std::vector<int> initGrippers{5, 0, 0, 380, 380};
     d->performAction(initGrippers);
     LOG(INFO) << "\n[SETUP] System tests completed, waiting for client input...\n";
  
@@ -467,6 +496,9 @@ int main(int argc, char *argv[]) {
     }
     if(pos_thread.joinable()) {
         pos_thread.join();
+    }
+    if(write_thread.joinable()) {
+        write_thread.join();
     }
     return 0;
 }

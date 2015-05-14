@@ -25,6 +25,7 @@
 #ifndef POSCONTROL_H
 #define	POSCONTROL_H
 
+#include <bitset>
 #include <condition_variable>
 #include <math.h>
 #include <mutex>
@@ -84,7 +85,7 @@ public:
 	bool positionCloseEnough();
 	bool inGoal();
 
-	std::string getCurrentPos();
+	std::string getPosStr();
 	std::string getState();
 	std::string getGripperPos();
 	void completeCurrent();
@@ -103,6 +104,11 @@ public:
 	float atan2AdjustedReverse(float x, float y);
 
 	void readConfig(std::string filename);
+
+	void pickUpLoop();
+
+	void setExactPos(std::vector<float> v);
+
 
 private:	
 	MotorCom *mcom;

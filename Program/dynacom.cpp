@@ -40,6 +40,7 @@ struct gripper {
     int straight;
     int closed;
     int goal;
+    int pos;
 } left_gripper, right_gripper;
 
 
@@ -85,7 +86,7 @@ void DynaCom::performAction(std::vector<int> cmd) {
 	//int id = cmd[1];
 	int action = cmd[2];
 
-	//LOG(INFO) << "[DYNA] performAction: " << cmd[0] << "," << cmd[1] << "," << cmd[2] << "," << cmd[3] << "," << cmd[4]; 
+	//LOG(INFO) << "[DYNA] performAction: " << cmd[0] << "," << cmd[1] << "," << cmd[2] << "," << ((cmd.size() > 3)? cmd[3] : 0) << "," << cmd[4]; 
 
 	if( type == LIFT ) {
 		//deprecated
@@ -175,6 +176,7 @@ void DynaCom::setRightGripper(int pos) {
 void DynaCom::setGrippers(int left_pos, int right_pos) {
 	setLeftGripper(left_pos);
 	setRightGripper(right_pos);
+	usleep(1000);
 } 
 
 
@@ -209,7 +211,20 @@ bool DynaCom::testShutter() {
 }
 
 
+void DynaCom::openGrippersNoSleep() {
+	setPositionNoSleep(left_gripper.ID, left_gripper.start - 100);
+	setPositionNoSleep(right_gripper.ID, right_gripper.start + 100);
+}
+
+void DynaCom::closeGrippersNoSleep() {
+	setPositionNoSleep(left_gripper.ID, left_gripper.start - 380);
+	setPositionNoSleep(right_gripper.ID, right_gripper.start + 380);
+}
+
+
 /*** PRIVATE FUNCTIONS ***/
+
+
 void DynaCom::packGrippers() {
 	setPosition(left_gripper.ID, left_gripper.start - 580);	
 	usleep(450000);
@@ -280,19 +295,34 @@ void DynaCom::setMaxTorque(int id, int torque) {
 }
 
 
+void DynaCom::setPositionNoSleep(int id, int pos) {
+	LOG(INFO) << "[DYNA] setPositionNoSleep(" << id << "," << pos << ")";
+	setReg2(id, 30, pos);
+	setReg2(id, 30, pos);
+}
+
 void DynaCom::setPosition(int id, int pos) {
 	LOG(INFO) << "[DYNA] setPosition(" << id << "," << pos << ")";
+	setReg2(id, 30, pos);
 	setReg2(id, 30, pos);
   	usleep(ACTION_DELAY);
 }
 
 
+//auto prev = std::chrono::high_resolution_clock::now();
+
 int DynaCom::readPosition(int id) {
+/*	auto now = std::chrono::high_resolution_clock::now();
+	auto timespan = std::chrono::duration<double, std::milli>(now - prev).count();
+
+	if(timespan < 1000) {
+		return left_gripper.pos;
+	}*/
 	if(simulating) {
 		return true;
 	}
 	regRead(id, 36, 2); //(int id, int firstRegAdress, int noOfBytesToRead)
-  	usleep(ACTION_DELAY*10);
+  	usleep(ACTION_DELAY);//*10);
 
 	return (int) returnValue( readByte() );
 }

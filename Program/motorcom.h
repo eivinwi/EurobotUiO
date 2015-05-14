@@ -28,12 +28,14 @@
 #ifndef MOTORCOM_H
 #define	MOTORCOM_H
 
-#include "printing.h"
-#include "serial.h"
-#include "serialsim.h"
 #include <cstring>
 #include <stdint.h>
 #include <tuple>
+
+#include "printing.h"
+#include "serial.h"
+#include "serialsim.h"
+
 
 #define LEFT 1
 #define RIGHT 2

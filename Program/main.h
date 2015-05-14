@@ -1,30 +1,30 @@
+#include <boost/program_options.hpp>
+#include <cstring>
+#include <ctype.h>
+#include <iomanip>
+#include <iostream>
+#include <limits>
+#include <mutex>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+#include <thread>
+#include <unistd.h>
+#include <zmq.hpp>
+
 #include "dynacom.h"
 #include "motorcom.h"
 #include "poscontrol.h"
 #include "printing.h"
 #include "protocol.h"
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string>
-#include <cstring>
-#include <thread>
-#include <mutex>
-#include <zmq.hpp>
-#include <iostream>
-#include <iomanip>
-#include <stdio.h>
-#include <boost/program_options.hpp>
-#include <limits>
-
-#define MAX_INT std::numeric_limits<int>::max()
-
 
 INITIALIZE_EASYLOGGINGPP
 #ifndef ELPP_THREAD_SAFE
 #define ELPP_THREAD_SAFE
 #endif
+
+#define MAX_INT std::numeric_limits<int>::max()
+
 
 // Implements a ZMQ server that waits for input from clients. 
 // Used for communication with AI.
@@ -40,7 +40,8 @@ int cmdArgs(int ac, char *av[]);
 
 // Used by the aiServer ZMQ-server thread.
 // Splits input from Client on delimiter, returns array with arguments
-std::vector<int> extractArguments(std::string input);
+std::vector<int> extractInts(std::string input);
+std::vector<float> extractFloats(std::string input);
 
 // Adds current command to queue in PosControl
 bool enqueue(int num_args, std::vector<int> args);
@@ -85,6 +86,8 @@ bool logging = true;
 std::string motor_serial = "/dev/ttyUSB0";
 std::string dyna_serial = "/dev/ttyUSB1";
 std::string config_file = "config.yaml";
+std::string pos_ip_port = "tcp://localhost:5500";
+
 int ai_port = 5900;
 int pos_port = 5555;
 

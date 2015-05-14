@@ -46,7 +46,7 @@ struct pos {
 	float x;
 	float y;
 	float angle;
-} cur_pos, goal_pos;
+} cur_pos, goal_pos, apr_pos;
 
 
 struct comp {
@@ -67,6 +67,14 @@ struct Motor {
 	int speed;
 } left_motor, right_motor;
 
+struct exact {
+	float x;
+	float y;
+	float angle;
+	std::chrono::time_point<std::chrono::high_resolution_clock> timestamp;
+} Exact;
+
+
 float x_0, x_diff, goal_x;
 float y_0, y_diff, goal_y;
 float angle_0, angle_diff, goal_angle;
@@ -76,6 +84,32 @@ auto compass_timestamp = std::chrono::high_resolution_clock::now();
 auto prev = std::chrono::high_resolution_clock::now();
 
 int current_id = 0;
+
+
+//TODO: check if reasonable
+void PosControl::setExactPos(std::vector<float> v) {
+	if(v.size() == 3) {
+		float x = v[0];
+		float y = v[1];
+		float angle = v[2];
+
+		if((x > 3000) || (x < 0) || (y > 2000) || (y < 0) || (angle > 360) || angle < 0)  {
+			LOG(WARNING) << "Exactpos is outside area: (" << x << "," << y << "," << angle;
+			return;
+		}
+
+		Exact.x = v[0];
+		Exact.y = v[1];
+		Exact.angle = v[2];
+		Exact.timestamp = std::chrono::high_resolution_clock::now();
+		LOG(INFO) << "Exactpos=(" << x << "," << y << "," << angle;
+	}
+	else {
+		LOG(WARNING) << "[POS] vector from POS too short: " << v.size();
+	}
+}
+
+
 
 PosControl::PosControl(MotorCom *m, DynaCom *d, bool test, std::string config_file) {
 	mcom = m;
@@ -94,6 +128,12 @@ void PosControl::reset(int x, int y, int rot) {
 	goal_pos.x = x;
 	goal_pos.y = y;
 	goal_pos.angle = rot;
+	apr_pos.x = x;
+	apr_pos.y = y;
+	apr_pos.angle = rot;
+	Exact.x = x;
+	Exact.y = y;
+	Exact.angle = rot;
 	left_encoder.prev = 0;
 	left_encoder.diff = 0;
 	left_encoder.diff_dist = 0.0;
@@ -147,7 +187,7 @@ std::vector<int> PosControl::dequeue() {
 
 	std::vector<int> cmd = q.front();
 	q.pop();
-	usleep(100);
+	//usleep(100);
 	return cmd;
 }
 
@@ -212,7 +252,11 @@ void PosControl::controlLoop() {
 						dcom->performAction(cmd);
 						break;
 					case 6:
-						//reserved
+						LOG(INFO) << "[POS] starting action: goal (" << cmd[2] << "," << cmd[3] << ")";
+						current_id = cmd[1];
+						goal_pos.x = cmd[2];
+						goal_pos.y = cmd[3];
+						pickUpLoop();
 						break;					
 					case 7:
 						current_id = cmd[1];
@@ -297,7 +341,7 @@ void PosControl::rotationLoop() {
 		readEncoders();
 		rotated = updateAngle();
 
-		LOG_EVERY_N(5, INFO) << "[POS] rotating:  (" << rotated << " / " << total_rotation << ")   angle: " 
+		LOG_EVERY_N(10, INFO) << "[POS] rotating:  (" << rotated << " / " << total_rotation << ")   angle: " 
 				<< cur_pos.angle << " goal: " << goal_pos.angle << "  error: " << angle_err;
 	}
 
@@ -324,8 +368,10 @@ void PosControl::rotationLoop() {
 	printf("right: | %6ld | %6ld | %6ld | %6ld | %6f \n\n", right_encoder.e_0, right_enc_complete, right_enc_final, (right_encoder.total - right_encoder.e_0), (right_encoder.total - right_encoder.e_0) / Enc.per_degree);
 
 
-	LOG(INFO) << " Adjusting cur_pos.angle from " << cur_pos.angle << " to " << goal_pos.angle;
-	cur_pos.angle = goal_pos.angle;
+//LOG(INFO) << " Adjusting cur_pos.angle from " << cur_pos.angle << " to " << goal_pos.angle;
+	//cur_pos.angle = goal_pos.angle;
+
+	apr_pos.angle = goal_pos.angle;
 }
 
 
@@ -373,7 +419,7 @@ void PosControl::positionLoop() {
 		readEncoders();
 		traveled = updatePosition();
 
-		LOG_EVERY_N(5, INFO) << "[POS] driving:  (" << traveled << "/" << total_dist << ") "; 
+		LOG_EVERY_N(10, INFO) << "[POS] driving:  (" << traveled << "/" << total_dist << ") "; 
 	}
 
 	halt();
@@ -406,9 +452,9 @@ void PosControl::positionLoop() {
 	printf("right: | %5ld | %5ld | %5ld | %5f \n\n", right_encoder.e_0, right_encoder.total, (right_encoder.total - right_encoder.e_0), (right_encoder.total - right_encoder.e_0)*Enc.constant);
 	//printf("avg: ");
 
-	LOG(INFO) << "Adjusting position from (" << cur_pos.x << "," << cur_pos.y << ") to (" << goal_pos.x << "," << goal_pos.y << ")";
-	cur_pos.x = goal_pos.x;
-	cur_pos.y = goal_pos.y;
+//	LOG(INFO) << "Adjusting position from (" << cur_pos.x << "," << cur_pos.y << ") to (" << goal_pos.x << "," << goal_pos.y << ")";
+	apr_pos.x = goal_pos.x;
+	apr_pos.y = goal_pos.y;
 }
 
 
@@ -442,15 +488,17 @@ void PosControl::reverseStraight(int dist) {
 		usleep(TimeStep.position);
 		readEncoders();
 		traveled = updatePositionReverse();
-		LOG_EVERY_N(5, INFO) << "[POS] driving:  (" << traveled << "/" << total_dist << ") "; 
+		LOG_EVERY_N(10, INFO) << "[POS] driving:  (" << traveled << "/" << total_dist << ") "; 
 	}
 
 	halt();
 	readEncoders();
 	updatePositionReverse();
 	LOG(INFO) << "[POS] reverse move complete, cur_pos is now:  (" << cur_pos.x << "," << cur_pos.y << ")"; 
-	cur_pos.x = goal_pos.x;
-	cur_pos.y = goal_pos.y;
+	//cur_pos.x = goal_pos.x;
+	//cur_pos.y = goal_pos.y;
+	apr_pos.x = goal_pos.x;
+	apr_pos.y = goal_pos.y;
 }
 
 
@@ -490,16 +538,18 @@ void PosControl::reverseLoop() {
 		usleep(TimeStep.position);
 		readEncoders();
 		traveled = updatePositionReverse();
-		LOG_EVERY_N(5, INFO) << "[POS] driving:  (" << traveled << "/" << total_dist << ") "; 
+		LOG_EVERY_N(10, INFO) << "[POS] driving:  (" << traveled << "/" << total_dist << ") "; 
 	}
 
 	halt();
 	readEncoders();
 	updatePositionReverse();
-	LOG(INFO) << "[POS] reverse move complete, cur_pos is now:  (" << cur_pos.x << "," << cur_pos.y << ")"; 
+//	LOG(INFO) << "[POS] reverse move complete, cur_pos is now:  (" << cur_pos.x << "," << cur_pos.y << ")"; 
 
-	cur_pos.x = goal_pos.x;
-	cur_pos.y = goal_pos.y;
+//	cur_pos.x = goal_pos.x;
+//	cur_pos.y = goal_pos.y;
+	apr_pos.x = goal_pos.x;
+	apr_pos.y = goal_pos.y;
 }
 
 
@@ -512,19 +562,29 @@ float PosControl::perc(float s, float a, float g) {
 
 
 void PosControl::crawlToRotation() {
+	float start_angle = cur_pos.angle;
 	float angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
-	while (abs(angle_err) > 1.0) {
+	while (fabs(angle_err) > 0.1) {
+		angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
 		if(angle_err > 0) {
 			setSpeeds(136, 120);
-		} else {
-			setSpeeds(120, 136);
+		} 
+		else if(angle_err < 0) {
+			setSpeeds(120, 136);			
+		}
+		else {
+			setSpeeds(120, 120);
 		}
 		usleep(TimeStep.crawling);
 		readEncoders();
 		updateAngle();
-		angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
+		LOG_EVERY_N(10, INFO) << "[POS] crawling:  " << cur_pos.angle << " goal: " << goal_pos.angle << "  error: " << angle_err;
 	}
+
+	LOG(INFO) << "[POS] crawl complete.  from=" << start_angle << " to=" << cur_pos.angle << " goal=" << goal_pos.angle << " %%=" << perc(start_angle, cur_pos.angle, goal_pos.angle);
+	apr_pos.angle = goal_pos.angle;
 }
+
 
 
 //dir negative means backwards. Else forwards
@@ -735,6 +795,12 @@ void PosControl::readEncoders() {
 	right_encoder.total += right_diff;
 
 	encoder_timestamp = now;
+
+/*	uint8_t err = mcom->getError();
+	if(err != 0x00) {
+		std::bitset<8>b1(err);
+		LOG(WARNING) << " error: " << (int) err << " = " << b1; 
+	}*/
 }
 
 
@@ -773,23 +839,23 @@ bool PosControl::inGoal() {
 }
 
 
-std::string PosControl::getCurrentPos() {
+std::string PosControl::getPosStr() {
+	std::stringstream ss;
+	ss << cur_pos.x << "," << cur_pos.y << "," << cur_pos.angle;
+	return ss.str();
+}
+
+std::string PosControl::getState() {
 	std::stringstream ss;
 	ss << current_id << "," << completed(current_id) << ",";
-	ss << cur_pos.x << "," << cur_pos.y << "," << cur_pos.angle;
+	ss << cur_pos.x << "," << cur_pos.y << "," << cur_pos.angle;	
+	//ss << apr_pos.x << "," << apr_pos.y << "," << apr_pos.angle;
 	return ss.str();
 }
 
 
 int PosControl::completed(int id) {
 	return ((completed_actions[id])? 1 : 0);
-}
-
-//TODO: test thread safety
-std::string PosControl::getState() {
-	std::stringstream ss;
-	ss << cur_pos.x << "," << cur_pos.y << "," << cur_pos.angle << "," << getSpeed();
-	return ss.str();
 }
 
 
@@ -809,7 +875,7 @@ void PosControl::halt() {
 
 
 void PosControl::completeCurrent() {
-	LOG(INFO) << "[POS] current action completed. TODO: id";
+	LOG(INFO) << "[POS] action " << current_id << " completed.";
 	completed_actions[current_id] = true;
 	//mcom->resetEncoders();
 	//usleep(1000000);
@@ -904,4 +970,97 @@ void PosControl::readConfig(std::string filename) {
 	Enc.per_degree = config["enc_per_degree"].as<float>();
 
 	MAX_WAIT = config["max_wait"].as<int>();
+}
+
+
+//TODO: check compass and/or absolute
+void PosControl::pickUpLoop() {
+	if(inGoal()) {
+		LOG(INFO) << "[POS] Already at specified goal position: (" << cur_pos.x << "," << cur_pos.y << ") ~= (" << goal_pos.x << "," << goal_pos.y << ")";
+		return;
+	}
+
+	x_0 = cur_pos.x;
+	y_0 = cur_pos.y;
+	angle_0 = cur_pos.angle;
+	x_diff = 0.0;
+	y_diff = 0.0;
+	angle_diff = 0.0;
+
+	float dist_x = goal_pos.x - cur_pos.x; 
+	float dist_y = goal_pos.y - cur_pos.y;
+	float angle = atan2Adjusted(dist_x, dist_y); 
+	goal_pos.angle = angle;
+	if(!angleCloseEnough()) {
+		rotationLoop();
+	} 
+
+	float total_dist = distStraight(angle, dist_x, dist_y);
+	float straight = 0.0;
+	float traveled = 0.0;
+
+	readEncoders();
+	left_encoder.e_0 = left_encoder.total;
+	right_encoder.e_0 = right_encoder.total;
+
+	bool open = false;
+	if((fabs(straight) < 400) && !open) {
+		dcom->openGrippersNoSleep();
+		usleep(500000); 
+		open = true;
+	}
+
+	while( fabs(total_dist - traveled) > CloseEnough.position ) {
+		cur_pos.x = x_0 + x_diff;
+		cur_pos.y = y_0 + y_diff;
+		straight = distStraight(angle, (goal_pos.x - cur_pos.x), (goal_pos.y - cur_pos.y));
+
+		if((fabs(straight) < 400) && !open) {
+			dcom->openGrippersNoSleep();
+			open = true;
+		}
+
+		setDriveSpeed(straight);
+
+		usleep(TimeStep.position);
+
+		readEncoders();
+		traveled = updatePosition();
+
+		LOG_EVERY_N(10, INFO) << "[POS] driving:  (" << traveled << "/" << total_dist << ") "; 
+	}
+
+	halt();
+	readEncoders();
+	updatePosition();
+	float x_complete = cur_pos.x;
+	float y_complete = cur_pos.y;
+//	float angle_complete = cur_pos.angle;
+//	long left_enc_complete = left_encoder.total;
+//	long right_enc_complete = right_encoder.total;
+//	float distance_left_complete = (left_encoder.total - left_encoder.e_0) * Enc.constant;
+//	float distance_right_complete = (right_encoder.total - right_encoder.e_0) * Enc.constant;
+
+	usleep(TimeStep.move_complete);
+	float x_final = cur_pos.x;
+	float y_final = cur_pos.y;
+//	float angle_final = cur_pos.angle;
+//	long left_enc_final = left_encoder.total;
+//	long right_enc_final = right_encoder.total;
+//	float distance_left_final = (left_encoder.total - left_encoder.e_0) * Enc.constant;
+//	float distance_right_final = (right_encoder.total - right_encoder.e_0) * Enc.constant;
+
+
+	PRINTLINE("\nPOSITION completed: (" << x_0 << "," << y_0 << ") -> (" << goal_pos.x << "," << goal_pos.y << ").  Distance traveled: " << traveled);
+	printf("       |   x_0  |  x_diff  |  0+d  | goal  | com(perc) | fin(perc) | \n");
+	PRINTLINE("-----------------------------------------------------------------------------------------------------------------");
+	printf("x:     | %8.3f | %8.3f | %8.3f | %8.3f | %8.3f(%3.3f) | %8.3f(%3.3f) \n", x_0, x_diff, x_0 + x_diff, goal_pos.x, x_complete, percPos(x_0, x_complete, goal_pos.x), x_final, percPos(x_0, x_final, goal_pos.x));
+	printf("y:     | %8.3f | %8.3f | %8.3f | %8.3f | %8.3f(%3.3f) | %8.3f(%3.3f) \n\n", y_0, y_diff, y_0 + y_diff, goal_pos.y, y_complete, percPos(y_0, y_complete, goal_pos.y), y_final, percPos(y_0, y_final, goal_pos.y));
+	printf("left:  | %5ld | %5ld | %5ld | %5f \n", left_encoder.e_0, left_encoder.total, (left_encoder.total - left_encoder.e_0), (left_encoder.total - left_encoder.e_0)*Enc.constant);
+	printf("right: | %5ld | %5ld | %5ld | %5f \n\n", right_encoder.e_0, right_encoder.total, (right_encoder.total - right_encoder.e_0), (right_encoder.total - right_encoder.e_0)*Enc.constant);
+	//printf("avg: ");
+
+	LOG(INFO) << "Adjusting position from (" << cur_pos.x << "," << cur_pos.y << ") to (" << goal_pos.x << "," << goal_pos.y << ")";
+	apr_pos.x = goal_pos.x;
+	apr_pos.y = goal_pos.y;
 }

@@ -31,18 +31,14 @@
 #ifndef SERIALSIM_H
 #define	SERIALSIM_H
 
-#include "md49.h"
-#include "printing.h"
 #include <iostream>
 #include <stdint.h>
 #include <time.h>
 
-/*
- * Encoder counts: 980 per output shaft turn
- * Wheel diameter: 120mm
- * Wheel circumference: 377mm
- * Distance per count: 0.385mm
- */
+#include "md49.h"
+#include "printing.h"
+
+
 #define RPM 122
 #define RPS 2
 

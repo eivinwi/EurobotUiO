@@ -1,9 +1,9 @@
 ---
 pos_speed_max_pos: 		235
 pos_speed_med_pos:		192
-pos_speed_slow_pos:		155
+pos_speed_slow_pos:		150
 pos_speed_slow_neg:		106
-pos_speed_med_neg:		59
+pos_speed_med_neg:		64
 pos_speed_max_neg:		20
 
 rot_speed_max_pos: 		225

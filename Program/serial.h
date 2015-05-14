@@ -1,4 +1,4 @@
-/*
+ /*
  *  File: serial.h
  *  Author: Eivind Wikheim
  *
@@ -26,13 +26,14 @@
 #ifndef SERIAL_H
 #define	SERIAL_H
 
-#include "md49.h"
-#include "printing.h"
 #include <bitset>
 #include <chrono>
 #include <string> 
 #include <SerialStream.h>
 using namespace LibSerial ;
+
+#include "md49.h"
+#include "printing.h"
 
 #define SERIAL_DELAY 500
 

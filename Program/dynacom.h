@@ -29,12 +29,13 @@
 #ifndef DYNACOM_H
 #define DYNACOM_H
 
+//#include <atomic>
+#include <array>
+ 
 #include "dynacom.h"
 #include "protocol.h"
 #include "printing.h"
 #include "serial.h"
-#include <atomic>
-#include <array>
 
 #define ACTION_DELAY 1000
 #define SERIAL_DELAY 500
@@ -58,6 +59,9 @@ public:
 
     bool testGripper();
     bool testShutter();
+
+    void openGrippersNoSleep();
+    void closeGrippersNoSleep();
 
 private:
     bool test(int id);
@@ -83,6 +87,7 @@ private:
 
     // Sets gripper position. See Dynamixel AX-12A documentation for details.
     // Servos have been hardware-limited to only accept legal positions to avoid breaking parts.
+    void setPositionNoSleep(int id, int angle);
     void setPosition(int id, int angle);
 
     // Returns position of servo "id". See Dynamixel AX-12A documentation for details
