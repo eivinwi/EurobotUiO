@@ -322,7 +322,7 @@ void PosControl::rotationLoop() {
 	right_encoder.e_0 = right_encoder.total;
 
 	float angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
-	if(abs(angle_err) < 5) {
+	if(abs(angle_err) < 10) {
 		crawlToRotation();
 		return;
 	}
@@ -399,6 +399,8 @@ void PosControl::positionLoop() {
 	if(!angleCloseEnough()) {
 		rotationLoop();
 	} 
+	angle = cur_pos.angle;
+	//TODO: crawl if inaccurate
 
 	float total_dist = distStraight(angle, dist_x, dist_y);
 	float straight = 0.0;
@@ -419,7 +421,7 @@ void PosControl::positionLoop() {
 		readEncoders();
 		traveled = updatePosition();
 
-		LOG_EVERY_N(10, INFO) << "[POS] driving:  (" << traveled << "/" << total_dist << ") "; 
+		LOG_EVERY_N(10, INFO) << "[POS] driving:  (" << traveled << "/" << total_dist << ")  cx=" << cur_pos.x << " cy=" << cur_pos.y << " ca=" << cur_pos.angle; 
 	}
 
 	halt();
@@ -649,6 +651,10 @@ float PosControl::updatePosition() {
 	float avg_dist = (fabs(left_dist) + fabs(right_dist)) / 2;
 	x_diff = cos_d(cur_pos.angle) * avg_dist; 
 	y_diff = sin_d(cur_pos.angle) * avg_dist; 
+
+	//PRINTLINE("x_diff = " << cos_d(cur_pos.angle) << " * " << avg_dist << " = " <<  x_diff);
+	//PRINTLINE("y_diff = " << sin_d(cur_pos.angle) << " * " << avg_dist << " = " <<  y_diff);
+
 	cur_pos.x = x_0 + x_diff;
 	cur_pos.y = y_0 + y_diff;
 
@@ -892,13 +898,13 @@ void PosControl::setCurrent(float x, float y, float angle) {
 
 float PosControl::sin_d(float angle) {
 	float r = sin(angle * M_PI/180);
-	return (fabs(r) < 0.1)? 0.0 : r;
+	return (fabs(r) < 0.001)? 0.0 : r;
 }
 
 
 float PosControl::cos_d(float angle) {
 	float r = cos(angle * M_PI/180);
-	return (fabs(r) < 0.1)? 0.0 : r;
+	return (fabs(r) < 0.001)? 0.0 : r;
 }
 
 
@@ -994,6 +1000,7 @@ void PosControl::pickUpLoop() {
 	if(!angleCloseEnough()) {
 		rotationLoop();
 	} 
+	angle = cur_pos.angle;
 
 	float total_dist = distStraight(angle, dist_x, dist_y);
 	float straight = 0.0;

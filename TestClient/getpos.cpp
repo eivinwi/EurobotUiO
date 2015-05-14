@@ -30,17 +30,6 @@
 
 int main (int argc, char *argv[])
 {
-	//default testing:
-	std::string position = "";
-
-	std::stringstream ss;
-
-	ss << argv[1];
-	for(int i = 2; i < argc; i++) {
-		ss << "," << argv[i];
-	}
-	ss << std::endl;
-	position = ss.str();
 
 
 	// Prepare our context and socket
@@ -48,8 +37,10 @@ int main (int argc, char *argv[])
 	zmq::socket_t socket (context, ZMQ_REQ);
 	std::cout << "Connecting to hello world server..." << std::endl;
 //	socket.connect ("tcp://localhost:5900");
-	socket.connect("tcp://localhost:5900");
+	socket.connect(argv[1]);
 	//socket.connect("ipc://ai.ipc");
+
+	std::string position = "1,100,300,57\n";
 
 	// Do 10 requests, waiting each time for a response
 	for (int request_nbr = 0; request_nbr < 1; request_nbr++) {
