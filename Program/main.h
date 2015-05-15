@@ -86,10 +86,11 @@ bool logging = true;
 std::string motor_serial = "/dev/ttyUSB0";
 std::string dyna_serial = "/dev/ttyUSB1";
 std::string config_file = "config.yaml";
-std::string pos_ip_port = "tcp://localhost:5500";
+std::string pos_ip_port = "tcp://localhost:5900";
+//std::string pos_ip_port = "tcp://193.157.205.194:5900";
 
-int ai_port = 5900;
-int pos_port = 5555;
+int ai_port = 5060;
+int pos_port = 5900;
 
 
 namespace po = boost::program_options;

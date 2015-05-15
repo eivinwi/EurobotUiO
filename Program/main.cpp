@@ -39,7 +39,7 @@ void aiServer() {
     // Prepare context and socket
     zmq::context_t context (1);
     zmq::socket_t socket (context, ZMQ_REP);
-    socket.bind ("tcp://*:5900");
+    socket.bind ("tcp://*:5060");
     //socket.bind ("ipc://ai.ipc");
 
     while (true) {
@@ -149,28 +149,34 @@ void aiServer() {
 void posClient() {
     zmq::context_t context(1);
     zmq::socket_t socket(context, ZMQ_REQ);
-    socket.connect("tcp://193.157.206.209:5900");
+    socket.connect("tcp://193.157.205.194:5900");
   //  socket.connect(pos_ip_port.c_str());
 
     while(true) {
         std::stringstream ss;
-        ss << "1," << p->getPosStr();
+        //ss << "1," << p->getPosStr();
+        ss << "2";
         std::string s = ss.str();
 
         zmq::message_t req( s.length() );
         memcpy((void*) req.data(), s.c_str(), s.length());
         
-        LOG(INFO) << "[COM2] Sending  len=" << s.length() << " to POS";
+        //LOG(INFO) << "[COM2] Sending  len=" << s.length() << " to POS";
         socket.send(req);
 
         zmq::message_t reply;
         socket.recv( &reply );
 
         std::string reply_str = std::string(static_cast<char*>(reply.data()), reply.size());
-        LOG(INFO) << "[COM2] Reply from POS: len=" << reply.size() << ": " << reply_str;
 
         std::vector<float> rpl = extractFloats(reply_str);
-        p->setExactPos(rpl);
+        std::stringstream stream;
+        for( float f : rpl) {
+            stream << "    |    " << f;
+        }
+        LOG(INFO) << "[COM2] Reply from POS: len=" << reply.size() << ": " << stream.str();
+
+//        p->setExactPos(rpl);
 
         usleep(500000); //500ms
     }
@@ -449,7 +455,7 @@ int main(int argc, char *argv[]) {
     LOG(INFO) << "[SETUP] resetting motor encoders";
     m->resetEncoders();
     usleep(10000);
-    m->enableReg(true);
+    m->enableReg(false);
     usleep(10000);
 
     LOG(INFO) << "[SETUP] starting dyna-serial";
@@ -487,7 +493,7 @@ int main(int argc, char *argv[]) {
     }
 
     testSystem();
-    std::vector<int> initGrippers{5, 0, 0, 380, 380};
+    std::vector<int> initGrippers{5, 0, 0, 280, 280};
     d->performAction(initGrippers);
     LOG(INFO) << "\n[SETUP] System tests completed, waiting for client input...\n";
  

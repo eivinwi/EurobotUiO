@@ -165,7 +165,7 @@ private:
 		int position = 5000;
 		int crawling = 1000;
 		int action = 5000;
-		long move_complete = 800000;
+		long move_complete = 1000000;
 	} TimeStep;
 
 	int MAX_WAIT = 2000;

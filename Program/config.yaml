@@ -1,26 +1,26 @@
 ---
-pos_speed_max_pos: 		235
-pos_speed_med_pos:		192
-pos_speed_slow_pos:		155
-pos_speed_slow_neg:		106
-pos_speed_med_neg:		59
-pos_speed_max_neg:		20
+pos_speed_max_pos: 		215
+pos_speed_med_pos:		185
+pos_speed_slow_pos:		148
+pos_speed_slow_neg:		108
+pos_speed_med_neg:		70
+pos_speed_max_neg:		40
 
-rot_speed_max_pos: 		225
-rot_speed_med_pos:		192
-rot_speed_slow_pos:		140
-rot_speed_slow_neg:		116
-rot_speed_med_neg:		64
-rot_speed_max_neg:		30
+rot_speed_max_pos: 		205
+rot_speed_med_pos:		175
+rot_speed_slow_pos:		148
+rot_speed_slow_neg:		108
+rot_speed_med_neg:		80
+rot_speed_max_neg:		50
 
 speed_stop:				128
 
-slowdown_max_dist:		60
-slowdown_med_dist:		30
+slowdown_max_dist:		300
+slowdown_med_dist:		150
 slowdown_max_rot:		70
 slowdown_med_rot:		40
 
-rotation_close_enough:	1.0
+rotation_close_enough:	0.8
 position_close_enough:	3.0
 
 max_enc_incr:			980

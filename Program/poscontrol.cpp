@@ -490,7 +490,7 @@ void PosControl::reverseStraight(int dist) {
 		usleep(TimeStep.position);
 		readEncoders();
 		traveled = updatePositionReverse();
-		LOG_EVERY_N(10, INFO) << "[POS] driving:  (" << traveled << "/" << total_dist << ") "; 
+		LOG_EVERY_N(10, INFO) << "[POS] reversing:  (" << traveled << "/" << total_dist << ") "; 
 	}
 
 	halt();
@@ -540,7 +540,7 @@ void PosControl::reverseLoop() {
 		usleep(TimeStep.position);
 		readEncoders();
 		traveled = updatePositionReverse();
-		LOG_EVERY_N(10, INFO) << "[POS] driving:  (" << traveled << "/" << total_dist << ") "; 
+		LOG_EVERY_N(10, INFO) << "[POS] reversing:  (" << traveled << "/" << total_dist << ") "; 
 	}
 
 	halt();
@@ -569,19 +569,21 @@ void PosControl::crawlToRotation() {
 	while (fabs(angle_err) > 0.1) {
 		angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
 		if(angle_err > 0) {
-			setSpeeds(136, 120);
+			setSpeeds(speed_rot.pos_slow-8, speed_rot.neg_slow+8);
 		} 
 		else if(angle_err < 0) {
-			setSpeeds(120, 136);			
+			setSpeeds(speed_rot.neg_slow+8, speed_rot.pos_slow-8);			
 		}
 		else {
-			setSpeeds(120, 120);
+			setSpeeds(128, 128);
 		}
 		usleep(TimeStep.crawling);
 		readEncoders();
 		updateAngle();
 		LOG_EVERY_N(10, INFO) << "[POS] crawling:  " << cur_pos.angle << " goal: " << goal_pos.angle << "  error: " << angle_err;
 	}
+	halt();
+	usleep(TimeStep.move_complete);
 
 	LOG(INFO) << "[POS] crawl complete.  from=" << start_angle << " to=" << cur_pos.angle << " goal=" << goal_pos.angle << " %%=" << perc(start_angle, cur_pos.angle, goal_pos.angle);
 	apr_pos.angle = goal_pos.angle;
@@ -716,16 +718,16 @@ void PosControl::setRotationSpeed(float angle_err) {
 
 //TODO: dynamically change speeds according to distance left. Start off slow
 void PosControl::setDriveSpeed(float straight_dist) {
-	if(straight_dist > 200) {
+	if(straight_dist > Slowdown.max_straight) {
 		setSpeeds(speed_pos.pos_fast, speed_pos.pos_fast);
 	} 
-	else if(straight_dist > 100) {
+	else if(straight_dist > Slowdown.med_straight) {
 		setSpeeds(speed_pos.pos_med, speed_pos.pos_med);
 	} 
 	else if(straight_dist > 0) {
 		setSpeeds(speed_pos.pos_slow, speed_pos.pos_slow);
 	}
-	else if(straight_dist < -200) {
+	else if(straight_dist < -Slowdown.max_straight) {
 		setSpeeds(speed_pos.neg_med, speed_pos.neg_med);
 	}
 	else if(straight_dist < 0) {
@@ -815,10 +817,10 @@ float PosControl::distStraight(float angle, float x, float y) {
 	float cos_a = cos_d(angle);
 	float straight = 0.0;
 
-	if(sin_a != 0) {
-		straight = (y / sin_a);
-	} else if(cos_a != 0) {
-		straight = (x / cos_a);
+	if(fabs(sin_a) >= fabs(cos_a)) {
+		straight = (fabs(y) > 0.001)? (y/sin_a) : x;
+	} else {
+		straight = (fabs(x) > 0.001) ? (x/cos_a) : y;
 	}
 	return straight;
 }
@@ -1034,7 +1036,7 @@ void PosControl::pickUpLoop() {
 		readEncoders();
 		traveled = updatePosition();
 
-		LOG_EVERY_N(10, INFO) << "[POS] driving:  (" << traveled << "/" << total_dist << ") "; 
+		LOG_EVERY_N(10, INFO) << "[POS] driving(pickup):  (" << traveled << "/" << total_dist << ") "; 
 	}
 
 	halt();
