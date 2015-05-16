@@ -455,7 +455,7 @@ int main(int argc, char *argv[]) {
     LOG(INFO) << "[SETUP] resetting motor encoders";
     m->resetEncoders();
     usleep(10000);
-    m->enableReg(false);
+    m->enableReg(true);
     usleep(10000);
     m->enableTimeout(true);
     usleep(10000);

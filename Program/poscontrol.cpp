@@ -566,7 +566,7 @@ float PosControl::perc(float s, float a, float g) {
 void PosControl::crawlToRotation() {
 	float start_angle = cur_pos.angle;
 	float angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
-	while (fabs(angle_err) > 0.025) {
+	while (fabs(angle_err) > 0.1) {
 		angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
 		if(angle_err > 0) {
 			setSpeeds(speed_rot.pos_slow-10, speed_rot.neg_slow+10);
