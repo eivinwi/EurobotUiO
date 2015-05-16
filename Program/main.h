@@ -70,8 +70,8 @@ DynaCom *d;
 std::mutex read_mutex;
 
 // MD49 constants
-const int ACCELERATION = 5;
-const int MODE = 0;
+const int ACCELERATION = 3;
+const int MODE = 0;//2;
 
 // Default values, can be changed with command-line arguments
 bool sim_motors = false;

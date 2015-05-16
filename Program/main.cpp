@@ -457,6 +457,9 @@ int main(int argc, char *argv[]) {
     usleep(10000);
     m->enableReg(false);
     usleep(10000);
+    m->enableTimeout(true);
+    usleep(10000);
+
 
     LOG(INFO) << "[SETUP] starting dyna-serial";
     d->startSerial();
@@ -486,7 +489,7 @@ int main(int argc, char *argv[]) {
     
     usleep(5000);
     int mode = m->getMode();
-    if(mode != 0) {
+    if(mode != MODE) {
         LOG(INFO) << "[SETUP] Mode is: " << m << ", setting new mode: " << MODE;
         usleep(1000);
         m->setMode(MODE);

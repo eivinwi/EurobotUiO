@@ -73,7 +73,7 @@ public:
 	void readEncoders();
 
 	void setRotationSpeed(float angle_err);
-	void setDriveSpeed(float straight_dist);
+	void setDriveSpeed(float straight_dist, float traveled);
 	void setSpeeds(int l, int r);
 
 	float shortestRotation(float angle, float goal);
@@ -126,12 +126,14 @@ private:
 	bool completed_actions[ACTION_STORAGE];
 
 	struct speed{
-		int pos_fast = 225; //235, 255
-		int pos_med = 192;
-		int pos_slow = 150;
-		int neg_slow = 106;
-		int neg_med = 64;
-		int neg_fast = 30; //20, 0
+		int pos_fast; //235, 255
+		int pos_med;
+		int pos_slow;
+		int pos_crawl;
+		int neg_fast; //20, 0
+		int neg_med;
+		int neg_slow;
+		int neg_crawl;
 	} speed_rot, speed_pos;
 
 	int speed_stop = 128;
@@ -139,8 +141,9 @@ private:
 	struct slowdown{
 		int max_dist = 120;
 		int med_dist = 60;
-		int max_rot = 30;
-		int med_rot = 15;
+		int max_rot = 70;
+		int med_rot = 45;
+		int slow_rot = 20;
 		int max_straight = 200;
 		int med_straight = 100;
 	} Slowdown;
@@ -162,7 +165,7 @@ private:
 
 	struct timestep {
 		int rotation = 5000;
-		int position = 5000;
+		int position = 10000;
 		int crawling = 1000;
 		int action = 5000;
 		long move_complete = 1000000;

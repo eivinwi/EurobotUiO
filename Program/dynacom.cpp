@@ -158,19 +158,26 @@ void DynaCom::toggleLed(int id) {
 
 
 void DynaCom::setLeftGripper(int pos) {
-	if( (pos <= 400) && (pos >= 0) ) {
-		left_gripper.goal = pos;
-		setPosition(left_gripper.ID, left_gripper.start - pos);
+	if(pos > 370) {
+		pos = 370;
+	} else if(pos < 0) {
+		pos = 0;
 	}
+	left_gripper.goal = pos;
+	setPosition(left_gripper.ID, left_gripper.start - pos);
 }
 
 
 void DynaCom::setRightGripper(int pos) {
-	if( (pos <= 400) && (pos >= 0) ) {
-		right_gripper.goal = pos;
-		setPosition(right_gripper.ID, right_gripper.start + pos);	
+	if(pos > 370) {
+		pos = 370;
+	} else if(pos < 0) {
+		pos = 0;
 	}
+	right_gripper.goal = pos;
+	setPosition(right_gripper.ID, right_gripper.start + pos);	
 }
+
 
 
 void DynaCom::setGrippers(int left_pos, int right_pos) {

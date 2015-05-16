@@ -414,7 +414,7 @@ void PosControl::positionLoop() {
 		cur_pos.x = x_0 + x_diff;
 		cur_pos.y = y_0 + y_diff;
 		straight = distStraight(angle, (goal_pos.x - cur_pos.x), (goal_pos.y - cur_pos.y));
-		setDriveSpeed(straight);
+		setDriveSpeed(straight, traveled);
 
 		usleep(TimeStep.position);
 
@@ -486,7 +486,7 @@ void PosControl::reverseStraight(int dist) {
 	while( fabs(fabs(total_dist) - fabs(traveled)) > CloseEnough.position ) {
 		straight = distStraight(angle, dist_x, dist_y);
 		straight = total_dist - traveled;
-		setDriveSpeed(straight);
+		setDriveSpeed(straight, traveled);
 		usleep(TimeStep.position);
 		readEncoders();
 		traveled = updatePositionReverse();
@@ -536,7 +536,7 @@ void PosControl::reverseLoop() {
 	while( fabs(fabs(total_dist) - fabs(traveled)) > CloseEnough.position ) {
 		straight = distStraight(angle, dist_x, dist_y);
 		straight = total_dist - traveled;
-		setDriveSpeed(straight);
+		setDriveSpeed(straight, traveled);
 		usleep(TimeStep.position);
 		readEncoders();
 		traveled = updatePositionReverse();
@@ -566,13 +566,13 @@ float PosControl::perc(float s, float a, float g) {
 void PosControl::crawlToRotation() {
 	float start_angle = cur_pos.angle;
 	float angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
-	while (fabs(angle_err) > 0.1) {
+	while (fabs(angle_err) > 0.025) {
 		angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
 		if(angle_err > 0) {
-			setSpeeds(speed_rot.pos_slow-8, speed_rot.neg_slow+8);
+			setSpeeds(speed_rot.pos_slow-10, speed_rot.neg_slow+10);
 		} 
 		else if(angle_err < 0) {
-			setSpeeds(speed_rot.neg_slow+8, speed_rot.pos_slow-8);			
+			setSpeeds(speed_rot.neg_slow+10, speed_rot.pos_slow-10);			
 		}
 		else {
 			setSpeeds(128, 128);
@@ -697,8 +697,10 @@ void PosControl::setRotationSpeed(float angle_err) {
 			setSpeeds(speed_rot.pos_med, speed_rot.neg_med);
 		} else if(angle_err > Slowdown.med_rot) {
 			setSpeeds(speed_rot.pos_med, speed_rot.neg_med);		
-		} else {
+		} else if(angle_err > Slowdown.slow_rot) {
 			setSpeeds(speed_rot.pos_slow, speed_rot.neg_slow);
+		} else {
+			setSpeeds(speed_rot.pos_crawl, speed_rot.neg_crawl);			
 		}
 	}
 	else if(angle_err < 0) {
@@ -706,28 +708,61 @@ void PosControl::setRotationSpeed(float angle_err) {
 			setSpeeds(speed_rot.neg_med, speed_rot.pos_med);
 		} else if(angle_err < -Slowdown.med_rot) {
 			setSpeeds(speed_rot.neg_med, speed_rot.pos_med);		
-		} else {
+		} else if(angle_err < -Slowdown.slow_rot) {
 			setSpeeds(speed_rot.neg_slow, speed_rot.pos_slow);
-		} 
+		} else {
+			setSpeeds(speed_rot.neg_crawl, speed_rot.pos_crawl);			
+		}
 	}
 	else {	
 		setSpeeds(speed_stop, speed_stop);
 	}
 }
+/*
+void PosControl::setRotationSpeed(float angle_err) {
+	if(angle_err > 0) {
+		if(angle_err > Slowdown.max_rot) {
+			setSpeeds(speed_stop, speed_rot.pos_med);
+		} else if(angle_err > Slowdown.med_rot) {
+			setSpeeds(speed_stop, speed_rot.pos_med);
+		} else if(angle_err > Slowdown.slow_rot) {
+			setSpeeds(speed_stop, speed_rot.pos_slow);
+		} else {
+			setSpeeds(speed_stop, speed_rot.pos_crawl);
+		}
+	}
+	else if(angle_err < 0) {
+		if(angle_err < -Slowdown.max_rot) {
+			setSpeeds(speed_stop, speed_rot.neg_med);
+		} else if(angle_err < -Slowdown.med_rot) {
+			setSpeeds(speed_stop, speed_rot.neg_med);
+		} else if(angle_err < -Slowdown.slow_rot) {
+			setSpeeds(speed_stop, speed_rot.neg_slow);
+		} else {
+			setSpeeds(speed_stop, speed_rot.neg_crawl);
+		}
+	}
+	else {	
+		setSpeeds(speed_stop, speed_stop);
+	}
+}*/
 
 
 //TODO: dynamically change speeds according to distance left. Start off slow
-void PosControl::setDriveSpeed(float straight_dist) {
-	if(straight_dist > Slowdown.max_straight) {
+void PosControl::setDriveSpeed(float straight_dist, float traveled) {
+	float t = fabs(traveled);
+
+	if(straight_dist > Slowdown.max_straight && t > 200) {
 		setSpeeds(speed_pos.pos_fast, speed_pos.pos_fast);
 	} 
-	else if(straight_dist > Slowdown.med_straight) {
+	else if(straight_dist > Slowdown.med_straight && t > 100) {
 		setSpeeds(speed_pos.pos_med, speed_pos.pos_med);
 	} 
 	else if(straight_dist > 0) {
 		setSpeeds(speed_pos.pos_slow, speed_pos.pos_slow);
 	}
-	else if(straight_dist < -Slowdown.max_straight) {
+
+	else if(straight_dist < -Slowdown.max_straight && t > 100) {
 		setSpeeds(speed_pos.neg_med, speed_pos.neg_med);
 	}
 	else if(straight_dist < 0) {
@@ -738,6 +773,29 @@ void PosControl::setDriveSpeed(float straight_dist) {
 	}
 }
 
+/*
+void PosControl::setDriveSpeed(float straight_dist) {
+	if(straight_dist > Slowdown.max_straight) {
+		setSpeeds(speed_pos.pos_fast, speed_stop);
+	} 
+	else if(straight_dist > Slowdown.med_straight) {
+		setSpeeds(speed_pos.pos_med, speed_stop);
+	} 
+	else if(straight_dist > 0) {
+		setSpeeds(speed_pos.pos_slow, speed_stop);
+	}
+	else if(straight_dist < -Slowdown.max_straight) {
+		setSpeeds(speed_pos.neg_med, speed_stop);
+	}
+	else if(straight_dist < 0) {
+		setSpeeds(speed_pos.neg_slow, speed_stop);
+	} 
+	else {
+		setSpeeds(speed_stop, speed_stop);
+	}
+}
+
+*/
 
 // check if speed is the same, to avoid clogging communication
 void PosControl::setSpeeds(int l, int r) {
@@ -745,18 +803,20 @@ void PosControl::setSpeeds(int l, int r) {
 	auto timespan = std::chrono::duration<double, std::milli>(now - prev).count();
 
 	if(timespan > timeout_guard) {
-		mcom->setSpeedL(l);
 		mcom->setSpeedR(r);
+		//usleep(4000);
+		mcom->setSpeedL(l);
 		prev = now;
 	} else {
+		if(right_motor.speed != r) {
+			mcom->setSpeedR(r);
+			right_motor.speed = r;
+		//	usleep(4000);
+		}
 		if(left_motor.speed != l) {
 			mcom->setSpeedL(l);
 			left_motor.speed = l;
 		}
-		if(right_motor.speed != r) {
-			mcom->setSpeedR(r);
-			right_motor.speed = r;
-		}	
 	}
 }
 
@@ -949,24 +1009,26 @@ void PosControl::readConfig(std::string filename) {
 
 	speed_stop = config["speed_stop"].as<int>();
 
-	speed_rot.pos_slow = config["rot_speed_slow_pos"].as<int>();
-	speed_rot.pos_med = config["rot_speed_med_pos"].as<int>();
-	speed_rot.pos_fast = config["rot_speed_max_pos"].as<int>();
-	speed_rot.neg_slow = config["rot_speed_slow_neg"].as<int>();
-	speed_rot.neg_med = config["rot_speed_med_neg"].as<int>();
-	speed_rot.neg_fast = config["rot_speed_max_neg"].as<int>();
 
-	speed_pos.pos_slow = config["pos_speed_slow_pos"].as<int>();
-	speed_pos.pos_med = config["pos_speed_med_pos"].as<int>();
-	speed_pos.pos_fast = config["pos_speed_max_pos"].as<int>();
-	speed_pos.neg_slow = config["pos_speed_slow_neg"].as<int>();
-	speed_pos.neg_med = config["pos_speed_med_neg"].as<int>();
-	speed_pos.neg_fast = config["pos_speed_max_neg"].as<int>();
+	int pos_max = config["pos_max_speed"].as<int>();
+	int pos_med = config["pos_med_speed"].as<int>();
+	int pos_slow = config["pos_slow_speed"].as<int>();
+	int pos_crawl = config["pos_crawl_speed"].as<int>();
+
+	int rot_max = config["rot_max_speed"].as<int>();
+	int rot_med = config["rot_med_speed"].as<int>();
+	int rot_slow = config["rot_slow_speed"].as<int>();
+	int rot_crawl = config["rot_crawl_speed"].as<int>();
+
+	int stop = speed_stop;
+	speed_pos = {stop+pos_max, stop+pos_med, stop+pos_slow, stop+pos_crawl, stop-pos_max, stop-pos_med, stop-pos_slow, stop-pos_crawl};
+	speed_rot = {stop+rot_max, stop+rot_med, stop+rot_slow, stop+rot_crawl, stop-rot_max, stop-rot_med, stop-rot_slow, stop-rot_crawl};
 
 	Slowdown.max_dist = config["slowdown_max_dist"].as<int>();
 	Slowdown.med_dist = config["slowdown_med_dist"].as<int>();
 	Slowdown.max_rot = config["slowdown_max_rot"].as<int>();
 	Slowdown.med_rot = config["slowdown_med_rot"].as<int>();
+	Slowdown.slow_rot = config["slowdown_slow_rot"].as<int>();
 
 	CloseEnough.rotation = 	config["rotation_close_enough"].as<float>();
 	CloseEnough.position = config["position_close_enough"].as<float>();
@@ -1029,7 +1091,7 @@ void PosControl::pickUpLoop() {
 			open = true;
 		}
 
-		setDriveSpeed(straight);
+		setDriveSpeed(straight, traveled);
 
 		usleep(TimeStep.position);
 
