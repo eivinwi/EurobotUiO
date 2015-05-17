@@ -218,7 +218,7 @@ void PosControl::controlLoop() {
 						goal_pos.x = cmd[2];
 						goal_pos.y = cmd[3];
 						goal_pos.angle = atan2Adjusted(goal_pos.x - cur_pos.x, goal_pos.y - cur_pos.y);
-						cur_pos = (Pos) {goal_pos.x, goal_pos.y, goal_pos.angle}
+						cur_pos = (Pos) {goal_pos.x, goal_pos.y, goal_pos.angle};
 						break;
 					case 3: 
 						goal_pos.angle = cmd[2];
@@ -229,7 +229,7 @@ void PosControl::controlLoop() {
 						dcom->performAction(cmd);
 						break;
 					case 7:
-						cur_pos = (Pos) {cmd[2], cmd[3], cur_pos.angle}
+						cur_pos = (Pos) {(float) cmd[2], (float) cmd[3], cur_pos.angle};
 						break;
 					case 9:
 						if(args > 3) reset(cmd[1], cmd[2], cmd[3]);					
@@ -855,7 +855,7 @@ void PosControl::readConfig(std::string filename) {
 	CloseEnough.position = config["position_close_enough"].as<float>();
 
 	Enc.max_incr = config["max_enc_incr"].as<int>();
-	Enc.madiff.x = config["max_enc_diff"].as<int>();
+	Enc.max_diff = config["max_enc_diff"].as<int>();
 	Enc.constant = config["encoder_constant"].as<float>();
 	Enc.dist_per_tick = config["dist_per_tick"].as<float>();
 	Enc.per_degree = config["enc_per_degree"].as<float>();
