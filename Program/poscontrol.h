@@ -194,7 +194,7 @@ private:
 		float x;
 		float y;
 		float angle;
-	} cur_pos, goal_pos, apr_pos, diff, pos_0;
+	} cur_pos, goal_pos, apr_pos, pos_diff, pos_0;
 
 	struct Exact {
 		float x;
