@@ -798,7 +798,7 @@ void PosControl::setExactPos(std::vector<float> v) {
 			LOG(WARNING) << "exact_pospos is outside area: (" << x << "," << y << "," << angle;
 			return;
 		}
-		exact_pos = (Pos) {v[0], v[1], v[2], std::chrono::high_resolution_clock::now()};
+		exact_pos = (Exact) {v[0], v[1], v[2], std::chrono::high_resolution_clock::now()};
 		LOG(INFO) << "exact_pospos=(" << x << "," << y << "," << angle;
 	}
 	else {
