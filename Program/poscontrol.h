@@ -67,9 +67,7 @@ public:
 	void crawlToRotation();
 
 	float updateAngle();
-	float updatePosition();
-	float updatePositionReverse();
-
+	float updatePosition(bool forward);
 	void readEncoders();
 
 	void setRotationSpeed(float angle_err);
@@ -92,7 +90,6 @@ public:
 
 	float perc(float angle, float starting_angle, float goal);
 	float percPos(float s, float c, float g);
-	void setCurrent(float x, float y, float angle);
 	bool running();
 	void halt();
 	int completed(int id);
@@ -125,7 +122,7 @@ private:
 	bool pos_running;
 	bool completed_actions[ACTION_STORAGE];
 
-	struct speed{
+	struct Speed {
 		int pos_fast; //235, 255
 		int pos_med;
 		int pos_slow;
@@ -138,7 +135,7 @@ private:
 
 	int speed_stop = 128;
 
-	struct slowdown{
+	struct Slowdown {
 		int dist_max = 120;
 		int dist_med = 60;
 		int rot_max = 70;
@@ -151,7 +148,7 @@ private:
 	} Slowdown;
 
 
-	struct encoder_stuff{
+	struct Encoder_stuff{
 		int max_incr = 980;
 		int max_diff = 440;
 		float constant = 0.327;
@@ -159,13 +156,13 @@ private:
 		float per_degree = 8.05;
 	} Enc;
 
-	struct closeenough{
+	struct Closeenough{
 		float rotation = 2.0;
 		float position = 2.0;
 	} CloseEnough;
 
 
-	struct timestep {
+	struct Timestep {
 		int rotation = 5000;
 		int position = 10000;
 		int crawling = 1000;
@@ -178,12 +175,12 @@ private:
 	int timeout_guard = 1000;
 
 
-	struct gripper {
+	struct Gripper {
 		int open_dist = 400;
 
 	} Grippers;
 
-	struct encoder {
+	struct Encoder {
 		long e_0;
 		long prev;
 		long diff;
@@ -193,14 +190,20 @@ private:
 		float speed;
 	} left_encoder, right_encoder;
 
-	struct pos {
+	struct Pos {
 		float x;
 		float y;
 		float angle;
-	} cur_pos, goal_pos, apr_pos;
+	} cur_pos, goal_pos, apr_pos, diff, pos_0;
 
+	struct Exact {
+		float x;
+		float y;
+		float angle;
+		std::chrono::time_point<std::chrono::high_resolution_clock> timestamp;
+	} exact_pos;
 
-	struct comp {
+	struct Comp {
 		float angle;
 	} compass;
 
@@ -218,12 +221,7 @@ private:
 		int speed;
 	} left_motor, right_motor;
 
-	struct exact {
-		float x;
-		float y;
-		float angle;
-		std::chrono::time_point<std::chrono::high_resolution_clock> timestamp;
-	} Exact;
+
 
 
 	float x_0, x_diff, goal_x;
