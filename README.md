@@ -61,7 +61,7 @@ While in Program directory:
 
 ##### Ubuntu packages
 ```
-sudo apt-get install libserial-dev libroot-core-dev libroot-graf2d-postscript-dev libroot-math-physics-dev libroot-graf3d-eve-dev libtool pkg-config build-essential autoconf automake pip python-dev
+sudo apt-get install libserial-dev libroot-core-dev libroot-graf2d-postscript-dev libroot-math-physics-dev libroot-graf3d-eve-dev libtool pkg-config build-essential autoconf automake python-pip python-dev libboost-all-dev
 ```
 
 ##### ZMQ
@@ -75,7 +75,7 @@ tar xvzf zeromq-4.1.0-rc1.tar.gz && cd zeromq-4.1.0 && ./configure && make && su
 https://github.com/zeromq/cppzmq
 ```
 git clone https://github.com/zeromq/cppzmq
-sudo mv cppzmg/zmq.hpp /usr/local/include
+sudo mv cppzmq/zmq.hpp /usr/local/include
 ```
 
 ##### Pyzmq (for testing with Eurobot-AI)
@@ -92,7 +92,7 @@ git clone https://github.com/easylogging/easyloggingpp/
 sudo mv easyloggingpp/src/easylogging++.h /usr/local/include
 ```
 
-##### ZMQ
+##### YAML
 https://github.com/jbeder/yaml-cpp.git
 ```
 git clone https://github.com/jbeder/yaml-cpp.git
