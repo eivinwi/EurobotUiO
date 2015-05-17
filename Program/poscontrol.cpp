@@ -48,7 +48,7 @@ PosControl::PosControl(MotorCom *m, DynaCom *d, bool test, std::string config_fi
 }
 
 
-void PosControl::reset(int x, int y, int angle) {
+void PosControl::reset(float x, float y, float angle) {
 	LOG(INFO) << "[POS] RESET to: (" << x << "," << y << "," << angle << ")"; 
 	exact_pos = (Exact) {x, y, angle, std::chrono::high_resolution_clock::now()};
 	cur_pos = (Pos) (x, y, angle);

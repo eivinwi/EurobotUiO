@@ -51,7 +51,7 @@ class PosControl {
 public:
 	PosControl(MotorCom* m, DynaCom* d, bool test, std::string config_file);
 	~PosControl();
-	void reset(int x, int y, int rot);
+	void reset(float x, float y, float rot);
 	bool test();
 
 	void enqueue(std::vector<int> arr);
