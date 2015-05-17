@@ -374,9 +374,9 @@ void PosControl::positionLoop(bool shouldOpen) {
 	PRINTLINE("-----------------------------------------------------------------------------------------------------------------");
 	printf("x:     | %8.3f | %8.3f | %8.3f | %8.3f | %8.3f(%3.3f) | %8.3f(%3.3f) \n", x_0, x_diff, x_0 + x_diff, goal_pos.x, x_complete, percPos(x_0, x_complete, goal_pos.x), x_final, percPos(x_0, x_final, goal_pos.x));
 	printf("y:     | %8.3f | %8.3f | %8.3f | %8.3f | %8.3f(%3.3f) | %8.3f(%3.3f) \n\n", y_0, y_diff, y_0 + y_diff, goal_pos.y, y_complete, percPos(y_0, y_complete, goal_pos.y), y_final, percPos(y_0, y_final, goal_pos.y));
-	printf("left:  | %8ld  | %8ld  | %8ld  | %8ld  | %8ld (?)     | %8ld (?)   \n\n", 
+	printf("left:  | %8ld  | %8ld  | %8ld  | %8d  | %8ld (?)     | %8ld (?)   \n\n", 
 		left_encoder.e_0, (left_encoder.total-left_encoder.e_0), left_encoder.total,  0, left_enc_complete, left_enc_final);
-	printf("right:  | %8ld  | %8ld  | %8ld  | %8ld  | %8ld (?)     | %8ld (?)   \n\n", 
+	printf("right:  | %8ld  | %8ld  | %8ld  | %8d  | %8ld (?)     | %8ld (?)   \n\n", 
 		right_encoder.e_0, (right_encoder.total-right_encoder.e_0), right_encoder.total,  0, right_enc_complete, right_enc_final);
 
 	apr_pos.x = goal_pos.x;
@@ -438,7 +438,7 @@ void PosControl::straightLoop(int dist) {
 	goal_pos.y = cur_pos.y + ( sin_d(cur_pos.angle) * dist );
 	goal_pos.angle = cur_pos.angle;
 	if(dist > 0) {
-		positionLoop();
+		positionLoop(false);
 	} else {
 		reverseLoop();
 	}
@@ -454,7 +454,7 @@ void PosControl::crawlToRotation() {
 	float total_rotation = fabs(angle_err);
 	float traveled = 0.0;
 
-	while( (total_rotation - fabs(traveled) > 0.05) { 
+	while( (total_rotation - fabs(traveled) > 0.05) ) { 
 		angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
 		if(angle_err > 0) {
 			setSpeeds(speed_rot.pos_crawl, speed_rot.neg_crawl);
