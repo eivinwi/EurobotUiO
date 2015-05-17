@@ -33,6 +33,12 @@
 //	- Overshoot protection
 
 
+auto encoder_timestamp = std::chrono::high_resolution_clock::now();
+auto compass_timestamp = std::chrono::high_resolution_clock::now();
+auto prev = std::chrono::high_resolution_clock::now();
+
+
+
 PosControl::PosControl(MotorCom *m, DynaCom *d, bool test, std::string config_file) {
 	mcom = m;
 	dcom = d;

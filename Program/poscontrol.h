@@ -230,9 +230,7 @@ private:
 	float y_0, y_diff, goal_y;
 	float angle_0, angle_diff, goal_angle;
 
-	auto encoder_timestamp = std::chrono::high_resolution_clock::now();
-	auto compass_timestamp = std::chrono::high_resolution_clock::now();
-	auto prev = std::chrono::high_resolution_clock::now();
+
 
 	int current_id = 0;
 
