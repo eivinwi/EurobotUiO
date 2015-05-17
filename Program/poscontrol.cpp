@@ -789,7 +789,7 @@ float PosControl::getSpeed() {
 
 
 //TODO: check if reasonable
-void PosControl::setexact_posPos(std::vector<float> v) {
+void PosControl::setExactPos(std::vector<float> v) {
 	if(v.size() == 3) {
 		float x = v[0];
 		float y = v[1];
