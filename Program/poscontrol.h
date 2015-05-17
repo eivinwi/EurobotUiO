@@ -60,7 +60,7 @@ public:
 
 	void controlLoop();
 	void rotationLoop();
-	void positionLoop();
+	void positionLoop(bool shouldOpen);
 	void straightLoop(int dist);
 	void reverseStraight(int dist);
 	void reverseLoop();
@@ -108,7 +108,7 @@ public:
 	void pickUpLoop();
 
 	void setExactPos(std::vector<float> v);
-
+	void printError();
 
 private:	
 	MotorCom *mcom;
@@ -139,13 +139,15 @@ private:
 	int speed_stop = 128;
 
 	struct slowdown{
-		int max_dist = 120;
-		int med_dist = 60;
-		int max_rot = 70;
-		int med_rot = 45;
-		int slow_rot = 20;
-		int max_straight = 200;
-		int med_straight = 100;
+		int dist_max = 120;
+		int dist_med = 60;
+		int rot_max = 70;
+		int rot_med = 45;
+		int rot_slow = 20;
+		int straight_max = 200;
+		int straight_med = 100;
+		int startup_max = 200;
+		int startup_med = 100;
 	} Slowdown;
 
 
@@ -174,6 +176,66 @@ private:
 	int MAX_WAIT = 2000;
 	int NO_ENCODER_ABORT = 500;
 	int timeout_guard = 1000;
+
+
+	struct gripper {
+		int open_dist = 400;
+
+	} Grippers;
+
+	struct encoder {
+		long e_0;
+		long prev;
+		long diff;
+		float diff_dist;
+		long total;
+		float total_dist;
+		float speed;
+	} left_encoder, right_encoder;
+
+	struct pos {
+		float x;
+		float y;
+		float angle;
+	} cur_pos, goal_pos, apr_pos;
+
+
+	struct comp {
+		float angle;
+	} compass;
+
+	// TODO: should be generalized instead of x,y,rot
+	struct Cmd {
+		int id;
+		int x;
+		int y;
+		float rot;
+		int argument;
+		int type;
+	};
+
+	struct Motor {
+		int speed;
+	} left_motor, right_motor;
+
+	struct exact {
+		float x;
+		float y;
+		float angle;
+		std::chrono::time_point<std::chrono::high_resolution_clock> timestamp;
+	} Exact;
+
+
+	float x_0, x_diff, goal_x;
+	float y_0, y_diff, goal_y;
+	float angle_0, angle_diff, goal_angle;
+
+	auto encoder_timestamp = std::chrono::high_resolution_clock::now();
+	auto compass_timestamp = std::chrono::high_resolution_clock::now();
+	auto prev = std::chrono::high_resolution_clock::now();
+
+	int current_id = 0;
+
 
 };
 

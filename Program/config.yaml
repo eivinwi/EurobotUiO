@@ -13,10 +13,11 @@ pos_crawl_speed:		12
 
 slowdown_max_dist:		300
 slowdown_med_dist:		150
-
 slowdown_max_rot:		90
 slowdown_med_rot:		45
 slowdown_slow_rot:		15
+slowdown_startup_max:	200  
+slowdown_startup_med:	100
 
 rotation_close_enough:	0.5
 position_close_enough:	2.5
