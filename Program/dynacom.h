@@ -60,7 +60,7 @@ public:
     bool testGripper();
     bool testShutter();
 
-    void openGrippersNoSleep();
+    void openGrippersNoSleep(int pos);
     void closeGrippersNoSleep();
 
 private:

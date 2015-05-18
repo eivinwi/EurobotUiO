@@ -60,7 +60,7 @@ public:
 
 	void controlLoop();
 	void rotationLoop();
-	void positionLoop(bool shouldOpen);
+	void positionLoop(int openPos);
 	void straightLoop(int dist);
 	void reverseStraight(int dist);
 	void reverseLoop();

@@ -6,7 +6,7 @@ LDFLAGS=-g $(shell root-config --ldflags)
 LDLIBS=$(shell root-config --libs) -lserial -lzmq -pthread -lyaml-cpp -lboost_program_options
 #`sdl-config --libs` -lSDL_mixer
 
-EXEC=exec
+EXEC=control
 SRCS=main.cpp motorcom.cpp dynacom.cpp serial.cpp serialsim.cpp poscontrol.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
 

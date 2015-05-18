@@ -39,8 +39,23 @@ void aiServer() {
     // Prepare context and socket
     zmq::context_t context (1);
     zmq::socket_t socket (context, ZMQ_REP);
-    socket.bind ("tcp://*:5060");
-    //socket.bind ("ipc://ai.ipc");
+    
+  /*  char port[1024];
+    size_t size = sizeof(port);
+    try {*/
+     //   socket.bind("tcp://*:*");
+ /*   } catch (zmq::error_t&e ){
+        std::cerr << "couldn't bind to socket: " << e.what();
+        //return e.num();
+    }
+    socket.getsockopt( ZMQ_LAST_ENDPOINT, &port, &size );
+    std::cout << "socket is bound at port " << port << std::endl;
+*/
+    std::stringstream ss;
+    ss << "tcp://*:" << ai_port;
+    PRINTLINE("Connecting to AI on: <" << ss.str().c_str() << ">");
+    socket.bind (ss.str().c_str());
+       //socket.bind ("ipc://ai.ipc");
 
     while (true) {
         zmq::message_t request;
@@ -149,7 +164,8 @@ void aiServer() {
 void posClient() {
     zmq::context_t context(1);
     zmq::socket_t socket(context, ZMQ_REQ);
-    socket.connect("tcp://193.157.205.194:5900");
+    socket.connect(pos_ip_port.c_str());
+    PRINTLINE("Pos connected on: <" << pos_ip_port.c_str() << ">");
   //  socket.connect(pos_ip_port.c_str());
 
     while(true) {
@@ -178,7 +194,7 @@ void posClient() {
 
 //        p->setExactPos(rpl);
 
-        usleep(500000); //500ms
+        usleep(1000000);
     }
     // Error happend, should be handeled
 }
@@ -264,9 +280,9 @@ int cmdArgs(int ac, char *av[]) {
         ("nolog", "disable all logging")
         ("mport", po::value<std::string>(),"MD49 serial port (ex: /dev/ttyUSB0)")
         ("dport", po::value<std::string>(), "Dynamixel serial port (ex: /dev/ttyUSB1")
-        ("ai", po::value<int>(), "AI ZMQ port as server (ex: 5900)")
+        ("ai", po::value<std::string>(), "AI ZMQ port as server (ex: 5900)")
         ("pos", po::value<int>(), "POS ZMQ port as client (ex: 5555)")
-        ("posip", po::value<std::string>(), "POS ZMQ ip:port (ex: tcp://193.157.206.209:5432")
+        ("pos_ip_port", po::value<std::string>(), "POS ZMQ ip:port (ex: tcp://193.157.206.209:5432")
         ("config", po::value<std::string>(), "Set YAML config file")
     ;
 
@@ -304,13 +320,8 @@ int cmdArgs(int ac, char *av[]) {
         PRINTLINE("[CFG] Dynamixel serial port = " << dyna_serial);
     }
     if(vm.count("ai")) {
-        int p = vm["ai"].as<int>();
-        if(p > 0 && p < MAX_INT) {
-            ai_port = p;
-            PRINTLINE("[CFG] AI zmq-port is: " << ai_port);
-        } else {
-            PRINTLINE("[CFG] AI: Invalid port value: " << p);
-        }
+        ai_port = vm["ai"].as<std::string>();
+        PRINTLINE("[CFG] AI zmq-port is: " << ai_port);
     }
     if(vm.count("pos")) {
         int p = vm["pos"].as<int>();
@@ -322,8 +333,8 @@ int cmdArgs(int ac, char *av[]) {
         } 
     }
 
-    if(vm.count("posip")) {
-        std::string pos_ip_port = vm["posip"].as<std::string>();
+    if(vm.count("pos_ip_port")) {
+        std::string pos_ip_port = vm["pos_ip_port"].as<std::string>();
         PRINTLINE("[CFG] POS zmq address is: " << pos_ip_port);
     }
     if(vm.count("config")) {

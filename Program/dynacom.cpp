@@ -218,9 +218,11 @@ bool DynaCom::testShutter() {
 }
 
 
-void DynaCom::openGrippersNoSleep() {
-	setPositionNoSleep(left_gripper.ID, left_gripper.start - 100);
-	setPositionNoSleep(right_gripper.ID, right_gripper.start + 100);
+void DynaCom::openGrippersNoSleep(int pos) {
+	if(pos > 0 && pos <= 400) {
+		setPositionNoSleep(left_gripper.ID, left_gripper.start - pos);
+		setPositionNoSleep(right_gripper.ID, right_gripper.start + pos);
+	}
 }
 
 void DynaCom::closeGrippersNoSleep() {
