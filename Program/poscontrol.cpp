@@ -651,6 +651,11 @@ void PosControl::readEncoders() {
 	float left_diff_dist = left_diff * Enc.constant; //dist_per_tick;
 	float right_diff_dist = left_diff * Enc.constant; //dist_per_tick;
 
+	if( (fabs(left_diff) >  Enc.max_diff) && (fabs(right_diff) > Enc.max_diff) ) {
+		LOG(WARNING) << "Encoder_diff too large: " << left_diff << ", " << right_diff; 
+		return;
+	}
+
 	left_encoder.prev = left_enc;
 	left_encoder.diff = left_diff;
 	left_encoder.diff_dist = left_diff_dist;
