@@ -828,7 +828,6 @@ void PosControl::readConfig(std::string filename) {
 	}
 
 	speed_stop = config["speed_stop"].as<int>();
-
 	int pos_max = config["pos_max_speed"].as<int>();
 	int pos_med = config["pos_med_speed"].as<int>();
 	int pos_slow = config["pos_slow_speed"].as<int>();
