@@ -56,7 +56,7 @@ void aiServer() {
    // PRINTLINE("Connecting to AI on: <" << ss.str().c_str() << ">");
     //socket.bind (ss.str().c_str());
        //socket.bind ("ipc://ai.ipc");
-    socket.bind("tcp://*:5555")
+    socket.bind("tcp://*:5555");
 
     while (true) {
         zmq::message_t request;
