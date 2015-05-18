@@ -3,6 +3,7 @@
 *.class
 *.o
 *.so
+control
 exec
 newlogs
 logs
