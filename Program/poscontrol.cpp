@@ -73,6 +73,16 @@ void PosControl::reset(float x, float y, float angle) {
 }
 
 
+void PosControl::stopAll() {
+	LOG(INFO) << "[POS]    STOP EVERYTHING!!!!!";
+	stop = true;
+	halt();
+	clearQueue();
+	usleep(100000);
+	reset(cur_pos.x, cur_pos.y, cur_pos.angle);
+ }
+
+
 bool PosControl::test() {
 	//TODO
 	//enqueue(0, 1, 2, 3, 4, NONE);
@@ -83,6 +93,7 @@ bool PosControl::test() {
 
 
 void PosControl::enqueue(std::vector<int> arr) {
+	stop = false;
 	std::lock_guard<std::mutex> lock(qMutex);
 	q.push(arr);
 	notifier.notify_one();
@@ -115,6 +126,7 @@ void PosControl::controlLoop() {
 	while(true) {
 		std::vector<int> cmd = dequeue();
 		working = true;
+		stop = false;
 
 		if(cmd.size() < 2) {
 			LOG(WARNING) << "[POS] dequeue invalid command";
@@ -239,6 +251,10 @@ void PosControl::rotationLoop() {
 	float rotated = 0.0;
 
 	while( (abs(rotated) < (abs(total_rotation) - CloseEnough.rotation)) ) {
+		if(stop) {
+			break;
+		}
+
 		cur_pos.angle = (pos_0.angle + pos_diff.angle);
 
 		angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
@@ -315,6 +331,10 @@ void PosControl::positionLoop(int openPos) {
 	}
 
 	while( fabs(total_dist - traveled) > CloseEnough.position ) {
+		if(stop) {
+			break;
+		}
+
 		cur_pos.x = pos_0.x + pos_diff.x;
 		cur_pos.y = pos_0.y + pos_diff.y;
 		straight = distStraight(angle, (goal_pos.x - cur_pos.x), (goal_pos.y - cur_pos.y));
@@ -389,6 +409,9 @@ void PosControl::reverseLoop() {
 	right_encoder.e_0 = right_encoder.total;
 
 	while( fabs(fabs(total_dist) - fabs(traveled)) > CloseEnough.position ) {
+		if(stop) {
+			break;
+		}
 		straight = distStraight(angle, dist_x, dist_y);
 		straight = total_dist - traveled;
 		setDriveSpeed(straight, traveled);
@@ -430,6 +453,9 @@ void PosControl::crawlToRotation() {
 	float traveled = 0.0;
 
 	while( (total_rotation - fabs(traveled) > 0.05) ) { 
+		if(stop) {
+			break;
+		}
 		angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
 		if(angle_err > 0) {
 			setSpeeds(speed_rot.pos_crawl, speed_rot.neg_crawl);

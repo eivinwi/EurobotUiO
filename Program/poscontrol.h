@@ -53,6 +53,7 @@ public:
 	~PosControl();
 	void reset(float x, float y, float rot);
 	bool test();
+	void stopAll();
 
 	void enqueue(std::vector<int> arr);
 	std::vector<int> dequeue();
@@ -221,17 +222,9 @@ private:
 		int speed;
 	} left_motor, right_motor;
 
-
-
-
-	float x_0, x_diff, goal_x;
-	float y_0, y_diff, goal_y;
-	float angle_0, angle_diff, goal_angle;
-
-
-
 	int current_id = 0;
 
+	bool stop = false;
 
 };
 

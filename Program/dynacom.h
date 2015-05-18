@@ -59,6 +59,7 @@ public:
 
     bool testGripper();
     bool testShutter();
+    void closeShutters();
 
     void openGrippersNoSleep(int pos);
     void closeGrippersNoSleep();

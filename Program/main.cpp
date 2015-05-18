@@ -134,7 +134,7 @@ void aiServer() {
                     break;
                 case HALT: 
                     LOG(DEBUG) << "[COM] Recieved HALT";
-                    p->halt();
+                    p->stopAll();
                     reply_str = "ok";
                     break;
                 case RESET: 
@@ -167,18 +167,11 @@ void posClient() {
     zmq::socket_t socket(context, ZMQ_REQ);
     socket.connect(pos_ip_port.c_str());
     PRINTLINE("Pos connected on: <" << pos_ip_port.c_str() << ">");
-  //  socket.connect(pos_ip_port.c_str());
 
     while(true) {
-        std::stringstream ss;
-        //ss << "1," << p->getPosStr();
-        ss << "2";
-        std::string s = ss.str();
-
+        std::string s = "2";
         zmq::message_t req( s.length() );
         memcpy((void*) req.data(), s.c_str(), s.length());
-        
-        //LOG(INFO) << "[COM2] Sending  len=" << s.length() << " to POS";
         socket.send(req);
 
         zmq::message_t reply;
@@ -192,12 +185,8 @@ void posClient() {
             stream << "    |    " << f;
         }
         LOG(INFO) << "[COM2] Reply from POS: len=" << reply.size() << ": " << stream.str();
-
-//        p->setExactPos(rpl);
-
         usleep(1000000);
     }
-    // Error happend, should be handeled
 }
 
 
@@ -510,6 +499,8 @@ int main(int argc, char *argv[]) {
     testSystem();
     std::vector<int> initGrippers{5, 0, 0, 280, 280};
     d->performAction(initGrippers);
+    d->closeShutters();
+
     LOG(INFO) << "\n[SETUP] System tests completed, waiting for client input...\n";
  
     if(read_thread.joinable()) {

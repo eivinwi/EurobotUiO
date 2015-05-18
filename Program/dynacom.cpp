@@ -217,6 +217,11 @@ bool DynaCom::testShutter() {
 	return test(left_shutter.ID) && test(right_shutter.ID);
 }
 
+void DynaCom::closeShutters() {
+	LOG(DEBUG) << "[DYNA] Testing shutters";
+	shutterCloseLeft();
+	shutterCloseRight();
+}
 
 void DynaCom::openGrippersNoSleep(int pos) {
 	if(pos > 0 && pos <= 400) {
