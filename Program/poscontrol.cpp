@@ -326,7 +326,7 @@ void PosControl::positionLoop(int openPos) {
 	bool open = false;
 	if((fabs(straight) < 400) && !open && (openPos > 0)) {
 		dcom->openGrippersNoSleep(openPos);
-		usleep(500000); 
+		usleep(400000); 
 		open = true;
 	}
 
@@ -652,7 +652,7 @@ void PosControl::readEncoders() {
 	float right_diff_dist = left_diff * Enc.constant; //dist_per_tick;
 
 	if( (fabs(left_diff) >  Enc.max_diff) && (fabs(right_diff) > Enc.max_diff) ) {
-		LOG(WARNING) << "Encoder_diff too large: " << left_diff << ", " << right_diff; 
+		LOG(WARNING) << "Encoder_diff too large: " << left_diff << ", " << right_diff;
 		return;
 	}
 
@@ -857,6 +857,8 @@ void PosControl::readConfig(std::string filename) {
 	Enc.constant = config["encoder_constant"].as<float>();
 	Enc.dist_per_tick = config["dist_per_tick"].as<float>();
 	Enc.per_degree = config["enc_per_degree"].as<float>();
+
+	TimeStep.move_complete = config["completion_delay"];
 
 	MAX_WAIT = config["max_wait"].as<int>();
 }

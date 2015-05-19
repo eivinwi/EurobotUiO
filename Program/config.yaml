@@ -22,7 +22,7 @@ slowdown_startup_med:	50
 rotation_close_enough:	0.5
 position_close_enough:	2.5
 
-
+completion_delay:		1000000
 
 max_enc_incr:			980
 max_enc_diff:			440
