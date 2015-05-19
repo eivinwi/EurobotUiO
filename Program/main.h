@@ -12,6 +12,10 @@
 #include <unistd.h>
 #include <zmq.hpp>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #include "dynacom.h"
 #include "motorcom.h"
 #include "poscontrol.h"

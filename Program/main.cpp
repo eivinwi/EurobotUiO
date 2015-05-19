@@ -424,6 +424,10 @@ void configureLogger() {
     el::Loggers::reconfigureAllLoggers(defaultConf);
 }
 
+bool exists_test(const std::string& name) {
+        struct stat buffer;   
+        return (stat (name.c_str(), &buffer) == 0); 
+}
 
 int main(int argc, char *argv[]) {  
     PRINTLINE("[SETUP] checking cmdline-arguments");
@@ -442,6 +446,40 @@ int main(int argc, char *argv[]) {
     el::Helpers::setCrashHandler(crashHandler);
 
     LOG(INFO) << "[SETUP] initializing MotorCom";
+
+    bool t1 = exists_test(motor_serial);
+    bool t2 = exists_test(dyna_serial);
+    if(!t1 || !t2) {
+        LOG(WARNING) << "[SETUP] WARNING: ports are incorrect";
+        LOG(WARNING) << "[SETUP] WARNING: motor-serial: " << motor_serial << " does" << ((t1)? " exist" : "n't exsist"); 
+        LOG(WARNING) << "[SETUP] WARNING: dyna_serial: " << dyna_serial << " does" << ((t2)? " exist" : "n't exsist"); 
+        LOG(WARNING) << "[SETUP] WARNING: ATTEMPTING FIX";
+
+        if(exists_test("/dev/ttyUSB0") && exists_test("/dev/ttyUSB1")) {
+            motor_serial = "/dev/ttyUSB0";         
+            dyna_serial = "/dev/ttyUSB1";
+            LOG(WARNING) << "[SETUP] connecting MOTOR to: " << motor_serial;
+            LOG(WARNING) << "[SETUP] connecting DYNA to: " << dyna_serial;            
+        }
+        else if(exists_test("/dev/ttyUSB1") && exists_test("/dev/ttyUSB2")) {
+            motor_serial = "/dev/ttyUSB1";         
+            dyna_serial = "/dev/ttyUSB2";
+            LOG(WARNING) << "[SETUP] connecting MOTOR to: " << motor_serial;
+            LOG(WARNING) << "[SETUP] connecting DYNA to: " << dyna_serial;            
+        }
+        else if(exists_test("/dev/ttyUSB2") && exists_test("/dev/ttyUSB3")) {
+            motor_serial = "/dev/ttyUSB2";         
+            dyna_serial = "/dev/ttyUSB3";
+            LOG(WARNING) << "[SETUP] connecting MOTOR to: " << motor_serial;
+            LOG(WARNING) << "[SETUP] connecting DYNA to: " << dyna_serial;            
+        } 
+        else {
+            LOG(WARNING) << "[SETUP] ports are fucked, aborting.";
+            return 0;
+        }
+    }
+
+
     m = new MotorCom(motor_serial, sim_motors);
     usleep(10000);
 
