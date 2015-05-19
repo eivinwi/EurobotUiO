@@ -858,7 +858,7 @@ void PosControl::readConfig(std::string filename) {
 	Enc.dist_per_tick = config["dist_per_tick"].as<float>();
 	Enc.per_degree = config["enc_per_degree"].as<float>();
 
-	TimeStep.move_complete = config["completion_delay"];
+	TimeStep.move_complete = config["completion_delay"].as<long>();
 
 	MAX_WAIT = config["max_wait"].as<int>();
 }
