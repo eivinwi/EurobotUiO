@@ -170,8 +170,10 @@ void posClient() {
 
     while(true) {
         std::stringstream ss;
-        ss << "1," << p->getPosStr();
+        ss << "1," << p->getPosStrDivided();
         std::string s = ss.str();
+        //std::string s = "3";
+        LOG(INFO) << "[COM2] sending to POS: <" << s << ">";
         zmq::message_t req( s.length() );
         memcpy((void*) req.data(), s.c_str(), s.length());
         socket.send(req);
@@ -187,7 +189,7 @@ void posClient() {
             stream << "    |    " << f;
         }
         LOG(INFO) << "[COM2] Reply from POS: len=" << reply.size() << ": " << stream.str();
-        usleep(1000000);
+        usleep(2000000);
     }
 }
 
@@ -540,8 +542,8 @@ int main(int argc, char *argv[]) {
     std::thread read_thread(aiServer);
     usleep(5000);
 
-  //  LOG(INFO) << "[SETUP] initializing POS thread";
-  //  std::thread write_thread(posClient);
+    LOG(INFO) << "[SETUP] initializing POS thread";
+    std::thread write_thread(posClient);
 
     int acc = m->getAcceleration(); 
     if(acc != ACCELERATION) {
@@ -571,8 +573,8 @@ int main(int argc, char *argv[]) {
     if(pos_thread.joinable()) {
         pos_thread.join();
     }
- //   if(write_thread.joinable()) {
-  //      write_thread.join();
-  //  }
+    if(write_thread.joinable()) {
+        write_thread.join();
+    }
     return 0;
 }

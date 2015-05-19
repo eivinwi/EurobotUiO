@@ -84,6 +84,7 @@ public:
 	bool positionCloseEnough();
 	bool inGoal();
 
+	std::string getPosStrDivided();
 	std::string getPosStr();
 	std::string getState();
 	std::string getGripperPos();

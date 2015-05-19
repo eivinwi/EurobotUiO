@@ -717,6 +717,13 @@ bool PosControl::inGoal() {
 }
 
 
+std::string PosControl::getPosStrDivided() {
+	std::stringstream ss;
+	ss << (cur_pos.x / 10.0) << "," << (cur_pos.y / 10.0) << "," << cur_pos.angle;
+	return ss.str();
+}
+
+
 std::string PosControl::getPosStr() {
 	std::stringstream ss;
 	ss << cur_pos.x << "," << cur_pos.y << "," << cur_pos.angle;
