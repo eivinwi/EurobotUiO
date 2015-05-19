@@ -171,7 +171,7 @@ void posClient() {
     while(true) {
         std::stringstream ss;
         ss << "1," << p->getPosStr();
-        std::string s = s.str();
+        std::string s = ss.str();
         zmq::message_t req( s.length() );
         memcpy((void*) req.data(), s.c_str(), s.length());
         socket.send(req);
