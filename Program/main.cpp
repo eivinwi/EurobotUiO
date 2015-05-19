@@ -169,7 +169,9 @@ void posClient() {
     PRINTLINE("Pos connected on: <" << pos_ip_port.c_str() << ">");
 
     while(true) {
-        std::string s = "2";
+        std::stringstream ss;
+        ss << "1," << p->getPosStr();
+        std::string s = s.str();
         zmq::message_t req( s.length() );
         memcpy((void*) req.data(), s.c_str(), s.length());
         socket.send(req);
