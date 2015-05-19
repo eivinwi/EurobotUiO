@@ -50,6 +50,7 @@ PosControl::PosControl(MotorCom *m, DynaCom *d, bool test, std::string config_fi
 
 void PosControl::reset(float x, float y, float angle) {
 	LOG(INFO) << "[POS] RESET to: (" << x << "," << y << "," << angle << ")"; 
+	stop = false;
 	exact_pos = (Exact) {x, y, angle, std::chrono::high_resolution_clock::now()};
 	cur_pos = (Pos) {x, y, angle};
 	goal_pos = (Pos) {x, y, angle};
@@ -73,13 +74,17 @@ void PosControl::reset(float x, float y, float angle) {
 }
 
 
-void PosControl::stopAll() {
+void PosControl::stopAll(int i) {
 	LOG(INFO) << "[POS]    STOP EVERYTHING!!!!!";
-	stop = true;
-	halt();
-	clearQueue();
+	if(i == 1) {
+		stop = true;
+		halt();
+	} else {
+		stop = false;
+	}
+	//clearQueue();
+	//reset(cur_pos.x, cur_pos.y, cur_pos.angle);
 	usleep(100000);
-	reset(cur_pos.x, cur_pos.y, cur_pos.angle);
  }
 
 
@@ -251,8 +256,10 @@ void PosControl::rotationLoop() {
 	float rotated = 0.0;
 
 	while( (abs(rotated) < (abs(total_rotation) - CloseEnough.rotation)) ) {
-		if(stop) {
-			break;
+		while(stop) {
+			LOG_EVERY_N(5, INFO) << "[POS] rotation paused.";
+			halt();
+			usleep(TimeStep.rotation);
 		}
 
 		cur_pos.angle = (pos_0.angle + pos_diff.angle);
@@ -331,9 +338,12 @@ void PosControl::positionLoop(int openPos) {
 	}
 
 	while( fabs(total_dist - traveled) > CloseEnough.position ) {
-		if(stop) {
-			break;
+		while(stop) {
+			LOG_EVERY_N(5, INFO) << "[POS] position paused.";
+			halt();
+			usleep(TimeStep.position);
 		}
+
 
 		cur_pos.x = pos_0.x + pos_diff.x;
 		cur_pos.y = pos_0.y + pos_diff.y;
@@ -379,15 +389,7 @@ void PosControl::positionLoop(int openPos) {
 }
 
 
-//TODO: rewrite to x/y
 void PosControl::reverseLoop() {
-/*	pos_0.x = cur_pos.x;
-	pos_0.y = cur_pos.y;
-	pos_0.angle = cur_pos.angle;
-	pos_diff.x = 0.0;
-	pos_diff.y = 0.0;
-	pos_diff.angle = 0.0;
-*/	
 	pos_0 = (Pos) {cur_pos.x, cur_pos.y, cur_pos.angle};
 	pos_diff = (Pos) {0.0, 0.0, 0.0};
 
@@ -409,9 +411,12 @@ void PosControl::reverseLoop() {
 	right_encoder.e_0 = right_encoder.total;
 
 	while( fabs(fabs(total_dist) - fabs(traveled)) > CloseEnough.position ) {
-		if(stop) {
-			break;
+		while(stop) {
+			LOG_EVERY_N(5, INFO) << "[POS] reverse paused.";
+			halt();
+			usleep(TimeStep.position);
 		}
+
 		straight = distStraight(angle, dist_x, dist_y);
 		straight = total_dist - traveled;
 		setDriveSpeed(straight, traveled);
@@ -453,9 +458,12 @@ void PosControl::crawlToRotation() {
 	float traveled = 0.0;
 
 	while( (total_rotation - fabs(traveled) > 0.05) ) { 
-		if(stop) {
-			break;
+		while(stop) {
+			LOG_EVERY_N(5, INFO) << "[POS] crawl paused.";
+			halt();
+			usleep(TimeStep.crawling);
 		}
+
 		angle_err = shortestRotation(cur_pos.angle, goal_pos.angle);
 		if(angle_err > 0) {
 			setSpeeds(speed_rot.pos_crawl, speed_rot.neg_crawl);

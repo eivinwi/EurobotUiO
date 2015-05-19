@@ -134,7 +134,7 @@ void aiServer() {
                     break;
                 case HALT: 
                     LOG(DEBUG) << "[COM] Recieved HALT";
-                    p->stopAll();
+                    p->stopAll((int) args[1]);
                     reply_str = "ok";
                     break;
                 case RESET: 

@@ -53,7 +53,7 @@ public:
 	~PosControl();
 	void reset(float x, float y, float rot);
 	bool test();
-	void stopAll();
+	void stopAll(int arg);
 
 	void enqueue(std::vector<int> arr);
 	std::vector<int> dequeue();
