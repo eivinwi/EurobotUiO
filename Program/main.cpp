@@ -542,8 +542,8 @@ int main(int argc, char *argv[]) {
     std::thread read_thread(aiServer);
     usleep(5000);
 
-    LOG(INFO) << "[SETUP] initializing POS thread";
-    std::thread write_thread(posClient);
+//    LOG(INFO) << "[SETUP] initializing POS thread";
+//    std::thread write_thread(posClient);
 
     int acc = m->getAcceleration(); 
     if(acc != ACCELERATION) {
@@ -573,8 +573,8 @@ int main(int argc, char *argv[]) {
     if(pos_thread.joinable()) {
         pos_thread.join();
     }
-    if(write_thread.joinable()) {
-        write_thread.join();
-    }
+ //   if(write_thread.joinable()) {
+ //       write_thread.join();
+ //   }
     return 0;
 }
