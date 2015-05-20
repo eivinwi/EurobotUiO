@@ -451,7 +451,7 @@ int main(int argc, char *argv[]) {
 
     bool t1 = exists_test(motor_serial);
     bool t2 = exists_test(dyna_serial);
-    if(!t1 || !t2) {
+    if(!t1 && !t2) {
         LOG(WARNING) << "[SETUP] WARNING: ports are incorrect";
         LOG(WARNING) << "[SETUP] WARNING: motor-serial: " << motor_serial << " does" << ((t1)? " exist" : "n't exsist"); 
         LOG(WARNING) << "[SETUP] WARNING: dyna_serial: " << dyna_serial << " does" << ((t2)? " exist" : "n't exsist"); 
@@ -498,6 +498,61 @@ int main(int argc, char *argv[]) {
             motor_serial = "/dev/ttyUSB2";
             dyna_serial = "/dev/ttyUSB3";
         } else {
+            LOG(WARNING) << "[SETUP] ports are fucked, aborting.";
+            return 0;
+        }
+    } else if(!t1) {
+        LOG(WARNING) << "[SETUP] WARNING: motor-serial: " << motor_serial << " does" << ((t1)? " exist" : "n't exsist"); 
+        LOG(WARNING) << "[SETUP] WARNING: ATTEMPTING FIX";
+        bool usb0 = exists_test("/dev/ttyUSB0");
+        bool usb1 = exists_test("/dev/ttyUSB1");
+        bool usb2 = exists_test("/dev/ttyUSB2");
+        bool usb3 = exists_test("/dev/ttyUSB3");
+        LOG(WARNING) << "[SETUP] /dev/ttyUSB0: " << ((usb0)? " online" : "offline"); 
+        LOG(WARNING) << "[SETUP] /dev/ttyUSB1: " << ((usb1)? " online" : "offline");
+        LOG(WARNING) << "[SETUP] /dev/ttyUSB2: " << ((usb2)? " online" : "offline");
+        LOG(WARNING) << "[SETUP] /dev/ttyUSB3: " << ((usb3)? " online" : "offline");
+
+        if(usb0) {
+            motor_serial = "/dev/ttyUSB0"; 
+        }
+        else if(usb1) {
+            motor_serial = "/dev/ttyUSB1";
+        }
+        else if(usb2) {
+            motor_serial = "/dev/ttyUSB2";
+        }
+        else if(usb3) {
+            motor_serial = "/dev/ttyUSB3";
+        } 
+        else {
+            LOG(WARNING) << "[SETUP] ports are fucked, aborting.";
+            return 0;
+        }
+    } else if(!t2) {
+        LOG(WARNING) << "[SETUP] WARNING: dyna-serial: " << dyna_serial << " does" << ((t2)? " exist" : "n't exsist"); 
+        LOG(WARNING) << "[SETUP] WARNING: ATTEMPTING FIX";
+        bool usb0 = exists_test("/dev/ttyUSB0");
+        bool usb1 = exists_test("/dev/ttyUSB1");
+        bool usb2 = exists_test("/dev/ttyUSB2");
+        bool usb3 = exists_test("/dev/ttyUSB3");
+        LOG(WARNING) << "[SETUP] /dev/ttyUSB0: " << ((usb0)? " online" : "offline"); 
+        LOG(WARNING) << "[SETUP] /dev/ttyUSB1: " << ((usb1)? " online" : "offline");
+        LOG(WARNING) << "[SETUP] /dev/ttyUSB2: " << ((usb2)? " online" : "offline");
+        LOG(WARNING) << "[SETUP] /dev/ttyUSB3: " << ((usb3)? " online" : "offline");
+        if(usb0) {
+            dyna_serial = "/dev/ttyUSB0"; 
+        }
+        else if(usb1) {
+            dyna_serial = "/dev/ttyUSB1";
+        }
+        else if(usb2) {
+            dyna_serial = "/dev/ttyUSB2";
+        }
+        else if(usb3) {
+            dyna_serial = "/dev/ttyUSB3";
+        } 
+        else {
             LOG(WARNING) << "[SETUP] ports are fucked, aborting.";
             return 0;
         }
