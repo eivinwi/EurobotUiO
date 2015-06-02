@@ -2,7 +2,7 @@
  *  File: printing.h
  *  Author: Eivind Wikheim
  *
- *	Printing contains various debug printing macros.
+ *	Contains various debug printing macros.
  *
  *  Copyright (c) 2015 Eivind Wikheim <eivinwi@ifi.uio.no>. All Rights Reserved.
  *

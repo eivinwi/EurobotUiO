@@ -2,7 +2,7 @@
  *  File: md49.h
  *  Author: Eivind Wikheim
  *
- *	md49 defines the commands used to communicate with the MD49 motor controller via serial,
+ *	Defines the protocol used to communicate with the MD49 motor controller via the serial interface (serial.cpp),
  *	as well as general defines concerning position control.
  *	Documentation: http://www.robot-electronics.co.uk/htm/md49tech.htm
  *
@@ -54,6 +54,5 @@
 #define ENABLE_REGULATOR 0x37 //2	0	
 #define DISABLE_TIMEOUT 0x38  //2	0
 #define ENABLE_TIMEOUT 0x39  // 2	0
-
 
 #endif /* MD49_H */

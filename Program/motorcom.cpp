@@ -2,7 +2,7 @@
  *  File: motorcom
  *  Author: Eivind Wikheim
  *
- *  MotorCom implements an interface for working with the MD49 motor controller, 
+ *  Implements an interface for working with the MD49 motor controller, 
  *  either via serial or serialsim (decided in main.cpp based on program arguments). 
  *
  *  Copyright (c) 2015 Eivind Wikheim <eivinwi@ifi.uio.no>. All Rights Reserved.
@@ -53,7 +53,7 @@ void MotorCom::startSerial() {
 
 
 bool MotorCom::test() {
-    return ((simulating) ? true : (getVersion() == 2));
+    return ((simulating)? true : (getVersion() == 2));
 }
 
 
@@ -61,14 +61,14 @@ void MotorCom::setAcceleration(int acc) {
     sync();
     writeToSerial(SET_ACCELERATION);
     writeToSerial(acc);
-}
+}   
 
 
 void MotorCom::setSpeedL(uint8_t speed) {
     sync();
     writeToSerial(SET_SPEEDL);
     writeToSerial(speed);
-//    LOG(INFO) << "[MCOM] left_speed has been set to: " << int(speed);
+    LOG(DEBUG) << "[MCOM] left_speed has been set to: " << int(speed);
 }
 
 
@@ -76,7 +76,7 @@ void MotorCom::setSpeedR(uint8_t speed) {
     sync();
     writeToSerial(SET_SPEEDR);
     writeToSerial(speed);
-//    LOG(INFO) << "[MCOM] right_speed has been set to: " << int(speed);
+    LOG(DEBUG) << "[MCOM] right_speed has been set to: " << int(speed);
 }
 
 
@@ -192,7 +192,7 @@ void MotorCom::enableTimeout(bool enable) {
 
 
 void MotorCom::flush() {
-   (simulating) ? simport->printAll() : port->printAll();
+   (simulating) ? simport->flush() : port->flush();
 }
 
 

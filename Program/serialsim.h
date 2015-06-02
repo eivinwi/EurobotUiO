@@ -61,7 +61,7 @@ public:
 	long readLong();
 
 	// Dummy method that dimulates clearing serial. 
-	void printAll();
+	void flush();
 
 private:
 	// Read methods that simulates reading from serial

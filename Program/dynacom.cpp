@@ -2,8 +2,8 @@
  *	File: dynacom.cpp
  *	Author: Eivind Wikheim
  *
- *  DynaCom implements a interface controlling lift/gripper parts via an arduino, 
- *  either via serial or serialsim (decided in main.cpp based on program arguments).
+ *  Implements a interface controlling dynamixel servos via USB serial. 
+ *  Utilizes serial.cpp for the communication
  *
  *	Copyright (c) 2015 Eivind Wikheim <eivinwi@ifi.uio.no>. All Rights Reserved.
  *
@@ -59,7 +59,7 @@ DynaCom::~DynaCom() {
 
 
 void DynaCom::startSerial() {
-	PRINTLINE("StartSerial");
+	LOG(DEBUG) << "StartSerial";
 	if(simulating) {
 	    LOG(INFO) << "[DYNA] 	 Simulating serial";		
 	}
@@ -86,7 +86,7 @@ void DynaCom::performAction(std::vector<int> cmd) {
 	//int id = cmd[1];
 	int action = cmd[2];
 
-	//LOG(INFO) << "[DYNA] performAction: " << cmd[0] << "," << cmd[1] << "," << cmd[2] << "," << ((cmd.size() > 3)? cmd[3] : 0) << "," << cmd[4]; 
+	LOG(DEBUG) << "[DYNA] performAction: " << cmd[0] << "," << cmd[1] << "," << cmd[2] << "," << ((cmd.size() > 3)? cmd[3] : 0) << "," << cmd[4]; 
 
 	if( type == LIFT ) {
 		//deprecated
@@ -145,7 +145,7 @@ void DynaCom::performAction(std::vector<int> cmd) {
 			default:
 				break;
 		}
-		usleep(1000000);
+//		usleep(1000000);
 	}
 }
 
@@ -190,6 +190,7 @@ void DynaCom::setGrippers(int left_pos, int right_pos) {
 std::string DynaCom::getGripperPosition() {
 	int left = readPosition(left_gripper.ID);
 	int right = readPosition(right_gripper.ID);
+
 	int normalized_left = left_gripper.start - left;
 	if( (abs(normalized_left) - left_gripper.goal) < 30 ) {
 		normalized_left = left_gripper.goal;
@@ -246,13 +247,13 @@ void DynaCom::packGrippers() {
 	usleep(100000);
 } 
 
+
 void DynaCom::unpackGrippers() {
 	setPosition(right_gripper.ID, right_gripper.start + 100);	
 	usleep(100000);
 	setPosition(left_gripper.ID, left_gripper.start - 100);	
 	usleep(100000);
 } 
-
 
 
 void DynaCom::shutterOpenLeft() {
@@ -273,6 +274,7 @@ void DynaCom::shutterOpenRight() {
 void DynaCom::shutterCloseRight() {
 	setPosition(right_shutter.ID, right_shutter.closed);
 }
+
 
 bool DynaCom::test(int id) {
 	uint8_t testval = 0;
@@ -315,6 +317,7 @@ void DynaCom::setPositionNoSleep(int id, int pos) {
 	setReg2(id, 30, pos);
 }
 
+
 void DynaCom::setPosition(int id, int pos) {
 	LOG(INFO) << "[DYNA] setPosition(" << id << "," << pos << ")";
 	setReg2(id, 30, pos);
@@ -322,8 +325,6 @@ void DynaCom::setPosition(int id, int pos) {
   	usleep(ACTION_DELAY);
 }
 
-
-//auto prev = std::chrono::high_resolution_clock::now();
 
 int DynaCom::readPosition(int id) {
 /*	auto now = std::chrono::high_resolution_clock::now();

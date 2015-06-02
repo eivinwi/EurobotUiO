@@ -2,8 +2,9 @@
  *  File: serial.h
  *  Author: Eivind Wikheim
  *
- *  Serial implements functions for communicating to the MD49 motor controller via serial. 
- *  Can be run at either 9600 or 38400 baud (IMPORTANT: changed with hardware pins on the controller.) 
+ *  Serial implements functions for communicating via serial (mainly on USB-ports).
+ *  It is specifically tuned to communicate with the MD49 motor controller, which can 
+ *  be run at either 9600 or 38400 baud (IMPORTANT: changed with hardware pins on the controller.) 
  *
  *  Copyright (c) 2015 Eivind Wikheim <eivinwi@ifi.uio.no>. All Rights Reserved.
  *
@@ -39,7 +40,9 @@ using namespace LibSerial ;
 
 class Serial {
 public:
+    //Opens a serial port on the specified com/tty, and sets configuration.
     Serial(std::string serial_port);
+
     ~Serial();
 
     // Overloaded write, shifts arg onto serial
@@ -51,15 +54,17 @@ public:
     uint8_t read();
 
     // Reads without the wait (useful for burst-read of multi-byte variables).
+    // Tries twice before returning failed.
     uint8_t readNoWait();
 
     // Reads 4 bytes from serial and combines them to a long
     long readLong();
     
-    // Reads and prints everything currently on the serial.
-    void printAll();
+    // Reads and prints everything currently on the serial. Works as a flush
+    void flush();
 
     // true: a byte is ready to be read form the serial
+    // false: serialport is empty
     bool available();
 
 private:

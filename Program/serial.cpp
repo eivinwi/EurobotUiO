@@ -1,9 +1,10 @@
-/*
+ /*
  *  File: serial.cpp
  *  Author: Eivind Wikheim
  *
- *  Serial implements functions for communicating to the MD49 motor controller via serial. 
- *  Can be run at either 9600 or 38400 baud (IMPORTANT: changed with hardware pins on the controller.) 
+ *  Serial implements functions for communicating via serial (mainly on USB-ports).
+ *  It is specifically tuned to communicate with the MD49 motor controller, which can 
+ *  be run at either 9600 or 38400 baud (IMPORTANT: changed with hardware pins on the controller.) 
  *
  *  Copyright (c) 2015 Eivind Wikheim <eivinwi@ifi.uio.no>. All Rights Reserved.
  *
@@ -129,7 +130,7 @@ bool Serial::available() {
 }
 
 
-void Serial::printAll() {
+void Serial::flush() {
     LOG(DEBUG) << "[SERIAL]  flushing:";
     std::stringstream ss;
     int itr = 0;

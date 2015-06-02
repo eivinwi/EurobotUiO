@@ -1,8 +1,8 @@
 /*
- *  File: motorcom.h
+ *  File: motorcom
  *  Author: Eivind Wikheim
  *
- *  MotorCom implements an interface for working with the MD49 motor controller, 
+ *  Implements an interface for working with the MD49 motor controller, 
  *  either via serial or serialsim (decided in main.cpp based on program arguments). 
  *
  *  Copyright (c) 2015 Eivind Wikheim <eivinwi@ifi.uio.no>. All Rights Reserved.
@@ -22,8 +22,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with EurobotUiO.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-// TODO: some of the methods should be private
 
 #ifndef MOTORCOM_H
 #define	MOTORCOM_H

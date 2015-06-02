@@ -317,6 +317,6 @@ void SerialSim::calculateEncR() {
 }
 
 
-void SerialSim::printAll() {
+void SerialSim::flush() {
 	DBPL("Sim \"flushed\"");
 }

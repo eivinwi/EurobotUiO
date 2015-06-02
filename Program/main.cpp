@@ -78,18 +78,18 @@ void aiServer() {
                 case REQUEST: 
                     LOG(DEBUG) << "[COM] Recieved REQUEST";
                     if(args[1] == 1) {
-                        //int id = p->getCurrentId();
+                        //int id = posctrl->getCurrentId();
                         int id = 0;
                         reply_str = std::to_string(id);
                         LOG(DEBUG) << "[COM] REQUEST ID, ret(" << reply_str.length() << "): " << reply_str;
                     } 
                     else if(args[1] == 2) {
-                        reply_str = p->getState();
+                        reply_str = posctrl->getState();
                         LOG(DEBUG) << "[COM] REQUEST POS, ret(" << reply_str.length() << "): " << reply_str;
                     } 
                     else if(args[1] == 4) {
                         //LIFT
-                        reply_str = d->getGripperPosition();
+                        reply_str = dcom->getGripperPosition();
                         LOG(DEBUG) << "[COM] REQUEST GRIPPER POS, ret(" << reply_str.length() << "): " << reply_str;
                     }                    
                     break;
@@ -134,7 +134,7 @@ void aiServer() {
                     break;
                 case HALT: 
                     LOG(DEBUG) << "[COM] Recieved HALT";
-                    p->stopAll((int) args[1]);
+                    posctrl->stopAll((int) args[1]);
                     reply_str = "ok";
                     break;
                 case RESET: 
@@ -170,7 +170,7 @@ void posClient() {
 
     while(true) {
         std::stringstream ss;
-        ss << "1," << p->getPosStrDivided();
+        ss << "1," << posctrl->getPosStrDivided();
         std::string s = ss.str();
         //std::string s = "3";
         LOG(INFO) << "[COM2] sending to POS: <" << s << ">";
@@ -201,14 +201,14 @@ bool enqueue(int num_args, std::vector<int> args) {
     }
 
     if(read_mutex.try_lock()) {
-        p->enqueue(arr);
+        posctrl->enqueue(arr);
         read_mutex.unlock();
         return true;
     } 
     else {
         usleep(1000);
         if(read_mutex.try_lock()) {
-            p->enqueue(arr);
+            posctrl->enqueue(arr);
             read_mutex.unlock();
             return true;
         }
@@ -223,14 +223,14 @@ bool resetRobot(int num_args, std::vector<int> args) {
     }
     else {
         if(read_mutex.try_lock()) {
-            p->reset(args[1], args[2], args[3]);
+            posctrl->reset(args[1], args[2], args[3]);
             read_mutex.unlock();
             return true;
         } 
         else {
             usleep(1000);
             if(read_mutex.try_lock()) {
-                p->reset(args[1], args[2], args[3]);
+                posctrl->reset(args[1], args[2], args[3]);
                 read_mutex.unlock();
                 return true;
             }
@@ -341,29 +341,29 @@ int cmdArgs(int ac, char *av[]) {
 
 void testSystem() {
     usleep(20000);
-    m->flush();
+    mcom->flush();
     LOG(INFO) << "[SETUP] Complete, testing components:\n";
 
     printResult("[TEST] Logging: ", true); //pointless, if logging isnt active nothing will be written
 
-    if(m->isSimulating()) {
+    if(mcom->isSimulating()) {
         printResult("[TEST] MotorCom: serialsim", true);
     } else {
-        printResult("[TEST] MotorCom: serial open", m->test());
+        printResult("[TEST] MotorCom: serial open", mcom->test());
     }
 
-    printResult("[TEST] DynaCom: gripper online", d->testGripper());
-    printResult("[TEST] PosControl active", p->test()); 
+    printResult("[TEST] DynaCom: gripper online", dcom->testGripper());
+    printResult("[TEST] PosControl active", posctrl->test()); 
     printResult("[TEST] Read_thread running", com_running);
-    printResult("[TEST] Pos_thread running", p->running());
+    printResult("[TEST] Pos_thread running", posctrl->running());
 
-    uint8_t voltage = m->getVoltage();
+    uint8_t voltage = mcom->getVoltage();
     printResult("[TEST] Voltage = " + std::to_string((int)voltage) +"v", (voltage > 20 && voltage < 25));
-    uint8_t error = m->getError();
+    uint8_t error = mcom->getError();
     printResult("[TEST] MD49_Error = " + std::to_string((int) error), (error == 0));
-    int acc = m->getAcceleration();
+    int acc = mcom->getAcceleration();
     printResult("[TEST] Acceleration = " + std::to_string(acc), (acc == ACCELERATION));  
-    int mode = m->getMode();
+    int mode = mcom->getMode();
     printResult("[TEST] Mode = " + std::to_string(mode), (mode == MODE));
 }
 
@@ -470,7 +470,7 @@ int main(int argc, char *argv[]) {
 		motor_serial = "/dev/ttyUSB2";
 		usb2 = false;
 	}	
-	else {
+/*	else {
 		LOG(WARNING) << "Too few ports available.";
 		return 0;
 	}
@@ -489,42 +489,42 @@ int main(int argc, char *argv[]) {
 	else {
 		LOG(WARNING) << "Too few ports available.";
 		return 0;
-	}
+	}*/
 
+	dyna_serial = "/dev/ttyS9";
 
-
-    m = new MotorCom(motor_serial, sim_motors);
+    mcom = new MotorCom(motor_serial, sim_motors);
     usleep(10000);
 
     LOG(INFO) << "[SETUP] initializing DynaCom";
-    d = new DynaCom(dyna_serial, sim_lift);
+    dcom = new DynaCom(dyna_serial, sim_lift);
     usleep(10000);
 
     LOG(INFO) << "[SETUP] starting motor serial";
-    m->startSerial();
+    mcom->startSerial();
     usleep(100000); // extra delay for safety, motor controller sometimes need more time
     LOG(INFO) << "[SETUP] flushing motor serial";
-    m->flush();
+    mcom->flush();
 
     LOG(INFO) << "[SETUP] resetting motor encoders";
-    m->resetEncoders();
+    mcom->resetEncoders();
     usleep(10000);
-    m->enableReg(true);
+    mcom->enableReg(true);
     usleep(10000);
-    m->enableTimeout(true);
+    mcom->enableTimeout(true);
     usleep(10000);
 
 
     LOG(INFO) << "[SETUP] starting dyna-serial";
-    d->startSerial();
+    dcom->startSerial();
     usleep(10000);
 
     LOG(INFO) << "[SETUP] initializing PosControl";
-    p = new PosControl(m, d, testing_enabled, config_file);
+    posctrl = new PosControl(mcom, dcom, testing_enabled, config_file);
     usleep(5000);
 
     LOG(INFO) << "[SETUP] initializing controlLoop thread";
-    std::thread pos_thread(&PosControl::controlLoop, p);
+    std::thread pos_thread(&PosControl::controlLoop, posctrl);
     usleep(5000);
 
     LOG(INFO) << "[SETUP] initializing aiServer thread";
@@ -534,25 +534,25 @@ int main(int argc, char *argv[]) {
 //    LOG(INFO) << "[SETUP] initializing POS thread";
 //    std::thread write_thread(posClient);
 
-    int acc = m->getAcceleration(); 
+    int acc = mcom->getAcceleration(); 
     if(acc != ACCELERATION) {
         LOG(INFO) << "[SETUP] Acceleration is: " << acc << ", setting new acceleration: " << ACCELERATION;
         usleep(1000);
-        m->setAcceleration(ACCELERATION);
+        mcom->setAcceleration(ACCELERATION);
     }
     
     usleep(5000);
-    int mode = m->getMode();
+    int mode = mcom->getMode();
     if(mode != MODE) {
-        LOG(INFO) << "[SETUP] Mode is: " << m << ", setting new mode: " << MODE;
+        LOG(INFO) << "[SETUP] Mode is: " << mode << ", setting new mode: " << MODE;
         usleep(1000);
-        m->setMode(MODE);
+        mcom->setMode(MODE);
     }
 
     testSystem();
     std::vector<int> initGrippers{5, 0, 0, 280, 280};
-    d->performAction(initGrippers);
-    d->closeShutters();
+    dcom->performAction(initGrippers);
+    dcom->closeShutters();
 
     LOG(INFO) << "\n[SETUP] System tests completed, waiting for client input...\n";
  

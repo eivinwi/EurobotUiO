@@ -1,8 +1,9 @@
 /*
- *  File: dynacom.h
+ *  File: dynacom.cpp
  *  Author: Eivind Wikheim
  *
- *  DynaCom implements a interface for controlling Dynamixel servos trough USB2AX serial.
+ *  Implements a interface controlling dynamixel servos via USB serial. 
+ *  Utilizes serial.cpp for the communication
  *
  *  Copyright (c) 2015 Eivind Wikheim <eivinwi@ifi.uio.no>. All Rights Reserved.
  *
@@ -50,15 +51,19 @@ public:
     // Initializes Dynamixel communication trough the Serial class
     void startSerial();
 
+    // Tests to check if servos are functional, by reading servos type register
+    bool testGripper();
+    bool testShutter();
+
     // Toggle LED of servo "id"
     void toggleLed(int id);
 
+    // Performs action specified in the vector (check com-protocol for info)
     void performAction(std::vector<int> arr);
 
+    // Checks the grippers actual position by polling servers.
     std::string getGripperPosition();
 
-    bool testGripper();
-    bool testShutter();
     void closeShutters();
 
     void openGrippersNoSleep(int pos);
@@ -67,13 +72,17 @@ public:
 private:
     bool test(int id);
 
+    // Hardcoded functions to pack/unpack grippers in as tight
+    // a position as possible
     void packGrippers();
     void unpackGrippers();
 
+    // functiions to sets each/both gripper to pos (must be [0,400])
     void setLeftGripper(int pos);
     void setRightGripper(int pos);
     void setGrippers(int left_pos, int right_pos);
 
+    // functions to open/close shutters (side arms)
     void shutterOpenLeft();
     void shutterCloseLeft();
     void shutterOpenRight();

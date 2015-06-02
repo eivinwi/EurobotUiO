@@ -1,6 +1,7 @@
 #include <boost/program_options.hpp>
 #include <cstring>
 #include <ctype.h>
+#include <fcntl.h>
 #include <iomanip>
 #include <iostream>
 #include <limits>
@@ -8,13 +9,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <thread>
 #include <unistd.h>
 #include <zmq.hpp>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 
 #include "dynacom.h"
 #include "motorcom.h"
@@ -29,6 +28,7 @@ INITIALIZE_EASYLOGGINGPP
 
 #define MAX_INT std::numeric_limits<int>::max()
 
+namespace po = boost::program_options;
 
 // Implements a ZMQ server that waits for input from clients. 
 // Used for communication with AI.
@@ -40,17 +40,20 @@ void posClient();
 // Reads command-line arguments. Uses GNU C++ GetOpt standard.
 // Returns true if no invalid arguments
 //bool checkArguments(int argc, char *argv[]);
+
+// Extracts program arguments trough boost-program_options
+// --help displays a menu with all available options.
 int cmdArgs(int ac, char *av[]);
 
 // Used by the aiServer ZMQ-server thread.
-// Splits input from Client on delimiter, returns array with arguments
+// Splits input from Client on delimiter, returns vector with arguments
 std::vector<int> extractInts(std::string input);
 std::vector<float> extractFloats(std::string input);
 
-// Adds current command to queue in PosControl
+// Adds command (as vector) to queue for execution in PosControl
 bool enqueue(int num_args, std::vector<int> args);
 
-// Reset robot to intial configuration, then set position to the one provided
+// Reset robot to intial configuration, then set position to the one provided in args
 bool resetRobot(int num_args, std::vector<int> args);
 
 // Test each part of the system after setup is completed, logs and print results.
@@ -60,15 +63,14 @@ void testSystem();
 void printResult(std::string text, bool success);
 
 // Implemented trough easylogging++. 
-// Catches SIGINT to avoid annoying CTRL-C being handled as a program crash.
+// Catches SIGINT to avoid annoying behaviour where CTRL-C is handled as a program crash.
 // Prints additional crash information if legitimate program crash.
 void crashHandler(int sig);
 
-
 // Objects 
-MotorCom *m;
-PosControl *p;
-DynaCom *d;
+PosControl *posctrl;
+MotorCom *mcom;
+DynaCom *dcom;
 
 // locking objects while aiServer is writing to them.
 std::mutex read_mutex;
@@ -80,7 +82,6 @@ const int MODE = 0;//2;
 // Default values, can be changed with command-line arguments
 bool sim_motors = false;
 bool sim_lift = false;
-
 bool sound_enabled = false;
 bool com_running = false;
 bool debug_file_enabled = false;
@@ -92,9 +93,5 @@ std::string dyna_serial = "/dev/ttyUSB1";
 std::string config_file = "config.yaml";
 std::string pos_ip_port = "tcp://localhost:5900";
 //std::string pos_ip_port = "tcp://193.157.205.194:5900";
-
 std::string ai_port = "5060";
 int pos_port = 5900;
-
-
-namespace po = boost::program_options;
